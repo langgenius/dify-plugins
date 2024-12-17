@@ -36,6 +36,7 @@ jobs:
         run: |
           gh repo clone https://github.com/langgenius/dify-marketplace-backend -- -b deploy/dev
           cp -r dify-marketplace-backend/toolkit/* .scripts/
+          rm -rf dify-marketplace-backend
 
       - name: Setup Python
         uses: actions/setup-python@v5
