@@ -74,7 +74,7 @@ jobs:
       - name: Check Plugin Manifest
         run: |
           # manifest.yaml author must be langgenius
-          if ! yq '.author' ${{ env.PLUGIN_PATH }}/manifest.yaml | ! grep -q "langgenius"; then
+          if yq '.author' ${{ env.PLUGIN_PATH }}/manifest.yaml | grep -q "langgenius"; then
             echo "!!! Plugin manifest.yaml author must not be 'langgenius'"
             exit 1
           fi
