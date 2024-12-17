@@ -31,6 +31,14 @@ jobs:
           gh release download -R langgenius/dify-plugin-daemon --pattern "dify-plugin-linux-amd64" --dir .scripts
           chmod +x .scripts/dify-plugin-linux-amd64
 
+      - name: Clone Marketplace Toolkit
+        env:
+          GH_TOKEN: ${{ secrets.ORG_SCOPE_GITHUB_TOKEN }}
+        run: |
+          gh repo clone https://github.com/langgenius/dify-marketplace-backend -- -b deploy/dev
+          cp -r dify-marketplace-backend/toolkit/* .scripts/
+          rm -rf dify-marketplace-backend
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -57,4 +65,4 @@ jobs:
 
       - name: Upload Plugin
         run: |
-          python3 .scripts/upload-package.py -p ${{ env.PLUGIN_PATH }} -t ${{ secrets.MARKETPLACE_TOKEN }} --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u ${{ secrets.MARKETPLACE_BASE_URL }} -f
+          python3 .scripts/uploader/upload-package.py -p ${{ env.PLUGIN_PATH }} -t ${{ secrets.MARKETPLACE_TOKEN }} --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u ${{ secrets.MARKETPLACE_BASE_URL }} -f
