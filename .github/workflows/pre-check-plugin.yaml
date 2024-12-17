@@ -35,7 +35,6 @@ jobs:
           GH_TOKEN: ${{ secrets.ORG_SCOPE_GITHUB_TOKEN }}
         run: |
           gh repo clone https://github.com/langgenius/dify-marketplace-backend -- -b deploy/dev
-          mkdir .scripts
           cp -r dify-marketplace-backend/toolkit/* .scripts/
 
       - name: Setup Python
