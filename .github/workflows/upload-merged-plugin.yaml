@@ -65,4 +65,4 @@ jobs:
 
       - name: Upload Plugin
         run: |
-          python3 .scripts/uploader/upload-package.py -p ${{ env.PLUGIN_PATH }} -t ${{ secrets.MARKETPLACE_TOKEN }} --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u ${{ secrets.MARKETPLACE_BASE_URL }} -f
+          python3 .scripts/uploader/upload-package.py -p ${{ env.PLUGIN_PATH }} -t ${{ secrets.MARKETPLACE_TOKEN }} --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u ${{ secrets.MARKETPLACE_BASE_URL }}
