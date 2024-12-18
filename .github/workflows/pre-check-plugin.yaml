@@ -73,6 +73,8 @@ jobs:
           echo "PLUGIN_PATH=unpacked_plugin" >> $GITHUB_ENV
 
       - name: Check Plugin Manifest
+        env:
+          GH_TOKEN: ${{ secrets.ORG_SCOPE_GITHUB_TOKEN }}
         run: |
           # manifest.yaml author must not be langgenius
           if yq '.author' ${{ env.PLUGIN_PATH }}/manifest.yaml | grep -q "langgenius"; then
