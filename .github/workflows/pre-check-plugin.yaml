@@ -142,7 +142,7 @@ jobs:
               issue_number: pr.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `## ❌ Failed \n The pre-check plugin workflow failed. Please check the logs for more details \n [View Logs](${repoUrl})`
+              body: `## ❌ Failed \n The pre-check plugin workflow failed. Please check the logs for more details. \n [View Logs](${repoUrl})`
             })
 
       - name: Comment on success
