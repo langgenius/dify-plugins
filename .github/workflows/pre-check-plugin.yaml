@@ -128,3 +128,32 @@ jobs:
       - name: Check Packaging
         run: |
           python3 .scripts/uploader/upload-package.py -d ${{ env.PLUGIN_PATH }} -t ${{ secrets.MARKETPLACE_TOKEN }} --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u ${{ secrets.MARKETPLACE_BASE_URL }} -f --test
+
+      - name: Comment on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const pr = context.payload.pull_request;
+            const runId = process.env.GITHUB_RUN_ID;
+            const repoUrl = `https://github.com/${{ github.repository }}/actions/runs/${runId}`;
+            github.rest.issues.createComment({
+              issue_number: pr.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## ❌ Failed \n The pre-check plugin workflow failed. Please check the logs for more details. \n [View Logs](${repoUrl})`
+            })
+
+      - name: Comment on success
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '## ✅ Success \n The pre-check plugin workflow passed. Please wait for maintainer to review your PR.'
+            })
