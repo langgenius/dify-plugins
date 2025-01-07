@@ -15,6 +15,8 @@ on:
 
 env:
   REPO_NAME: langgenius/dify-plugins
+  MARKETPLACE_BASE_URL: https://marketplace-plugin.dify.dev
+  MARKETPLACE_TOKEN: placeholder
 
 jobs:
   pre-check-plugin:
@@ -24,21 +26,15 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+
+      - name: Clone Marketplace Toolkit
+        run: |
+          gh repo clone langgenius/dify-marketplace-toolkit -- .scripts/
       
       - name: Download Plugin Daemon
-        env:
-          GH_TOKEN: ${{ secrets.ORG_SCOPE_GITHUB_TOKEN }}
         run: |
           gh release download -R langgenius/dify-plugin-daemon --pattern "dify-plugin-linux-amd64" --dir .scripts
           chmod +x .scripts/dify-plugin-linux-amd64
-
-      - name: Clone Marketplace Toolkit
-        env:
-          GH_TOKEN: ${{ secrets.ORG_SCOPE_GITHUB_TOKEN }}
-        run: |
-          gh repo clone https://github.com/langgenius/dify-marketplace-backend -- -b deploy/dev
-          cp -r dify-marketplace-backend/toolkit/* .scripts/
-          rm -rf dify-marketplace-backend
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -54,8 +50,6 @@ jobs:
         uses: mikefarah/yq@v4.44.5
 
       - name: Get PR Path
-        env:
-          GH_TOKEN: ${{ secrets.ORG_SCOPE_GITHUB_TOKEN }}
         run: |
           export PR_FILES=$(gh pr view -R ${{ env.REPO_NAME }} ${{ github.event.pull_request.number }} --json files --jq .files)
 
@@ -75,8 +69,6 @@ jobs:
           echo "PLUGIN_PATH=unpacked_plugin" >> $GITHUB_ENV
 
       - name: Check Plugin Manifest
-        env:
-          GH_TOKEN: ${{ secrets.ORG_SCOPE_GITHUB_TOKEN }}
         run: |
           # manifest.yaml author must not be langgenius
           if yq '.author' ${{ env.PLUGIN_PATH }}/manifest.yaml | grep -q "langgenius"; then
@@ -99,10 +91,10 @@ jobs:
           echo "Checking plugin version: $VERSION"
 
           # Check if the version already exists
-          RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" "${{ secrets.MARKETPLACE_BASE_URL }}/api/v1/plugins/$AUTHOR/$NAME/$VERSION")
+          RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" "${{ env.MARKETPLACE_BASE_URL }}/api/v1/plugins/$AUTHOR/$NAME/$VERSION")
           
           if [ "$RESPONSE_CODE" = "200" ]; then
-            RESPONSE=$(curl -s "${{ secrets.MARKETPLACE_BASE_URL }}/api/v1/plugins/$AUTHOR/$NAME/$VERSION")
+            RESPONSE=$(curl -s "${{ env.MARKETPLACE_BASE_URL }}/api/v1/plugins/$AUTHOR/$NAME/$VERSION")
             if [ "$(echo "$RESPONSE" | jq -r '.code')" = "0" ]; then
               echo "!!! Plugin version $VERSION already exists, please update the version number in manifest.yaml"
               exit 1
@@ -129,7 +121,7 @@ jobs:
 
       - name: Check Packaging
         run: |
-          python3 .scripts/uploader/upload-package.py -d ${{ env.PLUGIN_PATH }} -t ${{ secrets.MARKETPLACE_TOKEN }} --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u ${{ secrets.MARKETPLACE_BASE_URL }} -f --test
+          python3 .scripts/uploader/upload-package.py -d ${{ env.PLUGIN_PATH }} -t ${{ env.MARKETPLACE_TOKEN }} --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u ${{ env.MARKETPLACE_BASE_URL }} -f --test
 
       - name: Comment on failure
         if: failure()
