@@ -27,10 +27,14 @@ jobs:
           persist-credentials: false
 
       - name: Clone Marketplace Toolkit
+        env:
+          GH_TOKEN: ${{ secrets.ORG_SCOPE_GITHUB_TOKEN }}
         run: |
           gh repo clone langgenius/dify-marketplace-toolkit -- .scripts/
       
       - name: Download Plugin Daemon
+        env:
+          GH_TOKEN: ${{ secrets.ORG_SCOPE_GITHUB_TOKEN }}
         run: |
           gh release download -R langgenius/dify-plugin-daemon --pattern "dify-plugin-linux-amd64" --dir .scripts
           chmod +x .scripts/dify-plugin-linux-amd64
@@ -46,6 +50,8 @@ jobs:
           pip install requests
 
       - name: Get PR Path
+        env:
+          GH_TOKEN: ${{ secrets.ORG_SCOPE_GITHUB_TOKEN }}
         run: |
           export PR_FILES=$(gh pr view -R ${{ env.REPO_NAME }} ${{ github.event.pull_request.number }} --json files --jq .files)
 
