@@ -51,6 +51,7 @@ jobs:
         id: get_changed_files
         run: |
           git log -10
+          git branch
           CHANGED_FILES=$(git diff --name-only ${{ github.sha }} | jq -R -s -c 'split("\n")[:-1] | map({path: .})')
           git diff --name-only ${{ github.sha }}
           echo "CHANGED_FILES=$CHANGED_FILES" >> $GITHUB_ENV
