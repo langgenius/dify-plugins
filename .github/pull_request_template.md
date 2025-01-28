@@ -22,7 +22,7 @@ Please confirm that your plugin README includes all necessary information:
 - [ ] Connection requirements and configuration details
 
 ## 5. Privacy Protection Information
-Based on Dify Plugin Privacy Protection Guidelines:
+Based on Dify Plugin Privacy Protection [Guidelines](https://docs.dify.ai/plugins/publish-plugins/publish-to-dify-marketplace/plugin-privacy-protection-guidelines):
 
 ### Data Collection
 <!-- Does your plugin collect any user personal data? If yes, please list what types of user personal data are being collected according to the Plugin Privacy Protection Guidelines (for example: Email address, IP address, Age, etc) -->
