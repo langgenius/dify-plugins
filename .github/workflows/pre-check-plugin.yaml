@@ -115,6 +115,7 @@ jobs:
       - name: Check Plugin Install
         run: |
           if [ -f ${{ env.PLUGIN_PATH }}/requirements.txt ]; then
+              source .venv/bin/activate
               dify_version=$(pip list | grep 'dify_plugin' | awk '{print $2}')
               target_version="0.0.1b64"
               result=$(python -c "from packaging.version import Version; print(0 if Version('$dify_version') > Version('$target_version') else 1)")
