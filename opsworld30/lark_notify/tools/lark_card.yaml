@@ -1,0 +1,142 @@
+identity:
+  name: lark_card
+  author: opsworld30
+  label:
+    en_US: Lark Card Message
+    zh_Hans: 飞书卡片消息
+    ja_JP: Lark カードメッセージ
+    pt_BR: Mensagem de Cartão do Lark
+description:
+  human:
+    en_US: Send interactive card messages to Lark group chats with customizable layouts and styles.
+    zh_Hans: 发送交互式卡片消息到飞书群聊，支持自定义布局和样式。
+    ja_JP: カスタマイズ可能なレイアウトとスタイルでLarkグループチャットにインタラクティブなカードメッセージを送信。
+    pt_BR: Envie mensagens de cartão interativas para chats em grupo do Lark com layouts e estilos personalizáveis.
+  llm: Send interactive card messages to Lark group chats with customizable layouts and styles.
+parameters:
+  - name: message
+    type: string
+    form: llm
+    required: true
+    label:
+      en_US: Message Content
+      zh_Hans: 消息内容
+      ja_JP: メッセージ内容
+      pt_BR: Conteúdo da Mensagem
+    human_description:
+      en_US: "The message content for the card. Supports Feishu markdown format:\n- Bold: **text**\n- Italic: *text*\n- Link: [text](url)\n- At user: <at id=all></at>\n- Line break: two spaces or \\n"
+      zh_Hans: "卡片消息内容。支持飞书 markdown 格式：\n- 加粗：**文本**\n- 斜体：*文本*\n- 链接：[文本](url)\n- @所有人：<at id=all></at>\n- 换行：两个空格或 \\n"
+      ja_JP: "カードのメッセージ内容。Feishu markdown形式をサポート：\n- 太字：**テキスト**\n- 斜体：*テキスト*\n- リンク：[テキスト](url)\n- 全員をメンション：<at id=all></at>\n- 改行：二つのスペースまたは\\n"
+      pt_BR: "O conteúdo da mensagem para o cartão. Suporta formato markdown Feishu:\n- Negrito: **texto**\n- Itálico: *texto*\n- Link: [texto](url)\n- Mencionar todos: <at id=all></at>\n- Quebra de linha: dois espaços ou \\n"
+    llm_description: "Message content for the card. Supports Feishu markdown format:\n- Bold: **text**\n- Italic: *text*\n- Link: [text](url)\n- At everyone: <at id=all></at>\n- Line break: two spaces or \\n"
+
+  - name: title
+    type: string
+    form: form
+    required: false
+    label:
+      en_US: Card Title
+      zh_Hans: 卡片标题
+      ja_JP: カードタイトル
+      pt_BR: Título do Cartão
+    human_description:
+      en_US: Title for card message (optional)
+      zh_Hans: 卡片消息的标题（可选）
+      ja_JP: カードのタイトル（オプション）
+      pt_BR: Título para mensagem de cartão (opcional)
+
+  - name: card_type
+    type: select
+    form: form
+    required: false
+    default: info
+    label:
+      en_US: Card Type
+      zh_Hans: 卡片类型
+      ja_JP: カードタイプ
+      pt_BR: Tipo do Cartão
+    human_description:
+      en_US: Card message type (info/warning/success/error)
+      zh_Hans: 卡片消息类型（信息/警告/成功/错误）
+      ja_JP: カードメッセージタイプ（情報/警告/成功/エラー）
+      pt_BR: Tipo de mensagem de cartão (informação/aviso/sucesso/erro)
+    options:
+      - value: info
+        label:
+          en_US: Information
+          zh_Hans: 信息
+          ja_JP: 情報
+          pt_BR: Informação
+      - value: warning
+        label:
+          en_US: Warning
+          zh_Hans: 警告
+          ja_JP: 警告
+          pt_BR: Aviso
+      - value: success
+        label:
+          en_US: Success
+          zh_Hans: 成功
+          ja_JP: 成功
+          pt_BR: Sucesso
+      - value: error
+        label:
+          en_US: Error
+          zh_Hans: 错误
+          ja_JP: エラー
+          pt_BR: Erro
+
+  - name: card_layout
+    type: select
+    form: form
+    required: false
+    default: horizontal
+    label:
+      en_US: Card Layout
+      zh_Hans: 卡片布局
+      ja_JP: カードレイアウト
+      pt_BR: Layout do Cartão
+    human_description:
+      en_US: Card message layout (horizontal/vertical/bisected)
+      zh_Hans: 卡片消息布局（水平/垂直/二分）
+      ja_JP: カードメッセージレイアウト（水平/垂直/二分割）
+      pt_BR: Layout da mensagem de cartão (horizontal/vertical/dividido)
+    options:
+      - value: horizontal
+        label:
+          en_US: Horizontal
+          zh_Hans: 水平布局
+          ja_JP: 水平レイアウト
+          pt_BR: Horizontal
+      - value: vertical
+        label:
+          en_US: Vertical
+          zh_Hans: 垂直布局
+          ja_JP: 垂直レイアウト
+          pt_BR: Vertical
+      - value: bisected
+        label:
+          en_US: Bisected
+          zh_Hans: 二分布局
+          ja_JP: 二分割レイアウト
+          pt_BR: Dividido
+
+  - name: show_meta
+    type: boolean
+    form: form
+    required: false
+    default: true
+    label:
+      en_US: Show Meta Info
+      zh_Hans: 显示元信息
+      ja_JP: メタ情報を表示
+      pt_BR: Mostrar Meta Info
+    human_description:
+      en_US: Show meta information like timestamp (optional)
+      zh_Hans: 显示时间戳等元信息（可选）
+      ja_JP: タイムスタンプなどのメタ情報を表示（オプション）
+      pt_BR: Mostrar informações meta como timestamp (opcional)
+
+extra:
+  python:
+    source: tools/lark_card.py

@@ -4,7 +4,7 @@ from dify_plugin import ToolProvider
 from dify_plugin.errors.tool import ToolProviderCredentialValidationError
 
 
-class LarkNotifyProvider(ToolProvider):
+class lark_notify(ToolProvider):
     def _validate_credentials(self, credentials: dict[str, Any]) -> None:
         try:
             webhook_key = credentials.get('webhook_key')
