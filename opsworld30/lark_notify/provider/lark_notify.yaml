@@ -1,0 +1,35 @@
+identity:
+  author: opsworld30
+  name: lark_notify
+  label:
+    en_US: Lark Group Bot
+    ja_JP: Lark グループボット
+    zh_Hans: 飞书群机器人
+    pt_BR: Bot de Grupo do Lark
+  description:
+    en_US: A plugin for sending notifications to Lark group chats. It supports sending text messages and card messages, allowing you to communicate with your team in a more flexible and visually appealing way.
+    ja_JP: Larkグループチャットに通知を送信するためのプラグイン。テキストメッセージやカードメッセージの送信をサポートし、より柔軟で視覚的に魅力的な方法でチームとコミュニケーションを取ることができます。
+    zh_Hans: LarkNotify 是一个用于向飞书群聊发送通知消息的插件。它支持发送文本消息和卡片消息，让你能够以更灵活和美观的方式向团队传递信息。
+    pt_BR: Um plugin para enviar notificações para chats em grupo do Lark. Suporta o envio de mensagens de texto e cartões, permitindo que você se comunique com sua equipe de forma mais flexível e visualmente atraente.
+  icon: icon.svg
+tools:
+  - tools/lark_card.yaml
+  - tools/lark_text.yaml
+extra:
+  python:
+    source: provider/lark_notify.py
+
+credentials_for_provider:
+  webhook_key:
+    type: secret-input
+    label:
+      en_US: Webhook URL
+      zh_Hans: Webhook地址
+    help:
+      en_US: The webhook URL for your Lark bot
+      zh_Hans: 飞书机器人的webhook地址
+    required: true
+    placeholder:
+      en_US: Enter webhook URL from Lark
+      zh_Hans: 输入飞书机器人的webhook地址
+    url: https://open.feishu.cn/document/client-docs/bot-v3/add-bot-to-group
