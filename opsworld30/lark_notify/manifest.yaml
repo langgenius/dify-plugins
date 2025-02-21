@@ -14,7 +14,7 @@ description:
   pt_BR: Um plugin para enviar notificações para chats em grupo do Lark. Suporta o envio de mensagens de texto e cartões, permitindo que você se comunique com sua equipe de forma mais flexível e visualmente atraente.
 icon: icon.svg
 resource:
-  memory: 268435456
+  memory: 1048576
   permission:
     tool:
       enabled: true
