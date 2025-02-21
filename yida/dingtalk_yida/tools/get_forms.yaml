@@ -1,0 +1,97 @@
+identity:
+  name: get_forms
+  author: dingtalk_yida
+  label:
+    en_US: Get Forms In APP
+    zh_Hans: 获取指定应用下表单列表
+
+description:
+  human:
+    en_US: Retrieve forms from the Yida platform based on various criteria.
+    zh_Hans: 根据各种条件从宜搭平台检索表单
+  llm: A tool for retrieving forms from the Yida platform based on various criteria.
+
+parameters:
+  - name: app_type
+    type: string
+    required: true
+    label:
+      en_US: App Type
+      zh_Hans: 应用编码
+    human_description:
+      en_US: The application code.
+      zh_Hans: 应用编码。
+    llm_description: The application code, e.g., APP_PBKTxxxxx.
+    form: llm
+
+  - name: system_token
+    type: string
+    required: true
+    label:
+      en_US: System Token
+      zh_Hans: 应用密钥
+    human_description:
+      en_US: The system token required for authentication.
+      zh_Hans: 用于身份验证的应用密钥。
+    llm_description: The system token required to authenticate the request, e.g., FO86xxxxx.
+    form: llm
+
+  - name: user_id
+    type: string
+    required: true
+    label:
+      en_US: User ID
+      zh_Hans: 用户ID
+    human_description:
+      en_US: The ID of the user performing the retrieval.
+      zh_Hans: 执行检索操作的用户ID。
+    llm_description: The unique identifier of the user performing the retrieval, e.g., 5014xxxxx.
+    form: llm
+
+  - name: form_types
+    type: select
+    required: false
+    label:
+      en_US: Form Types
+      zh_Hans: 表单类型
+    human_description:
+      en_US: The types of forms to retrieve. Options， receipt (普通单据表单), process (流程表单). (Optional)
+      zh_Hans: 要检索的表单类型。选项：receipt（普通单据表单）、process（流程表单）。（可选）
+    llm_description: The types of forms to retrieve, e.g., receipt, process. (Optional)
+    form: llm
+    options:
+      - value: receipt
+        label:
+          en_US: Receipt
+          zh_Hans: 普通单据表单
+      - value: process
+        label:
+          en_US: Process
+          zh_Hans: 流程表单
+
+  - name: page_size
+    type: number
+    required: false
+    label:
+      en_US: Page Size
+      zh_Hans: 每页数量
+    human_description:
+      en_US: The number of results per page. (Optional)
+      zh_Hans: 每页的结果数量。（可选）
+    llm_description: The number of forms to return per page. (Optional)
+    form: llm
+
+  - name: page_number
+    type: number
+    required: false
+    label:
+      en_US: Page Number
+      zh_Hans: 页码
+    human_description:
+      en_US: The page number for paginated results. (Optional)
+      zh_Hans: 分页结果的页码。（可选）
+    llm_description: The page number to retrieve, starting from 1. (Optional)
+    form: llm
+extra:
+  python:
+    source: tools/get_forms.py

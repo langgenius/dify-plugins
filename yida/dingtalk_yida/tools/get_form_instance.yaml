@@ -1,0 +1,65 @@
+identity:
+  name: get_form_instance
+  author: dingtalk_yida
+  label:
+    en_US: Get Form Instance Data
+    zh_Hans: 获取表单实例数据
+
+description:
+  human:
+    en_US: Retrieve an existing instance of data from the Yida form.
+    zh_Hans: 从宜搭表单中检索一条实例数据
+  llm: A tool for retrieving an existing instance of data from the Yida form.
+
+parameters:
+  - name: form_instance_id
+    type: string
+    required: true
+    label:
+      en_US: Form Instance ID
+      zh_Hans: 表单实例ID
+    human_description:
+      en_US: The ID of the form instance to retrieve.
+      zh_Hans: 要检索的表单实例的ID。
+    llm_description: The unique identifier of the form instance to retrieve, e.g., INSTANCE-12345.
+    form: llm
+
+  - name: app_type
+    type: string
+    required: true
+    label:
+      en_US: App Type
+      zh_Hans: 应用编码
+    human_description:
+      en_US: Application code.
+      zh_Hans: 应用编码。
+    llm_description: Application code, e.g., APP_VZ4Q0ITP6MV1XXXXXXXX.
+    form: llm
+
+  - name: system_token
+    type: string
+    required: true
+    label:
+      en_US: System Token
+      zh_Hans: 应用密钥
+    human_description:
+      en_US: Application key.
+      zh_Hans: 应用密钥。
+    llm_description: The system token required to authenticate the request, e.g., VTC664B19FTS3BQQ9VQHHDUUYUVJ3R2XXXXXXXX.
+    form: llm
+
+  - name: user_id
+    type: string
+    required: true
+    label:
+      en_US: User ID
+      zh_Hans: 用户ID
+    human_description:
+      en_US: The ID of the user requesting the form instance.
+      zh_Hans: 请求表单实例的用户ID。
+    llm_description: The unique identifier of the user requesting the form instance, e.g., 021664184515XXXXXXXX.
+    form: llm
+extra:
+  python:
+    source: tools/get_form_instance.py
+

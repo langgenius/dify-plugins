@@ -1,0 +1,160 @@
+identity:
+  name: search_form_instances
+  author: dingtalk_yida
+  label:
+    en_US: Search Form Instances
+    zh_Hans: 搜索表单实例数据
+
+description:
+  human:
+    en_US: Search for form instances in the Yida form based on various criteria.
+    zh_Hans: 根据各种条件在宜搭表单中搜索表单实例
+  llm: A tool for searching form instances in the Yida form based on various criteria.
+
+parameters:
+  - name: app_type
+    type: string
+    required: true
+    label:
+      en_US: App Type
+      zh_Hans: 应用编码
+    human_description:
+      en_US: Application code.
+      zh_Hans: 应用编码
+    llm_description: Application code, e.g., APP_VZ4Q0ITP6MV1XXXXXXXX.
+    form: llm
+
+  - name: form_uuid
+    type: string
+    required: true
+    label:
+      en_US: Form UUID
+      zh_Hans: 表单UUID
+    human_description:
+      en_US: The UUID of the form to search instances for.
+      zh_Hans: 要搜索实例的表单的UUID
+    llm_description: The unique identifier of the form, e.g., FORM-F5177FA821294F44988682E0D076XXXXXXXX.
+    form: llm
+
+  - name: system_token
+    type: string
+    required: true
+    label:
+      en_US: System Token
+      zh_Hans: 应用密钥
+    human_description:
+      en_US: Application key required for authentication.
+      zh_Hans: 用于身份验证的应用密钥
+    llm_description: The system token required to authenticate the request, e.g., VTC664B19FTS3BQQ9VQHHDUUYUXXXXXXXXXXXXX.
+    form: llm
+
+  - name: user_id
+    type: string
+    required: true
+    label:
+      en_US: User ID
+      zh_Hans: 用户ID
+    human_description:
+      en_US: The ID of the user performing the search.
+      zh_Hans: 执行搜索的用户ID
+    llm_description: The unique identifier of the user performing the search, e.g., 021664184515XXXXXXXX.
+    form: llm
+
+  - name: page_number
+    type: number
+    required: false
+    label:
+      en_US: Page Number
+      zh_Hans: 页码
+    human_description:
+      en_US: The page number for paginated results. (Optional)
+      zh_Hans: 分页结果的页码（可选）
+    llm_description: The page number to retrieve, starting from 1. (Optional)
+    form: llm
+
+  - name: page_size
+    type: number
+    required: false
+    label:
+      en_US: Page Size
+      zh_Hans: 每页数量
+    human_description:
+      en_US: The number of results per page. (Optional)
+      zh_Hans: 每页的结果数量（可选）
+    llm_description: The number of form instances to return per page. (Optional)
+    form: llm
+
+  - name: modified_to_time_gmt
+    type: string
+    required: false
+    label:
+      en_US: Modified To Time GMT
+      zh_Hans: 修改结束时间GMT
+    human_description:
+      en_US: The upper bound for the modification date in GMT. (Optional)
+      zh_Hans: 修改日期的上限（GMT）（可选）
+    llm_description: The end date for filtering by modification time, in GMT, e.g., "2025-02-13". (Optional)
+    form: llm
+
+  - name: modified_from_time_gmt
+    type: string
+    required: false
+    label:
+      en_US: Modified From Time GMT
+      zh_Hans: 修改开始时间GMT
+    human_description:
+      en_US: The lower bound for the modification date in GMT. (Optional)
+      zh_Hans: 修改日期的下限（GMT）（可选）
+    llm_description: The start date for filtering by modification time, in GMT, e.g., "2021-05-01". (Optional)
+    form: llm
+
+  - name: search_field_json
+    type: string
+    required: false
+    label:
+      en_US: Search Field JSON
+      zh_Hans: 搜索字段JSON
+    human_description:
+      en_US: A JSON string specifying fields to search by. (Optional)
+      zh_Hans: 指定搜索字段的JSON字符串（可选）
+    llm_description: A JSON-formatted string containing fields and values to filter the search,. (Optional)
+    form: llm
+
+  - name: originator_id
+    type: string
+    required: false
+    label:
+      en_US: Originator ID
+      zh_Hans: 发起人ID
+    human_description:
+      en_US: The ID of the originator of the form instances. (Optional)
+      zh_Hans: 表单实例发起人的ID（可选）
+    llm_description: The unique identifier of the originator, e.g., "02166418451524409518". (Optional)
+    form: llm
+
+  - name: create_to_time_gmt
+    type: string
+    required: false
+    label:
+      en_US: Creation To Time GMT
+      zh_Hans: 创建结束时间GMT
+    human_description:
+      en_US: The upper bound for the creation date in GMT. (Optional)
+      zh_Hans: 创建日期的上限（GMT）（可选）
+    llm_description: The end date for filtering by creation time, in GMT, e.g., "2025-02-13". (Optional)
+    form: llm
+
+  - name: create_from_time_gmt
+    type: string
+    required: false
+    label:
+      en_US: Creation From Time GMT
+      zh_Hans: 创建开始时间GMT
+    human_description:
+      en_US: The lower bound for the creation date in GMT. (Optional)
+      zh_Hans: 创建日期的下限（GMT）（可选）
+    llm_description: The start date for filtering by creation time, in GMT, e.g., "2021-05-01". (Optional)
+    form: llm
+extra:
+  python:
+    source: tools/search_form_instances.py
