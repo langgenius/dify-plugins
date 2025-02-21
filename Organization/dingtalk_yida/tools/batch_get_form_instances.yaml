@@ -1,0 +1,92 @@
+identity:
+  name: batch_get_form_instances
+  author: dingtalk_yida
+  label:
+    en_US: Batch Get Form Instances
+    zh_Hans: 批量获取表单实例数据
+
+description:
+  human:
+    en_US: Retrieve multiple form instances from the Yida form based on a list of instance IDs.
+    zh_Hans: 根据实例ID列表从宜搭表单中批量检索表单实例
+  llm: A tool for retrieving multiple form instances from the Yida form based on a list of instance IDs.
+
+parameters:
+  - name: form_uuid
+    type: string
+    required: true
+    label:
+      en_US: Form UUID
+      zh_Hans: 表单UUID
+    human_description:
+      en_US: The UUID of the form to retrieve instances from.
+      zh_Hans: 要从中检索实例的表单的UUID。
+    llm_description: The unique identifier of the form, e.g., FORM-F5177FA821294F44988682E0D076XXXXXXXX.
+    form: llm
+
+  - name: app_type
+    type: string
+    required: true
+    label:
+      en_US: App Type
+      zh_Hans: 应用编码
+    human_description:
+      en_US: Application code.
+      zh_Hans: 应用编码。
+    llm_description: Application code, e.g., APP_VZ4Q0ITP6MV1XXXXXXXX.
+    form: llm
+
+  - name: system_token
+    type: string
+    required: true
+    label:
+      en_US: System Token
+      zh_Hans: 应用密钥
+    human_description:
+      en_US: Application key required for authentication.
+      zh_Hans: 用于身份验证的应用密钥。
+    llm_description: The system token required to authenticate the request, e.g., VTC664B19FTS3BQQ9VQHHDUUYUVXXXXXXXXXXXX.
+    form: llm
+
+  - name: form_instance_id_list
+    type: string
+    items:
+      type: string
+    required: true
+    label:
+      en_US: Form Instance ID List
+      zh_Hans: 表单实例ID列表
+    human_description:
+      en_US: A list of form instance IDs to retrieve.
+      zh_Hans: 要检索的表单实例ID列表。
+    llm_description: A list of form instance IDs, e.g., ["FINST-56B66Q91BEUSFYD172R9N9ING9YA24XXXXXXXXX","FINST-ERD665811PTSLIK97TNGI9137FZF3SZLXXXXXXXX"].
+    form: llm
+
+  - name: user_id
+    type: string
+    required: true
+    label:
+      en_US: User ID
+      zh_Hans: 用户ID
+    human_description:
+      en_US: The ID of the user performing the retrieval.
+      zh_Hans: 执行检索的用户ID。
+    llm_description: The unique identifier of the user performing the retrieval, e.g., 021664184515XXXXXXXX.
+    form: llm
+
+  - name: need_form_instance_value
+    type: boolean
+    required: false
+    label:
+      en_US: Need Form Instance Value
+      zh_Hans: 是否需要宜搭表单组件格式的实例数据
+    human_description:
+      en_US: Whether to include the form instance values in the response. (Optional)
+      zh_Hans: 是否需要宜搭表单组件格式的实例数据。（可选）
+    llm_description: Whether to include the form instance values in the response, e.g., false. (Optional)
+    form: llm
+extra:
+  python:
+    source: tools/batch_get_form_instances.py
+
+

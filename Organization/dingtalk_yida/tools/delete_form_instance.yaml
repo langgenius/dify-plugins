@@ -1,0 +1,64 @@
+identity:
+  name: delete_form_instance
+  author: dingtalk_yida
+  label:
+    en_US: Delete Form Instance
+    zh_Hans: 删除表单实例数据
+
+description:
+  human:
+    en_US: Delete a specific form instance from the Yida form.
+    zh_Hans: 从宜搭表单中删除特定的表单实例
+  llm: A tool for deleting a specific form instance from the Yida form.
+
+parameters:
+  - name: app_type
+    type: string
+    required: true
+    label:
+      en_US: App Type
+      zh_Hans: 应用编码
+    human_description:
+      en_US: The application code.
+      zh_Hans: 应用编码。
+    llm_description: The application code, e.g., APP_VZ4Q0ITP6MVXXXXXXXX.
+    form: llm
+
+  - name: system_token
+    type: string
+    required: true
+    label:
+      en_US: System Token
+      zh_Hans: 应用密钥
+    human_description:
+      en_US: The system token required for authentication.
+      zh_Hans: 用于身份验证的应用密钥。
+    llm_description: The system token required to authenticate the request, e.g., VTC664B19FTS3BQQ9VQHHDUUYUVJ3R2XXXXXXXX.
+    form: llm
+
+  - name: user_id
+    type: string
+    required: true
+    label:
+      en_US: User ID
+      zh_Hans: 用户ID
+    human_description:
+      en_US: The ID of the user performing the deletion.
+      zh_Hans: 执行删除操作的用户ID。
+    llm_description: The unique identifier of the user performing the deletion, e.g., 021664184515XXXXXXXX.
+    form: llm
+
+  - name: form_instance_id
+    type: string
+    required: true
+    label:
+      en_US: Form Instance ID
+      zh_Hans: 表单实例ID
+    human_description:
+      en_US: The ID of the form instance to be deleted.
+      zh_Hans: 要删除的表单实例的ID。
+    llm_description: The unique identifier of the form instance to delete, e.g., FINST-12345.
+    form: llm
+extra:
+  python:
+    source: tools/delete_form_instance.py

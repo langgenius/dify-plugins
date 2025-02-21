@@ -1,0 +1,76 @@
+identity:
+  name: save_form_instance
+  author: dingtalk_yida
+  label:
+    en_US: Add Form Instance Data
+    zh_Hans: 添加表单实例数据
+
+description:
+  human:
+    en_US: Add a new instance of data in the Yida form.
+    zh_Hans: 在宜搭表单中新增一条实例数据
+  llm: A tool for adding a new instance of data in the Yida form.
+
+parameters:
+  - name: app_type
+    type: string
+    required: true
+    label:
+      en_US: App Type
+      zh_Hans: 应用编码
+    human_description:
+      en_US: Application code.
+      zh_Hans: 应用编码
+    llm_description: Application code, e.g., APP_VZ4Q0ITP6MVXXXXXXXX.
+    form: llm
+
+  - name: system_token
+    type: string
+    required: true
+    label:
+      en_US: System Token
+      zh_Hans: 应用密钥
+    human_description:
+      en_US: Application key.
+      zh_Hans: 应用密钥
+    llm_description: The system token required to authenticate the request, e.g., VTC664B19FTS3BQQ9VQHHDUUYXXXXXXXXXXXXXX.
+    form: llm
+
+  - name: user_id
+    type: string
+    required: true
+    label:
+      en_US: User ID
+      zh_Hans: 用户ID
+    human_description:
+      en_US: The ID of the user submitting the form.
+      zh_Hans: 提交表单的用户ID。
+    llm_description: The unique identifier of the user submitting the form instance, e.g., 021664184515XXXXXXXX.
+    form: llm
+
+  - name: form_uuid
+    type: string
+    required: true
+    label:
+      en_US: Form UUID
+      zh_Hans: 表单UUID
+    human_description:
+      en_US: The UUID of the form to be submitted.
+      zh_Hans: 要提交的表单的UUID。
+    llm_description: The unique identifier of the form, e.g., FORM-F5177FA821294F44988682E0D076XXXXXXXX.
+    form: llm
+
+  - name: form_data_json
+    type: string
+    required: true
+    label:
+      en_US: Form Data JSON
+      zh_Hans: 表单数据JSON
+    human_description:
+      en_US: The JSON string containing form data.
+      zh_Hans: 包含表单数据的JSON字符串。
+    llm_description: The JSON-formatted string with the form data.
+    form: llm
+extra:
+  python:
+    source: tools/save_form_instance.py

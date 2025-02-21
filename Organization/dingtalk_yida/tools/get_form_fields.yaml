@@ -1,0 +1,64 @@
+identity:
+  name: get_form_fields
+  author: dingtalk_yida
+  label:
+    en_US: Get Form Fields
+    zh_Hans: 获取指定表单元数据
+
+description:
+  human:
+    en_US: Retrieve the fields of a specific form from the Yida platform.
+    zh_Hans: 从宜搭平台检索特定表单的字段信息
+  llm: A tool for retrieving the fields of a specific form from the Yida platform.
+
+parameters:
+  - name: app_type
+    type: string
+    required: true
+    label:
+      en_US: App Type
+      zh_Hans: 应用编码
+    human_description:
+      en_US: The application code.
+      zh_Hans: 应用编码。
+    llm_description: The application code, e.g., APP_PBKxxxxx.
+    form: llm
+
+  - name: system_token
+    type: string
+    required: true
+    label:
+      en_US: System Token
+      zh_Hans: 应用密钥
+    human_description:
+      en_US: The system token required for authentication.
+      zh_Hans: 用于身份验证的应用密钥。
+    llm_description: The system token required to authenticate the request, e.g., FO8xxxxx.
+    form: llm
+
+  - name: form_uuid
+    type: string
+    required: true
+    label:
+      en_US: Form UUID
+      zh_Hans: 表单UUID
+    human_description:
+      en_US: The UUID of the form whose fields are to be retrieved.
+      zh_Hans: 要检索字段的表单的UUID。
+    llm_description: The unique identifier of the form, e.g., FORM-J7xxxxx.
+    form: llm
+
+  - name: user_id
+    type: string
+    required: true
+    label:
+      en_US: User ID
+      zh_Hans: 用户ID
+    human_description:
+      en_US: The ID of the user performing the retrieval.
+      zh_Hans: 执行检索操作的用户ID。
+    llm_description: The unique identifier of the user performing the retrieval, e.g., 5014xxxxx.
+    form: llm
+extra:
+  python:
+    source: tools/get_form_fields.py

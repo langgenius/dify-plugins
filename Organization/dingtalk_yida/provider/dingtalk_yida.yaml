@@ -1,0 +1,57 @@
+identity:
+  author: YIDA
+  name: dingtalk_yida
+  label:
+    en_US: DingTalk Yida
+    zh_Hans: 钉钉宜搭
+  description:
+    en_US: Tool for creating and submitting DingTalk form instances.
+    zh_Hans: 用于创建和提交钉钉表单实例的工具。
+  icon: icon.svg
+  tags:
+    - social
+    - productivity
+
+credentials_for_provider:
+  app_key:
+    type: text-input
+    required: true
+    label:
+      en_US: App Key
+      zh_Hans: AppKey
+    placeholder:
+      en_US: Please input your App Key
+      zh_Hans: 请输入您的AppKey
+    help:
+      en_US: Obtain your App Key from DingTalk Developer Console
+      zh_Hans: 从钉钉开发者控制台获取您的AppKey
+    url: https://open.dingtalk.com/document/orgapp/obtain-the-access_token-of-an-internal-app
+
+  app_secret:
+    type: secret-input
+    required: true
+    label:
+      en_US: App Secret
+      zh_Hans: AppSecret
+    placeholder:
+      en_US: Please input your App Secret
+      zh_Hans: 请输入您的AppSecret
+    help:
+      en_US: Obtain your App Secret from DingTalk Developer Console
+      zh_Hans: 从钉钉开发者控制台获取您的应用密钥
+    url: https://open.dingtalk.com/document/orgapp/obtain-the-access_token-of-an-internal-app
+tools:
+  - tools/batch_delete_form_instances.yaml
+  - tools/batch_get_form_instances.yaml
+  - tools/batch_save_form_instances.yaml
+  - tools/batch_update_form_instances.yaml
+  - tools/delete_form_instance.yaml
+  - tools/get_form_fields.yaml
+  - tools/get_form_instance.yaml
+  - tools/get_forms.yaml
+  - tools/save_form_instance.yaml
+  - tools/search_form_instances.yaml
+  - tools/update_form_instance.yaml
+extra:
+  python:
+    source: provider/dingtalk_yida.py

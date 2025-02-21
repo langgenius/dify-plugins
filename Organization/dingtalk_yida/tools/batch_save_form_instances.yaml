@@ -1,0 +1,112 @@
+identity:
+  name: batch_save_form_instances
+  author: dingtalk_yida
+  label:
+    en_US: Batch Save Form Instances
+    zh_Hans: 批量新增表单实例数据
+
+description:
+  human:
+    en_US: Batch save multiple form instances in the Yida form.
+    zh_Hans: 在宜搭表单中批量新增多个表单实例
+  llm: A tool for batch saving multiple form instances in the Yida form.
+
+parameters:
+  - name: form_uuid
+    type: string
+    required: true
+    label:
+      en_US: Form UUID
+      zh_Hans: 表单UUID
+    human_description:
+      en_US: The UUID of the form to save instances to.
+      zh_Hans: 要保存实例的表单的UUID。
+    llm_description: The unique identifier of the form, e.g., FORM-F5177FA821294F44988682E0D076XXXXXXXX.
+    form: llm
+
+  - name: app_type
+    type: string
+    required: true
+    label:
+      en_US: App Type
+      zh_Hans: 应用编码
+    human_description:
+      en_US: Application code.
+      zh_Hans: 应用编码。
+    llm_description: Application code, e.g., APP_VZ4Q0ITP6MV1XXXXXXXX.
+    form: llm
+
+  - name: system_token
+    type: string
+    required: true
+    label:
+      en_US: System Token
+      zh_Hans: 应用密钥
+    human_description:
+      en_US: Application key required for authentication.
+      zh_Hans: 用于身份验证的应用密钥。
+    llm_description: The system token required to authenticate the request, e.g., VTC664B19FTS3BQQ9VQHHDUUYUVXXXXXXXXXXXX.
+    form: llm
+
+  - name: user_id
+    type: string
+    required: true
+    label:
+      en_US: User ID
+      zh_Hans: 用户ID
+    human_description:
+      en_US: The ID of the user performing the save operation.
+      zh_Hans: 执行保存操作的用户ID。
+    llm_description: The unique identifier of the user performing the save operation, e.g., 021664184515XXXXXXXX.
+    form: llm
+
+  - name: form_data_json_list
+    type: string
+    required: true
+    label:
+      en_US: Form Data JSON List
+      zh_Hans: 表单数据JSON列表
+    human_description:
+      en_US: A JSON string representing a list of form data objects to save.
+      zh_Hans: 表单数据对象列表的JSON字符串。
+    llm_description: A JSON-formatted string containing a list of form data objects to save, e.g., '["{\\"textField\\":\\"Sample Text1\\"}", "{\\"textField\\":\\"Sample Text2\\"}"]'.
+    form: llm
+
+  - name: no_execute_expression
+    type: boolean
+    required: false
+    label:
+      en_US: No Execute Expression
+      zh_Hans: 是否不触发表单绑定的校验规则、业务规则和三方回调
+    human_description:
+      en_US: Whether to skip executing form-bound validation rules, related business rules, and third-party service callbacks. (Optional)
+      zh_Hans: 是否跳过执行表单绑定的校验规则、关联业务规则和第三方服务回调。（可选）
+    llm_description: Whether to skip executing form-bound validation rules, related business rules, and third-party service callbacks, e.g., true. (Optional)
+    form: llm
+
+  - name: asynchronous_execution
+    type: boolean
+    required: false
+    label:
+      en_US: Asynchronous Execution
+      zh_Hans: 是否需要宜搭服务端异步执行该任务
+    human_description:
+      en_US: Whether to execute the save operation asynchronously on the Yida server. (Optional)
+      zh_Hans: 是否在宜搭服务器端异步执行保存操作。（可选）
+    llm_description: Whether to execute the save operation asynchronously on the Yida server, e.g., true. (Optional)
+    form: llm
+
+  - name: keep_running_after_exception
+    type: boolean
+    required: false
+    label:
+      en_US: Keep Running After Exception
+      zh_Hans: 发生异常时是否跳过并继续保存下一个表单实例数据
+    human_description:
+      en_US: Whether to skip the erroneous form instances and continue saving the next ones if an exception occurs during batch save. (Optional)
+      zh_Hans: 批量保存过程中如果发生异常，是否跳过出错的表单实例并继续保存下一个表单实例。（可选）
+    llm_description: Whether to skip the erroneous form instances and continue saving the next ones if an exception occurs during batch save, e.g., true. (Optional)
+    form: llm
+extra:
+  python:
+    source: tools/batch_save_form_instances.py
