@@ -13,10 +13,15 @@ LarkNotify is a plugin for sending notification messages to Lark (Feishu) group 
 - Support for plain text messages
 - Support for card messages, including:
   - 4 message types: info, warning, success, error
-  - 3 layout options: horizontal, vertical, bisected
+  - Markdown formatting support:
+    - Bold text: **text**
+    - Italic text: *text*
+    - Links: [text](url)
+    - Bullet points with -
+    - @everyone with <at id=all></at>
   - Optional timestamp display
 - Support for automatic long text segmentation
-- Multi-language interface (English, Chinese, Portuguese)
+- Multi-language interface (English, Chinese, Japanese, Portuguese)
 
 ### Prerequisites
 
@@ -38,30 +43,19 @@ In the plugin configuration, you need to set the following credentials:
 1. Send a text message:
 ```json
 {
-  "message": "System backup completed",
-  "msg_type": "text"
+  "webhook": "xxx",
+  "message": "System backup completed"
 }
 ```
 
-2. Send a success status card:
+2. Send a card message with markdown:
 ```json
 {
-  "message": "Database migration completed",
-  "msg_type": "card",
-  "title": "Migration Notice",
-  "card_type": "success"
-}
-```
-
-3. Send a warning message (without timestamp):
-```json
-{
-  "message": "High server load\n- CPU: 92%\n- Memory: 87%\n- Disk: 95%",
-  "msg_type": "card",
-  "title": "System Warning",
-  "card_type": "warning",
-  "card_layout": "vertical",
-  "show_meta": false
+  "webhook": "xxx",
+  "card_content": "**Deployment Status**: *Success*\n- Service: API Gateway\n- Version: 1.2.3\n- Time: 2024-02-25\n\nFor details, see [Deployment Log](https://example.com/logs)",
+  "title": "Deployment Notice",
+  "card_type": "success",
+  "show_time": true
 }
 ```
 
@@ -75,3 +69,10 @@ This plugin only collects the following necessary information for message delive
 This information is used solely for sending messages to the specified Lark group chat and will not be used for other purposes or shared with third parties.
 
 Message sending uses Lark's official API. For related privacy policies, please refer to: [Lark Open Platform Service Agreement](https://www.larksuite.com/en_us/agreement)
+
+### Support
+
+If you encounter any issues or have questions, please:
+1. Check the documentation in the GUIDE.md file
+2. Raise an issue on the GitHub repository
+3. Contact the plugin author
