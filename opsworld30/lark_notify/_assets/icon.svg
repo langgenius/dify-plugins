@@ -1,15 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="50" cy="50" r="45" fill="#3370ff"/>
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4c8dff"/>
+      <stop offset="100%" style="stop-color:#3370ff"/>
+    </linearGradient>
+  </defs>
+  <circle cx="50" cy="50" r="45" fill="url(#bgGradient)"/>
+  <rect x="32" y="28" width="36" height="44" rx="8" fill="white" filter="url(#shadow)"/>
+
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1"/>
+      <feOffset dx="0" dy="2"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
   
-  <!-- 简单的机器人头部和身体 -->
-  <rect x="35" y="30" width="30" height="40" rx="5" fill="white"/>
+
+  <g transform="translate(40, 42)">
+    <ellipse cx="0" cy="0" rx="4" ry="5" fill="#3370ff"/>
+    <circle cx="-1" cy="-1" r="1.5" fill="white" opacity="0.8"/>
+  </g>
+  <g transform="translate(60, 42)">
+    <ellipse cx="0" cy="0" rx="4" ry="5" fill="#3370ff"/>
+    <circle cx="-1" cy="-1" r="1.5" fill="white" opacity="0.8"/>
+  </g>
   
-  <!-- 简单的眼睛 -->
-  <circle cx="45" cy="45" r="3" fill="#3370ff"/>
-  <circle cx="55" cy="45" r="3" fill="#3370ff"/>
+
+  <path d="M44 58 Q50 62 56 58" stroke="#3370ff" stroke-width="2" fill="none"/>
   
-  <!-- 简单的翅膀 -->
-  <path d="M25 40 L35 50 L25 60" stroke="white" stroke-width="3" fill="none"/>
-  <path d="M75 40 L65 50 L75 60" stroke="white" stroke-width="3" fill="none"/>
+
+  <line x1="42" y1="28" x2="42" y2="22" stroke="#3370ff" stroke-width="2"/>
+  <line x1="58" y1="28" x2="58" y2="22" stroke="#3370ff" stroke-width="2"/>
+  <circle cx="42" cy="21" r="2" fill="#3370ff"/>
+  <circle cx="58" cy="21" r="2" fill="#3370ff"/>
+  
+
+  <path d="M25 40 Q30 50 25 60" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M75 40 Q70 50 75 60" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
 </svg>
