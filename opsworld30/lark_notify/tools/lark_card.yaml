@@ -6,44 +6,64 @@ identity:
     zh_Hans: 飞书卡片消息
     ja_JP: Lark カードメッセージ
     pt_BR: Mensagem de Cartão do Lark
+
 description:
   human:
-    en_US: Send interactive card messages to Lark group chats with customizable layouts and styles.
-    zh_Hans: 发送交互式卡片消息到飞书群聊，支持自定义布局和样式。
-    ja_JP: カスタマイズ可能なレイアウトとスタイルでLarkグループチャットにインタラクティブなカードメッセージを送信。
-    pt_BR: Envie mensagens de cartão interativas para chats em grupo do Lark com layouts e estilos personalizáveis.
-  llm: Send interactive card messages to Lark group chats with customizable layouts and styles.
+    en_US: Send interactive card messages to Lark group chats with customizable styles.
+    zh_Hans: 发送交互式卡片消息到飞书群聊，支持自定义样式。
+    ja_JP: カスタマイズ可能なスタイルで、Larkグループチャットにインタラクティブなカードメッセージを送信します。
+    pt_BR: Envie mensagens de cartão interativas para chats em grupo do Lark com estilos personalizáveis.
+  llm: A tool for sending interactive card messages to Lark group chats, featuring customizable styles.
+
 parameters:
-  - name: message
+  - name: webhook
     type: string
-    form: llm
     required: true
+    form: llm
     label:
-      en_US: Message Content
-      zh_Hans: 消息内容
-      ja_JP: メッセージ内容
-      pt_BR: Conteúdo da Mensagem
+      en_US: Webhook URL/Key
+      zh_Hans: Webhook地址/Key
+      ja_JP: Webhook URL/キー
+      pt_BR: URL/Chave do Webhook
     human_description:
-      en_US: "The message content for the card. Supports Feishu markdown format:\n- Bold: **text**\n- Italic: *text*\n- Link: [text](url)\n- At user: <at id=all></at>\n- Line break: two spaces or \\n"
-      zh_Hans: "卡片消息内容。支持飞书 markdown 格式：\n- 加粗：**文本**\n- 斜体：*文本*\n- 链接：[文本](url)\n- @所有人：<at id=all></at>\n- 换行：两个空格或 \\n"
-      ja_JP: "カードのメッセージ内容。Feishu markdown形式をサポート：\n- 太字：**テキスト**\n- 斜体：*テキスト*\n- リンク：[テキスト](url)\n- 全員をメンション：<at id=all></at>\n- 改行：二つのスペースまたは\\n"
-      pt_BR: "O conteúdo da mensagem para o cartão. Suporta formato markdown Feishu:\n- Negrito: **texto**\n- Itálico: *texto*\n- Link: [texto](url)\n- Mencionar todos: <at id=all></at>\n- Quebra de linha: dois espaços ou \\n"
-    llm_description: "Message content for the card. Supports Feishu markdown format:\n- Bold: **text**\n- Italic: *text*\n- Link: [text](url)\n- At everyone: <at id=all></at>\n- Line break: two spaces or \\n"
+      en_US: The webhook URL or key for the Lark bot. You can input either a complete webhook URL or just the webhook key.
+      zh_Hans: 飞书机器人的webhook地址或key。您可以输入完整webhook地址或仅webhook的key。
+      ja_JP: Larkボットのwebhook URLまたはキー。完全なwebhook URLまたはwebhookキーのみを入力できます。
+      pt_BR: URL ou chave do webhook para o bot do Lark. Você pode inserir a URL completa do webhook ou apenas a chave do webhook.
+    llm_description: The webhook URL or key for the Lark bot.
+
+  - name: card_content
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Card Content
+      zh_Hans: 卡片内容
+      ja_JP: カード内容
+      pt_BR: Conteúdo do Cartão
+    human_description:
+      en_US: "The text content to be displayed in the card message. Supports basic markdown: **bold**, *italic*, [link](url), bullet points with -, and @everyone with <at id=all></at>."
+      zh_Hans: "要在卡片消息中显示的文本内容。支持基本的 markdown 格式：**粗体**、*斜体*、[链接](url)、以 - 开头的列表，以及使用 <at id=all></at> 来@所有人。"
+      ja_JP: "カードメッセージに表示するテキスト内容。基本的なmarkdown形式をサポート：**太字**、*斜体*、[リンク](url)、- による箇条書き、<at id=all></at> による全員メンション。"
+      pt_BR: "O conteúdo de texto a ser exibido na mensagem do cartão. Suporta markdown básico: **negrito**, *itálico*, [link](url), marcadores com -, e mencionar todos com <at id=all></at>."
+    llm_description: The text content that will be displayed in the card message, supports basic markdown formatting including @everyone.
 
   - name: title
     type: string
-    form: form
     required: false
+    form: llm
+    default: ""
     label:
       en_US: Card Title
       zh_Hans: 卡片标题
       ja_JP: カードタイトル
       pt_BR: Título do Cartão
     human_description:
-      en_US: Title for card message (optional)
-      zh_Hans: 卡片消息的标题（可选）
-      ja_JP: カードのタイトル（オプション）
-      pt_BR: Título para mensagem de cartão (opcional)
+      en_US: Optional title for the card message.
+      zh_Hans: 卡片消息的可选标题。
+      ja_JP: カードメッセージのオプションタイトル。
+      pt_BR: Título opcional para a mensagem do cartão.
+    llm_description: Optional title to be displayed at the top of the card.
 
   - name: card_type
     type: select
@@ -86,56 +106,21 @@ parameters:
           ja_JP: エラー
           pt_BR: Erro
 
-  - name: card_layout
-    type: select
-    form: form
-    required: false
-    default: horizontal
-    label:
-      en_US: Card Layout
-      zh_Hans: 卡片布局
-      ja_JP: カードレイアウト
-      pt_BR: Layout do Cartão
-    human_description:
-      en_US: Card message layout (horizontal/vertical/bisected)
-      zh_Hans: 卡片消息布局（水平/垂直/二分）
-      ja_JP: カードメッセージレイアウト（水平/垂直/二分割）
-      pt_BR: Layout da mensagem de cartão (horizontal/vertical/dividido)
-    options:
-      - value: horizontal
-        label:
-          en_US: Horizontal
-          zh_Hans: 水平布局
-          ja_JP: 水平レイアウト
-          pt_BR: Horizontal
-      - value: vertical
-        label:
-          en_US: Vertical
-          zh_Hans: 垂直布局
-          ja_JP: 垂直レイアウト
-          pt_BR: Vertical
-      - value: bisected
-        label:
-          en_US: Bisected
-          zh_Hans: 二分布局
-          ja_JP: 二分割レイアウト
-          pt_BR: Dividido
-
-  - name: show_meta
+  - name: show_time
     type: boolean
     form: form
     required: false
     default: true
     label:
-      en_US: Show Meta Info
-      zh_Hans: 显示元信息
-      ja_JP: メタ情報を表示
-      pt_BR: Mostrar Meta Info
+      en_US: Show Time
+      zh_Hans: 显示时间
+      ja_JP: 時間を表示
+      pt_BR: Mostrar Tempo
     human_description:
-      en_US: Show meta information like timestamp (optional)
-      zh_Hans: 显示时间戳等元信息（可选）
-      ja_JP: タイムスタンプなどのメタ情報を表示（オプション）
-      pt_BR: Mostrar informações meta como timestamp (opcional)
+      en_US: Show message timestamp (optional)
+      zh_Hans: 显示消息时间戳（可选）
+      ja_JP: メッセージのタイムスタンプを表示（オプション）
+      pt_BR: Mostrar timestamp da mensagem (opcional)
 
 extra:
   python:

@@ -1,4 +1,4 @@
-## lark_notify
+# lark_notify
 
 **Author:** opsworld30
 **Version:** 0.0.1
@@ -6,57 +6,59 @@
 
 ### Description
 
-LarkNotify 是一个用于向飞书群聊发送通知消息的插件。它支持发送文本消息和卡片消息，让你能够以更灵活和美观的方式向团队传递信息。
+LarkNotify is a plugin for sending notification messages to Lark (Feishu) group chats. It supports sending text messages and card messages, allowing you to communicate with your team in a more flexible and visually appealing way.
 
 ### Features
 
-- 支持发送纯文本消息
-- 支持发送卡片消息，包括：
-  - 4种消息类型：信息、警告、成功、错误
-  - 3种布局方式：水平、垂直、二分
-  - 可选的时间戳显示
-- 支持长文本自动分段发送
-- 支持多语言界面（英文、中文、葡萄牙语）
+- Support for plain text messages
+- Support for card messages, including:
+  - 4 message types: info, warning, success, error
+  - 3 layout options: horizontal, vertical, bisected
+  - Optional timestamp display
+- Support for automatic long text segmentation
+- Multi-language interface (English, Chinese, Portuguese)
 
 ### Prerequisites
 
-- 飞书机器人 Webhook URL
-  1. 在飞书群聊中添加自定义机器人
-  2. 获取机器人的 Webhook URL
-  3. 从 URL 中提取 webhook_key（/hook/ 后的部分）
+- Lark Bot Webhook URL
+  1. Add a custom bot to your Lark group chat
+  2. Get the bot's Webhook URL
+  3. Use either the complete webhook URL or just the webhook key (the part after /hook/)
 
 ### Configuration
 
-在插件配置中，你需要设置以下凭据：
+In the plugin configuration, you need to set the following credentials:
 
-- `webhook_key`: 飞书机器人的 Webhook URL 密钥
+- `webhook_key`: You can input either:
+  - The complete webhook URL: `https://open.feishu.cn/open-apis/bot/v2/hook/xxx`
+  - Just the webhook key: `xxx`
 
 ### Usage Examples
 
-1. 发送文本消息：
+1. Send a text message:
 ```json
 {
-  "message": "系统已完成数据备份",
+  "message": "System backup completed",
   "msg_type": "text"
 }
 ```
 
-2. 发送成功状态卡片：
+2. Send a success status card:
 ```json
 {
-  "message": "数据库迁移完成",
+  "message": "Database migration completed",
   "msg_type": "card",
-  "title": "迁移通知",
+  "title": "Migration Notice",
   "card_type": "success"
 }
 ```
 
-3. 发送警告消息（无时间戳）：
+3. Send a warning message (without timestamp):
 ```json
 {
-  "message": "服务器负载过高\n- CPU: 92%\n- 内存: 87%\n- 磁盘: 95%",
+  "message": "High server load\n- CPU: 92%\n- Memory: 87%\n- Disk: 95%",
   "msg_type": "card",
-  "title": "系统警告",
+  "title": "System Warning",
   "card_type": "warning",
   "card_layout": "vertical",
   "show_meta": false
@@ -65,14 +67,11 @@ LarkNotify 是一个用于向飞书群聊发送通知消息的插件。它支持
 
 ### Privacy Policy
 
-本插件仅收集以下必要信息用于消息发送：
+This plugin only collects the following necessary information for message delivery:
 
-1. 飞书机器人的 Webhook URL 密钥
-2. 用户提供的消息内容
+1. Lark bot webhook URL/key
+2. User-provided message content
 
-这些信息仅用于向指定的飞书群聊发送消息，不会用于其他用途或与第三方共享。
+This information is used solely for sending messages to the specified Lark group chat and will not be used for other purposes or shared with third parties.
 
-消息发送使用飞书官方的 API，相关隐私政策请参考：[飞书开放平台服务协议](https://www.feishu.cn/agreement/platform_service)
-
-
-
+Message sending uses Lark's official API. For related privacy policies, please refer to: [Lark Open Platform Service Agreement](https://www.larksuite.com/en_us/agreement)
