@@ -1,0 +1,36 @@
+identity:
+  author: scrapeless
+  name: deep_serpapi
+  label:
+    en_US: Deep SerpApi
+    zh_Hans: Deep SerpApi
+    pt_BR: Deep SerpApi
+  description:
+    en_US: Scrapeless is a powerful real-time search engine tool API that provides structured data from Google Search, with a low cost of $0.1 to $0.3 per 1,000 queries.
+    zh_Hans: Scrapeless 是一款强大的实时搜索引擎工具 API，提供来自 Google 搜索的结构化数据，查询成本低至每千次查询 0.1 到 0.3 美元。
+    pt_BR: Scrapeless é uma poderosa API de ferramenta de busca em tempo real que fornece dados estruturados da Pesquisa do Google, com um custo baixo de US$ 0,1 a US$ 0,3 por 1.000 consultas.
+  icon: icon.svg
+  tags:
+    - search
+tools:
+  - tools/deep_serpapi_search.yaml
+extra:
+  python:
+    source: provider/deep_serpapi.py
+credentials_for_provider:
+  scrapeless_api_key:
+    help:
+      en_US: Get your Scrapeless API key from Scrapeless
+      pt_BR: Get your Scrapeless API key from Scrapeless
+      zh_Hans: 从 Scrapeless 获取您的 Scrapeless API key
+    label:
+      en_US: Scrapeless API key
+      pt_BR: Scrapeless API key
+      zh_Hans: Scrapeless API key
+    placeholder:
+      en_US: Please input your Scrapeless API key
+      pt_BR: Please input your Scrapeless API key
+      zh_Hans: 请输入你的 Scrapeless API key
+    required: true
+    type: secret-input
+    url: https://app.scrapeless.com/dashboard/settings/api-key

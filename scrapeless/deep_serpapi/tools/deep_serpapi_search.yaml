@@ -1,0 +1,30 @@
+identity:
+  name: deep_serpapi
+  author: scrapeless
+  label:
+    en_US: Deep SerpApi
+    zh_Hans: Deep SerpApi
+    pt_BR: Deep SerpApi
+description:
+  human:
+    en_US: Scrapeless is a powerful real-time search engine tool API that provides structured data from Google Search, with a low cost of $0.1 to $0.3 per 1,000 queries.
+    zh_Hans: Scrapeless 是一款强大的实时搜索引擎工具 API，提供来自 Google 搜索的结构化数据，查询成本低至每千次查询 0.1 到 0.3 美元。
+    pt_BR: Scrapeless é uma poderosa API de ferramenta de busca em tempo real que fornece dados estruturados da Pesquisa do Google, com um custo baixo de US$ 0,1 a US$ 0,3 por 1.000 consultas.
+  llm: Scrapeless is a powerful real-time search engine tool API that provides structured data from Google Search, with a low cost of $0.1 to $0.3 per 1,000 queries.
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Query string
+      zh_Hans: 查询语句
+      pt_BR: Query string
+    human_description:
+      en_US: Scrapeless is a powerful real-time search engine tool API that provides structured data from Google Search, with a low cost of $0.1 to $0.3 per 1,000 queries.
+      zh_Hans: Scrapeless 是一款强大的实时搜索引擎工具 API，提供来自 Google 搜索的结构化数据，查询成本低至每千次查询 0.1 到 0.3 美元。
+      pt_BR: Scrapeless é uma poderosa API de ferramenta de busca em tempo real que fornece dados estruturados da Pesquisa do Google, com um custo baixo de US$ 0,1 a US$ 0,3 por 1.000 consultas.
+    llm_description: Scrapeless is a powerful real-time search engine tool API that provides structured data from Google Search, with a low cost of $0.1 to $0.3 per 1,000 queries.
+    form: llm
+extra:
+  python:
+    source: tools/deep_serpapi_search.py
