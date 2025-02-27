@@ -1,0 +1,34 @@
+identity:
+  name: kintone
+  author: r3yamauchi
+  label:
+    en_US: kintone
+    zh_Hans: kintone
+    ja_JP: kintone
+    pt_BR: kintone
+description:
+  human:
+    en_US: kintone Plugin
+    zh_Hans: kintone Plugin
+    ja_JP: kintoneプラグイン
+    pt_BR: kintone Plugin
+  llm: kintone Plugin
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Query string
+      zh_Hans: 查询语句
+      ja_JP: kintoneへ渡すquery文字列
+      pt_BR: Query string
+    human_description:
+      en_US: "Keyword or text to search in kintone"
+      zh_Hans: "Keyword or text to search in kintone"
+      ja_JP: "kintoneへ渡すquery文字列"
+      pt_BR: "Keyword or text to search in kintone"
+    llm_description: kintone Plugin
+    form: llm
+extra:
+  python:
+    source: tools/kintone_query.py
