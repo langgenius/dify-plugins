@@ -1,0 +1,60 @@
+identity:
+  author: r3yamauchi
+  name: kintone
+  label:
+    en_US: kintone
+    zh_Hans: kintone
+    pt_BR: kintone
+    ja_JP: kintone
+  description:
+    en_US: kintone Plugin
+    zh_Hans: kintone Plugin
+    pt_BR: kintone Plugin
+    ja_JP: kintone プラグイン
+  icon: icon.svg
+tools:
+  - tools/kintone_query.yaml
+extra:
+  python:
+    source: provider/kintone_provider.py
+
+# kintoneアプリの APIキーを入力してもらうフォーム
+credentials_for_provider:
+  kintone_domain:
+    type: text-input
+    required: true
+    label:
+      en_US: "kintone Domain"
+      ja_JP: "cybozu.com ドメイン"
+    placeholder:
+      en_US: "your-subdomain.cybozu.com"
+      ja_JP: "your-subdomain.cybozu.com"
+    help:
+      en_US: "Your kintone domain (e.g., your-subdomain.cybozu.com)"
+      ja_JP: "お使いのkintoneのURLのうち、https:// より後ろの部分（例: your-subdomain.cybozu.com）"
+
+  kintone_app_id:
+    type: text-input
+    required: true
+    label:
+      en_US: "kintone App ID"
+      ja_JP: "kintone アプリID"
+    placeholder:
+      en_US: "Enter your kintone app ID"
+      ja_JP: "kintone アプリIDを入力してください"
+    help:
+      en_US: "The ID of your kintone application"
+      ja_JP: "使用するkintoneアプリのID"
+
+  kintone_api_token:
+    type: secret-input
+    required: true
+    label:
+      en_US: "kintone API Token"
+      ja_JP: "対象の kintoneアプリの APIトークン"
+    placeholder:
+      en_US: "kintone API Token"
+      ja_JP: "kintone APIトークン"
+    help:
+      en_US: "API token generated from your kintone app"
+      ja_JP: "kintone アプリで発行したAPIトークン"
