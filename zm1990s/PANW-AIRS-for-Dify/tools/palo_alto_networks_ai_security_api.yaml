@@ -1,0 +1,132 @@
+identity:
+  name: palo_alto_networks_ai_security_api
+  author: zm1990s
+  label:
+    en_US: PANW AI Security
+    zh_Hans: PANW AI Security
+    pt_BR: PANW AI Security
+    ja_JP: PANW AI Security
+description:
+  human:
+    en_US: Check the User Input and LLM Output through Palo Alto Networks‘ AI Runtime Security API.
+    zh_Hans: 通过 Palo Alto Networks 的 AI Runtime Security API 对用户输入和大模型输出进行检查
+    pt_BR: Inspecione a entrada do usuário e a saída do modelo grande com a API de segurança de tempo de execução de IA da Palo Alto Networks.
+    ja_JP: Palo Alto Networks の AI ランタイム セキュリティ API を使用して、ユーザー入力と大規模モデル出力を検査します
+  llm: PANW AI Runtime Security API
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Query string
+      zh_Hans: 查询内容
+      pt_BR: Cadeia de consulta
+      ja_JP: クエリコンテンツ
+    human_description:
+      en_US: Query string
+      zh_Hans: 查询内容
+      pt_BR: Cadeia de consulta
+      ja_JP: クエリコンテンツ
+    llm_description: Check Against PANW AI Runtime Security API
+    form: llm
+  - name: inputoroutput
+    type: select
+    required: true
+    options: 
+      - name: input
+        description: Input Check
+        type: string
+        value: input
+        label:
+          en_US: Input Check
+          zh_Hans: 输入检查
+          pt_BR: Verifique a entrada
+          ja_JP: 入力チェック
+      - name: output
+        description: Output Check
+        type: string
+        value: output
+        label:
+          en_US: Output Check
+          zh_Hans: 输出检查
+          pt_BR: Verifique a saída
+          ja_JP: 出力チェック
+    default: input
+    label:
+      en_US: Input Check or Output Check?
+      zh_Hans: 进行输入检查还是输出检查？
+      pt_BR: Verificação de entrada ou verificação de saída?
+      ja_JP: 入力チェックですか、それとも出力チェックですか?
+    human_description:
+      en_US: Input Check or Output Check?
+      zh_Hans:  进行输入检查还是输出检查？
+      pt_BR: Verificação de entrada ou verificação de saída?
+      ja_JP: 入力チェックですか、それとも出力チェックですか?
+    llm_description: Whether the query is user input, or LLM output
+    form: form
+  - name: appname
+    type: string
+    required: false
+    default: dify_app
+    label:
+      en_US: App Name
+      zh_Hans: 应用名称
+      pt_BR: Nome do aplicativo
+      ja_JP: アプリケーション名
+    human_description:
+      en_US: Specify the Dify App Name
+      zh_Hans: Dify 应用名称
+      pt_BR:  Nome da aplicação Dify
+      ja_JP: Dify アプリ名
+    llm_description: Dify App Name
+    form: form
+  - name: appuser
+    type: string
+    required: false
+    default: dify_user
+    label:
+      en_US: User Name
+      zh_Hans: 用户名称
+      pt_BR: Nome de usuário
+      ja_JP: ユーザー名
+    human_description:
+      en_US: Specify the Dify User Name
+      zh_Hans: Dify 用户名称
+      pt_BR:  Nome de utilizador Dify
+      ja_JP: Dify ユーザー名
+    llm_description: Dify User Name
+    form: form
+  - name: modelname
+    type: string
+    required: false
+    default: dify_default_llm
+    label:
+      en_US: Model Name
+      zh_Hans: 模型名称
+      pt_BR: Nome do modelo
+      ja_JP: モデル名
+    human_description:
+      en_US: Model Name
+      zh_Hans: 模型名称
+      pt_BR:  Nome do modelo
+      ja_JP: モデル名
+    llm_description: Model Name
+    form: form
+  - name: profileoverride
+    type: string
+    required: false
+    label:
+      en_US: PANW AIRS Profile Name Override
+      zh_Hans: 指定新的 PANW AIRS Profile Name
+      pt_BR: Especifique um novo nome de perfil PANW AIRS
+      ja_JP: 新しいPANW AIRSプロファイル名を指定します
+    human_description:
+      en_US: Specify a new PANW AIRS Profile Name instead of the global one
+      zh_Hans: 指定新的 PANW AIRS 配置文件名称
+      pt_BR:  Especifique um novo nome de perfil PANW AIRS
+      ja_JP: グローバル名の代わりに新しいPANW AIRSプロファイル名を指定します
+    llm_description: PANW AIRS Profile Name Override
+    form: form
+extra:
+  python:
+    source: tools/palo_alto_networks_ai_security_api.py
