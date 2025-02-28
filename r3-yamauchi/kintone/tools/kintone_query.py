@@ -1,3 +1,4 @@
+import re
 import json
 from collections.abc import Generator
 from typing import Any, Dict, List, Optional, Union
@@ -30,6 +31,59 @@ class KintoneTool(Tool):
         # クエリ文字列の取得
         query_str = tool_parameters.get("query", "").strip()
 
+        # 正規表現を使用してクエリ文字列内のlimitとoffsetを検出して抽出
+        # limitの検出と抽出
+        limit_match = re.search(r'\blimit\s+(\d+)', query_str.lower())
+        has_limit = bool(limit_match)
+        user_limit = int(limit_match.group(1)) if has_limit else None
+        
+        # offsetの検出と抽出
+        offset_match = re.search(r'\boffset\s+(\d+)', query_str.lower())
+        has_offset = bool(offset_match)
+        user_offset = int(offset_match.group(1)) if has_offset else None
+        
+        # ユーザー指定のlimitがある場合はそれを使用、なければデフォルト値
+        limit = user_limit if user_limit is not None else 500
+        
+        # ユーザー指定のoffsetがある場合はそれを使用、なければデフォルト値
+        initial_offset = user_offset if user_offset is not None else 0
+        offset = initial_offset
+
+        # ユーザーがlimitやoffsetを指定している場合のログメッセージ
+        if has_limit or has_offset:
+            pagination_info = []
+            if has_limit:
+                pagination_info.append(f"limit={user_limit}")
+            if has_offset:
+                pagination_info.append(f"offset={user_offset}")
+            
+            # printでコンソールに出力するだけ
+            print(f"クエリ内で指定されたページネーション設定を検出しました: {', '.join(pagination_info)}")
+
+        # ユーザーがlimitやoffsetを指定している場合、元のクエリからそれらを削除
+        clean_query = query_str
+        if has_limit:
+            clean_query = re.sub(r'\blimit\s+\d+', '', clean_query, flags=re.IGNORECASE)
+        if has_offset:
+            clean_query = re.sub(r'\boffset\s+\d+', '', clean_query, flags=re.IGNORECASE)
+        # 余分な空白を整理
+        clean_query = re.sub(r'\s+', ' ', clean_query).strip()
+
+        # ページネーション処理の設定
+        # ユーザーがlimitを指定した場合：
+        #   - ユーザーが指定した件数だけを取得する（ページネーションを行わない）
+        #   - ユーザーの意図を尊重し、指定された件数以上は取得しない
+        # ユーザーがlimitを指定していない場合：
+        #   - 全件取得するためにページネーションを行う
+        #   - デフォルトのlimit値（500）を使用して複数回APIを呼び出す
+        should_paginate = not has_limit
+        
+        # デバッグ情報
+        print(f"ページネーション処理: {'無効（ユーザー指定のlimit値を使用）' if not should_paginate else '有効（全件取得）'}")
+
+        # ページネーション処理用の変数
+        all_records = []
+
         # フィールドリストの処理
         fields_list = None
         fields_param = tool_parameters.get("fields")
@@ -47,16 +101,11 @@ class KintoneTool(Tool):
         # kintone のレコード取得 API のエンドポイント
         url = f"https://{kintone_domain}/k/v1/records.json"
 
-        # ページネーション用のパラメータ設定
-        limit = 500  # 1回のリクエストで取得できる最大件数を500件に設定
-        offset = 0   # 取得開始位置
-        all_records = []
-
         try:
             # ページネーションを使用して全レコードを取得
             while True:
                 # クエリ文字列にlimitとoffsetを追加
-                query = query_str
+                query = clean_query
                 if query:
                     query += f" limit {limit} offset {offset}"
                 else:
@@ -121,11 +170,20 @@ class KintoneTool(Tool):
                 # 取得したレコードを結果リストに追加
                 all_records.extend(records)
 
-                # 取得件数が limit 未満なら、これ以上レコードは存在しないと判断
+                # ページネーション処理の判断
+                # 1. ユーザーがlimitを指定した場合（should_paginate = False）：
+                #    - 1回だけAPIを呼び出し、指定された件数だけを取得
+                # 2. ユーザーがlimitを指定していない場合（should_paginate = True）：
+                #    - 全件取得するまで繰り返しAPIを呼び出す
+                if not should_paginate:
+                    # ユーザーがlimitを指定した場合は1回だけ取得
+                    break
+                        
+                # 取得したレコード数が指定したlimitより少ない場合、全てのレコードを取得完了
                 if len(records) < limit:
                     break
-
-                # 次のページへ
+                        
+                # 次のページのoffsetを設定
                 offset += limit
 
             # 検索結果の有無を確認
