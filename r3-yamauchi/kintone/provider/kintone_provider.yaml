@@ -1,0 +1,19 @@
+identity:
+  author: r3yamauchi
+  name: kintone
+  label:
+    en_US: kintone
+    zh_Hans: kintone
+    pt_BR: kintone
+    ja_JP: kintone
+  description:
+    en_US: kintone Plugin
+    zh_Hans: kintone Plugin
+    pt_BR: kintone Plugin
+    ja_JP: kintone プラグイン
+  icon: icon.svg
+tools:
+  - tools/kintone_query.yaml
+extra:
+  python:
+    source: provider/kintone_provider.py
