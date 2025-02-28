@@ -1,8 +1,8 @@
 ## dify-kintone-plugin
 
 **Author:** r3yamauchi
-**Version:** 0.0.1
-**Type:** extension
+**Version:** 0.0.2
+**Type:** tool
 
 ### Description
 

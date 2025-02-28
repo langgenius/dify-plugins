@@ -14,9 +14,45 @@ description:
     pt_BR: kintone Plugin
   llm: kintone Plugin
 parameters:
-  - name: query
+  - name: kintone_domain
     type: string
     required: true
+    label:
+      en_US: "kintone Domain"
+      ja_JP: "cybozu.com ドメイン"
+    human_description:
+      en_US: "Your kintone domain (e.g., your-subdomain.cybozu.com)"
+      ja_JP: "お使いのkintoneのURLのうち、https:// より後ろの部分（例: your-subdomain.cybozu.com）"
+    llm_description: kintone Plugin
+    form: llm
+
+  - name: kintone_app_id
+    type: number
+    required: true
+    label:
+      en_US: "kintone App ID"
+      ja_JP: "kintone アプリID"
+    human_description:
+      en_US: "The ID of your kintone application"
+      ja_JP: "使用するkintoneアプリのID"
+    llm_description: kintone Plugin
+    form: llm
+
+  - name: kintone_api_token
+    type: secret-input
+    required: true
+    label:
+      en_US: "kintone API Token"
+      ja_JP: "対象の kintoneアプリの APIトークン"
+    human_description:
+      en_US: "API token generated from your kintone app"
+      ja_JP: "kintone アプリで発行したAPIトークン"
+    llm_description: kintone Plugin
+    form: llm
+
+  - name: query
+    type: string
+    required: false
     label:
       en_US: Query string
       zh_Hans: 查询语句
@@ -28,6 +64,18 @@ parameters:
       ja_JP: "kintoneへ渡すquery文字列"
       pt_BR: "Keyword or text to search in kintone"
     llm_description: kintone Plugin
+    form: llm
+
+  - name: fields
+    type: string
+    required: false
+    label:
+      en_US: "Fields to retrieve"
+      ja_JP: "取得するフィールド"
+    human_description:
+      en_US: "Comma-separated list of field names to retrieve from kintone (e.g., field1,field2,field3)"
+      ja_JP: "kintoneから取得するフィールド名をカンマ区切りで指定（例: フィールド1,フィールド2,フィールド3）"
+    llm_description: "Comma-separated list of field names to retrieve from kintone records"
     form: llm
 extra:
   python:
