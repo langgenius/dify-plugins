@@ -1,6 +1,6 @@
 version: 0.0.1
 type: plugin
-author: himicos
+author: himicoswilson
 name: no_markdown
 label:
   en_US: No Markdown

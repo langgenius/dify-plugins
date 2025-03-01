@@ -31,12 +31,11 @@ class NoMarkdownTool(Tool):
                 for link in soup.find_all('a'):
                     link.replace_with(link.get_text())
             
-            # Get text content, removing all HTML tags
-            text = soup.get_text()
+            # Get text content, removing only HTML tags while preserving whitespace
+            text = soup.get_text(separator='\n')
             
-            # Clean up extra whitespace
-            text = re.sub(r'\n\s*\n\s*\n', '\n\n', text)
-            text = text.strip()
+            # Remove language identifier at the start of code blocks if present
+            text = re.sub(r'^[a-zA-Z]+\n', '', text)
             
             yield self.create_text_message(text)
             
