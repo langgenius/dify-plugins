@@ -1,0 +1,7 @@
+dify_plugin~=0.0.1b67
+requests>=2.28.0
+beautifulsoup4>=4.11.0
+html2text>=2020.1.16
+crawl4ai>=0.1.0
+python-dotenv>=0.19.0
+PySocks>=1.7.1
