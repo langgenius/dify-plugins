@@ -91,7 +91,3 @@ To publish your plugin on the Dify Marketplace, follow these steps:
 ### Security disclosure
 
 To protect your privacy, please avoid posting security issues on GitHub. Instead, send your questions to [security@dify.ai](mailto:security@dify.ai) and we will provide you with a more detailed answer.
-
-### License
-
-This repository is available under the [Dify Open Source License](https://github.com/langgenius/dify/blob/main/LICENSE), which is essentially Apache 2.0 with a few additional restrictions.
