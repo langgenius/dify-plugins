@@ -1,5 +1,0 @@
-path: "/wechat/input"
-method: "GET"
-extra:
-  python:
-    source: "endpoints/wechat_get.py"

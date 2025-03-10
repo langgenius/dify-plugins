@@ -1,5 +1,0 @@
-path: "/wechat/input"
-method: "POST"
-extra:
-  python:
-    source: "endpoints/wechat_post.py"
