@@ -1,57 +1,42 @@
 ## linebot
 
-**Author:** kevintsai
+**Author:** [@kevintsai1202](https://github.com/kevintsai1202)
 **Version:** 0.0.1
 **Type:** extension
 
 ### Description
-Follow these steps to integrate the Slack plugin:
+Follow these steps to integrate the Line Bot plugin:
 
-1. **Create a Slack App**
+1. **Create Provider and Messaging API channel**
+  Line developers URL: https://developers.line.biz
+  <img src="./_assets/2025-03-10 20 34 06.png" width="600" />
 
-   - Either create an app from a manifest or from scratch
-   - Name your app and select your target workspace
-     <img src="./_assets/step1.png" width="600" />
-     <img src="./_assets/step2.png" width="600" />
+2. **Copy the Channel secret and Channel access token of the Messaging API**
+  - Go to Basic settings.
+  - Copy the Channel secret (if it hasn’t been created yet, click "issue" to generate it).
+  <img src="./_assets/2025-03-10 21 07 14.png" width="600" />
+  
+  - Go to Messaging API.
+  - Enable Use webhook
+  - Copy the Channel access token (if it hasn’t been created yet, click "issue" to generate it).
+  <img src="./_assets/2025-03-10 21 06 36.png" width="600" />
 
-2. **Configure App Settings**
+3. **Set Up Dify Line Bot Endpoint**
+   - Set Endpoint name
+   - Paste "Channel secret" and "Channel access token"
+   - Select a Chat Workflow
+   <img src="./_assets/2025-03-10 21 08 10.png" width="600" />
 
-   - Enable Incoming Webhooks
-   - Install the app to your workspace
-   - Choose a channel for message delivery
-   - Locate your "Bot User OAuth Token" in settings
-     <img src="./_assets/step3.png" width="600" />
-     <img src="./_assets/step4.png" width="600" />
-     <img src="./_assets/step5.png" width="600" />
+4. **Save and copy Line Bot webhook url**
+  <img src="./_assets/2025-03-10 21 02 33.png" width="600" />
 
-3. **Set Up Dify Endpoint**
+5. ** Set webhook url and verify **
+  - Go back to the Messaging API page on Line Developers.
+  - Paste the URL from the previous step into the Webhook URL.
+  - Verify Line Bot
+  <img src="./_assets/2025-03-10 21 03 50.png" width="600" />
+  <img src="./_assets/2025-03-10 21 08 36.png" width="600" />
 
-   - Create a new endpoint with a custom name
-   - Input your Bot User OAuth Token
-   - Set "Allow Retry" to false (recommended to prevent duplicate messages)
-   - Link to your Dify chatflow/chatbot/agent
-   - Save and copy the generated endpoint URL
-
-    <div style="display: flex; gap: 10px;">
-      <img src="./_assets/step6.png" width="400" />
-      <img src="./_assets/step7.png" width="400" />
-    </div>
-
-4. **Complete Slack App Configuration**
-
-   - Enable Event Subscriptions
-   - Paste the Dify endpoint URL as the Request URL
-   - Add required OAuth scopes for Event Subscriptions
-   - Configure App's OAuth & Permissions with necessary scopes
-     <img src="./_assets/step8.png" width="600" />
-     <img src="./_assets/step9.png" width="600" />
-
-     <img src="./_assets/step10.png" width="400" />
-
-5. **Final Steps**
-   - Reinstall the app to your workspace if you made changes
-   - Add the bot to your chosen channel
-   - Start interacting by @mentioning the bot in messages
-     <img src="./_assets/step11.png" width="600" />
-     <img src="./_assets/step12.png" width="600" />
+6. ** Use Line to add the Bot Basic ID, and you can chat with the Dify flow **
+  <img src="./_assets/S__320659478.jpg" width="600" />
 
