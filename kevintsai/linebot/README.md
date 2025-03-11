@@ -30,13 +30,13 @@ Follow these steps to integrate the Line Bot plugin:
 4. **Save and copy Line Bot webhook url**
   <img src="./_assets/2025-03-10 21 02 33.png" width="600" />
 
-5. ** Set webhook url and verify **
+5. **Set webhook url and verify**
   - Go back to the Messaging API page on Line Developers.
   - Paste the URL from the previous step into the Webhook URL.
   - Verify Line Bot
   <img src="./_assets/2025-03-10 21 03 50.png" width="600" />
   <img src="./_assets/2025-03-10 21 08 36.png" width="600" />
 
-6. ** Use Line to add the Bot Basic ID, and you can chat with the Dify flow **
+6. **Use Line to add the Bot Basic ID, and you can chat with the Dify flow**
   <img src="./_assets/S__320659478.jpg" width="600" />
 
