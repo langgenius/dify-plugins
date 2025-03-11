@@ -1,0 +1,38 @@
+settings:
+  - name: channel_secret
+    type: secret-input
+    required: true
+    label:
+      en_US: Channel Secret
+      zh_Hans: 频道密钥
+      pt_BR: Segredo do Canal
+    placeholder:
+      en_US: Please input your Channel Secret
+      zh_Hans: 请输入你的频道密钥
+      pt_BR: Por favor, insira seu Segredo do Canal
+  - name: channel_access_token
+    type: secret-input
+    required: true
+    label:
+      en_US: Channel Access Token
+      zh_Hans: 频道访问令牌
+      pt_BR: Token de Acesso do Canal
+    placeholder:
+      en_US: Please input your Channel Access Token
+      zh_Hans: 请输入你的频道访问令牌
+      pt_BR: Por favor, insira seu Token de Acesso do Canal
+  - name: app
+    type: app-selector
+    required: true
+    label:
+      en_US: App
+      zh_Hans: 应用
+      pt_BR: App
+      ja_JP: アプリ
+    placeholder:
+      en_US: the app you want to use to answer Line messages
+      zh_Hans: 你想要用来回答 Line 消息的应用
+      pt_BR: o app que você deseja usar para responder mensagens do Line
+      ja_JP: あなたが Line メッセージに回答するために使用するアプリ
+endpoints:
+  - endpoints/linebot.yaml
