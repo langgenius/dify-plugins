@@ -1,0 +1,18 @@
+identity:
+  author: mvptianyu
+  name: imgtool
+  label:
+    en_US: imgtool
+    zh_Hans: imgtool
+    pt_BR: imgtool
+  description:
+    en_US: a image tool to convert image to byte or base64 string
+    zh_Hans: a image tool to convert image to byte or base64 string
+    pt_BR: a image tool to convert image to byte or base64 string
+  icon: icon.svg
+tools:
+  - tools/img_file_content.yaml
+  - tools/img_url_content.yaml
+extra:
+  python:
+    source: provider/imgtool.py

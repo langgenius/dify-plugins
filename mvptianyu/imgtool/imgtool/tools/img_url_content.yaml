@@ -1,0 +1,52 @@
+identity:
+  name: ImgUrlContent
+  author: mvptianyu
+  label:
+    en_US: ImgUrlContent
+    zh_Hans: ImgUrlContent
+    pt_BR: ImgUrlContent
+description:
+  human:
+    en_US: convert image url to bytes or base64 string
+    zh_Hans: 图片URL转换为字节流或base64字符串
+    pt_BR: convert image url to bytes or base64 string
+  llm: convert image url to bytes or base64 string
+parameters:
+  - name: url
+    type: string
+    required: true
+    label:
+      en_US: Image Url 
+      zh_Hans: 图片URL地址
+      pt_BR: Image Url
+    human_description:
+      en_US: Image Url
+      zh_Hans: 图片URL地址
+      pt_BR: Image Url
+    llm_description: Image Url
+    form: llm
+  - name: base64
+    options:
+    - label:
+        en_US: "false"
+        zh_Hans: 否
+      value: 0
+    - label:
+        en_US: "true"
+        zh_Hans: 是
+      value: 1
+    required: true
+    type: select
+    label:
+      en_US: return base64
+      zh_Hans: 返回base64
+      pt_BR: return base64
+    human_description:
+      en_US: return base64 string or not(0 false, 1 true)
+      zh_Hans: 是否返回base64字符串(0 否, 1 是)
+      pt_BR: return base64 string or not(0 false, 1 true)
+    llm_description: return base64 string or not(0 false, 1 true) 
+    form: llm
+extra:
+  python:
+    source: tools/img_url_content.py

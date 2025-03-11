@@ -1,0 +1,53 @@
+identity:
+  name: ImgFileContent
+  author: mvptianyu
+  label:
+    en_US: ImgFileContent
+    zh_Hans: ImgFileContent
+    pt_BR: ImgFileContent
+description:
+  human:
+    en_US: convert image file to bytes or base64 string
+    zh_Hans: 图片文件转换为字节流或base64字符串
+    pt_BR: convert image file to bytes or base64 string
+  llm: convert image file to bytes or base64 string
+parameters:
+  - name: file
+    type: file
+    required: true
+    label:
+      en_US: Image File
+      zh_Hans: 图片文件
+      pt_BR: Image File
+    human_description:
+      en_US: Image File
+      zh_Hans: 图片文件
+      pt_BR: Image File
+    llm_description: Image File
+    form: llm
+  - name: base64
+    options:
+    - label:
+        en_US: "false"
+        zh_Hans: 否
+      value: 0
+    - label:
+        en_US: "true"
+        zh_Hans: 是
+      value: 1
+    required: true
+    type: select
+    label:
+      en_US: return base64
+      zh_Hans: 返回base64
+      pt_BR: return base64
+    human_description:
+      en_US: return base64 string or not
+      zh_Hans: 是否返回base64字符串
+      pt_BR: return base64 string or not
+    llm_description: return base64 string or not
+    form: llm
+
+extra:
+  python:
+    source: tools/img_file_content.py
