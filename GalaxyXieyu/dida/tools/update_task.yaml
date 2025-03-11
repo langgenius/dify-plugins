@@ -1,0 +1,182 @@
+identity:
+  name: update_task
+  author: galaxyxieyu
+  label:
+    en_US: Update Task
+    zh_Hans: 更新任务
+
+description:
+  human:
+    en_US: Update an existing task in Dida Todo List by ID or title
+    zh_Hans: 通过ID或标题更新滴答清单中的现有任务
+  llm: |
+    A tool to update an existing task in Dida Todo List.
+    Can locate task by exact ID or fuzzy title match.
+    Returns error if multiple tasks match the title.
+
+parameters:
+  - name: task_id_or_title
+    type: string
+    required: true
+    label:
+      en_US: Task ID or Title
+      zh_Hans: 任务ID或标题
+    human_description:
+      en_US: The ID or title of the task to update (supports fuzzy title match)
+      zh_Hans: 要更新的任务ID或标题（支持标题模糊匹配）
+    llm_description: 任务ID或标题（支持标题模糊匹配）
+    form: llm
+
+  - name: title
+    type: string
+    required: false
+    label:
+      en_US: Task Title
+      zh_Hans: 任务标题
+    human_description:
+      en_US: The new title for the task
+      zh_Hans: 任务的新标题
+    llm_description: 任务的新标题
+    form: llm
+
+  - name: content
+    type: string
+    required: false
+    label:
+      en_US: Task Content
+      zh_Hans: 任务内容
+    human_description:
+      en_US: The new content for the task
+      zh_Hans: 任务的新内容
+    llm_description: 任务的新内容
+    form: llm
+
+  - name: priority
+    type: select
+    required: false
+    label:
+      en_US: Priority
+      zh_Hans: 优先级
+    human_description:
+      en_US: New priority level for the task
+      zh_Hans: 任务的新优先级
+    options:
+      - value: 0
+        label:
+          en_US: Lowest
+          zh_Hans: 最低
+      - value: 1
+        label:
+          en_US: Low
+          zh_Hans: 低
+      - value: 3
+        label:
+          en_US: Medium
+          zh_Hans: 中
+      - value: 5
+        label:
+          en_US: High
+          zh_Hans: 高
+    llm_description: 任务的新优先级
+    form: form
+
+  - name: project_name
+    type: string
+    required: false
+    label:
+      en_US: Project Name
+      zh_Hans: 项目名称
+    human_description:
+      en_US: New project name for the task
+      zh_Hans: 任务的新项目名称
+    llm_description: 任务的新项目名称
+    form: llm
+
+  - name: tag_names
+    type: string
+    required: false
+    label:
+      en_US: Tag Names
+      zh_Hans: 标签名称
+    human_description:
+      en_US: New list of tag names for the task (comma separated)
+      zh_Hans: 任务的新标签名称列表（用逗号分隔）
+    llm_description: 任务的新标签名称列表（用逗号分隔）
+    form: llm
+
+  - name: start_date
+    type: string
+    required: false
+    label:
+      en_US: Start Date
+      zh_Hans: 开始时间
+    human_description:
+      en_US: New start date for the task (format2025-02-27 02:32:57)
+      zh_Hans: 任务的新开始时间（格式2025-02-27 02:32:57）
+    llm_description: 任务的新开始时间（格式2025-02-27 02:32:57）
+    form: llm
+
+  - name: due_date
+    type: string
+    required: false
+    label:
+      en_US: Due Date
+      zh_Hans: 截止时间
+    human_description:
+      en_US: New due date for the task (format2025-02-27 02:32:57)
+      zh_Hans: 任务的新截止时间（格式2025-02-27 02:32:57）
+    llm_description: 任务的新截止时间（格式2025-02-27 02:32:57）
+    form: llm
+
+  - name: is_all_day
+    type: boolean
+    required: false
+    label:
+      en_US: All Day
+      zh_Hans: 全天任务
+    human_description:
+      en_US: Whether the task is an all-day task
+      zh_Hans: 任务是否为全天任务
+    llm_description: 任务是否为全天任务
+    form: llm
+
+  - name: reminder
+    type: string
+    required: false
+    label:
+      en_US: Reminder
+      zh_Hans: 提醒设置
+    human_description:
+      en_US: "Task reminder setting, supports: 1) Relative reminders (recommended): '0'(on time), '-5M'(5min before), '-15M', '-30M', '-1H', '-2H', '-1D', '-2D', '-1W'; 2) ReminderOption enum values; 3) Absolute time (not recommended): YYYY-MM-DD HH:mm:ss; 4) None to clear reminder"
+      zh_Hans: "任务提醒设置，支持：1) 相对提醒（推荐）：'0'(准时)、'-5M'(提前5分钟)、'-15M'、'-30M'、'-1H'、'-2H'、'-1D'、'-2D'、'-1W'；2) ReminderOption 枚举值；3) 绝对时间（不推荐）：YYYY-MM-DD HH:mm:ss；4) None 清除提醒"
+    llm_description: "任务提醒设置，支持：1) 相对提醒（推荐）：'0'(准时)、'-5M'(提前5分钟)、'-15M'、'-30M'、'-1H'、'-2H'、'-1D'、'-2D'、'-1W'；2) ReminderOption 枚举值；3) 绝对时间（不推荐）：YYYY-MM-DD HH:mm:ss；4) None 清除提醒"
+    form: llm
+
+  - name: status
+    type: select
+    required: false
+    label:
+      en_US: Status
+      zh_Hans: 状态
+    human_description:
+      en_US: New status for the task
+      zh_Hans: 任务的新状态
+    options:
+      - value: 0
+        label:
+          en_US: Not Started
+          zh_Hans: 未开始
+      - value: 1
+        label:
+          en_US: In Progress
+          zh_Hans: 进行中
+      - value: 2
+        label:
+          en_US: Completed
+          zh_Hans: 已完成
+    llm_description: 任务的新状态
+    form: form
+
+extra:
+  python:
+    source: tools/update_task.py

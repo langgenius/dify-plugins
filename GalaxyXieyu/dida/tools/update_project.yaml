@@ -1,0 +1,88 @@
+identity:
+  name: update_project
+  author: galaxyxieyu
+  label:
+    en_US: Update Project
+    zh_Hans: 更新项目
+
+description:
+  human:
+    en_US: Update an existing project in Dida Todo List
+    zh_Hans: 更新滴答清单中的现有项目
+  llm: |
+    A tool to update an existing project in Dida Todo List.
+    Requires project ID and supports updating various project properties.
+
+parameters:
+  - name: project_id
+    type: string
+    required: true
+    label:
+      en_US: Project ID
+      zh_Hans: 项目ID
+    human_description:
+      en_US: The ID of the project to update
+      zh_Hans: 要更新的项目ID
+    llm_description: 项目ID
+    form: llm
+
+  - name: name
+    type: string
+    required: false
+    label:
+      en_US: Project Name
+      zh_Hans: 项目名称
+    human_description:
+      en_US: The new name for the project
+      zh_Hans: 项目的新名称
+    llm_description: 项目的新名称
+    form: llm
+
+  - name: color
+    type: string
+    required: false
+    label:
+      en_US: Project Color
+      zh_Hans: 项目颜色
+    human_description:
+      en_US: The new color for the project
+      zh_Hans: 项目的新颜色
+    llm_description: 项目的新颜色
+    form: llm
+
+  - name: group_id
+    type: string
+    required: false
+    label:
+      en_US: Group ID
+      zh_Hans: 项目组ID
+    human_description:
+      en_US: The new group ID for the project
+      zh_Hans: 项目的新项目组ID
+    llm_description: 项目的新项目组ID
+    form: llm
+
+  - name: view_mode
+    type: select
+    required: false
+    label:
+      en_US: View Mode
+      zh_Hans: 视图模式
+    human_description:
+      en_US: The new view mode for the project
+      zh_Hans: 项目的新视图模式
+    options:
+      - value: list
+        label:
+          en_US: List
+          zh_Hans: 列表
+      - value: board
+        label:
+          en_US: Board
+          zh_Hans: 看板
+    llm_description: 项目的新视图模式
+    form: form 
+
+extra:
+  python:
+    source: tools/update_project.py

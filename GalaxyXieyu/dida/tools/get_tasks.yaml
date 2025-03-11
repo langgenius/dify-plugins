@@ -1,0 +1,27 @@
+identity:
+  name: get_tasks
+  author: galaxyxieyu
+  label:
+    en_US: Get Tasks
+    zh_Hans: 获取任务列表
+description:
+  human:
+    en_US: Get all tasks from Dida Todo List
+    zh_Hans: 从滴答清单获取所有任务
+  llm: A tool for retrieving all tasks from Dida Todo List.
+
+parameters:
+  - name: project_id
+    type: string
+    required: false
+    label:
+      en_US: Project ID
+      zh_Hans: 项目ID
+    human_description:
+      en_US: The project ID to get tasks from. If not provided, will get all tasks.
+      zh_Hans: 要获取任务的项目ID。如果不提供，将获取所有任务。
+    form: llm
+
+extra:
+  python:
+    source: tools/get_tasks.py

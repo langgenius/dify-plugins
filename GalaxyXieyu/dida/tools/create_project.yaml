@@ -1,0 +1,87 @@
+identity:
+  name: create_project
+  author: galaxyxieyu
+  label:
+    en_US: Create Project
+    zh_Hans: 创建项目
+
+description:
+  human:
+    en_US: Create a new project in Dida Todo List
+    zh_Hans: 在滴答清单中创建新项目
+  llm: |
+    A tool to create a new project in Dida Todo List.
+    Requires project name and supports optional parameters.
+
+parameters:
+  - name: name
+    type: string
+    required: true
+    label:
+      en_US: Project Name
+      zh_Hans: 项目名称
+    human_description:
+      en_US: The name of the project to create
+      zh_Hans: 要创建的项目名称
+    llm_description: 项目名称
+    form: llm
+
+  - name: color
+    type: string
+    required: false
+    label:
+      en_US: Project Color
+      zh_Hans: 项目颜色
+    human_description:
+      en_US: The color of the project
+      zh_Hans: 项目的颜色
+    llm_description: 项目颜色
+    form: llm
+
+  - name: group_id
+    type: string
+    required: false
+    label:
+      en_US: Group ID
+      zh_Hans: 项目组ID
+    human_description:
+      en_US: The group ID for the project
+      zh_Hans: 项目所属的项目组ID
+    llm_description: 项目组ID
+    form: llm
+
+  - name: view_mode
+    type: select
+    required: false
+    label:
+      en_US: View Mode
+      zh_Hans: 视图模式
+    human_description:
+      en_US: The view mode for the project
+      zh_Hans: 项目的视图模式
+    options:
+      - value: list
+        label:
+          en_US: List
+          zh_Hans: 列表
+      - value: board
+        label:
+          en_US: Board
+          zh_Hans: 看板
+    llm_description: 项目的视图模式
+    form: form
+
+  - name: is_inbox
+    type: boolean
+    required: false
+    label:
+      en_US: Is Inbox
+      zh_Hans: 是否为收集箱
+    human_description:
+      en_US: Whether the project is an inbox
+      zh_Hans: 项目是否为收集箱
+    llm_description: 是否为收集箱项目
+    form: llm 
+extra:
+  python:
+    source: tools/create_project.py

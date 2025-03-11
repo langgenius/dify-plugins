@@ -1,0 +1,35 @@
+identity:
+  author: galaxyxieyu
+  name: dida
+  label:
+    en_US: dida
+    zh_Hans: dida
+    pt_BR: dida
+  description:
+    en_US: a agent tool for didatodolist
+    zh_Hans: a agent tool for didatodolist
+    pt_BR: a agent tool for didatodolist
+  icon: icon.svg
+tools:
+  - tools/create_project.yaml
+  - tools/create_task.yaml
+  - tools/delete_project.yaml
+  - tools/delete_task.yaml
+  - tools/get_projects.yaml
+  - tools/get_tasks.yaml
+  - tools/update_project.yaml
+credentials_for_provider: #添加 credentials_for_provider 字段
+  token:
+    type: secret-input
+    required: true
+    label:
+      en_US: token
+      zh_Hans: token
+    placeholder:
+      en_US: Please input your token
+      zh_Hans: 请输入你的 token
+    help:
+      en_US: Get your token from dida
+extra:
+  python:
+    source: provider/dida.py
