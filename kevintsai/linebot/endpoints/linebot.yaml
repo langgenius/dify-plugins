@@ -1,5 +1,0 @@
-path: "/"
-method: "POST"
-extra:
-  python:
-    source: "endpoints/linebot.py"

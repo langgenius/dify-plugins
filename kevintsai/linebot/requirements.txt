@@ -1,3 +1,0 @@
-dify_plugin~=0.0.1b67
-Werkzeug==3.0.3
-line-bot-sdk>=3.3.0
