@@ -1,0 +1,30 @@
+identity:
+  name: url-to-markdown
+  author: siwei
+  label:
+    en_US: URL to Markdown
+    zh_Hans: URL转Markdown
+    pt_BR: URL para Markdown
+description:
+  human:
+    en_US: A tool for crawling web pages and converting content to Markdown format.
+    zh_Hans: 一个用于爬取网页并将内容转换为Markdown格式的工具。
+    pt_BR: Uma ferramenta para rastrear páginas da web e converter conteúdo para o formato Markdown.
+  llm: A tool that takes a URL as input, crawls the web page, and converts its content to Markdown format. It extracts the main content of the page and formats it as clean, readable Markdown text.
+parameters:
+  - name: url
+    type: string
+    required: true
+    label:
+      en_US: Website URL
+      zh_Hans: 网站URL
+      pt_BR: URL do site
+    human_description:
+      en_US: The URL of the website to crawl and convert to Markdown
+      zh_Hans: 要爬取并转换为Markdown的网站URL
+      pt_BR: O URL do site para rastrear e converter para Markdown
+    llm_description: The complete URL of the web page to crawl and convert to Markdown format. Should include the protocol (http:// or https://).
+    form: llm
+extra:
+  python:
+    source: tools/url_to_markdown.py
