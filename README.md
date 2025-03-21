@@ -70,23 +70,32 @@ A “plugin bundle” is a collection of multiple plugins. Bundles allow you to 
 
 Check the [Plugins documentation](https://docs.dify.ai/plugins/quick-start/develop-plugins) to learn how to develop and publish plugins.
 
-#### Listing Plugins in Dify Marketplace
+### Publishing to Dify Marketplace
 
 To publish your plugin on the Dify Marketplace, follow these steps:
 
+#### Development
 1. Develop and test your plugin according to the [Plugin Developer Guidelines](https://docs.dify.ai/plugins/publish-plugins/publish-to-dify-marketplace/plugin-developer-guidelines).
 
 2. Write a [Plugin Privacy Policy](https://docs.dify.ai/plugins/publish-plugins/publish-to-dify-marketplace/plugin-privacy-protection-guidelines) for your plugin in line with Dify’s privacy policy requirements. In your plugin’s [Manifest](https://docs.dify.ai/plugins/schema-definition/manifest) file, include the file path or URL for this privacy policy.
 
-3. Package your plugin for distribution.
+3. Leave your contact infomation and repository URL in `README.md`.
 
-4. Fork the this repository.
+#### Publishing
 
-5. Create an organization directory under the repository’s main structure, then create a subdirectory named after your plugin. Place your plugin’s source code and the packaged `.pkg` file in that subdirectory.
+1. Package your plugin into `.difypkg` file for distribution.
 
-6. Submit a Pull Request (PR) following the required PR template format, then wait for the review;
+2. [Fork the this repository](https://github.com/langgenius/dify-plugins/fork).
 
-7. Once approved, your plugin code will merge into the main branch, and the plugin will be automatically listed on the [Dify Marketplace](https://marketplace.dify.ai/).
+3. Create an organization directory under the repository’s main structure, then create a subdirectory named after your plugin. Place your plugin’s source code and the packaged `.difypkg` file in that subdirectory (eg. `langgenius/dify-plugin/dify-plugin-0.0.1.difypkg`). You can place different versions in the same subdirectory. 
+
+4. [Submit a Pull Request (PR)](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request) following the required PR template format, then wait for the review;
+
+5. Once approved, your plugin code will merge into the main branch, and the plugin will be automatically listed on the [Dify Marketplace](https://marketplace.dify.ai/).
+
+> **Tips for contributing:**
+> - Only **one file change** can be made in a PR request.
+> - Check the version of the plugin before publishing. Same version cannot be merged into the same subdirectory.
 
 ### Security disclosure
 
