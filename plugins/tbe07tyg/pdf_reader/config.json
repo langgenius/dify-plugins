@@ -1,0 +1,26 @@
+{
+    "name": "pdf_reader",
+    "version": "0.1.0",
+    "description": "A plugin for reading and processing PDF files",
+    "author": "Your Name",
+    "type": "python",
+    "main": "main.py",
+    "api": {
+        "pdf_to_text": {
+            "description": "Convert PDF to text",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "description": "URL of the PDF file"
+                    },
+                    "file_path": {
+                        "type": "string",
+                        "description": "Local path to PDF file"
+                    }
+                }
+            }
+        }
+    }
+} 
