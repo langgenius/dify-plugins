@@ -1,0 +1,100 @@
+identity:
+  name: dify_echarts
+  author: fly
+  label:
+    en_US: dify_echarts
+    zh_Hans: dify_echarts
+    pt_BR: dify_echarts
+description:
+  human:
+    en_US: This plugin can convert statistical data into ECharts charts for display.
+    ja_JP: このプラグインは統計データをEChartsのチャートに変換して表示できます.
+    zh_Hans: 此插件可将统计数据转换为ECharts图表进行展示。
+    pt_BR: Este plugin pode converter dados estatísticos em gráficos do ECharts para exibição.
+  llm: This plugin can convert statistical data into ECharts charts for display.
+parameters:
+  - name: data
+    type: string
+    required: true
+    label:
+      en_US: Echarts Data
+      zh_Hans: Echarts数据
+      pt_BR: Echarts Data 
+    human_description:
+      en_US: This plugin can convert statistical data into ECharts charts for display.
+      ja_JP: このプラグインは統計データをEChartsのチャートに変換して表示できます.
+      zh_Hans: 此插件可将统计数据转换为ECharts图表进行展示。
+      pt_BR: Este plugin pode converter dados estatísticos em gráficos do ECharts para exibição.
+    llm_description: This plugin can convert statistical data into ECharts charts for display.
+    form: llm
+  - name: chart_type
+    type: select
+    required: false
+    label:
+      en_US: Chart type format
+      zh_Hans: 图表输出格式
+    human_description:
+      en_US: Choose the chart type format.
+      zh_Hans: 选择输出格式。
+    llm_description: Choose the chart type format. It can be one of `pie (饼图)`, `rounded_donut (圆角环形图)`, `gap_pie (饼图-扇区间隙)`, `semi_donut (半环形图)`, `rose (南丁格尔玫瑰图)`, `stacked_line (折线图堆叠)`, `bar (柱状图堆叠)`, `grouped_bar (分组柱状图)`, `horizontal_bar (水平柱状图)`, `line (折线图)`, `scatter (散点图)`.
+    form: llm
+    default: pie
+    options:
+      - value: pie
+        label:
+          en_US: pie
+          zh_Hans: 饼图
+      - value: rounded_donut
+        label:
+          en_US: rounded_donut
+          zh_Hans: 圆角环形图
+      - value: gap_pie
+        label:
+          en_US: gap_pie
+          zh_Hans: 饼图（扇区间隙）
+      - value: semi_donut
+        label:
+          en_US: semi_donut
+          zh_Hans: 半环形图
+      - value: rose
+        label:
+          en_US: rose
+          zh_Hans: 南丁格尔玫瑰图
+      - value: stacked_line
+        label:
+          en_US: stacked_line
+          zh_Hans: 折线图堆叠
+      - value: bar
+        label:
+          en_US: bar
+          zh_Hans: 柱状图堆叠
+      - value: grouped_bar
+        label:
+          en_US: grouped_bar
+          zh_Hans: 分组柱状图
+      - value: horizontal_bar
+        label:
+          en_US: horizontal_bar
+          zh_Hans: 水平柱状图
+      - value: line
+        label:
+          en_US: line
+          zh_Hans: 折线图
+      - value: scatter
+        label:
+          en_US: scatter
+          zh_Hans: 散点图
+  - name: chart_title
+    type: string
+    required: true
+    label:
+      en_US: Chart title.
+      zh_Hans: 图表标题。
+    human_description:
+      en_US: Chart title.
+      zh_Hans: 图表标题。
+    llm_description: User-defined chart title.
+    form: llm
+extra:
+  python:
+    source: tools/dify_echarts.py

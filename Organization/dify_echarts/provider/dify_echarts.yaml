@@ -1,0 +1,17 @@
+identity:
+  author: fly
+  name: dify_echarts
+  label:
+    en_US: dify_echarts
+    zh_Hans: dify_echarts
+    pt_BR: dify_echarts
+  description:
+    en_US: This plugin can convert statistical data into ECharts charts for display.
+    zh_Hans: This plugin can convert statistical data into ECharts charts for display.
+    pt_BR: This plugin can convert statistical data into ECharts charts for display.
+  icon: icon.svg
+tools:
+  - tools/dify_echarts.yaml
+extra:
+  python:
+    source: provider/dify_echarts.py
