@@ -1,0 +1,46 @@
+identity:
+  name: text2sql
+  author: fly
+  label:
+    en_US: Text to SQL
+description:
+  human:
+    en_US: supply to LLM the context of the database and the user query to get a sql string.
+    zh_Hans: 提供数据库上下文和用户的问题，来得到一个 SQL 语句。
+  llm: supply to LLM the context of the database and the user query to get a sql string.
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Query string
+      zh_Hans: 查询语句
+    human_description:
+      en_US: The user query.
+      zh_Hans: 用户的问题。
+    llm_description: The user query.
+    form: llm
+  - name: model
+    type: model-selector
+    scope: llm
+    required: true
+    label:
+      en_US: Model
+      zh_Hans: 模型
+    human_description:
+      en_US: Choose the model.
+      zh_Hans: 选择模型。
+    form: form
+  - name: tables
+    type: string
+    required: false
+    label:
+      en_US: Tables
+      zh_Hans: 表
+    human_description:
+      en_US: Specify which tables to provide to LLM as context. If not specified, all tables will be used.
+      zh_Hans: 指定哪些表用于提供给LLM作为上下文，如不指定，则使用所有表。
+    form: form
+extra:
+  python:
+    source: tools/text2sql.py

@@ -1,0 +1,104 @@
+settings:
+  - name: db_type
+    type: select
+    options:
+      - value: mysql
+        label:
+          en_US: MySQL
+          zh_Hans: MySQL
+      - value: postgresql
+        label:
+          en_US: PostgreSQL
+          zh_Hans: PostgreSQL
+      - value: sqlite
+        label:
+          en_US: SQLite
+          zh_Hans: SQLite
+      - value: oracle
+        label:
+          en_US: Oracle
+          zh_Hans: Oracle
+      - value: doris
+        label:
+          en_US: Doris
+          zh_Hans: Doris
+    default: mysql
+    label:
+      en_US: Database Type
+      zh_Hans: 数据库类型
+    help:
+      en_US: Used for selecting the database type, mysql, doris, oracle , postgresql or sqlite.
+      zh_Hans: 用于选择数据库类型，mysql、doris、oracle、postgresql或sqlite。
+    required: true
+  - name: db_host
+    type: text-input
+    required: true
+    default: localhost
+    label:
+      en_US: Database Host
+      zh_Hans: 数据库地址
+    human_description:
+      en_US: database hostname or IP address.
+      zh_Hans: 数据库的主机名或IP地址。
+  - name: db_port
+    type: text-input
+    required: true
+    label:
+      en_US: Port
+      zh_Hans: 端口
+    human_description:
+      en_US: database port.
+      zh_Hans: 数据库的端口。
+  - name: db_username
+    type: text-input
+    required: true
+    label:
+      en_US: Username
+      zh_Hans: 用户名
+    human_description:
+      en_US: database username.
+      zh_Hans: 数据库的用户名。
+  - name: db_password
+    type: secret-input
+    required: true
+    label:
+      en_US: Password
+      zh_Hans: 密码
+    human_description:
+      en_US: database password.
+      zh_Hans: 数据库的密码。
+  - name: db_name
+    type: text-input
+    required: false
+    label:
+      en_US: Database name
+      zh_Hans: 库名
+    human_description:
+      en_US: database name.
+      zh_Hans: 数据库的名称。
+  - name: db_properties
+    type: text-input
+    required: false
+    label:
+      en_US: Database properties
+      zh_Hans: 数据库属性
+    human_description:
+      en_US: 'Database properties, for example: alt_host=host1&alt_host=host2&ssl_cipher=/path/to/crt'
+      zh_Hans: 数据库属性，例如：alt_host=host1&alt_host=host2&ssl_cipher=/path/to/crt
+    help:
+      en_US: 'Database properties, for example: alt_host=host1&alt_host=host2&ssl_cipher=/path/to/crt'
+      zh_Hans: 数据库属性，例如：alt_host=host1&alt_host=host2&ssl_cipher=/path/to/crt
+  # - name: db_uri
+  #   type: secret-input
+  #   required: true
+  #   label:
+  #     en_US: Database URI
+  #     zh_Hans: 数据库 URI
+  #   placeholder:
+  #     en_US: Please input your Database URI
+  #     zh_Hans: 请输入你的 Database URI
+  #   help:
+  #     en_US: For example `mysql://<user>:<password>@<host>:<port>/<database>`
+  #     zh_Hans: 例如 `mysql://<user>:<password>@<host>:<port>/<database>`
+endpoints:
+  - endpoints/sql_execute.yaml

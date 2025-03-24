@@ -1,0 +1,63 @@
+identity:
+  name: sql_execute
+  author: fly
+  label:
+    en_US: SQL Execute
+    zh_Hans: SQL 执行
+description:
+  human:
+    en_US: This tool is used to execute SQL in an existing database.
+    zh_Hans: 此工具用于在已存在的数据库中执行 SQL 查询。
+  llm: This tool is used to execute SQL in an existing database.
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: SQL Query
+      zh_Hans: SQL 查询语句
+    human_description:
+      en_US: The SQL query string.
+      zh_Hans: SQL 查询语句。
+    llm_description: The SQL query string.
+    form: llm
+  - name: format
+    type: select
+    required: false
+    label:
+      en_US: Output format
+      zh_Hans: 输出格式
+    human_description:
+      en_US: Choose the output format.
+      zh_Hans: 选择输出格式。
+    llm_description: Choose the output format. It can be one of `json`, `csv`, `yaml`, `md`, `xlsx`, `html`.
+    form: llm
+    default: json
+    options:
+      - value: json
+        label:
+          en_US: JSON
+          zh_Hans: JSON
+      - value: csv
+        label:
+          en_US: CSV
+          zh_Hans: CSV
+      - value: yaml
+        label:
+          en_US: YAML
+          zh_Hans: YAML
+      - value: md
+        label:
+          en_US: Markdown
+          zh_Hans: Markdown
+      - value: xlsx
+        label:
+          en_US: Excel
+          zh_Hans: Excel
+      - value: html
+        label:
+          en_US: HTML
+          zh_Hans: HTML
+extra:
+  python:
+    source: tools/sql_execute.py
