@@ -1,0 +1,42 @@
+identity:
+  author: shaojk
+  name: datafocus
+  label:
+    en_US: DataFocus
+    zh_Hans: DataFocus
+  description:
+    en_US: DataFocus, a question and answer interactive, search based experience data analysis platform.
+    zh_Hans: DataFocus，一个问答式交互，搜索式体验的数据分析平台。
+  icon: icon.svg
+  tags:
+    - search
+credentials_for_provider: #添加 credentials_for_provider 字段
+  datafocus_host:
+    type: text-input
+    required: true
+    default: "https://cloud001.datafocus.ai"
+    label:
+      en_US: DataFocus host
+      zh_Hans: DataFocus host
+    placeholder:
+      en_US: Please input your DataFocus host url
+      zh_Hans: 请输入你的DataFocus应用地址
+  app_token:
+    type: secret-input
+    required: true
+    label:
+      en_US: DataFocus APP Token
+      zh_Hans: DataFocus APP Token
+    placeholder:
+      en_US: Please input your APP Token
+      zh_Hans: 请输入你的 APP Token
+    help:
+      en_US: Get your APP token from DataFocus
+      zh_Hans: 从 DataFocus 获取您的 APP Token
+    url: https://www.datafocus.ai/infos/data-focus-token?from=dify
+tools:
+  - tools/focus-sql.yaml
+  - tools/focus-gpt.yaml
+extra:
+  python:
+    source: provider/datafocus.py
