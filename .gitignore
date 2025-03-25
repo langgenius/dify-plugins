@@ -164,3 +164,4 @@ cython_debug/
 /logs
 /dify-marketplace-backend
 /.scripts
+.aider*
