@@ -1,0 +1,38 @@
+version: 0.0.1
+type: plugin
+author: joto
+name: datafocus
+label:
+  en_US: DataFocus
+  zh_Hans: DataFocus
+description:
+  en_US: DataFocus, a question and answer interactive, search based experience data analysis platform.
+  zh_Hans: DataFocus，一个问答式交互，搜索式体验的数据分析平台。
+icon: icon.svg
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+    endpoint:
+      enabled: true
+    app:
+      enabled: true
+    storage:
+      enabled: true
+      size: 1048576
+plugins:
+  tools:
+    - provider/datafocus.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+created_at: 2025-01-14T10:41:30.9355822+08:00
+privacy: https://www.datafocus.ai/user-registration-agreement
+verified: false
