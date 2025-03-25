@@ -1,0 +1,48 @@
+identity:
+  name: json_extractor
+  author: shanjijian
+  label:
+    en_US: JSON Extractor
+    zh_Hans: JSON 提取器
+    pt_BR: Extrator de JSON
+description:
+  human:
+    en_US: Extracts specific values from JSON data based on user-defined keys or paths.
+    zh_Hans: 根据用户定义的键或路径从 JSON 数据中提取特定值。
+    pt_BR: Extrai valores específicos dos dados JSON com base em chaves ou caminhos definidos pelo usuário.
+  llm: Extracts specific values from JSON data based on user-defined keys or paths.
+parameters:
+  - name: json_data
+    type: string
+    required: true
+    label:
+      en_US: JSON Data
+      zh_Hans: JSON 数据
+      pt_BR: Dados JSON
+    human_description:
+      en_US: The JSON data from which values will be extracted.
+      zh_Hans: 从中提取值的 JSON 数据。
+      pt_BR: Os dados JSON dos quais os valores serão extraídos。
+    llm_description: The JSON data from which values will be extracted.
+    form: llm
+  - name: query_path
+    type: string
+    required: true
+    label:
+      en_US: Query Paths
+      zh_Hans: 查询路径
+      pt_BR: Caminhos de consulta
+    human_description:
+      en_US: One or more JSON paths to extract specific values using dot notation, separated by commas (e.g., user.address.city, user.name).
+      zh_Hans: 使用点表示法提取特定值的一个或多个 JSON 路径，路径之间用逗号分隔（例如：user.address.city, user.name）。
+      pt_BR: Um ou mais caminhos JSON para extrair valores específicos usando a notação de ponto, separados por vírgulas (por exemplo, user.address.city, user.name).
+    llm_description: One or more JSON paths to extract specific values using dot notation, separated by commas.
+    form: llm
+output_schema:
+  type: object
+  properties:
+    name:
+      type: string
+extra:
+  python:
+    source: tools/json_extractor.py

@@ -1,0 +1,33 @@
+version: 0.0.1
+type: plugin
+author: shanjijian
+name: json_extractor
+label:
+  en_US: JSON Extractor
+  ja_JP: JSON エクストラクタ
+  zh_Hans: JSON 提取器
+  pt_BR: Extrator de JSON
+description:
+  en_US: A simple plugin that extracts specific values from JSON data based on user-defined keys or paths.
+  ja_JP: ユーザーが定義したキーまたはパスに基づいてJSONデータから特定の値を抽出するシンプルなプラグイン。
+  zh_Hans: 一个简单的插件，可以根据用户定义的键或路径从JSON数据中提取特定值。
+  pt_BR: Um plugin simples que extrai valores específicos de dados JSON com base em chaves ou caminhos definidos pelo usuário.
+icon: icon.svg
+resource:
+  memory: 268435456
+  permission: {}
+plugins:
+  tools:
+    - provider/json_extractor.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+created_at: 2025-03-21T18:28:01.668426+08:00
+privacy: PRIVACY.md
+verified: false

@@ -1,0 +1,9 @@
+<svg width="600" height="600" xmlns="http://www.w3.org/2000/svg">
+
+ <g>
+  <title>Layer 1</title>
+  <ellipse stroke="#ffff00" ry="299.5" rx="298.99999" id="svg_8" cy="300" cx="299.99999" stroke-width="0" fill="#ffe900"/>
+  <text transform="matrix(8.42628 0 0 4.8524 -22.4968 -5.91192)" stroke="#000" xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="24" id="svg_3" y="59.79281" x="6.07404" stroke-width="0" fill="#000000">JSON</text>
+  <text transform="matrix(3.42454 0 0 6.55319 -591.125 -1643.91)" stroke="#000" xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="24" id="svg_4" y="316.36575" x="208.10301" stroke-width="0" fill="#000000">Extractor</text>
+ </g>
+</svg>
