@@ -1,0 +1,17 @@
+identity:
+  author: siwei
+  name: url-to-markdown
+  label:
+    en_US: URL to Markdown
+    zh_Hans: URL转Markdown
+    pt_BR: URL para Markdown
+  description:
+    en_US: A tool for crawling web pages and converting content to Markdown format.
+    zh_Hans: 一个用于爬取网页并将内容转换为Markdown格式的工具。
+    pt_BR: Uma ferramenta para rastrear páginas da web e converter conteúdo para o formato Markdown.
+  icon: icon.svg
+tools:
+  - tools/url-to-markdown.yaml
+extra:
+  python:
+    source: provider/url_to_markdown.py
