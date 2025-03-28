@@ -1,0 +1,36 @@
+version: 0.0.1
+type: plugin
+author: zxi2002
+name: metastudio_dify_app
+label:
+  en_US: metastudio_dify_app
+  zh_Hans: metastudio_dify_app
+description:
+  en_US: Compatible Dify App's API with Huawei MetaStudio third-party llm api
+  zh_Hans: 提供将 Dify App 适配华为 MetaStudio 第三方 LLM 接口的扩展插件
+icon: icon.svg
+resource:
+  memory: 1048576
+  permission:
+    app:
+      enabled: true
+    endpoint:
+      enabled: true
+    storage: 
+      enabled: true
+      size: 1048576
+plugins:
+  endpoints:
+    - group/metastudio_dify_app.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+created_at: 2025-03-21T15:48:46.044412+08:00
+privacy: PRIVACY.md
+verified: false

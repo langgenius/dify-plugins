@@ -1,0 +1,5 @@
+path: "/metastudio_dify_app/chat"
+method: "POST"
+extra:
+  python:
+    source: "endpoints/metastudio_dify_app.py"

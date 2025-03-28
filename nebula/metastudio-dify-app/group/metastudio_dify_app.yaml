@@ -1,0 +1,45 @@
+settings:
+  - name: base_url
+    type: text-input
+    required: true
+    label:
+      en_US: Base URL
+      zh_Hans: Base URL
+    placeholder:
+      en_US: Please input your base URL
+      zh_Hans: 请输入你的基础访问地址
+  - name: api_key
+    type: secret-input
+    required: true
+    label:
+      en_US: API key
+      zh_Hans: API key
+    placeholder:
+      en_US: Please input your API key
+      zh_Hans: 请输入你的 API key
+  - name: app_id
+    type: app-selector
+    scope: chat
+    required: true
+    label:
+      en_US: App
+      zh_Hans: App
+    placeholder:
+      en_US: Please select an app
+      zh_Hans: 请选择一个应用
+  - name: memory_mode
+    type: select
+    required: true
+    label:
+      en_US: Memory Mode
+      zh_Hans: 记忆模式
+    placeholder:
+      en_US: Please select a memory mode, it will decide how the Endpoint manage the context
+      zh_Hans: 请选择一个上下文模式，它将决定该 Endpoint 使用哪种方式管理上下文
+    options:
+      - label:
+          en_US: Last User Message
+          zh_Hans: 使用最后一条用户消息
+        value: last_user_message
+endpoints:
+  - endpoints/metastudio_dify_app.yaml
