@@ -1,0 +1,17 @@
+identity:
+  author: shanjijian
+  name: json_extractor
+  label:
+    en_US: JSON Extractor
+    zh_Hans: JSON 提取器
+    pt_BR: Extrator JSON
+  description:
+    en_US: Extracts specific values from JSON data based on user-defined keys or paths.
+    zh_Hans: 根据用户定义的键或路径从 JSON 数据中提取特定值。
+    pt_BR: Extrai valores específicos dos dados JSON com base em chaves ou caminhos definidos pelo usuário。
+  icon: icon.svg
+tools:
+  - tools/json_extractor.yaml
+extra:
+  python:
+    source: provider/json_extractor.py
