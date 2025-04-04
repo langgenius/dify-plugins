@@ -1,0 +1,266 @@
+identity:
+  author: joto
+  name: focus-gpt
+  label:
+    en_US: FocusGPT
+    zh_Hans: FocusGPT
+description:
+  human:
+    en_US: A natural language to SQL plugin based on FocusSearch keyword parsing, more accurate, faster, and cheaper!
+    zh_Hans: 一款基于FocusSearch关键词解析的自然语言转SQL插件，更准，更快，更便宜！
+  llm: 一款基于FocusSearch关键词解析的自然语言转SQL插件，更准，更快，更便宜！
+parameters:
+  - name: language
+    type: select
+    required: false
+    label:
+      en_US: Language
+      zh_Hans: 语言环境
+    human_description:
+      en_US: Language environment
+      zh_Hans: 语言环境
+    llm_description: Language environment
+    form: llm
+    default: chinese
+    options:
+      - value: chinese
+        label:
+          en_US: Chinese
+          zh_Hans: 中文
+      - value: english
+        label:
+          en_US: English
+          zh_Hans: 英文
+  - name: query
+    type: string
+    required: false
+    label:
+      en_US: Query string
+      zh_Hans: 查询语句
+    human_description:
+      en_US: Natural language input
+      zh_Hans: 输入的自然语言
+    llm_description: Natural language input
+    form: llm
+  - name: tableName
+    type: string
+    required: false
+    label:
+      en_US: table
+      zh_Hans: 数据表
+    human_description:
+      en_US: Select the name of the data table that you want to query
+      zh_Hans: 选择要查询的数据表名
+    llm_description: Select the name of the data table that you want to query
+    form: llm
+  - name: conversation_id
+    type: string
+    required: false
+    label:
+      en_US: Conversation Id
+      zh_Hans: Conversation Id
+    human_description:
+      en_US: Session unique identifier, which is used by the plug-in to identify the current session and can be passed in sys.conversation_id
+      zh_Hans: 会话唯一标识，用于插件识别当前会话，可传入sys.conversation_id
+    llm_description: Session unique identifier, which is used by the plug-in to identify the current session and can be passed in sys.conversation_id
+    form: llm
+  - name: action
+    type: select
+    required: true
+    form: form
+    default: chat
+    options:
+      - value: listTables
+        label:
+          en_US: get table list
+          zh_Hans: 获取数据表列表
+      - value: chat
+        label:
+          en_US: chat and get data
+          zh_Hans: 对话互动
+    label:
+      en_US: action
+      zh_Hans: 执行行为
+    human_description:
+      en_US: Action performed by plugins
+      zh_Hans: 插件执行的动作
+  - name: type
+    type: select
+    required: false
+    form: llm
+    label:
+      en_US: Datasource Type
+      zh_Hans: 数据源类型
+    human_description:
+      en_US: Select database type
+      zh_Hans: 选择要连接的数据库类型
+    options:
+      - value: mysql
+        label:
+          en_US: MySQL
+          zh_Hans: MySQL
+      - value: postgresql
+        label:
+          en_US: PostgreSQL
+          zh_Hans: PostgreSQL
+      - value: sqlserver
+        label:
+          en_US: SQLServer
+          zh_Hans: SQLServer
+      - value: oracle
+        label:
+          en_US: Oracle
+          zh_Hans: Oracle
+      - value: ibmdb2
+        label:
+          en_US: IBMDB2
+          zh_Hans: IBMDB2
+      - value: gaussdb100
+        label:
+          en_US: GaussDB100
+          zh_Hans: GaussDB100
+      - value: sybase
+        label:
+          en_US: Sybase
+          zh_Hans: Sybase
+      - value: greenplum
+        label:
+          en_US: Greenplum
+          zh_Hans: Greenplum
+      - value: clickhouse
+        label:
+          en_US: Clickhouse
+          zh_Hans: Clickhouse
+      - value: teradata
+        label:
+          en_US: Teradata
+          zh_Hans: Teradata
+      - value: doris
+        label:
+          en_US: Doris
+          zh_Hans: Doris
+      - value: tidb
+        label:
+          en_US: TIDB
+          zh_Hans: TIDB
+      - value: hana
+        label:
+          en_US: Hana
+          zh_Hans: Hana
+      - value: clickzetta
+        label:
+          en_US: Clickzetta
+          zh_Hans: Clickzetta
+      - value: impala
+        label:
+          en_US: Impala
+          zh_Hans: Impala
+      - value: dameng
+        label:
+          en_US: DM8
+          zh_Hans: DM8
+      - value: argodb
+        label:
+          en_US: ArgoDB
+          zh_Hans: ArgoDB
+      - value: kudu
+        label:
+          en_US: Kudu
+          zh_Hans: Kudu
+      - value: elasticsearch
+        label:
+          en_US: Elasticsearch
+          zh_Hans: Elasticsearch
+      - value: mongodb
+        label:
+          en_US: Mongodb
+          zh_Hans: Mongodb
+      - value: prometheus
+        label:
+          en_US: Prometheus
+          zh_Hans: Prometheus
+      - value: hive
+        label:
+          en_US: Hive
+          zh_Hans: Hive
+      - value: delta_lake
+        label:
+          en_US: Delta-Lake
+          zh_Hans: Delta-Lake
+      - value: iceberg
+        label:
+          en_US: Iceberg
+          zh_Hans: Iceberg
+  - name: host
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: Host
+      zh_Hans: Host地址
+    human_description:
+      en_US: Host
+      zh_Hans: Host地址
+  - name: port
+    type: number
+    required: false
+    form: llm
+    label:
+      en_US: Port
+      zh_Hans: 端口
+    human_description:
+      en_US: Port
+      zh_Hans: 端口
+  - name: user
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: DB User
+      zh_Hans: 数据库用户
+    human_description:
+      en_US: DB user
+      zh_Hans: 数据库用户
+  - name: password
+    type: secret-input
+    required: false
+    form: llm
+    label:
+      en_US: DB Password
+      zh_Hans: 数据库密码
+    human_description:
+      en_US: DB Password
+      zh_Hans: 数据库密码
+  - name: db
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: Database Name
+      zh_Hans: 数据库名
+    human_description:
+      en_US: Database Name
+      zh_Hans: 数据库名
+  - name: jdbc
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: JDBC
+      zh_Hans: JDBC
+    human_description:
+      en_US: JDBC
+      zh_Hans: JDBC
+  - name: schema
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: Schema
+      zh_Hans: Schema
+    human_description:
+      en_US: Schema Name
+      zh_Hans: Schema Name
+extra:
+  python:
+    source: tools/focus_gpt.py
