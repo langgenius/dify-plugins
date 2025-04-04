@@ -1,0 +1,7 @@
+dify_plugin~=0.0.1b67
+records[all]~=0.6.0
+pymysql~=1.1.1
+psycopg2-binary~=2.9.10
+pandas~=2.2.3
+oracledb~=2.2.1
+SQLAlchemy~=2.0.35
