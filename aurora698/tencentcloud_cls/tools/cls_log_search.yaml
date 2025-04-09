@@ -1,0 +1,95 @@
+identity:
+  name: cls_log_search
+  author: cls
+  label:
+    en_US: cls_log_search
+    zh_Hans: CLS日志检索分析
+    pt_BR: cls_log_search
+description:
+  human:
+    en_US: Query logs in Tencent Cloud Log Service
+    zh_Hans: 在腾讯云日志服务中对日志进行检索分析
+    pt_BR: Query logs in Tencent Cloud Log Service
+  llm: Query logs in Tencent Cloud Log Service
+parameters:
+  - name: Query
+    type: string
+    required: true
+    label:
+      en_US: Query statement
+      zh_Hans: 检索分析语句
+      pt_BR: Query statement
+    human_description:
+      en_US: Query statement for log search and analysis
+      zh_Hans: 日志检索分析语句
+      pt_BR: Query statement for log search and analysis
+    llm_description: 用于在腾讯云日志服务CLS中查询日志，语法符合日志服务CLS查询语法。该语法在继承 Kibana Query Language(简称KQL)、和 Trino SQL语言特性基础上, 添加了自定义的语言特性及函数，简称为CQL语言(全称CLS Query Language)。例如使用status:404检索响应状态码为404的应用请求日志,使用status:404 | select count(*) as logCounts统计响应状态码为404的日志数量
+    form: llm
+  - name: Region
+    type: string
+    required: false
+    label:
+      en_US: Region
+      zh_Hans: 地域
+      pt_BR: Region
+    human_description:
+      en_US: The log topic's associated region, defaults to the default region when not specified.
+      zh_Hans: 日志主题所属地域，未指定时采用默认地域
+      pt_BR: The log topic's associated region, defaults to the default region when not specified.
+    llm_description: 要查询的日志主题所属的地域，未指定时采用凭证中设置的默认地域
+    form: llm
+  - name: TopicId
+    type: string
+    required: false
+    label:
+      en_US: TopicId
+      zh_Hans: 日志主题ID
+      pt_BR: TopicId
+    human_description:
+      en_US: The log topic ID to query, defaults to the default topic when not specified.
+      zh_Hans: 要查询的日志主题ID，未指定时采用默认主题
+      pt_BR: The log topic ID to query, defaults to the default topic when not specified.
+    llm_description: 要查询的日志主题ID，未指定时采用凭证中设置的默认主题ID
+    form: llm
+  - name: From
+    type: number
+    required: false
+    label:
+      en_US: From Time
+      zh_Hans: 起始时间
+      pt_BR: From Time
+    human_description:
+      en_US: The start time for the logs to be retrieved and analyzed, in Unix timestamp (milliseconds). If not provided, it defaults to 30 minutes ago.
+      zh_Hans: 查要检索分析的日志的起始时间，Unix时间戳（毫秒），如不提供则默认为30分钟前
+      pt_BR: The start time for the logs to be retrieved and analyzed, in Unix timestamp (milliseconds). If not provided, it defaults to 30 minutes ago.
+    llm_description: 查要检索分析的日志的起始时间，Unix时间戳（毫秒），如不提供则默认为30分钟前
+    form: llm
+  - name: To
+    type: number
+    required: false
+    label:
+      en_US: To Time
+      zh_Hans: 结束时间
+      pt_BR: To Time
+    human_description:
+      en_US: The start time for retrieving and analyzing logs, in Unix timestamp (milliseconds). If not provided, it defaults to the current time.
+      zh_Hans: 查要检索分析的日志的起始时间，Unix时间戳（毫秒），如不提供则默认为当前时间
+      pt_BR: The start time for retrieving and analyzing logs, in Unix timestamp (milliseconds). If not provided, it defaults to the current time.
+    llm_description: 查要检索分析的日志的起始时间，Unix时间戳（毫秒），如不提供则默认为当前时间
+    form: llm
+  - name: Limit
+    type: number
+    required: false
+    label:
+      en_US: Limit
+      zh_Hans: 返回数量限制
+      pt_BR: Limit
+    human_description:
+      en_US: The number of raw log entries returned in a single query, with a default of 100 and a maximum of 1000
+      zh_Hans: 单次查询返回的原始日志条数，默认为20，最大值为1000
+      pt_BR: The number of raw log entries returned in a single query, with a default of 100 and a maximum of 1000
+    llm_description: 单次查询返回的原始日志条数，默认为20，最大值为1000
+    form: llm
+extra:
+  python:
+    source: tools/cls_log_search.py
