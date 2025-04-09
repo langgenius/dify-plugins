@@ -1,0 +1,68 @@
+identity:
+  author: aurora698
+  name: tencentcloud_cls
+  label:
+    en_US: tencentcloud cls
+    zh_Hans: 腾讯云日志服务
+    pt_BR: tencentcloud cls
+  description:
+    en_US: Tencent Cloud Log Service
+    zh_Hans: 腾讯云日志服务CLS
+    pt_BR: Tencent Cloud Log Service
+  icon: icon.svg
+  tags:
+    - other
+credentials_for_provider:
+  SecretId:
+    type: secret-input
+    required: true
+    label:
+      en_US: SecretId
+      zh_Hans: SecretId
+    placeholder:
+      en_US: Please input your SecretId
+      zh_Hans: 请输入你的密钥SecretId
+    help:
+      en_US: Get your SecretId from Tencent Cloud
+      zh_Hans: 从腾讯云获取您的密钥SecretId
+    url: https://console.cloud.tencent.com/cam/capi
+  SecretKey:
+    type: secret-input
+    required: true
+    label:
+      en_US: SecretKey
+      zh_Hans: SecretKey
+    placeholder:
+      en_US: Please input your SecretKey
+      zh_Hans: 请输入你的密钥SecretKey
+    help:
+      en_US: Get your SecretKey from Tencent Cloud
+      zh_Hans: 从腾讯云获取您的密钥SecretKey
+    url: https://console.cloud.tencent.com/cam/capi
+  Region:
+    type: text-input
+    required: true
+    label:
+      en_US: DefaultRegion
+      zh_Hans: 默认地域
+    placeholder:
+      en_US: Please enter your region, for example, ap-guangzhou
+      zh_Hans: 请输入日志主题所在的地域，例如ap-guangzhou
+    help:
+      en_US: Look up the region abbreviation in the documentation.
+      zh_Hans: 在文档中查询地域简称
+    url: https://cloud.tencent.com/document/product/614/18940
+  TopicId:
+    type: text-input
+    required: true
+    label:
+      en_US: DefaultLogTopicId
+      zh_Hans: 默认日志主题ID
+    placeholder:
+      en_US: Please input your TopicId
+      zh_Hans: 请输入您的日志主题ID
+tools:
+  - tools/cls_log_search.yaml
+extra:
+  python:
+    source: provider/tencent_cls.py
