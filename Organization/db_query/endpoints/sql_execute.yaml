@@ -1,0 +1,5 @@
+path: "/sql"
+method: "POST"
+extra:
+  python:
+    source: "endpoints/sql_execute.py"
