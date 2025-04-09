@@ -1,0 +1,17 @@
+identity:
+  author: edtechools
+  name: mattermost
+  label:
+    en_US: Mattermost
+    zh_Hans: Mattermost
+    pt_BR: Mattermost
+  description:
+    en_US: Mattermost Webhook
+    zh_Hans: Mattermost Webhook
+    pt_BR: Mattermost Webhook
+  icon: icon.svg
+tools:
+  - tools/incoming_hook.yaml
+extra:
+  python:
+    source: provider/mattermost.py
