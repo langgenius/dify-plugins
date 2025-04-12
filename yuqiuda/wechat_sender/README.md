@@ -33,3 +33,7 @@
 1. 访问[GeweChat开源项目](https://github.com/Devo919/Gewechat)
 2. 按照文档部署服务端
 3. 通过api接口获取必须参数，[接口文档](https://apifox.com/apidoc/shared/69ba62ca-cb7d-437e-85e4-6f3d3df271b1/api-266307392)
+
+token：通过gewe服务的`/tools/getTokenId`接口获取
+appid：通过gewe服务的`/login/deviceList`接口获取
+receiver_id：通过gewe服务的`/contacts/getPhoneAddressList`接口获取
