@@ -1,0 +1,74 @@
+identity:
+  author: yuqiuda
+  name: wechat_sender
+  label:
+    en_US: WeChat Sender
+    zh_Hans: 微信消息发送器
+    pt_BR: Remetente WeChat
+  description:
+    en_US: Send messages through WeChat programmatically
+    zh_Hans: 通过微信自动发送消息
+    pt_BR: Enviar mensagens pelo WeChat automaticamente
+  icon: icon.svg
+  tags:
+    - social
+
+credentials_for_provider:
+  server_url:
+    type: text-input
+    required: true
+    label:
+      en_US: Gewe API Server URL
+      zh_Hans: Gewe API服务器地址
+    placeholder:
+      en_US: https://api.gewe.example.com
+      zh_Hans: 请输入Gewe API服务器地址
+    help:
+      en_US: Enter the base URL for Gewe API server
+      zh_Hans: 输入Gewe API服务器的基础地址
+
+  token:
+    type: text-input
+    required: true
+    label:
+      en_US: API Authentication Token
+      zh_Hans: API认证令牌
+    placeholder:
+      en_US: Enter your Gewe API token
+      zh_Hans: 请输入Gewe API令牌
+    help:
+      en_US: Required for authenticating with Gewe API
+      zh_Hans: 用于Gewe API身份验证
+
+  appid:
+    type: text-input
+    required: true
+    label:
+      en_US: Application ID
+      zh_Hans: 应用ID
+    placeholder:
+      en_US: Enter your WeChat application ID
+      zh_Hans: 请输入微信应用ID
+    help:
+      en_US: Your registered WeChat application identifier
+      zh_Hans: 您注册的微信应用标识符
+
+  receiver_id:
+    type: text-input
+    required: true
+    label:
+      en_US: Receiver WeChat ID
+      zh_Hans: 接收者微信ID
+    placeholder:
+      en_US: Enter recipient's WeChat ID
+      zh_Hans: 请输入接收者的微信ID
+    help:
+      en_US: The WeChat ID of message recipient
+      zh_Hans: 消息接收者的微信ID
+
+tools:
+  - tools/wechat_sender.yaml
+
+extra:
+  python:
+    source: provider/wechat_sender.py

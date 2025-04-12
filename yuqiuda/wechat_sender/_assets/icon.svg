@@ -1,0 +1,45 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle with WeChat green gradient -->
+  <circle cx="64" cy="64" r="60" fill="url(#gradient)"/>
+  
+  <!-- Gradient definition -->
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#07C160"/>
+      <stop offset="100%" stop-color="#09AE56"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Speech bubble base -->
+  <path d="M40,40 
+           a10,10 0 0 1 10,-10 
+           h28 
+           a10,10 0 0 1 10,10 
+           v28 
+           a10,10 0 0 1 -10,10 
+           h-18 
+           l-10,10 
+           v-10 
+           a10,10 0 0 1 -10,-10 
+           z" 
+        fill="white"/>
+  
+  <!-- Paper plane symbol (simplified WeChat send icon) -->
+  <path d="M64,54 
+           l20,-10 
+           l-20,26 
+           v-8 
+           l-12,-6 
+           z" 
+        fill="#07C160"/>
+  
+  <!-- WiFi-like signal arcs representing message transmission -->
+  <path d="M90,80 
+           a16,16 0 0 1 0,-22 
+           a22,22 0 0 1 0,-30 
+           a28,28 0 0 1 0,-38" 
+        stroke="white" 
+        stroke-width="2" 
+        fill="none" 
+        stroke-linecap="round"/>
+</svg>
