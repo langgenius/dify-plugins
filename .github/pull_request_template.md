@@ -36,6 +36,7 @@ Please confirm that your plugin README includes all necessary information:
 - [ ] Detailed usage instructions
 - [ ] All required APIs and credentials are clearly listed
 - [ ] Connection requirements and configuration details
+- [ ] Link to the repository for the plugin source code
 
 ## 6. Privacy Protection Information
 
