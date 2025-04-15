@@ -64,7 +64,7 @@ Lightweight plugins that only provide endpoint capabilities for simpler scenario
 
 ##### Bundles
 
-A “plugin bundle” is a collection of multiple plugins. Bundles allow you to install a curated set of plugins all at once—no more adding them one by one. For more information on creating plugin bundles, see [Plugin Development: Bundle Plugin](https://docs.dify.ai/plugins/quick-start/develop-plugins/bundle).
+A "plugin bundle" is a collection of multiple plugins. Bundles allow you to install a curated set of plugins all at once—no more adding them one by one. For more information on creating plugin bundles, see [Plugin Development: Bundle Plugin](https://docs.dify.ai/plugins/quick-start/develop-plugins/bundle).
 
 #### Plugin Docs
 
@@ -93,9 +93,15 @@ To publish your plugin on the Dify Marketplace, follow these steps:
 
 5. Once approved, your plugin code will merge into the main branch, and the plugin will be automatically listed on the [Dify Marketplace](https://marketplace.dify.ai/).
 
-> **Tips for contributing:**
-> - Only **one file change** can be made in a PR request.
-> - Check the version of the plugin before publishing. Same version cannot be merged into the same subdirectory.
+#### Updating/Bump
+
+1. When updating your plugin, ensure you increment the version in your plugin's `manifest.yaml` file.
+
+2. Each PR for plugin updates must contain only one file change - the new `.difypkg` file. Check that the version hasn't been published before.
+
+3. If your update includes breaking changes, document them clearly in your plugin's README.md to prevent user issues.
+
+4. For faster plugin updates, you can set up automated PR workflows using the [GitHub Actions workflow template](https://docs.dify.ai/plugins/publish-plugins/plugin-auto-publish-pr). This will automate the PR creation process when you release new versions.
 
 ### Security disclosure
 
