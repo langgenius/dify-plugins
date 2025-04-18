@@ -1,0 +1,30 @@
+identity:
+  name: wechat_sender
+  author: yuqiuda
+  label:
+    en_US: wechat_sender
+    zh_Hans: wechat_sender
+    pt_BR: wechat_sender
+description:
+  human:
+    en_US: send message by wechat
+    zh_Hans: send message by wechat
+    pt_BR: send message by wechat
+  llm: send message by wechat
+parameters:
+  - name: content
+    type: string
+    required: true
+    label:
+      en_US: Message content
+      zh_Hans: 消息内容
+      pt_BR: Message content
+    human_description:
+      en_US: Message content for sending
+      zh_Hans: 待发送的消息内容
+      pt_BR: Message content for sending
+    llm_description: The message need to be send.
+    form: llm
+extra:
+  python:
+    source: tools/wechat_sender.py
