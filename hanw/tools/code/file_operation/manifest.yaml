@@ -1,0 +1,41 @@
+version: 0.0.1
+type: plugin
+author: hanw39
+name: file_operation
+label:
+  en_US: file_operation
+  ja_JP: file_operation
+  zh_Hans: file_operation
+  pt_BR: file_operation
+description:
+  en_US: Common file operations
+  ja_JP: Common file operations
+  zh_Hans: Common file operations
+  pt_BR: Common file operations
+icon: icon.svg
+resource:
+  memory: 536870912  # 512MB
+  permission:
+    tool:
+      enabled: true
+    app:
+      enabled: true
+    storage:
+      enabled: true
+      size: 1048576
+plugins:
+  tools:
+    - provider/file_operation.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: null
+created_at: 2025-04-23T21:40:57.065387+08:00
+privacy: PRIVACY.md
+verified: false

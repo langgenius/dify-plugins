@@ -1,0 +1,128 @@
+identity:
+  name: file_hash
+  author: hanw39
+  label:
+    en_US: File Hash
+    zh_Hans: 文件哈希
+    pt_BR: Hash de Arquivo
+description:
+  human:
+    en_US: Generate file hash using different algorithms
+    zh_Hans: 使用不同算法为文件生成哈希摘要
+    pt_BR: Gerar hash de arquivo usando diferentes algoritmos
+  llm: Generate file hash using different algorithms
+parameters:
+  - name: file
+    type: files
+    required: true
+    label:
+      en_US: File
+      zh_Hans: 文件
+      pt_BR: Arquivo
+    human_description:
+      en_US: The file to calculate hash for
+      zh_Hans: 需要计算哈希值的文件
+      pt_BR: O arquivo para calcular o hash
+    llm_description: The file to calculate hash for
+    form: llm
+  - name: algorithm
+    type: select
+    required: false
+    label:
+      en_US: Hash Algorithm
+      zh_Hans: 哈希算法
+      pt_BR: Algoritmo de Hash
+    human_description:
+      en_US: Hash algorithm to use
+      zh_Hans: 要使用的哈希算法
+      pt_BR: Algoritmo de hash a ser usado
+    llm_description: Hash algorithm to use
+    form: llm
+    default: SHA-256
+    options:
+      - value: MD2
+        label:
+          en_US: MD2 (legacy)
+          zh_Hans: MD2 (传统)
+          pt_BR: MD2 (legado)
+      - value: MD5
+        label:
+          en_US: MD5 (legacy)
+          zh_Hans: MD5 (传统)
+          pt_BR: MD5 (legado)
+      - value: SHA-1
+        label:
+          en_US: SHA-1 (legacy)
+          zh_Hans: SHA-1 (传统)
+          pt_BR: SHA-1 (legado)
+      - value: SHA-256
+        label:
+          en_US: SHA-256 (recommended)
+          zh_Hans: SHA-256 (推荐)
+          pt_BR: SHA-256 (recomendado)
+      - value: SHA-384
+        label:
+          en_US: SHA-384
+          zh_Hans: SHA-384
+          pt_BR: SHA-384
+      - value: SHA-512
+        label:
+          en_US: SHA-512
+          zh_Hans: SHA-512
+          pt_BR: SHA-512
+      - value: SHA3-256
+        label:
+          en_US: SHA3-256 (modern)
+          zh_Hans: SHA3-256 (现代)
+          pt_BR: SHA3-256 (moderno)
+      - value: BLAKE2b
+        label:
+          en_US: BLAKE2b (modern, fast)
+          zh_Hans: BLAKE2b (现代, 快速)
+          pt_BR: BLAKE2b (moderno, rápido)
+  - name: format
+    type: select
+    required: false
+    label:
+      en_US: Output Format
+      zh_Hans: 输出格式
+      pt_BR: Formato de Saída
+    human_description:
+      en_US: Format of the hash output
+      zh_Hans: 哈希值的输出格式
+      pt_BR: Formato da saída do hash
+    llm_description: Format of the hash output
+    form: llm
+    default: hex
+    options:
+      - value: hex
+        label:
+          en_US: Hexadecimal
+          zh_Hans: 十六进制
+          pt_BR: Hexadecimal
+      - value: base64
+        label:
+          en_US: Base64
+          zh_Hans: Base64
+          pt_BR: Base64
+      - value: binary
+        label:
+          en_US: Binary
+          zh_Hans: 二进制
+          pt_BR: Binário
+  - name: expected_hash
+    type: string
+    required: false
+    label:
+      en_US: Expected Hash
+      zh_Hans: 预期哈希值
+      pt_BR: Hash Esperado
+    human_description:
+      en_US: Expected hash value for verification (optional)
+      zh_Hans: 用于验证的预期哈希值（可选）
+      pt_BR: Valor de hash esperado para verificação (opcional)
+    llm_description: Expected hash value for verification (optional)
+    form: llm
+extra:
+  python:
+    source: tools/file_hash.py
