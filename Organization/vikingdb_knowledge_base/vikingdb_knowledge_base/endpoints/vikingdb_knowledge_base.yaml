@@ -1,0 +1,5 @@
+path: "/vikingdb/knowledge_base/retrieval"
+method: "POST"
+extra:
+  python:
+    source: "endpoints/vikingdb_knowledge_base.py"

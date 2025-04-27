@@ -1,0 +1,27 @@
+settings:
+  - name: vikingdb_ak
+    type: secret-input
+    required: true
+    label:
+      en_US: Access Key ID
+      zh_Hans: Access Key ID
+      pt_BR: Access Key ID
+    placeholder:
+      en_US: Please input your Access Key ID
+      zh_Hans: 请输入你的 Access Key ID
+      pt_BR: Please input your Access Key ID
+
+  - name: vikingdb_sk
+    type: secret-input
+    required: true
+    label:
+      en_US: Secret Access Key
+      zh_Hans: Secret Access Key
+      pt_BR: Secret Access Key
+    placeholder:
+      en_US: Please input your Secret Access Key
+      zh_Hans: 请输入你的 Secret Access Key
+      pt_BR: Please input your Secret Access Key
+
+endpoints:
+  - endpoints/vikingdb_knowledge_base.yaml

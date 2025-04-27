@@ -1,0 +1,5 @@
+dify_plugin>=0.1.0,<0.2.0
+volcengine~=1.0.183
+deprecated~=1.2.18
+aiohttp~=3.11.18
+Werkzeug~=3.0.6
