@@ -1,0 +1,37 @@
+identity:
+  author: anspire
+  name: anspire_rewrite
+  label:
+    en_US: anspire_rewrite
+    zh_Hans: 安思派多轮改写
+    pt_BR: anspire_rewrite
+  description:
+    en_US: Optimized specifically for conversational AI scenarios, it intelligently supplements exhaustive content and resolves referential relationships in multiple rounds of interaction, significantly enhancing the accuracy and coherence of user queries. No prompt words required, plug and play. The effect is even better when combined with the Ansipai network search capability.
+    zh_Hans: 专为对话式AI场景优化，在多轮交互中智能补全省略内容并消解指代关系，显  著提升用户查询的准确性与连贯性。无需提示词，即插即用，搭配安思派联网搜索能力效果更佳。
+    pt_BR: anspire net work search plugin
+  icon: icon.svg
+credentials_for_provider: #添加 credentials_for_provider 字段
+  endpoint:
+    type: text-input
+    required: true
+    label:
+      en_US: Endpoint
+      zh_Hans: 终结点
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: Anspire API key
+      zh_Hans: 安思派 API key
+    placeholder:
+      en_US: Please input your Anspire API key
+      zh_Hans: 请输入你的安思派 API key
+    help:
+      en_US: Get Anspire API key from anspire
+      zh_Hans: 从安思派获取 API key
+    url: https://anchnet.feishu.cn/wiki/UttTwXWcCiz8XZkoVSycyxbdnz9?fromScene=spaceOverview
+tools:
+  - tools/rewrite.yaml
+extra:
+  python:
+    source: provider/rewrite.py
