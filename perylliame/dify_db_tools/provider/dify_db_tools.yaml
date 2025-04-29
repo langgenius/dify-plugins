@@ -1,0 +1,17 @@
+identity:
+  author: perylliame
+  name: dify_db_tools
+  label:
+    en_US: dify_db_tools
+    zh_Hans: dify_db_tools
+    pt_BR: dify_db_tools
+  description:
+    en_US: A database tool that follows the dify plugin specification
+    zh_Hans: A database tool that follows the dify plugin specification
+    pt_BR: A database tool that follows the dify plugin specification
+  icon: icon.svg
+tools:
+  - tools/dify_db_tools.yaml
+extra:
+  python:
+    source: provider/dify_db_tools.py

@@ -1,0 +1,111 @@
+identity:
+  name: dify_db_tools
+  author: perylliame
+  label:
+    en_US: dify_db_tools
+    zh_Hans: dify_db_tools
+    pt_BR: dify_db_tools
+description:
+  human:
+    en_US: A dify tool for adding, deleting, modifying and querying based on the mariadb database
+    zh_Hans: 一个基于mariadb数据库进行增删改查的dify工具
+    pt_BR: A dify tool for adding, deleting, modifying and querying based on the mariadb database
+  llm: A dify tool for adding, deleting, modifying and querying based on the mariadb database
+parameters:
+  - name: db_info
+    type: string
+    required: true
+    label:
+      en_US: Database connect info
+      zh_Hans: 连接数据库的信息
+      pt_BR: Database connect info
+    human_description:
+      en_US: Database connect info
+      zh_Hans: 连接数据库的信息
+      pt_BR: Database connect info
+    llm_description: Database connect info
+    form: llm
+  - name: output_debug
+    type: boolean
+    required: false
+    label:
+      en_US: Output debugging information
+      zh_Hans: 输出sql等调试信息
+      pt_BR: Output debugging information
+    human_description:
+      en_US: Output debugging information
+      zh_Hans: 输出sql等调试信息
+      pt_BR: Output debugging information
+    llm_description: Output debugging information
+    form: form
+  - name: operateType
+    type: select
+    required: true
+    label:
+      en_US: Operate Type
+      zh_Hans: 操作类型
+      pt_BR: Operate Type
+    human_description:
+      en_US: The operation type of the database
+      zh_Hans: 操作数据库的类型
+      pt_BR: The operation type of the database
+    llm_description: The operation type of the database
+    form: llm
+    options:
+      - label:
+          en_US: query
+          zh_Hans: 查询
+        value: query
+      - label:
+          en_US: item
+          zh_Hans: 查询单条
+        value: item
+      - label:
+          en_US: insert
+          zh_Hans: 新建
+        value: insert
+      - label:
+          en_US: update
+          zh_Hans: 更新
+        value: update
+      - label:
+          en_US: delete
+          zh_Hans: 删除
+        value: delete
+      - label:
+          en_US: batchInsert
+          zh_Hans: 批量新建
+        value: batchInsert
+      - label:
+          en_US: batchUpdate
+          zh_Hans: 批量更新
+        value: batchUpdate
+  - name: operateData
+    type: string
+    required: true
+    label:
+      en_US: Operate Data
+      zh_Hans: 操作参数
+      pt_BR: Operate Data
+    human_description:
+      en_US: The operation data
+      zh_Hans: 操作参数(json字符串)
+      pt_BR: The operation data
+    llm_description: The operation data
+    form: llm
+  - name: moduleConfig
+    type: string
+    required: true
+    label:
+      en_US: Module Config
+      zh_Hans: 模块配置信息对象
+      pt_BR: Module Config
+    human_description:
+      en_US: Module Config
+      zh_Hans: 模块配置信息对象
+      pt_BR: Module Config
+    llm_description: Module Config
+    form: llm
+extra:
+  python:
+    source: tools/dify_db_tools.py
