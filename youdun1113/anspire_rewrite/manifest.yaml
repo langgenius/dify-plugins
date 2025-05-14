@@ -1,17 +1,17 @@
 version: 0.0.1
 type: plugin
-author: rewrite
-name: rewrite
+author: youdun1113
+name: anspire_rewrite
 label:
-  en_US: rewrite
-  ja_JP: rewrite
-  zh_Hans: rewrite
-  pt_BR: rewrite
+  en_US: anspire_rewrite
+  ja_JP: anspire_rewrite
+  zh_Hans: anspire_rewrite
+  pt_BR: anspire_rewrite
 description:
-  en_US: rewrite
-  ja_JP: rewrite
-  zh_Hans: rewrite
-  pt_BR: rewrite
+  en_US: anspire_rewrite
+  ja_JP: anspire_rewrite
+  zh_Hans: anspire_rewrite
+  pt_BR: anspire_rewrite
 icon: icon.svg
 resource:
   memory: 268435456
