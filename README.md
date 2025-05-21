@@ -34,9 +34,21 @@
         <img alt="Discussion posts" src="https://img.shields.io/github/discussions/langgenius/dify?labelColor=%20%239b8afb&color=%20%237a5af8"></a>
 </p>
 
+## Table of Contents
+
+- [Introducing Dify Plugins](#introducing-dify-plugins)
+- [Plugin Development](#plugin-development)
+  - [Types of Plugin](#types-of-plugin)
+  - [Plugin Docs](#plugin-docs)
+- [Publishing to Dify Marketplace](#publishing-to-dify-marketplace)
+  - [Development](#development)
+  - [Publishing](#publishing)
+- [Contributing](#contributing)
+- [Security Disclosure](#security-disclosure)
+
 ### Introducing Dify Plugins
 
-[Dify](https://dify.ai/) is an open-source platform for developing LLM-powered AI applications, designed to help developers and businesses efficiently build, deploy, and manage AI-driven solutions. With Dify, users can easily create and test complex AI workflows, integrate a wide range of advanced models and tools, and optimize their performance in real-world applications. The platform offers an intuitive interface, supporting RAG (Retrieval-Augmented Generation) pipelines, intelligent agent capabilities, and robust model management, enabling developers to seamlessly transition from prototype to production.
+[Dify](https://dify.ai/)&nbsp;is an open-source platform for developing LLM-powered AI applications, designed to help developers and businesses efficiently build, deploy, and manage AI-driven solutions. With Dify, users can easily create and test complex AI workflows, integrate a wide range of advanced models and tools, and optimize their performance in real-world applications. The platform offers an intuitive interface, supporting RAG (Retrieval-Augmented Generation) pipelines, intelligent agent capabilities, and robust model management, enabling developers to seamlessly transition from prototype to production.
 
 [Dify Marketplace](https://marketplace.dify.ai/) is a vibrant center that allows developers, businesses, and AI enthusiasts to explore, share, and deploy plugins designed to enhance Dify Apps' capabilities. It serves as a platform where users can discover a wide range of models, tools, agent strategies, extensions, and bundles, all of which can be seamlessly integrated into their AI applications. By providing a collaborative space for both official and community-contributed plugins, the Dify Marketplace encourages innovation and resource sharing. 
 
@@ -97,6 +109,22 @@ To publish your plugin on the Dify Marketplace, follow these steps:
 > - Only **one file change** can be made in a PR request.
 > - Check the version of the plugin before publishing. Same version cannot be merged into the same subdirectory.
 
-### Security disclosure
+### Contributing
 
-To protect your privacy, please avoid posting security issues on GitHub. Instead, send your questions to [security@dify.ai](mailto:security@dify.ai) and we will provide you with a more detailed answer.
+Contributions to Dify Plugins are welcome! We appreciate your help in expanding and improving the collection of plugins available.
+
+For detailed guidelines on how to contribute, please refer to our [CONTRIBUTING.md](CONTRIBUTING.md) file.
+
+The general process for contributing a new plugin is as follows:
+1.  **Fork** this repository.
+2.  **Create a directory** for your plugin under the appropriate organization directory (e.g., `your-org/your-plugin-name/`).
+3.  **Add your plugin source code** and the packaged `.difypkg` file to this directory.
+4.  **Submit a Pull Request (PR)** with your changes. Please ensure your PR follows the template and guidelines.
+
+**Important reminders (Tips for contributing):**
+-   Only **one file change** (meaning one plugin addition or update) should be made in a single PR request.
+-   **Check the version** of the plugin before publishing. The same version cannot be merged into the same subdirectory if it already exists.
+
+### Security Disclosure
+
+To protect your privacy, please avoid posting security issues on GitHub. Instead, send your questions to&nbsp;[security@dify.ai](mailto:security@dify.ai)&nbsp;and we will provide you with a more detailed answer.
