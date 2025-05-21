@@ -1,0 +1,98 @@
+identity:
+  name: mcp_call_tool
+  author: YoFoon
+  label:
+    en_US: Call MCP Tool
+    zh_Hans: 调用MCP工具
+description:
+  human:
+    en_US: Call MCP Server tool through HTTP with SSE transport or Streamable HTTP transport.
+    zh_Hans: 通过HTTP with SSE传输或Streamable HTTP传输来调用MCP服务端工具。
+  llm: Call a tool on an MCP Server.
+extra:
+  python:
+    source: tools/mcp_call_tool.py
+parameters:
+  - name: server_url
+    type: string
+    required: true
+    label:
+      en_US: Server URL
+      zh_Hans: 服务器地址
+    human_description:
+      en_US: The URL of the MCP Server endpoint.
+      zh_Hans: MCP服务器的端点URL。
+    llm_description: The URL of the MCP Server endpoint.
+    form: llm
+  - name: transport
+    type: string
+    required: false
+    default: sse
+    enum:
+      - sse
+      - streamable_http
+    label:
+      en_US: Transport Protocol
+      zh_Hans: 传输协议
+    human_description:
+      en_US: The transport protocol to use, either "sse" (default) or "streamable_http".
+      zh_Hans: 使用的传输协议，可选值为 "sse"（默认）或 "streamable_http"。
+    llm_description: The transport protocol to use, either "sse" (default) or "streamable_http".
+    form: llm
+  - name: headers
+    type: string
+    required: false
+    label:
+      en_US: Headers
+      zh_Hans: 请求头
+    human_description:
+      en_US: HTTP headers in JSON format (e.g. {"Authorization":"Bearer token"}).
+      zh_Hans: HTTP请求头，JSON格式（例如：{"Authorization":"Bearer token"}）。
+    llm_description: HTTP headers in JSON format (e.g. {"Authorization":"Bearer token"}).
+    form: llm
+  - name: timeout
+    type: number
+    required: false
+    default: 60
+    label:
+      en_US: Timeout
+      zh_Hans: 超时时间
+    human_description:
+      en_US: HTTP request timeout in seconds.
+      zh_Hans: HTTP请求超时时间（秒）。
+    llm_description: HTTP request timeout in seconds.
+    form: llm
+  - name: sse_read_timeout
+    type: number
+    required: false
+    default: 300
+    label:
+      en_US: SSE Read Timeout
+      zh_Hans: SSE读取超时
+    human_description:
+      en_US: SSE read timeout in seconds (time to wait for SSE events). Only used with "sse" transport.
+      zh_Hans: SSE读取超时时间（秒）（等待SSE事件的时间）。仅在使用"sse"传输方式时适用。
+    llm_description: SSE read timeout in seconds (time to wait for SSE events). Only used with "sse" transport.
+    form: llm
+  - name: tool_name
+    type: string
+    required: true
+    label:
+      en_US: Tool Name
+      zh_Hans: 工具名称
+    human_description:
+      en_US: Name of the tool to execute.
+      zh_Hans: 要执行的工具的名称。
+    llm_description: Name of the tool to execute.
+    form: llm
+  - name: arguments
+    type: string
+    required: false
+    label:
+      en_US: Arguments
+      zh_Hans: 参数
+    human_description:
+      en_US: Tool arguments (JSON string in the python dict[str, Any] format).
+      zh_Hans: 工具的参数，JSON格式的字符串（Python dict[str, Any]格式）。
+    llm_description: Tool arguments (JSON string in the python dict[str, Any] format).
+    form: llm 

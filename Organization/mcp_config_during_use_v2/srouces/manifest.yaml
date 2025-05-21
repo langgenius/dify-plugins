@@ -1,0 +1,31 @@
+version: 0.0.1
+type: plugin
+author: YoFoon
+name: mcp_config_during_use_v2
+label:
+  en_US: MCP Config During Use
+  zh_Hans: 使用时配置的MCP工具
+description:
+  en_US: Enhanced version based on arrenxxxxx/dify-plugin-tools-mcp_config_during_use, supporting both SSE and Streamable HTTP transport methods to fetch and call tools via MCP protocol.
+  zh_Hans: 基于arrenxxxxx/dify-plugin-tools-mcp_config_during_use增强版本，支持SSE和Streamable HTTP两种传输方式使用MCP协议来发现和调用工具。
+icon: icon.svg
+resource:
+  memory: 268435456
+  permission: {}
+plugins:
+  tools:
+    - provider/mcp_config.yaml
+tags:
+  - utilities
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+created_at: 2025-04-14T15:00:00+08:00
+privacy: PRIVACY.md
+verified: false 
