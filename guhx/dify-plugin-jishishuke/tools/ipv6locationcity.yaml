@@ -1,0 +1,43 @@
+identity:
+  name: ipv6location-city
+  author: hongxin-gu
+  label:
+    en_US: ipv6-query-city
+    zh_Hans: ipv6归属地查询(城市级)
+    pt_BR: ipv6-query-city
+description:
+  human:
+    en_US: Query the location of ipv6 address,city level accuracy.
+    zh_Hans: 查询ipv6地址的归属地，城市级查询精度。
+    pt_BR: Query the location of ipv6 address,city level accuracy.
+  llm: A tool for querying the location of ipv6 address,city level accuracy.
+parameters:
+  - name: key
+    type: secret-input
+    required: true
+    label:
+      en_US: API KEY
+      zh_Hans: API密钥
+      pt_BR: API KEY
+    human_description:
+      en_US: The API key for accessing the Jishishuke API, you can get it from api.jishishuke.com .
+      zh_Hans: 访问极识数科API平台的密钥，您可以在 api.jishishuke.com 上获取。
+      pt_BR: The API key for accessing the Jishishuke API, you can get it from api.jishishuke.com .
+    llm_description: The API key for accessing the Jishishuke API, you can get it from api.jishishuke.com .
+    form: llm
+  - name: ipAddress
+    type: string
+    required: true
+    label:
+      en_US: IPv6
+      zh_Hans: IPv6
+      pt_BR: IPv6
+    human_description:
+      en_US: The IPv6 address to query, like '240e:358:d4a:9900:4a1f:2dff:fe10:c52b'.
+      zh_Hans: 要查询的IPv6地址，例如 '240e:358:d4a:9900:4a1f:2dff:fe10:c52b'。
+      pt_BR: The IPv6 address to query, like '240e:358:d4a:9900:4a1f:2dff:fe10:c52b'.
+    llm_description: The IPv6 address to query, like '240e:358:d4a:9900:4a1f:2dff:fe10:c52b'.
+    form: llm
+extra:
+  python:
+    source: tools/IPv6locationcity.py

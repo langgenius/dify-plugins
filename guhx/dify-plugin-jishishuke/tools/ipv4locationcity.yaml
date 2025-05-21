@@ -1,0 +1,43 @@
+identity:
+  name: ipv4location-city
+  author: hongxin-gu
+  label:
+    en_US: ipv4-query-city
+    zh_Hans: ipv4归属地查询(城市级)
+    pt_BR: ipv4-query-city
+description:
+  human:
+    en_US: Query the location of ipv4 address,city level accuracy.
+    zh_Hans: 查询ipv4地址的归属地，城市级查询精度。
+    pt_BR: Query the location of ipv4 address,city level accuracy.
+  llm: A tool for querying the location of ipv4 address,city level accuracy.
+parameters:
+  - name: key
+    type: secret-input
+    required: true
+    label:
+      en_US: API KEY
+      zh_Hans: API密钥
+      pt_BR: API KEY
+    human_description:
+      en_US: The API key for accessing the Jishishuke API, you can get it from api.jishishuke.com .
+      zh_Hans: 访问极识数科API平台的密钥，您可以在 api.jishishuke.com 上获取。
+      pt_BR: The API key for accessing the Jishishuke API, you can get it from api.jishishuke.com .
+    llm_description: The API key for accessing the Jishishuke API, you can get it from api.jishishuke.com .
+    form: llm
+  - name: ipAddress
+    type: string
+    required: true
+    label:
+      en_US: IPv4
+      zh_Hans: IPv4
+      pt_BR: IPv4
+    human_description:
+      en_US: The IPv4 address to query, like '1.1.1.1'.
+      zh_Hans: 要查询的IPv4地址，例如 '1.1.1.1'。
+      pt_BR: The IPv4 address to query, like '1.1.1.1'.
+    llm_description: The IPv4 address to query, like '1.1.1.1'.
+    form: llm
+extra:
+  python:
+    source: tools/ipv4locationcity.py

@@ -1,0 +1,18 @@
+identity:
+  author: hongxin-gu
+  name: jishishuke
+  label:
+    en_US: jishishuke
+    zh_Hans: 郑州极识数字科技有限公司
+    pt_BR: jishishuke
+  description:
+    en_US: Jishishuke API toolbox (IP location, bank card number, mobile phone location query...).
+    zh_Hans: 极识数科API工具箱（IP归属地、银行卡号、手机号归属地查询...）。
+    pt_BR: Jishishuke API toolbox (IP location, bank card number, mobile phone location query...).
+  icon: icon.svg
+tools:
+  - tools/ipv4locationcity.yaml
+  - tools/ipv6locationcity.yaml
+extra:
+  python:
+    source: provider/jishishuke.py

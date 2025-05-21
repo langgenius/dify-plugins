@@ -1,0 +1,53 @@
+version: 0.0.1
+type: plugin
+author: guhx
+name: jishishuke
+label:
+  en_US: jishishuke
+  ja_JP: jishishuke
+  zh_Hans: 极识数科
+  pt_BR: jishishuke
+description:
+  en_US: Jishishuke API toolbox (IP location, bank card number, mobile phone location query...).
+  ja_JP: Jishishuke API toolbox (IP location, bank card number, mobile phone location query...).
+  zh_Hans: 极识数科API工具箱（IP归属地、银行卡号、手机号归属地查询...）。
+  pt_BR: Jishishuke API toolbox (IP location, bank card number, mobile phone location query...).
+icon: icon.svg
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+    model:
+      enabled: false
+      llm: false
+      text_embedding: false
+      rerank: false
+      tts: false
+      speech2text: false
+      moderation: false
+    node:
+      enabled: false
+    endpoint:
+      enabled: true
+    app:
+      enabled: true
+    storage:
+      enabled: true
+      size: 1048576
+plugins:
+  tools:
+    - provider/jishishuke.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: null
+created_at: 2025-05-15T17:36:03.8229015+08:00
+privacy: PRIVACY.md
+verified: false
