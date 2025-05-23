@@ -1,6 +1,6 @@
-## anspire_search
+## anspire_rewrite
 
-**Author:** rewrite
+**Author:** anspire_rewrite
 **Version:** 0.0.1
 **Type:** tool
 
