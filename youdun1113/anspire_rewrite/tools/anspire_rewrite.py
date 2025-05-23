@@ -6,7 +6,7 @@ from dify_plugin.entities.tool import ToolInvokeMessage
 from utils.httpUtil import do_request
 
 
-class RewriteTool(Tool):
+class AnspireRewriteTool(Tool):
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:
         _auth_key = self.runtime.credentials.get('api_key')
         _endpoint = self.runtime.credentials.get('endpoint')

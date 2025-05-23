@@ -27,7 +27,7 @@ resource:
       size: 1048576
 plugins:
   tools:
-    - provider/rewrite.yaml
+    - provider/anspire_rewrite.yaml
 meta:
   version: 0.0.1
   arch:

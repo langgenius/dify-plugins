@@ -1,10 +1,10 @@
 identity:
-  name: rewrite
-  author: anspire
+  name: anspire_rewrite
+  author: youdun1113
   label:
-    en_US: rewrite
+    en_US: anspire_rewrite
     zh_Hans: 安思派多轮改写
-    pt_BR: rewrite
+    pt_BR: anspire_rewrite
 description:
   human:
     en_US: Optimized specifically for conversational AI scenarios, it intelligently supplements exhaustive content and resolves referential relationships in multiple rounds of interaction, significantly enhancing the accuracy and coherence of user queries. No prompt words required, plug and play. The effect is even better when combined with the Ansipai network search capability.
@@ -40,4 +40,4 @@ parameters:
   form: llm
 extra:
   python:
-    source: tools/rewrite.py
+    source: tools/anspire_rewrite.py

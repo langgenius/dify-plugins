@@ -1,5 +1,5 @@
 identity:
-  author: anspire
+  author: youdun1113
   name: anspire_rewrite
   label:
     en_US: anspire_rewrite
@@ -31,7 +31,7 @@ credentials_for_provider: #添加 credentials_for_provider 字段
       zh_Hans: 从安思派获取 API key
     url: https://anchnet.feishu.cn/wiki/UttTwXWcCiz8XZkoVSycyxbdnz9?fromScene=spaceOverview
 tools:
-  - tools/rewrite.yaml
+  - tools/anspire_rewrite.yaml
 extra:
   python:
-    source: provider/rewrite.py
+    source: provider/anspire_rewrite.py
