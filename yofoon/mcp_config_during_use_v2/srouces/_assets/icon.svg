@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景 -->
+  <rect width="64" height="64" rx="16" fill="#3F51B5"/>
+  
+  <!-- 简洁的配置连接线 -->
+  <path d="M18 20C18 20 28 32 40 20" stroke="white" stroke-width="5" stroke-linecap="round"/>
+  <path d="M18 44C18 44 28 32 40 44" stroke="white" stroke-width="5" stroke-linecap="round"/>
+  
+  <!-- 小配置元素 -->
+  <path d="M40 20L46 26" stroke="white" stroke-width="5" stroke-linecap="round"/>
+</svg> 
