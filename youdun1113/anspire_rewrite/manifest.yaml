@@ -1,0 +1,43 @@
+version: 0.0.1
+type: plugin
+author: youdun1113
+name: anspire_rewrite
+label:
+  en_US: anspire_rewrite
+  ja_JP: anspire_rewrite
+  zh_Hans: anspire_rewrite
+  pt_BR: anspire_rewrite
+description:
+  en_US: anspire_rewrite
+  ja_JP: anspire_rewrite
+  zh_Hans: anspire_rewrite
+  pt_BR: anspire_rewrite
+icon: icon.svg
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+    endpoint:
+      enabled: true
+    app:
+      enabled: true
+    storage:
+      enabled: true
+      size: 1048576
+plugins:
+  tools:
+    - provider/anspire_rewrite.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: null
+created_at: 2025-04-28T14:23:23.540104+08:00
+privacy: PRIVACY.md
+verified: false
