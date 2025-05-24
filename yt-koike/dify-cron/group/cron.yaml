@@ -1,0 +1,28 @@
+settings:
+  - name: endpoint_url
+    type: text-input
+    required: true
+    label:
+      en_US: Dify Endpoint
+    placeholder:
+      en_US: http://dify.example.com:8080
+  - name: api_key
+    type: secret-input
+    required: true
+    label:
+      en_US: API key
+      zh_Hans: API key
+      pt_BR: API key
+    placeholder:
+      en_US: Please input your API key
+      zh_Hans: 请输入你的 API key
+      pt_BR: Please input your API key
+  - name: cron_str
+    type: text-input
+    required: true
+    label:
+      en_US: Cron
+    placeholder:
+      en_US: Please input cron setting
+endpoints:
+  - endpoints/cron.yaml

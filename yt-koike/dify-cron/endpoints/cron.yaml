@@ -1,0 +1,5 @@
+path: "/cron/<command>"
+method: "GET"
+extra:
+  python:
+    source: "endpoints/cron.py"
