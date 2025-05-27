@@ -1,0 +1,50 @@
+version: 0.0.1
+type: plugin
+author: hkx
+name: prompt
+
+#parameters:
+#  - name: system_value       # 变量名
+#    type: string            # 类型（string/number等）
+#    description: 自定义输出变量
+#    default: 默认值         # 可选默认值
+
+label:
+  en_US: prompt
+  ja_JP: prompt
+  zh_Hans: prompt
+  pt_BR: prompt
+description:
+  en_US: 提示词调用插件
+  ja_JP: 提示词调用插件
+  zh_Hans: 提示词调用插件
+  pt_BR: 提示词调用插件
+icon: icon.svg
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+    endpoint:
+      enabled: true
+    app:
+      enabled: true
+    storage:
+      enabled: true
+      size: 1048576
+plugins:
+  tools:
+    - provider/prompt.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: null
+created_at: 2025-05-08T22:40:33.979684+08:00
+privacy: PRIVACY.md
+verified: false
