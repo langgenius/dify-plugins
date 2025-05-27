@@ -1,0 +1,17 @@
+identity:
+  author: hkx
+  name: prompt
+  label:
+    en_US: prompt
+    zh_Hans: prompt
+    pt_BR: prompt
+  description:
+    en_US: 提示词调用插件
+    zh_Hans: 提示词调用插件
+    pt_BR: 提示词调用插件
+  icon: icon.svg
+tools:
+  - tools/prompt.yaml
+extra:
+  python:
+    source: provider/prompt.py
