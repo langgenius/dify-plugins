@@ -1,3 +1,3 @@
 ## Privacy
 
-!!! Please fill in the privacy policy of the plugin.
+This plugin, Cron, does NOT collect any personal data.

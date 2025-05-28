@@ -1,22 +1,17 @@
 settings:
-  - name: endpoint_url
-    type: text-input
+  - name: app
+    type: app-selector
     required: true
     label:
-      en_US: Dify Endpoint
+      en_US: App
+      zh_Hans: 应用
+      pt_BR: App
+      ja_JP: アプリ
     placeholder:
-      en_US: http://dify.example.com:8080
-  - name: api_key
-    type: secret-input
-    required: true
-    label:
-      en_US: API key
-      zh_Hans: API key
-      pt_BR: API key
-    placeholder:
-      en_US: Please input your API key
-      zh_Hans: 请输入你的 API key
-      pt_BR: Please input your API key
+      en_US: the app you want to use to answer Slack messages
+      zh_Hans: 你想要用来回答 Slack 消息的应用
+      pt_BR: o app que você deseja usar para responder mensagens do Slack
+      ja_JP: あなたが Slack メッセージに回答するために使用するアプリ
   - name: cron_str
     type: text-input
     required: true
@@ -24,5 +19,11 @@ settings:
       en_US: Cron
     placeholder:
       en_US: Please input cron setting
+  - name: is_cloud
+    type: boolean
+    required: false
+    label:
+      en_US: Is this cloud version?
 endpoints:
+  - endpoints/entry.yaml
   - endpoints/cron.yaml

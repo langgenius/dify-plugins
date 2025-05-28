@@ -8,15 +8,17 @@ label:
   zh_Hans: Cron
   pt_BR: Cron
 description:
-  en_US: Regular self-call plugin
-  ja_JP: Regular self-call plugin
-  zh_Hans: Regular self-call plugin
-  pt_BR: Regular self-call plugin
+  en_US: Regular self-call plugin for self-hosted servers, not cloud version
+  ja_JP: Regular self-call plugin for self-hosted servers, not cloud version
+  zh_Hans: Regular self-call plugin for self-hosted servers, not cloud version
+  pt_BR: Regular self-call plugin for self-hosted servers, not cloud version
 icon: icon.svg
 resource:
   memory: 268435456
   permission:
     endpoint:
+      enabled: true
+    app:
       enabled: true
 plugins:
   endpoints:
