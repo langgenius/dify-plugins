@@ -1,2 +1,0 @@
-httpx-sse>=0.4.0 
-dify_plugin==0.0.1b76
