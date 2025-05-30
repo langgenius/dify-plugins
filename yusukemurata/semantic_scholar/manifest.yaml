@@ -1,0 +1,55 @@
+version: 0.0.1
+type: plugin
+author: yusukemurata
+name: semantic_scholar
+label:
+  en_US: Semantic Scholar
+  ja_JP: Semantic Scholar
+  zh_Hans: Semantic Scholar
+  pt_BR: Semantic Scholar
+description:
+  en_US: A plugin for searching academic papers on Semantic Scholar. Enables full-text search and snippet extraction.
+  ja_JP: Semantic Scholarによる学術論文の検索プラグイン。スニペットサーチでは全文検索が可能。
+  zh_Hans: 用于在Semantic Scholar中搜索学术论文的插件。支持全文搜索和片段提取。
+  pt_BR: Plugin para pesquisar artigos acadêmicos no Semantic Scholar. Permite busca em texto completo e extração de trechos.
+icon: icon.svg
+tags:
+  - search
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+    model:
+      enabled: false
+      llm: false
+      text_embedding: false
+      rerank: false
+      tts: false
+      speech2text: false
+      moderation: false
+    node:
+      enabled: false
+    endpoint:
+      enabled: true
+    app:
+      enabled: false
+    storage:
+      enabled: true
+      size: 10485760
+plugins:
+  tools:
+    - provider/semantic_scholar.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: 1.0.0
+created_at: 2025-05-30T18:55:47.779319+09:00
+privacy: PRIVACY.md
+verified: false

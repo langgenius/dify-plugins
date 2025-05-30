@@ -1,0 +1,58 @@
+identity:
+  name: paper_details
+  author: yusukemurata
+  label:
+    en_US: Get Paper Details
+    zh_Hans: 論文詳細取得
+    pt_BR: Get Paper Details
+description:
+  human:
+    en_US: Retrieve detailed information and full text snippets from a specific research paper
+    zh_Hans: 特定の研究論文から詳細情報と全文スニペットを取得
+    pt_BR: Retrieve detailed information and full text snippets from a specific research paper
+  llm: Get comprehensive details about a specific academic paper including abstract, citations, and full text snippets when available
+parameters:
+  - name: paper_id
+    type: string
+    required: true
+    label:
+      en_US: Paper ID
+      zh_Hans: 論文ID
+      pt_BR: Paper ID
+    human_description:
+      en_US: Enter the DOI to retrieve detailed information about the paper
+      zh_Hans: DOIを入力すると、論文の詳細情報を取得できます
+      pt_BR: Insira o DOI para obter informações detalhadas sobre o artigo
+    llm_description: The DOI to retrieve detailed information for the paper
+    form: llm
+  - name: include_citations
+    type: boolean
+    required: false
+    default: true
+    label:
+      en_US: Include Citations
+      zh_Hans: 引用を含める
+      pt_BR: Include Citations
+    human_description:
+      en_US: Include citation information and references
+      zh_Hans: 引用情報と参考文献を含める
+      pt_BR: Include citation information and references
+    llm_description: Whether to include citation count and reference information
+    form: form
+  - name: include_abstract
+    type: boolean
+    required: false
+    default: true
+    label:
+      en_US: Include Abstract
+      zh_Hans: 要約を含める
+      pt_BR: Include Abstract
+    human_description:
+      en_US: Include the paper's abstract
+      zh_Hans: 論文の要約を含める
+      pt_BR: Include the paper's abstract
+    llm_description: Whether to include the full abstract of the paper
+    form: form
+extra:
+  python:
+    source: tools/paper_details.py

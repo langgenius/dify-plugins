@@ -1,0 +1,58 @@
+identity:
+  name: snippet_search
+  author: yusukemurata
+  label:
+    en_US: Semantic Scholar Snippet Search
+    zh_Hans: Semantic Scholar スニペット検索
+    pt_BR: Semantic Scholar Snippet Search
+description:
+  human:
+    en_US: Search for academic papers using Semantic Scholar. Full-text search and snippet extraction are supported.
+    zh_Hans: Semantic Scholarによる学術論文の検索プラグイン。スニペットサーチでは全文検索が可能。
+    pt_BR: Search for academic papers using Semantic Scholar. Full-text search and snippet extraction are supported.
+  llm: Search for academic papers using the Semantic Scholar API. Supports full-text search and extraction of relevant text snippets.
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Snippet Search Query
+      zh_Hans: スニペット検索クエリ
+      pt_BR: Snippet Search Query
+    human_description:
+      en_US: Enter specific Dify concepts to find relevant text snippets
+      zh_Hans: 関連するテキストスニペットを見つけるための具体的なDify概念を入力
+      pt_BR: Enter specific Dify concepts to find relevant text snippets
+    llm_description: Specific Dify-related query to search for relevant text snippets within academic papers
+    form: llm
+  - name: limit
+    type: number
+    required: false
+    default: 20
+    label:
+      en_US: Number of Snippets
+      zh_Hans: スニペット数
+      pt_BR: Number of Snippets
+    human_description:
+      en_US: Maximum number of text snippets to retrieve (1-100)
+      zh_Hans: 取得するテキストスニペットの最大数（1-100）
+      pt_BR: Maximum number of text snippets to retrieve (1-100)
+    llm_description: Number of text snippets to return in search results
+    form: form
+  - name: min_score
+    type: number
+    required: false
+    default: 0.3
+    label:
+      en_US: Minimum Relevance Score
+      zh_Hans: 最小関連性スコア
+      pt_BR: Minimum Relevance Score
+    human_description:
+      en_US: Minimum relevance score for snippets (0.0-1.0)
+      zh_Hans: スニペットの最小関連性スコア（0.0-1.0）
+      pt_BR: Minimum relevance score for snippets (0.0-1.0)
+    llm_description: Minimum relevance score threshold for including snippets in results
+    form: form
+extra:
+  python:
+    source: tools/snippet_search.py
