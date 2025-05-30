@@ -1,0 +1,83 @@
+identity:
+  name: semantic_search
+  author: yusukemurata
+  label:
+    en_US: Semantic Scholar
+    zh_Hans: Semantic Scholar
+    pt_BR: Semantic Scholar
+description:
+  human:
+    en_US: Search for academic papers using Semantic Scholar. Full-text search and snippet extraction are supported.
+    zh_Hans: Semantic Scholarによる学術論文の検索プラグイン。スニペットサーチでは全文検索が可能。
+    pt_BR: Search for academic papers using Semantic Scholar. Full-text search and snippet extraction are supported.
+  llm: Search for academic papers using the Semantic Scholar API. Supports full-text search and extraction of relevant text snippets.
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Search Query
+      zh_Hans: 検索クエリ
+      pt_BR: Search Query
+    human_description:
+      en_US: Plugin for searching academic papers using Semantic Scholar. Full-text search and snippet extraction are supported.
+      zh_Hans: Semantic Scholarによる学術論文の検索プラグイン。
+      pt_BR: Plugin para buscar artigos acadêmicos usando o Semantic Scholar. Suporta busca em texto completo e extração de trechos.
+    llm_description: Plugin for searching academic papers using the Semantic Scholar API. Supports full-text search and snippet extraction.
+    form: llm
+  - name: max_results
+    type: number
+    required: false
+    default: 10
+    label:
+      en_US: Maximum Results
+      zh_Hans: 最大結果数
+      pt_BR: Maximum Results
+    human_description:
+      en_US: Maximum number of papers to retrieve (1-50)
+      zh_Hans: 取得する論文の最大数（1-50）
+      pt_BR: Maximum number of papers to retrieve (1-50)
+    llm_description: Number of research papers to return in search results (default 10, max 50)
+    form: form
+  - name: venue
+    type: string
+    required: false
+    label:
+      en_US: Journal/Venue
+      zh_Hans: ジャーナル/会議
+      pt_BR: Journal/Venue
+    human_description:
+      en_US: Filter by specific journal or conference venue
+      zh_Hans: 特定のジャーナルや会議で絞り込み
+      pt_BR: Filter by specific journal or conference venue
+    llm_description: Name of journal or conference venue to filter results
+    form: form
+  - name: start_year
+    type: number
+    required: false
+    label:
+      en_US: Start Year
+      zh_Hans: 開始年
+      pt_BR: Start Year
+    human_description:
+      en_US: Start year for publication date range
+      zh_Hans: 出版年の開始年
+      pt_BR: Start year for publication date range
+    llm_description: Earliest publication year to include in results
+    form: form
+  - name: end_year
+    type: number
+    required: false
+    label:
+      en_US: End Year
+      zh_Hans: 終了年
+      pt_BR: End Year
+    human_description:
+      en_US: End year for publication date range
+      zh_Hans: 出版年の終了年
+      pt_BR: End year for publication date range
+    llm_description: Latest publication year to include in results
+    form: form
+extra:
+  python:
+    source: tools/semantic_search.py
