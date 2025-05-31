@@ -1,0 +1,30 @@
+identity:
+    name: paper_abstract # 工具的唯一内部名称
+    author: bill
+    label: # 在 Dify UI 中显示的工具名称 (多语言)
+        en_US: paper_abstract
+        zh_Hans: 论文摘要
+        # ... (其他语言)
+description:
+    human: # 给人类用户看的工具描述 (多语言)
+        en_US: Search for paper abstracts based on the user's paper title.
+        zh_Hans: 根据用户的论文题目查询论文摘要。
+        # ... (其他语言)
+    llm: # 给 LLM 看的工具描述 (用于 Agent 模式)
+        Search for paper abstracts based on the user's paper title.
+parameters: # 定义工具的输入参数列表
+    - name: paper_name # 参数的内部名称，与 Python 代码中的 key 对应
+      type: string # 参数类型
+      required: true # 是否必需
+      label: # 在 Dify UI 中显示的参数标签 (多语言)
+          en_US: Paper Title
+          zh_Hans: 文章标题
+      human_description: # 给人类用户看的参数描述 (多语言)
+          en_US: The title for the paper.
+          zh_Hans: 论文的标题。
+      llm_description: # 给 LLM 看的参数描述 (指导 Agent 如何填充)
+          The title of the paper. Should be a concise and meaningful plain text string.
+      form: llm # 参数表单类型 ('llm' 或 'form')
+extra: # 额外配置
+    python:
+        source: tools/paper_abstract.py # 指向实现该工具逻辑的 Python 文件
