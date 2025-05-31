@@ -1,0 +1,35 @@
+identity:
+  name: paper_tools
+  author: bill
+  label:
+    en_US: paper_tools
+    zh_Hans: 论文工具
+    pt_BR: paper_tools
+  description:
+    en_US: A paper tool list that help user to achieve their thinking
+    zh_Hans: 一个可以帮助用户完成他们想法的论文工具集
+    pt_BR: A paper tool list that help user to achieve their thinking
+  icon: icon.svg
+tools:
+  - tools/paper_abstract.yaml
+extra:
+  python:
+    source: provider/paper_tools.py
+
+
+# ... (文件可能已有的 identity, name, label, description, icon 等保持不变) ...
+
+credentials_for_provider: #添加 credentials_for_provider 字段
+    serpapi_api_key:
+        type: secret-input
+        required: true
+        label:
+            en_US: SerpApi API key
+            zh_Hans: SerpApi API key
+        placeholder:
+            en_US: Please input your SerpApi API key
+            zh_Hans: 请输入你的 SerpApi API key
+        help:
+            en_US: Get your SerpApi API key from SerpApi
+            zh_Hans: 从 SerpApi 获取您的 SerpApi API key
+        url: https://serpapi.com/manage-api-key
