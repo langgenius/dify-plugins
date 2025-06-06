@@ -1,0 +1,189 @@
+configurate_methods:
+  - customizable-model
+extra:
+  python:
+    model_sources:
+      - models/llm/llm.py
+      - models/rerank/rerank.py
+      - models/speech2text/speech2text.py
+      - models/tts/tts.py
+      - models/text_embedding/text_embedding.py
+    provider_source: provider/bigapi.py
+icon_large:
+  en_US: bigapi-01.png
+icon_small:
+  en_US: bigapi-01.png
+background: "#E5E7EB"
+help:
+  title:
+    en_US: Get your API Key from BigAPI
+    zh_Hans: 从BigAPI 获取 API Key
+  url:
+    en_US: https://bigapi.skyai.vip/token
+label:
+  en_US: BigAPI
+model_credential_schema:
+  credential_form_schemas:
+    - label:
+        en_US: Server URL
+        zh_Hans: 服务器地址
+      placeholder:
+        en_US: Enter the BigAPI server URL, e.g. https://bigapi.skyai.vip/
+        zh_Hans: 输入 BigAPI 的服务器地址，如https://bigapi.skyai.vip/
+      required: true
+      type: text-input
+      variable: endpoint_url
+    - label:
+        en_US: API Key
+      placeholder:
+        en_US: Enter your API Key
+        zh_Hans: 输入您的 API Key
+      required: true
+      type: secret-input
+      variable: api_key
+    - default: chat
+      label:
+        en_US: Completion mode
+      options:
+        - label:
+            en_US: Completion
+            zh_Hans: 补全
+          value: completion
+        - label:
+            en_US: Chat
+            zh_Hans: 对话
+          value: chat
+      placeholder:
+        en_US: Select completion type
+        zh_Hans: 选择补全类型
+      required: false
+      show_on:
+        - value: llm
+          variable: __model_type
+      type: select
+      variable: mode
+    - default: "8192"
+      label:
+        en_US: Model context size
+        zh_Hans: 模型上下文长度
+      placeholder:
+        en_US: Enter your Model context size
+        zh_Hans: 输入您的模型上下文长度
+      required: true
+      type: text-input
+      variable: context_size
+    - default: "8192"
+      label:
+        en_US: Upper bound for max tokens
+        zh_Hans: 最大 token 上限
+      show_on:
+        - value: llm
+          variable: __model_type
+      type: text-input
+      variable: max_tokens_to_sample
+    - default: no_call
+      label:
+        en_US: Function calling
+      options:
+        - label:
+            en_US: Function Call
+            zh_Hans: Function Call
+          value: function_call
+        - label:
+            en_US: Tool Call
+            zh_Hans: Tool Call
+          value: tool_call
+        - label:
+            en_US: Not Support
+            zh_Hans: 不支持
+          value: no_call
+      required: false
+      show_on:
+        - value: llm
+          variable: __model_type
+      type: select
+      variable: function_calling_type
+
+    - default: not_support
+      label:
+        en_US: Stream Function Calling
+      options:
+        - label:
+            en_US: Supported
+            zh_Hans: 支持
+          value: supported
+        - label:
+            en_US: Not Supported
+            zh_Hans: 不支持
+          value: not_support
+      required: false
+      show_on:
+        - value: llm
+          variable: __model_type
+      type: select
+      variable: stream_function_calling
+    - default: no_support
+      label:
+        en_US: Vision Support
+        zh_Hans: Vision 支持
+      options:
+        - label:
+            en_US: Support
+            zh_Hans: 支持
+          value: support
+        - label:
+            en_US: Not Support
+            zh_Hans: 不支持
+          value: no_support
+      required: false
+      show_on:
+        - value: llm
+          variable: __model_type
+      type: select
+      variable: vision_support
+    - variable: voices
+      show_on:
+        - variable: __model_type
+          value: tts
+      label:
+        en_US: Available Voices (comma-separated)
+        zh_Hans: 可用声音（用英文逗号分隔）
+      type: text-input
+      required: false
+      default: "nova,shimmer,echo,onyx,fable,alloy,ash,sage,coral"
+      placeholder:
+        en_US: "Chinese Female,Chinese Male, Japanese Male, Cantonese Female, English Female, English Male, Korean Female"
+        zh_Hans: "Chinese Female,Chinese Male, Japanese Male, Cantonese Female, English Female, English Male, Korean Female"
+      help:
+        en_US: "List voice names separated by commas. First voice will be used as default."
+        zh_Hans: "用英文逗号分隔的声音列表。第一个声音将作为默认值。"
+    - variable: timeout
+      label:
+        en_US: Timeout(s)
+        zh_Hans: 超时时间(秒)
+      type: text-input
+      required: false
+      default: "600"
+      placeholder:
+        en_US: "600"
+        zh_Hans: "600"
+      help:
+        en_US: "The maximum time to wait for the model to complete the task(seconds)."
+        zh_Hans: "等待模型完成任务的最大时间(秒)。"
+      show_on:
+        - value: rerank
+          variable: __model_type
+  model:
+    label:
+      en_US: Model Name
+      zh_Hans: 模型名称
+    placeholder:
+      en_US: Enter your model name
+      zh_Hans: 输入模型名称
+provider: bigapi
+supported_model_types:
+  - llm
+  - text-embedding
+  - rerank
+  - speech2text
+  - tts
