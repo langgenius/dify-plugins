@@ -73,10 +73,7 @@ This plugin uses the BrightData API service. By using this plugin, you agree to:
 - Use the extracted data in accordance with applicable laws and regulations
 
 ### Contact
-For privacy concerns related to this plugin, please contact:
-- GitHub Issues: https://github.com/Idanvilenski/BrightData_Dify_Plugin/issues
-- Email: [Your contact email]
-
+For privacy concerns related to this plugin, please contact GitHub Issues: https://github.com/Idanvilenski/BrightData_Dify_Plugin/issues
 For BrightData-specific privacy concerns, contact BrightData support directly.
 
 ## Updates
