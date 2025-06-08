@@ -1,0 +1,50 @@
+identity:
+  name: structured_data_feeds
+  author: idanvilenski
+  label:
+    en_US: Structured Data Feeds
+  description:
+    en_US: Intelligent data extraction tool that automatically selects the best BrightData tool based on your request. Supports 20+ data sources including Amazon, LinkedIn, Instagram, YouTube, and more.
+  icon: icon.svg
+
+description:
+  human:
+    en_US: Smart data extraction tool that automatically determines the best extraction method based on your request. Supports E-commerce, Social Media, Business Intelligence, and Content platforms. Simply describe what data you want or provide a URL!
+  llm: This is an intelligent data extraction tool that automatically selects the appropriate BrightData extractor based on the user's request and/or URL. It supports 20+ major platforms including Amazon, LinkedIn, Instagram, YouTube, Crunchbase, Google Maps, Reddit, and more.
+
+parameters:
+  - name: request
+    type: string
+    required: true
+    label:
+      en_US: Data Request Description
+    human_description:
+      en_US: Describe what data you want to extract. Be specific about the type of information you're looking for.
+    llm_description: Describe the data extraction task you want to perform. Examples - Get Amazon product details, Extract LinkedIn profile information, Find company data from Crunchbase, Get Instagram profile statistics, Extract YouTube video details, Find Google Maps reviews for a business, Get Reddit post content.
+    form: llm
+
+  - name: url
+    type: string
+    required: false
+    label:
+      en_US: Target URL (Optional)
+    human_description:
+      en_US: Optional - Provide the specific URL you want to extract data from. If provided, the tool will auto-detect the extraction method.
+    llm_description: Optional URL to extract data from. If provided, the tool will automatically detect the appropriate extraction method based on the URL pattern. Supported URLs include Amazon products, LinkedIn profiles, Instagram accounts, YouTube videos, Crunchbase companies, Google Maps businesses, Reddit posts, etc.
+    form: llm
+
+  - name: additional_params
+    type: string
+    required: false
+    label:
+      en_US: Additional Parameters (JSON)
+    human_description:
+      en_US: Optional - Additional parameters in JSON format for specific extraction requirements.
+    llm_description: Optional JSON string with additional parameters for specific extraction requirements. Common parameters include pages_to_search for pagination, num_of_reviews for review count, days_limit for time range, keyword for search terms.
+    form: llm
+    placeholder:
+      en_US: '{"pages_to_search": "1", "num_of_reviews": "10"}'
+
+extra:
+  python:
+    source: tools/structured_data_feeds.py

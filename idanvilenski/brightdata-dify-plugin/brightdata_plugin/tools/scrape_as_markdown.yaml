@@ -1,0 +1,38 @@
+identity:
+  name: scrape_as_markdown
+  author: idanvilenski
+  label:
+    en_US: Scrape As Markdown
+    zh_Hans: 抓取为 markdown
+    pt_BR: Scrape As Markdown
+  description:
+    en_US: Scrape a single webpage URL and get back the results in MarkDown language. This tool can unlock any webpage even if it uses bot detection or CAPTCHA.
+    zh_Hans: 抓取单个网页URL并以MarkDown语言返回结果。此工具可以解锁任何网页，即使它使用机器人检测或验证码。
+    pt_BR: Scrape a single webpage URL and get back the results in MarkDown language. This tool can unlock any webpage even if it uses bot detection or CAPTCHA.
+  icon: icon.svg
+
+description:
+  human:
+    en_US: Scrape a single webpage URL and get back the results in MarkDown language. This tool can unlock any webpage even if it uses bot detection or CAPTCHA.
+    zh_Hans: 抓取单个网页URL并以MarkDown语言返回结果。此工具可以解锁任何网页，即使它使用机器人检测或验证码。
+    pt_BR: Scrape a single webpage URL and get back the results in MarkDown language. This tool can unlock any webpage even if it uses bot detection or CAPTCHA.
+  llm: Scrape a single webpage URL with advanced options for content extraction and get back the results in MarkDown language. This tool can unlock any webpage even if it uses bot detection or CAPTCHA.
+
+parameters:
+  - name: url
+    type: string
+    required: true
+    label:
+      en_US: Website URL
+      zh_Hans: 网站 URL
+      pt_BR: Website URL
+    human_description:
+      en_US: The full URL of the webpage to scrape
+      zh_Hans: 要抓取的网页的完整 URL
+      pt_BR: The full URL of the webpage to scrape
+    llm_description: The complete URL of the webpage you want to scrape. Must include http:// or https://. The tool can handle any public webpage, including those with bot protection.
+    form: llm
+
+extra:
+  python:
+    source: tools/scrape_as_markdown.py
