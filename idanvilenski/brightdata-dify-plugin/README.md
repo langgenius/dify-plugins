@@ -10,13 +10,13 @@ A comprehensive web scraping and data extraction plugin powered by Bright Data's
 Download the latest plugin package: [`brightdata_plugin.difypkg`](https://github.com/idanvilenski/BrightData_Dify_Plugin/releases/latest/download/brightdata_plugin.difypkg)
 
 ### 2. Install in Dify
-1. Go to [Dify.ai](https://dify.ai) → **Plugins** → **Add Plugin**
-2. Choose **Add from Local File**
+1. Go to [Dify.ai](https://dify.ai) → **Plugins** → **Install Plugin**
+2. Choose **Choose Local Package File**
 3. Upload the `brightdata_plugin.difypkg` file
 
 ### 3. Setup Bright Data Account
 1. Visit [Bright Data](https://brightdata.com/) and create an account
-2. Navigate to your account settings to get your API key
+2. You will get your API key by email at the end of the signup process or you can navigate to your account settings to find it.
 3. Copy your API token for the next step
 
 ### 4. Create Your First Workflow
@@ -27,7 +27,18 @@ Download the latest plugin package: [`brightdata_plugin.difypkg`](https://github
    - **Search Engine** - Get search results from Google, Bing, Yandex
 
 3. Enter your Bright Data API key when prompted
-4. Connect an **LLM node** to process and summarize the scraped data
+4. You can connect an **LLM node** to process and summarize the scraped data
+
+## 💡 Example Workflow
+(see workflow in banner image)
+**Sample Use Case**: Extract Amazon product information and create a summary
+1. **START** → Input: **Product** URL
+2. **STRUCTURED DATA FEEDS** → Extract product details
+3. **LLM** → Summarize into easy-to-read text
+4. **END** → Output: Clean product summary
+Important tips;
+- Referance every stage of the workflow to the output of the previos stage
+- Set a high charecter limit in input fields (for the URL input field choose the "short paragraph" var option)
 
 ## 📋 Available Tools
 
@@ -51,17 +62,6 @@ Get search results from major search engines:
 - Google
 - Bing
 - Yandex
-
-## 💡 Example Workflow
-(see workflow in banner image)
-**Sample Use Case**: Extract Amazon product information and create a summary
-1. **START** → Input: Product URL
-2. **STRUCTURED DATA FEEDS** → Extract product details
-3. **LLM** → Summarize into easy-to-read text
-4. **END** → Output: Clean product summary
-Important tips;
-- Referance every stage of the workflow to the output of the previos stage
-- Set a high charecter limit in input fields (for the URL input field choose the "short paragraph" var option)
 
 ## 🛠️ Development
 
