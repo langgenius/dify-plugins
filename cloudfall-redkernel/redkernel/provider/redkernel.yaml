@@ -1,0 +1,36 @@
+identity:
+  author: joywang
+  name: redkernel
+  label:
+    en_US: cloudfall redkernel
+    zh_Hans: cloudfall redkernel
+    pt_BR: cloudfall redkernel
+  description:
+    en_US: An UEBA plugin that allows you enhance threat detection easily.
+    zh_Hans: An UEBA plugin that allows you enhance threat detection easily.
+    pt_BR: An UEBA plugin that allows you enhance threat detection easily.
+  icon: RedKernel.logo.svg
+tools:
+  - tools/redkernel.yaml
+extra:
+  python:
+    source: provider/redkernel.py # 指向实现该工具逻辑的 Python 文件
+
+credentials_for_provider:
+    api_key: # 这是凭证的内部名称，将在 Python 代码中使用
+        type: secret-input # 输入类型为密码框
+        required: true # 此凭证是必需的
+        label: # 在 Dify UI 中显示的标签 (支持多语言)
+            en_US: Cloudfall RedKernel API KEY
+            zh_Hans: Cloudfall RedKernel 访问令牌
+            # ... (其他语言)
+        placeholder: # 输入框的提示文字 (支持多语言)
+            en_US: Enter your Cloudfall RedKernel API KEY
+            zh_Hans: 请输入您的 Cloudfall RedKernel 访问令牌
+            # ... (其他语言)
+        help: # 帮助提示信息 (支持多语言)
+            en_US: How to get your Cloudfall RedKernel API KEY
+            zh_Hans: 如何获取 Cloudfall RedKernel 访问令牌
+            # ... (其他语言)
+        url: https://Cloudfall.cn # 点击帮助提示时跳转的 URL
+
