@@ -1,0 +1,30 @@
+identity:
+  name: redkernel
+  author: joywang
+  label:
+    en_US: cloudfall redkernel
+    zh_Hans: cloudfall redkernel
+    pt_BR: cloudfall redkernel
+description:
+  human:
+    en_US: An UEBA plugin that allows you enhance threat detection easily.
+    zh_Hans: An UEBA plugin that allows you enhance threat detection easily.
+    pt_BR: An UEBA plugin that allows you enhance threat detection easily.
+  llm: An UEBA plugin that allows you enhance threat detection easily.
+parameters: # 定义工具的输入参数列表
+    - name: text # 参数的内部名称，与 Python 代码中的 text 对应
+      type: string # 参数类型
+      required: true # 是否必需
+      label: # 在 Dify UI 中显示的参数标签 (多语言)
+          en_US: Text
+          zh_Hans: 文本
+      human_description: # 给人类用户看的参数描述 (多语言)
+          en_US: The text for AI Threat classification.
+          zh_Hans: 需要做AI威胁分类的文本。
+      llm_description: # 给 LLM 看的参数描述 (指导 Agent 如何填充)
+          The text for threat classification. Should be a concise and meaningful plain text string.
+      form: llm # 参数表单类型 ('llm' 或 'form')
+    
+extra:
+  python:
+    source: tools/redkernel.py
