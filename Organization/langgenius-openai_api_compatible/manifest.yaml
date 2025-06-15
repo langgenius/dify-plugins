@@ -1,0 +1,32 @@
+version: 0.0.1
+type: plugin
+author: "liangpn"
+name: "openai-api-compatible-fork"
+description:
+  en_US: "Fork of OpenAI API compatible model provider with thinking_budget support. Based on official v0.0.16."
+  zh_Hans: "OpenAI API 兼容模型提供商的 fork 版本，支持 thinking_budget 参数。基于官方 v0.0.16 版本。"
+label:
+  en_US: "OpenAI-API-compatible (Fork)"
+  zh_Hans: "OpenAI API 兼容版 (Fork)"
+created_at: "2025-06-15T17:40:00+08:00"
+icon: icon.svg
+resource:
+  memory: 1048576
+  permission:
+    tool:
+      enabled: true
+    model:
+      enabled: true
+      llm: true
+plugins:
+  models:
+    - "provider/openai_api_compatible.yaml"
+meta:
+  version: 0.0.1
+  arch:
+    - "amd64"
+    - "arm64"
+  runner:
+    language: "python"
+    version: "3.12"
+    entrypoint: "main"
