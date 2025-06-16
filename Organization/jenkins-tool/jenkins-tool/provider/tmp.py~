@@ -1,0 +1,7 @@
+import jenkins
+
+server = jenkins.Jenkins('http://127.0.0.1:8080', username='lizb', password='11da663ec9c668e88899d0decd6e7a7f06', timeout=10)
+
+# get_version() will trigger the underlying HTTP request
+# print(server.build_job('test_job'))
+print(server.get_build_info('test_job', 1))

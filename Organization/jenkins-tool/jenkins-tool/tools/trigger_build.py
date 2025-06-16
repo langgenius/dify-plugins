@@ -1,0 +1,28 @@
+import logging
+from collections.abc import Generator
+from typing import Any
+
+from dify_plugin.config.logger_format import plugin_logger_handler
+from dify_plugin.entities.tool import ToolInvokeMessage
+from dify_plugin import Tool
+from utils.jenkins_client import JenkinsClient
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+logger.addHandler(plugin_logger_handler)
+
+
+class TriggerBuildTool(Tool):
+    def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:
+        client = JenkinsClient(**self.runtime.credentials)
+        job_name = tool_parameters.get("job_name", "")
+
+        if not job_name:
+            yield self.create_text_message("Error: Job name is required.")
+            return
+
+        try:
+            result_message = client.trigger_build(job_name)
+            yield self.create_text_message(result_message)
+        except Exception as e:
+            yield self.create_text_message(f"Error triggering build: {str(e)}")

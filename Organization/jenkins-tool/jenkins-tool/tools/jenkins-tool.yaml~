@@ -1,0 +1,38 @@
+# In tools/trigger_build.yaml
+identity:
+  name: trigger_build
+  author: your_name
+  label:
+    en_US: Trigger Jenkins Build
+    zh_Hans: 触发 Jenkins 构建
+description:
+  human:
+    en_US: Triggers a build for a specified Jenkins job.
+    zh_Hans: 为指定的 Jenkins 任务触发一次构建。
+  llm: This tool triggers a build for a Jenkins job. You must provide the exact job name. You can optionally provide build parameters as a JSON string.
+parameters:
+  - name: job_name
+    type: string
+    required: true
+    label:
+      en_US: Job Name
+      zh_Hans: 任务名称
+    human_description:
+      en_US: The exact name of the Jenkins job to build.
+      zh_Hans: 要构建的 Jenkins 任务的准确名称。
+    llm_description: The exact name of the Jenkins job to build.
+    form: llm
+  - name: job_parameters
+    type: string
+    required: false
+    label:
+      en_US: Build Parameters (JSON)
+      zh_Hans: 构建参数 (JSON)
+    human_description:
+      en_US: Optional. A JSON string of key-value pairs for the build parameters. Example '{"branch": "main", "deploy": "true"}'
+      zh_Hans: 可选。键值对形式的构建参数JSON字符串。例如 '{"branch": "main", "deploy": "true"}'
+    llm_description: Optional. A JSON formatted string representing the build parameters.
+    form: llm
+extra:
+  python:
+    source: tools/trigger_build.py

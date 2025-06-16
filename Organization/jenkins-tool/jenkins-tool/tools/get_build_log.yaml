@@ -1,0 +1,37 @@
+identity:
+  name: get_build_log
+  author: lizb
+  label:
+    en_US: Get Jenkins Build Log
+    zh_Hans: 获取 Jenkins 构建日志
+description:
+  human:
+    en_US: Retrieves the console log for a specific Jenkins build.
+    zh_Hans: 检索特定 Jenkins 构建的控制台日志。
+  llm: This tool retrieves the full console log text for a specific Jenkins build.
+parameters:
+  - name: job_name
+    type: string
+    required: true
+    label:
+      en_US: Job Name
+      zh_Hans: 任务名称
+    human_description:
+      en_US: The name of the Jenkins job.
+      zh_Hans: Jenkins 任务的名称。
+    llm_description: The full name of the Jenkins job.
+    form: llm
+  - name: build_number
+    type: string
+    required: true
+    label:
+      en_US: Build Number
+      zh_Hans: 构建编号
+    human_description:
+      en_US: The number of the specific build.
+      zh_Hans: 特定构建的编号。
+    llm_description: The number of the build to get the log for.
+    form: llm
+extra:
+  python:
+    source: tools/get_build_log.py

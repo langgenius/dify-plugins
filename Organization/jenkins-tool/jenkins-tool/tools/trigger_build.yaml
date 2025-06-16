@@ -1,0 +1,26 @@
+identity:
+  name: trigger_build
+  author: lizb
+  label:
+    en_US: Trigger Jenkins Build
+    zh_Hans: 触发 Jenkins 构建
+description:
+  human:
+    en_US: Triggers a new build for a specified Jenkins job.
+    zh_Hans: 为指定的 Jenkins 任务触发一个新的构建。
+  llm: This tool triggers a new build for a Jenkins job. Note this is for jobs that do not require parameters.
+parameters:
+  - name: job_name
+    type: string
+    required: true
+    label:
+      en_US: Job Name
+      zh_Hans: 任务名称
+    human_description:
+      en_US: The name of the Jenkins job to trigger.
+      zh_Hans: 要触发的 Jenkins 任务的名称。
+    llm_description: The full name of the Jenkins job to trigger.
+    form: llm
+extra:
+  python:
+    source: tools/trigger_build.py

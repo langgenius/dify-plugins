@@ -1,0 +1,37 @@
+identity:
+  name: get_build_info
+  author: lizb
+  label:
+    en_US: Get Jenkins Build Info
+    zh_Hans: 获取 Jenkins 构建信息
+description:
+  human:
+    en_US: Retrieves detailed information for a specific Jenkins build.
+    zh_Hans: 检索特定 Jenkins 构建的详细信息。
+  llm: This tool retrieves detailed information for a specific Jenkins build, such as duration, result, and timestamp.
+parameters:
+  - name: job_name
+    type: string
+    required: true
+    label:
+      en_US: Job Name
+      zh_Hans: 任务名称
+    human_description:
+      en_US: The name of the Jenkins job.
+      zh_Hans: Jenkins 任务的名称。
+    llm_description: The full name of the Jenkins job, including folder paths if any (e.g., 'folder/my-job').
+    form: llm
+  - name: build_number
+    type: string
+    required: true
+    label:
+      en_US: Build Number
+      zh_Hans: 构建编号
+    human_description:
+      en_US: The number of the specific build. Can also be 'lastSuccessfulBuild', 'lastCompletedBuild'.
+      zh_Hans: 特定构建的编号。也可以是 'lastSuccessfulBuild', 'lastCompletedBuild' 等。
+    llm_description: The number of the build to get information for.
+    form: llm
+extra:
+  python:
+    source: tools/get_build_info.py

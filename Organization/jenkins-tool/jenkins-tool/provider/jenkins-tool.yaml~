@@ -1,0 +1,51 @@
+identity:
+    author: lizb
+    name: jenkins-tool
+    label:
+        en_US: Jenkins Tool
+        zh_Hans: Jenkins 工具
+    description:
+        en_US: A tool to interact with Jenkins.
+        zh_Hans: 与 Jenkins 交互的工具。
+    icon: icon.svg
+
+credentials_for_provider:
+    jenkins_url:
+        type: text-input
+        required: true
+        label:
+            en_US: Jenkins URL
+            zh_Hans: Jenkins 地址
+        placeholder:
+            en_US: Enter your Jenkins server URL, e.g., http://your-jenkins-server:8080
+            zh_Hans: 输入您的 Jenkins 服务器地址，例如 http://your-jenkins-server:8080
+    username:
+        type: text-input
+        required: true
+        label:
+            en_US: Jenkins Username
+            zh_Hans: Jenkins 用户名
+        placeholder:
+            en_US: Enter your Jenkins username
+            zh_Hans: 输入您的 Jenkins 用户名
+    api_token:
+        type: secret-input
+        required: true
+        label:
+            en_US: Jenkins API Token
+            zh_Hans: Jenkins API 令牌
+        placeholder:
+            en_US: Enter your Jenkins API token
+            zh_Hans: 输入您的 Jenkins API 令牌
+        help:
+            en_US: You can get your API token from Jenkins > Your Profile > Configure > API Token.
+            zh_Hans: 您可以从 Jenkins > 您的个人资料 > 设置 > API Token 处获取。
+
+tools:
+    - tools/get_build_info.yaml
+    - tools/get_build_log.yaml
+    - tools/trigger_build.yaml
+
+extra:
+    python:
+        source: provider/jenkins-tool.py
