@@ -1,0 +1,48 @@
+identity:
+  author: bank010
+  name: google
+  label:
+    en_US: Google Search
+    zh_Hans: 谷歌搜索
+  description:
+    en_US: A powerful search tool powered by Google Custom Search API
+    zh_Hans: 由谷歌自定义搜索API提供支持的强大搜索工具
+  icon: icon.svg
+  tags:
+    - search
+
+credentials_for_provider:
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: Google API Key
+      zh_Hans: 谷歌API密钥
+    placeholder:
+      en_US: Please input your Google API key
+      zh_Hans: 请输入你的谷歌API密钥
+    help:
+      en_US: Get your API key from Google Cloud Console
+      zh_Hans: 从谷歌云控制台获取您的API密钥
+    url: https://console.cloud.google.com/apis/credentials
+
+  cse_id:
+    type: text-input
+    required: true
+    label:
+      en_US: Custom Search Engine ID
+      zh_Hans: 自定义搜索引擎ID
+    placeholder:
+      en_US: Please input your Custom Search Engine ID
+      zh_Hans: 请输入你的自定义搜索引擎ID
+    help:
+      en_US: Get your Custom Search Engine ID from Google Programmable Search Engine
+      zh_Hans: 从谷歌可编程搜索引擎获取您的搜索引擎ID
+    url: https://programmablesearchengine.google.com/
+
+tools:
+  - tools/google_search.yaml
+
+extra:
+  python:
+    source: provider/google.py 

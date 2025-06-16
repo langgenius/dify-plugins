@@ -1,0 +1,41 @@
+identity:
+  name: google_search
+  author: bank010
+  label:
+    en_US: Google Search
+    zh_Hans: 谷歌搜索
+description:
+  human:
+    en_US: A powerful search tool that uses Google Custom Search API to find relevant information from the web. Input should be a search query.
+    zh_Hans: 一个使用谷歌自定义搜索API的强大搜索工具，可以从网络中找到相关信息。输入应该是一个搜索查询。
+  llm: A tool that performs web searches using Google Custom Search API. It returns relevant web pages, titles, and snippets based on the search query.
+
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Search Query
+      zh_Hans: 搜索关键词
+    human_description:
+      en_US: The search query to look up on Google
+      zh_Hans: 要在谷歌上搜索的关键词
+    llm_description: The search query to find relevant information on the web
+    form: llm
+
+  - name: num_results
+    type: number
+    required: false
+    default: 10
+    label:
+      en_US: Number of Results
+      zh_Hans: 结果数量
+    human_description:
+      en_US: Number of search results to return (maximum 10)
+      zh_Hans: 返回的搜索结果数量（最多10个）
+    llm_description: The number of search results to return, limited to a maximum of 10 results
+    form: form
+
+extra:
+  python:
+    source: tools/google_search.py
