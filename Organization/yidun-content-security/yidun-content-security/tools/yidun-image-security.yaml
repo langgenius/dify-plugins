@@ -1,0 +1,30 @@
+identity:
+  name: yidun-image-security
+  author: yidun
+  label:
+    en_US: imageSecurity
+    zh_Hans: 易盾内容安全图片检测
+    pt_BR: imageSecurity
+description:
+  human:
+    en_US: A tool for detecting whether the input content violates/meets regulatory requirements. The input should be text to be detected/images to be detected.
+    zh_Hans: 一个用于检测输入内容是否违规/符合监管要求的工具，输入应为待检测图片url。
+    pt_BR: A tool for detecting whether the input content violates/meets regulatory requirements. The input should be text to be detected/images to be detected.
+  llm: A tool for detecting whether the input content violates/meets regulatory requirements. The input should be text to be detected/images to be detected.
+parameters:
+  - name: image_url
+    type: string
+    required: false
+    label:
+      en_US: Image detection content
+      zh_Hans: 图片检测内容
+      pt_BR: Image detection content
+    human_description:
+      en_US: The image link to be downloaded for the content to be detected in the image should be provided.
+      zh_Hans: 用于传入图片待检测内容，需为可下载的图片链接
+      pt_BR: The image link to be downloaded for the content to be detected in the image should be provided.
+    llm_description: The image link to be downloaded for the content to be detected in the image should be provided.
+    form: llm
+extra:
+  python:
+    source: tools/yidun-image-security.py
