@@ -1,0 +1,43 @@
+identity:
+  name: anspire_rewrite
+  author: youdun1113
+  label:
+    en_US: anspire_rewrite
+    zh_Hans: 安思派多轮改写
+    pt_BR: anspire_rewrite
+description:
+  human:
+    en_US: Optimized specifically for conversational AI scenarios, it intelligently supplements exhaustive content and resolves referential relationships in multiple rounds of interaction, significantly enhancing the accuracy and coherence of user queries. No prompt words required, plug and play. The effect is even better when combined with the Ansipai network search capability.
+    zh_Hans: 专为对话式AI场景优化，在多轮交互中智能补全省略内容并消解指代关系，显  著提升用户查询的准确性与连贯性。无需提示词，即插即用，搭配安思派联网搜索能力效果更佳。
+    pt_BR: anspire net work search plugin
+  llm: anspire net work search plugin
+parameters:
+- name: question
+  type: string
+  required: true
+  label:
+    en_US: Search content
+    zh_Hans: 检索内容
+    pt_BR: Search content
+  human_description:
+    en_US: Search content
+    zh_Hans: 检索内容
+    pt_BR: Search content
+  llm_description: Search content
+  form: llm
+- name: messages
+  type: string
+  required: true
+  label:
+    en_US: Search the history content
+    zh_Hans: 检索历史
+    pt_BR: Search the history content
+  human_description:
+    en_US: Search the history content
+    zh_Hans: 检索历史
+    pt_BR: Search the shistory content
+  llm_description: Search the history content
+  form: llm
+extra:
+  python:
+    source: tools/anspire_rewrite.py
