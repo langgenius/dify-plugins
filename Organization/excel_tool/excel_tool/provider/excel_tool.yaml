@@ -1,0 +1,17 @@
+identity:
+  author: wangpengfei44
+  name: excel_tool
+  label:
+    en_US: excel_tool
+    zh_Hans: excel_tool
+    pt_BR: excel_tool
+  description:
+    en_US: Convert 2D array data into an Excel file
+    zh_Hans: 将二维数组数据转换为Excel文件
+    pt_BR: Converter dados de matriz 2D em arquivo Excel
+  icon: icon.svg
+tools:
+  - tools/excel_tool.yaml
+extra:
+  python:
+    source: provider/excel_tool.py
