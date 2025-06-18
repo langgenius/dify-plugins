@@ -1,2 +1,0 @@
-dify_plugin~=0.0.1b76
-python-jenkins~=1.8.0
