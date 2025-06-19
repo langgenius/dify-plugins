@@ -1,0 +1,135 @@
+identity:
+  name: "paddle-ocr"
+  author: "woody"
+  label:
+    en_US: "paddle-ocr"
+    zh_Hans: "paddle-ocr"
+description:
+  human:
+    en_US: "paddle-ocr plugin for dify"
+    zh_Hans: "paddle-ocr plugin for dify"
+  llm: "paddle-ocr plugin for dify"
+parameters:
+  - name: doc_orientation_classify_model_name
+    type: string
+    required: false
+    label:
+      en_US: doc_orientation_classify_model_name
+      zh_Hans: doc_orientation_classify_model_name
+    human_description:
+      en_US: doc_orientation_classify_model_name
+      zh_Hans: 文档方向分类模型名称
+    llm_description: doc orientation classify model name for the paddle-ocr engine
+    form: llm
+
+  - name: doc_unwarping_model_name
+    type: string
+    required: false
+    label:
+      en_US: doc_unwarping_model_name
+      zh_Hans: doc_unwarping_model_name
+    human_description:
+      en_US: doc_unwarping_model_name
+      zh_Hans: 文档去卷曲模型名称
+    llm_description: doc unwarping model name for the paddle-ocr engine
+    form: llm
+
+  - name: text_detection_model_name
+    type: string
+    required: false
+    label:
+      en_US: text_detection_model_name
+      zh_Hans: text_detection_model_name
+    human_description:
+      en_US: text_detection_model_name
+      zh_Hans: 文本检测模型名称
+    llm_description: text detection model name for the paddle-ocr engine
+    form: llm
+
+  - name: textline_orientation_model_name
+    type: string
+    required: false
+    label:
+      en_US: textline_orientation_model_name
+      zh_Hans: textline_orientation_model_name
+    human_description:
+      en_US: textline_orientation_model_name
+      zh_Hans: 文本行方向分类模型名称
+    llm_description: textline orientation model name for the paddle-ocr engine
+    form: llm
+
+  - name: text_recognition_model_name
+    type: string
+    required: false
+    label:
+      en_US: text_recognition_model_name
+      zh_Hans: text_recognition_model_name
+    human_description:
+      en_US: text_recognition_model_name
+      zh_Hans: 文本识别模型名称
+    llm_description: text recognition model name for the paddle-ocr engine
+    form: llm
+
+  - name: use_doc_orientation_classify
+    type: boolean
+    required: false
+    label:
+      en_US: use_doc_orientation_classify
+      zh_Hans: use_doc_orientation_classify
+    human_description:
+      en_US: use_doc_orientation_classify
+      zh_Hans: 是否使用文档方向分类
+    llm_description: use doc orientation classify for the paddle-ocr engine
+    form: llm
+
+  - name: use_doc_unwarping
+    type: boolean
+    required: false
+    label:
+      en_US: use_doc_unwarping
+      zh_Hans: use_doc_unwarping
+    human_description:
+      en_US: use_doc_unwarping
+      zh_Hans: 是否使用文档去卷曲
+    llm_description: use doc unwarping for the paddle-ocr engine
+    form: llm
+
+  - name: use_textline_orientation
+    type: boolean
+    required: false
+    label:
+      en_US: use_textline_orientation
+      zh_Hans: use_textline_orientation
+    human_description:
+      en_US: use_textline_orientation
+      zh_Hans: 是否使用文本行方向分类
+    llm_description: use textline orientation for the paddle-ocr engine
+    form: llm
+
+  - name: lang
+    type: string
+    required: false
+    label:
+      en_US: lang
+      zh_Hans: lang
+    human_description:
+      en_US: lang
+      zh_Hans: 语言
+    llm_description: lang for the paddle-ocr engine
+    form: llm
+  
+  - name: img
+    type: file
+    required: true
+    label:
+      en_US: img
+      zh_Hans: img
+    human_description:
+      en_US: img
+      zh_Hans: img
+    llm_description: img for the paddle-ocr engine
+    form: llm
+
+extra:
+  python:
+    source: tools/paddle-ocr.py
