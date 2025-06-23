@@ -1,2 +1,0 @@
-dify_plugin~=0.0.1b72
-gmssl
