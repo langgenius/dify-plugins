@@ -2,9 +2,9 @@ identity:
   author: joywang
   name: redkernel
   label:
-    en_US: cloudfall redkernel
-    zh_Hans: cloudfall redkernel
-    pt_BR: cloudfall redkernel
+    en_US: Cloudfall Redkernel
+    zh_Hans: Cloudfall Redkernel
+    pt_BR: Cloudfall Redkernel
   description:
     en_US: An UEBA plugin that allows you enhance threat detection easily.
     zh_Hans: An UEBA plugin that allows you enhance threat detection easily.
