@@ -1,9 +1,0 @@
-{
-  "schema_version": "v1",
-  "name_for_human": "二维数组转Excel工具",
-  "name_for_model": "excel_tool",
-  "description_for_human": "将二维数组转换为Excel文件，支持自定义列宽和合并单元格",
-  "description_for_model": "当用户需要将表格数据导出为Excel文件时使用此插件",
-  "author": "wangpengfei44",
-  "privacy_policy": "privacy_policy.md"
-}
