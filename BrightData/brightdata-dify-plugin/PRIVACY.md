@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 # BrightData Dify Plugin Privacy Policy
 
 ## Data Collection and Usage

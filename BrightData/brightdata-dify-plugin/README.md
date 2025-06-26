@@ -59,5 +59,3 @@ Get search results from major search engines:
 - **Issues**: [GitHub Issues](https://github.com/idanvilenski/BrightData_Dify_Plugin/issues)
 - **Bright Data Support**: [Bright Data Help Center](https://help.brightdata.com/)
 - **Dify Documentation**: [Dify Docs](https://docs.dify.ai/)
-
-Thanks.
