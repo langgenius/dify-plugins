@@ -6,9 +6,9 @@ identity:
     zh_Hans: Bright Data 网页抓取器
     pt_BR: Bright Data Web Scraper
   description:
-    en_US: A comprehensive web scraping and data extraction plugin powered by Bright Data's enterprise-grade infrastructure. Now featuring intelligent auto-detection of the best extraction method.
-    zh_Hans: 基于 Bright Data 企业级基础设施的综合网页抓取和数据提取插件。现在具有智能自动检测最佳提取方法的功能。
-    pt_BR: Um plugin abrangente de web scraping e extração de dados alimentado pela infraestrutura de nível empresarial da Bright Data. Agora com detecção automática inteligente do melhor método de extração.
+    en_US: Unlock the entire web with enterprise-grade scraping - extract data from any website, bypass anti-bot protection, and access structured data from 50+ platforms including Amazon, LinkedIn, Instagram, and more.
+    zh_Hans: Unlock the entire web with enterprise-grade scraping - extract data from any website, bypass anti-bot protection, and access structured data from 50+ platforms including Amazon, LinkedIn, Instagram, and more.
+    pt_BR: Unlock the entire web with enterprise-grade scraping - extract data from any website, bypass anti-bot protection, and access structured data from 50+ platforms including Amazon, LinkedIn, Instagram, and more.
   icon: icon.svg
 tools:
   - tools/structured_data_feeds.yaml
@@ -27,9 +27,9 @@ credentials_for_provider:
       zh_Hans: 请输入您的 Bright Data API 令牌
       pt_BR: Enter your Bright Data API token
     help:
-      en_US: Get your API token from Bright Data user settings. The token should start with your zone credentials.
+      en_US: Get your API token from Bright Data user settings.
       zh_Hans: 从 Bright Data 用户设置中获取您的 API 令牌。令牌应以您的区域凭据开头。
-      pt_BR: Get your API token from Bright Data user settings. The token should start with your zone credentials.
+      pt_BR: Get your API token from Bright Data user settings.
     url: https://brightdata.com/cp/setting/users
 extra:
   python:
