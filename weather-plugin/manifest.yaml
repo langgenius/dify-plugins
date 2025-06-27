@@ -1,0 +1,17 @@
+version: 0.0.1
+type: tool
+author: dify-community
+name: weather
+label:
+  en-US: Weather
+  zh-Hans: 天气
+description:
+  en-US: Get current weather conditions, forecasts, and alerts for any location
+  zh-Hans: 获取任何位置的当前天气状况、预报和警报
+icon: icon.svg
+tags:
+  - weather
+  - forecast
+  - temperature
+  - climate
+privacy_policy: https://example.com/privacy-policy
