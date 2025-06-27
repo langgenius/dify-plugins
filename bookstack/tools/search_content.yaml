@@ -1,0 +1,67 @@
+identity:
+  name: search_content
+  author: sudheer1994
+  label:
+    en_US: Search Content
+    zh_Hans: 搜索内容
+description:
+  human:
+    en_US: Search for content across books, chapters, and pages in BookStack
+    zh_Hans: 在BookStack的书籍、章节和页面中搜索内容
+  llm: Search for content in BookStack wiki including books, chapters, and pages using text queries
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Search Query
+      zh_Hans: 搜索查询
+    human_description:
+      en_US: The text to search for in BookStack content
+      zh_Hans: 在BookStack内容中搜索的文本
+    llm_description: The search query string to find matching content in BookStack
+    form: llm
+  - name: type
+    type: select
+    required: false
+    default: all
+    label:
+      en_US: Content Type
+      zh_Hans: 内容类型
+    human_description:
+      en_US: Type of content to search for
+      zh_Hans: 要搜索的内容类型
+    llm_description: Specify the type of content to search for - all, books, chapters, or pages
+    form: form
+    options:
+      - value: all
+        label:
+          en_US: All Content
+          zh_Hans: 所有内容
+      - value: books
+        label:
+          en_US: Books
+          zh_Hans: 书籍
+      - value: chapters
+        label:
+          en_US: Chapters
+          zh_Hans: 章节
+      - value: pages
+        label:
+          en_US: Pages
+          zh_Hans: 页面
+  - name: limit
+    type: number
+    required: false
+    default: 20
+    label:
+      en_US: Result Limit
+      zh_Hans: 结果限制
+    human_description:
+      en_US: Maximum number of search results to return
+      zh_Hans: 返回的最大搜索结果数量
+    llm_description: Maximum number of search results to return (default 20)
+    form: form
+extra:
+  python:
+    source: tools/search_content.py

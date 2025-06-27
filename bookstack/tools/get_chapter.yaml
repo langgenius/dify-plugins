@@ -1,0 +1,26 @@
+identity:
+  name: get_chapter
+  author: sudheer1994
+  label:
+    en_US: Get Chapter
+    zh_Hans: 获取章节
+description:
+  human:
+    en_US: Retrieve detailed information about a specific chapter by its ID
+    zh_Hans: 通过ID获取特定章节的详细信息
+  llm: Get detailed information about a specific chapter in BookStack using its ID
+parameters:
+  - name: chapter_id
+    type: number
+    required: true
+    label:
+      en_US: Chapter ID
+      zh_Hans: 章节ID
+    human_description:
+      en_US: The unique ID of the chapter to retrieve
+      zh_Hans: 要检索的章节的唯一ID
+    llm_description: The unique identifier of the chapter to retrieve from BookStack
+    form: llm
+extra:
+  python:
+    source: tools/get_chapter.py

@@ -1,0 +1,65 @@
+identity:
+  author: sudheer1994
+  name: bookstack
+  label:
+    en_US: BookStack
+    zh_Hans: BookStack
+  description:
+    en_US: A comprehensive BookStack integration plugin that allows you to search, create, and manage content in your BookStack wiki platform.
+    zh_Hans: 一个全面的BookStack集成插件，允许您在BookStack wiki平台中搜索、创建和管理内容。
+  icon: icon.svg
+  tags:
+    - business
+    - productivity
+    - utilities
+credentials_for_provider:
+  bookstack_url:
+    type: text-input
+    required: true
+    label:
+      en_US: BookStack URL
+      zh_Hans: BookStack URL
+    placeholder:
+      en_US: https://your-bookstack-domain.com
+      zh_Hans: https://your-bookstack-domain.com
+    help:
+      en_US: The base URL of your BookStack instance
+      zh_Hans: 您的BookStack实例的基础URL
+  api_token:
+    type: secret-input
+    required: true
+    label:
+      en_US: API Token
+      zh_Hans: API令牌
+    placeholder:
+      en_US: Your BookStack API Token
+      zh_Hans: 您的BookStack API令牌
+    help:
+      en_US: API token from BookStack Settings > API Tokens
+      zh_Hans: 从BookStack设置 > API令牌获取的API令牌
+  api_secret:
+    type: secret-input
+    required: true
+    label:
+      en_US: API Secret
+      zh_Hans: API密钥
+    placeholder:
+      en_US: Your BookStack API Secret
+      zh_Hans: 您的BookStack API密钥
+    help:
+      en_US: API secret from BookStack Settings > API Tokens
+      zh_Hans: 从BookStack设置 > API令牌获取的API密钥
+tools:
+  - tools/search_content.yaml
+  - tools/get_book.yaml
+  - tools/get_chapter.yaml
+  - tools/get_page.yaml
+  - tools/create_book.yaml
+  - tools/create_chapter.yaml
+  - tools/create_page.yaml
+  - tools/update_page.yaml
+  - tools/list_books.yaml
+  - tools/list_shelves.yaml
+extra:
+  python:
+    source: provider/bookstack.py

@@ -1,0 +1,39 @@
+identity:
+  name: list_shelves
+  author: sudheer1994
+  label:
+    en_US: List Shelves
+    zh_Hans: 列出书架
+description:
+  human:
+    en_US: List all shelves in BookStack
+    zh_Hans: 列出BookStack中的所有书架
+  llm: Retrieve a list of all shelves available in BookStack
+parameters:
+  - name: limit
+    type: number
+    required: false
+    default: 20
+    label:
+      en_US: Limit
+      zh_Hans: 限制
+    human_description:
+      en_US: Maximum number of shelves to return
+      zh_Hans: 返回的最大书架数量
+    llm_description: Maximum number of shelves to return in the list (default 20)
+    form: llm
+  - name: offset
+    type: number
+    required: false
+    default: 0
+    label:
+      en_US: Offset
+      zh_Hans: 偏移量
+    human_description:
+      en_US: Number of shelves to skip for pagination
+      zh_Hans: 用于分页的要跳过的书架数量
+    llm_description: Number of shelves to skip for pagination (default 0)
+    form: llm
+extra:
+  python:
+    source: tools/list_shelves.py

@@ -1,0 +1,37 @@
+identity:
+  name: create_book
+  author: sudheer1994
+  label:
+    en_US: Create Book
+    zh_Hans: 创建书籍
+description:
+  human:
+    en_US: Create a new book in BookStack
+    zh_Hans: 在BookStack中创建新书籍
+  llm: Create a new book in BookStack with a name and optional description
+parameters:
+  - name: name
+    type: string
+    required: true
+    label:
+      en_US: Book Name
+      zh_Hans: 书籍名称
+    human_description:
+      en_US: The name of the new book
+      zh_Hans: 新书籍的名称
+    llm_description: The name/title of the book to create
+    form: llm
+  - name: description
+    type: string
+    required: false
+    label:
+      en_US: Description
+      zh_Hans: 描述
+    human_description:
+      en_US: Optional description for the book
+      zh_Hans: 书籍的可选描述
+    llm_description: Optional description text for the book
+    form: llm
+extra:
+  python:
+    source: tools/create_book.py

@@ -1,0 +1,39 @@
+identity:
+  name: list_books
+  author: sudheer1994
+  label:
+    en_US: List Books
+    zh_Hans: 列出书籍
+description:
+  human:
+    en_US: List all books in BookStack
+    zh_Hans: 列出BookStack中的所有书籍
+  llm: Retrieve a list of all books available in BookStack
+parameters:
+  - name: limit
+    type: number
+    required: false
+    default: 20
+    label:
+      en_US: Limit
+      zh_Hans: 限制
+    human_description:
+      en_US: Maximum number of books to return
+      zh_Hans: 返回的最大书籍数量
+    llm_description: Maximum number of books to return in the list (default 20)
+    form: llm
+  - name: offset
+    type: number
+    required: false
+    default: 0
+    label:
+      en_US: Offset
+      zh_Hans: 偏移量
+    human_description:
+      en_US: Number of books to skip for pagination
+      zh_Hans: 用于分页的要跳过的书籍数量
+    llm_description: Number of books to skip for pagination (default 0)
+    form: llm
+extra:
+  python:
+    source: tools/list_books.py

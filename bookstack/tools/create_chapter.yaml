@@ -1,0 +1,48 @@
+identity:
+  name: create_chapter
+  author: sudheer1994
+  label:
+    en_US: Create Chapter
+    zh_Hans: 创建章节
+description:
+  human:
+    en_US: Create a new chapter in a BookStack book
+    zh_Hans: 在BookStack书籍中创建新章节
+  llm: Create a new chapter within a specific book in BookStack
+parameters:
+  - name: book_id
+    type: number
+    required: true
+    label:
+      en_US: Book ID
+      zh_Hans: 书籍ID
+    human_description:
+      en_US: The ID of the book to create the chapter in
+      zh_Hans: 要在其中创建章节的书籍ID
+    llm_description: The ID of the book where the chapter should be created
+    form: llm
+  - name: name
+    type: string
+    required: true
+    label:
+      en_US: Chapter Name
+      zh_Hans: 章节名称
+    human_description:
+      en_US: The name of the new chapter
+      zh_Hans: 新章节的名称
+    llm_description: The name/title of the chapter to create
+    form: llm
+  - name: description
+    type: string
+    required: false
+    label:
+      en_US: Description
+      zh_Hans: 描述
+    human_description:
+      en_US: Optional description for the chapter
+      zh_Hans: 章节的可选描述
+    llm_description: Optional description text for the chapter
+    form: llm
+extra:
+  python:
+    source: tools/create_chapter.py

@@ -1,0 +1,26 @@
+identity:
+  name: get_page
+  author: sudheer1994
+  label:
+    en_US: Get Page
+    zh_Hans: 获取页面
+description:
+  human:
+    en_US: Retrieve detailed information about a specific page by its ID
+    zh_Hans: 通过ID获取特定页面的详细信息
+  llm: Get detailed information about a specific page in BookStack using its ID
+parameters:
+  - name: page_id
+    type: number
+    required: true
+    label:
+      en_US: Page ID
+      zh_Hans: 页面ID
+    human_description:
+      en_US: The unique ID of the page to retrieve
+      zh_Hans: 要检索的页面的唯一ID
+    llm_description: The unique identifier of the page to retrieve from BookStack
+    form: llm
+extra:
+  python:
+    source: tools/get_page.py

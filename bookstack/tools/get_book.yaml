@@ -1,0 +1,26 @@
+identity:
+  name: get_book
+  author: sudheer1994
+  label:
+    en_US: Get Book
+    zh_Hans: 获取书籍
+description:
+  human:
+    en_US: Retrieve detailed information about a specific book by its ID
+    zh_Hans: 通过ID获取特定书籍的详细信息
+  llm: Get detailed information about a specific book in BookStack using its ID
+parameters:
+  - name: book_id
+    type: number
+    required: true
+    label:
+      en_US: Book ID
+      zh_Hans: 书籍ID
+    human_description:
+      en_US: The unique ID of the book to retrieve
+      zh_Hans: 要检索的书籍的唯一ID
+    llm_description: The unique identifier of the book to retrieve from BookStack
+    form: llm
+extra:
+  python:
+    source: tools/get_book.py

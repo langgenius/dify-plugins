@@ -1,0 +1,59 @@
+identity:
+  name: update_page
+  author: sudheer1994
+  label:
+    en_US: Update Page
+    zh_Hans: 更新页面
+description:
+  human:
+    en_US: Update an existing page in BookStack
+    zh_Hans: 更新BookStack中的现有页面
+  llm: Update the content or name of an existing page in BookStack
+parameters:
+  - name: page_id
+    type: number
+    required: true
+    label:
+      en_US: Page ID
+      zh_Hans: 页面ID
+    human_description:
+      en_US: The ID of the page to update
+      zh_Hans: 要更新的页面ID
+    llm_description: The unique identifier of the page to update
+    form: llm
+  - name: name
+    type: string
+    required: false
+    label:
+      en_US: Page Name
+      zh_Hans: 页面名称
+    human_description:
+      en_US: The new name for the page
+      zh_Hans: 页面的新名称
+    llm_description: The new name/title for the page
+    form: llm
+  - name: html
+    type: string
+    required: false
+    label:
+      en_US: HTML Content
+      zh_Hans: HTML内容
+    human_description:
+      en_US: The new HTML content for the page
+      zh_Hans: 页面的新HTML内容
+    llm_description: The new HTML content for the page
+    form: llm
+  - name: markdown
+    type: string
+    required: false
+    label:
+      en_US: Markdown Content
+      zh_Hans: Markdown内容
+    human_description:
+      en_US: The new Markdown content for the page
+      zh_Hans: 页面的新Markdown内容
+    llm_description: The new Markdown content for the page (alternative to HTML)
+    form: llm
+extra:
+  python:
+    source: tools/update_page.py

@@ -1,0 +1,70 @@
+identity:
+  name: create_page
+  author: sudheer1994
+  label:
+    en_US: Create Page
+    zh_Hans: 创建页面
+description:
+  human:
+    en_US: Create a new page in BookStack book or chapter
+    zh_Hans: 在BookStack书籍或章节中创建新页面
+  llm: Create a new page in BookStack either in a book directly or within a chapter
+parameters:
+  - name: name
+    type: string
+    required: true
+    label:
+      en_US: Page Name
+      zh_Hans: 页面名称
+    human_description:
+      en_US: The name of the new page
+      zh_Hans: 新页面的名称
+    llm_description: The name/title of the page to create
+    form: llm
+  - name: book_id
+    type: number
+    required: false
+    label:
+      en_US: Book ID
+      zh_Hans: 书籍ID
+    human_description:
+      en_US: The ID of the book to create the page in (required if chapter_id not provided)
+      zh_Hans: 要在其中创建页面的书籍ID（如果未提供chapter_id则必填）
+    llm_description: The ID of the book where the page should be created (use this if not creating in a chapter)
+    form: llm
+  - name: chapter_id
+    type: number
+    required: false
+    label:
+      en_US: Chapter ID
+      zh_Hans: 章节ID
+    human_description:
+      en_US: The ID of the chapter to create the page in (required if book_id not provided)
+      zh_Hans: 要在其中创建页面的章节ID（如果未提供book_id则必填）
+    llm_description: The ID of the chapter where the page should be created (use this to create page within a chapter)
+    form: llm
+  - name: html
+    type: string
+    required: false
+    label:
+      en_US: HTML Content
+      zh_Hans: HTML内容
+    human_description:
+      en_US: The HTML content of the page
+      zh_Hans: 页面的HTML内容
+    llm_description: The HTML content for the page
+    form: llm
+  - name: markdown
+    type: string
+    required: false
+    label:
+      en_US: Markdown Content
+      zh_Hans: Markdown内容
+    human_description:
+      en_US: The Markdown content of the page
+      zh_Hans: 页面的Markdown内容
+    llm_description: The Markdown content for the page (alternative to HTML)
+    form: llm
+extra:
+  python:
+    source: tools/create_page.py
