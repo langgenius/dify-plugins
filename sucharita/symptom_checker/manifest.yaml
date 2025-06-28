@@ -1,0 +1,8 @@
+name: symptom_checker
+version: 0.0.1
+description: AI-powered plugin to suggest conditions based on symptoms
+type: tool
+tags: [health, ai]
+icon: https://cdn-icons-png.flaticon.com/512/2874/2874784.png
+entry: http://localhost:5001/analyze
+author: sucharita
