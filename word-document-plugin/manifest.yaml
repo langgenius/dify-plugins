@@ -1,0 +1,25 @@
+version: 0.1.0
+type: tool
+author: community
+name: word_document_generator
+label:
+  en_US: Word Document Generator
+  zh_Hans: Word文档生成器
+description:
+  en_US: Generate Word documents with customizable content, formatting, and styling options
+  zh_Hans: 生成可自定义内容、格式和样式的Word文档
+icon: document
+tags:
+  - document
+  - productivity
+resource:
+  memory: 512
+meta:
+  version: 0.1.0
+  arch:
+    - amd64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: word_generator.py
+created_at: 2024-01-01T00:00:00Z
