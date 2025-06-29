@@ -1,0 +1,69 @@
+identity:
+  name: search_engine
+  author: idanvilenski
+  label:
+    en_US: Search Engine
+    zh_Hans: Search Engine
+    pt_BR: Search Engine
+  description:
+    en_US: Scrape search results from Google, Bing or Yandex. Returns SERP results in markdown.
+    zh_Hans: 从 Google、Bing 或 Yandex 抓取搜索结果。以 markdown 格式返回 SERP 结果。
+    pt_BR: Scrape search results from Google, Bing or Yandex. Returns SERP results in markdown.
+  icon: icon.svg
+
+description:
+  human:
+    en_US: Scrape search results from Google, Bing or Yandex. Returns SERP results in markdown.
+    zh_Hans: 从 Google、Bing 或 Yandex 抓取搜索结果。以 markdown 格式返回 SERP 结果。
+    pt_BR: Scrape search results from Google, Bing or Yandex. Returns SERP results in markdown.
+  llm: Scrape search results from Google, Bing or Yandex. Returns SERP results in markdown (URL, title, description).
+
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Search Query
+      zh_Hans: 搜索查询
+      pt_BR: Search Query
+    human_description:
+      en_US: The search query to execute
+      zh_Hans: 要执行的搜索查询
+      pt_BR: The search query to execute
+    llm_description: The search terms or question to search for. Should be a clear, specific query.
+    form: llm
+
+  - name: search_engine
+    type: select
+    required: false
+    default: google
+    label:
+      en_US: Search Engine
+      zh_Hans: 搜索引擎
+      pt_BR: Search Engine
+    human_description:
+      en_US: Which search engine to use
+      zh_Hans: 使用哪个搜索引擎
+      pt_BR: Which search engine to use
+    llm_description: The search engine to use. Choose 'google' for most comprehensive results, 'bing' for Microsoft-focused results, or 'yandex' for Russian/Eastern European focused results.
+    form: form
+    options:
+      - value: google
+        label:
+          en_US: Google
+          zh_Hans: Google
+          pt_BR: Google
+      - value: bing
+        label:
+          en_US: Bing
+          zh_Hans: Bing
+          pt_BR: Bing
+      - value: yandex
+        label:
+          en_US: Yandex
+          zh_Hans: Yandex
+          pt_BR: Yandex
+
+extra:
+  python:
+    source: tools/search_engine.py
