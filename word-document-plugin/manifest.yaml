@@ -8,7 +8,7 @@ label:
 description:
   en_US: Generate Word documents with customizable content, formatting, and styling options
   zh_Hans: 生成可自定义内容、格式和样式的Word文档
-icon: document
+icon: icon.png.png
 tags:
   - document
   - productivity
