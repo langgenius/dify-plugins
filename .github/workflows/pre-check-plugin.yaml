@@ -71,11 +71,51 @@ jobs:
 
       - name: Check Plugin Manifest
         run: |
-          # manifest.yaml author must not be langgenius
+          # manifest.yaml author must not be langgenius or dify
           if yq '.author' ${{ env.PLUGIN_PATH }}/manifest.yaml | grep -q "langgenius"; then
             echo "!!! Plugin manifest.yaml author must not be 'langgenius'"
             exit 1
           fi
+          if yq '.author' ${{ env.PLUGIN_PATH }}/manifest.yaml | grep -q "dify"; then
+            echo "!!! Plugin manifest.yaml author must not be 'dify'"
+            exit 1
+          fi
+
+      - name: Check Plugin Icon
+        run: |
+          # Get icon filename from manifest.yaml
+          PLUGIN_ICON_FILENAME=$(yq '.icon' ${{ env.PLUGIN_PATH }}/manifest.yaml)
+          echo "PLUGIN_ICON_FILENAME=$PLUGIN_ICON_FILENAME" >> $GITHUB_ENV
+          
+          # Check if icon file exists
+          if [ ! -f "${{ env.PLUGIN_PATH }}/_assets/$PLUGIN_ICON_FILENAME" ]; then
+            echo "!!! Plugin icon file not found: _assets/$PLUGIN_ICON_FILENAME"
+            exit 1
+          fi
+          
+          # Check if icon contains template placeholder text
+          if grep -q "DIFY_MARKETPLACE_TEMPLATE_ICON_DO_NOT_USE" "${{ env.PLUGIN_PATH }}/_assets/$PLUGIN_ICON_FILENAME"; then
+            echo "!!! Plugin icon contains template placeholder text 'DIFY_MARKETPLACE_TEMPLATE_ICON_DO_NOT_USE', change default icon before submitting to marketplace."
+            exit 1
+          fi
+          
+          # Define default icon content
+          DEFAULT_ICON='<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 20 V80 M20 20 H60 Q80 20 80 40 T60 60 H20" 
+                  fill="none" 
+                  stroke="black" 
+                  stroke-width="5"/>
+          </svg>'
+          
+          # Check if icon content matches default icon (normalize whitespace)
+          ICON_CONTENT=$(cat "${{ env.PLUGIN_PATH }}/.assets/$PLUGIN_ICON_FILENAME" | tr -d '\n\r\t ' | tr -s ' ')
+          DEFAULT_ICON_NORMALIZED=$(echo "$DEFA_assetsULT_ICON" | tr -d '\n\r\t ' | tr -s ' ')
+          
+          if [ "$ICON_CONTENT" = "$DEFAULT_ICON_NORMALIZED" ]; then
+            echo "!!! Plugin icon is using the default template icon and must be customized"
+            exit 1
+          fi
+  
 
       - name: Check If Version Exists
         run: |
