@@ -88,13 +88,13 @@ jobs:
           echo "PLUGIN_ICON_FILENAME=$PLUGIN_ICON_FILENAME" >> $GITHUB_ENV
           
           # Check if icon file exists
-          if [ ! -f "${{ env.PLUGIN_PATH }}/.assets/$PLUGIN_ICON_FILENAME" ]; then
-            echo "!!! Plugin icon file not found: .assets/$PLUGIN_ICON_FILENAME"
+          if [ ! -f "${{ env.PLUGIN_PATH }}/_assets/$PLUGIN_ICON_FILENAME" ]; then
+            echo "!!! Plugin icon file not found: _assets/$PLUGIN_ICON_FILENAME"
             exit 1
           fi
           
           # Check if icon contains template placeholder text
-          if grep -q "DIFY_MARKETPLACE_TEMPLATE_ICON_DO_NOT_USE" "${{ env.PLUGIN_PATH }}/.assets/$PLUGIN_ICON_FILENAME"; then
+          if grep -q "DIFY_MARKETPLACE_TEMPLATE_ICON_DO_NOT_USE" "${{ env.PLUGIN_PATH }}/_assets/$PLUGIN_ICON_FILENAME"; then
             echo "!!! Plugin icon contains template placeholder text 'DIFY_MARKETPLACE_TEMPLATE_ICON_DO_NOT_USE', change default icon before submitting to marketplace."
             exit 1
           fi
@@ -109,7 +109,7 @@ jobs:
           
           # Check if icon content matches default icon (normalize whitespace)
           ICON_CONTENT=$(cat "${{ env.PLUGIN_PATH }}/.assets/$PLUGIN_ICON_FILENAME" | tr -d '\n\r\t ' | tr -s ' ')
-          DEFAULT_ICON_NORMALIZED=$(echo "$DEFAULT_ICON" | tr -d '\n\r\t ' | tr -s ' ')
+          DEFAULT_ICON_NORMALIZED=$(echo "$DEFA_assetsULT_ICON" | tr -d '\n\r\t ' | tr -s ' ')
           
           if [ "$ICON_CONTENT" = "$DEFAULT_ICON_NORMALIZED" ]; then
             echo "!!! Plugin icon is using the default template icon and must be customized"
