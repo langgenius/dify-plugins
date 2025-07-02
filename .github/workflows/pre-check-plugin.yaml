@@ -108,7 +108,7 @@ jobs:
           </svg>'
           
           # Check if icon content matches default icon (normalize whitespace)
-          ICON_CONTENT=$(cat "${{ env.PLUGIN_PATH }}/.assets/$PLUGIN_ICON_FILENAME" | tr -d '\n\r\t ' | tr -s ' ')
+          ICON_CONTENT=$(cat "${{ env.PLUGIN_PATH }}/_assets/$PLUGIN_ICON_FILENAME" | tr -d '\n\r\t ' | tr -s ' ')
           DEFAULT_ICON_NORMALIZED=$(echo "$DEFA_assetsULT_ICON" | tr -d '\n\r\t ' | tr -s ' ')
           
           if [ "$ICON_CONTENT" = "$DEFAULT_ICON_NORMALIZED" ]; then
