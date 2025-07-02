@@ -69,11 +69,15 @@ jobs:
           unzip ${{ env.PLUGIN_PATH }}.zip -d unpacked_plugin
           echo "PLUGIN_PATH=unpacked_plugin" >> $GITHUB_ENV
 
-      - name: Check Plugin Manifest
+      - name: Check Plugin Author
         run: |
-          # manifest.yaml author must not be langgenius
+          # manifest.yaml author must not be langgenius or dify
           if yq '.author' ${{ env.PLUGIN_PATH }}/manifest.yaml | grep -q "langgenius"; then
             echo "!!! Plugin manifest.yaml author must not be 'langgenius'"
+            exit 1
+          fi
+          if yq '.author' ${{ env.PLUGIN_PATH }}/manifest.yaml | grep -q "dify"; then
+            echo "!!! Plugin manifest.yaml author must not be 'dify'"
             exit 1
           fi
 
