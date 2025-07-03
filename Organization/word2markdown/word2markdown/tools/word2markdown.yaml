@@ -1,0 +1,43 @@
+identity:
+  name: "word2markdown"
+  author: "cheng"
+  label:
+    en_US: "word2markdown"
+    zh_Hans: "word2markdown"
+    pt_BR: "word2markdown"
+description:
+  human:
+    en_US: "word to markdown"
+    zh_Hans: "word to markdown"
+    pt_BR: "word to markdown"
+  llm: "word to markdown"
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: title profix like Heading
+      zh_Hans: 标题样式前缀(Heading)
+      pt_BR: Query string
+    human_description:
+      en_US: "word to markdown"
+      zh_Hans: "word to markdown"
+      pt_BR: "word to markdown"
+    llm_description: "word to markdown"
+    form: llm
+  - name: file
+    type: file
+    required: true
+    label:
+      en_US: file
+      zh_Hans: 文件
+      pt_BR: file
+    human_description:
+      en_US: "word to markdown"
+      zh_Hans: "word to markdown"
+      pt_BR: "word to markdown"
+    llm_description: "word to markdown"
+    form: llm
+extra:
+  python:
+    source: tools/word2markdown.py
