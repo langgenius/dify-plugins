@@ -1,0 +1,17 @@
+identity:
+  author: "cheng"
+  name: "word2markdown"
+  label:
+    en_US: "word2markdown"
+    zh_Hans: "word2markdown"
+    pt_BR: "word2markdown"
+  description:
+    en_US: "word to markdown"
+    zh_Hans: "word to markdown"
+    pt_BR: "word to markdown"
+  icon: "icon.svg"
+tools:
+  - tools/word2markdown.yaml
+extra:
+  python:
+    source: provider/word2markdown.py
