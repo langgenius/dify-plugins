@@ -1,0 +1,34 @@
+version: 0.0.1
+type: plugin
+author: cloudsway
+name: smartseach
+label:
+  en_US: Smartsearch
+  zh_Hans: 智能搜索
+description:
+  en_US: A Dify tool plugin that integrates with the remote Cloudsway intelligent search API to provide web search functionality.
+  zh_Hans: 一个集成 Cloudsway 智能搜索 API 的 Dify 工具插件，支持网页检索功能。
+icon: icon.png
+tags: ['search']
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+plugins:
+  tools:
+    - provider/smartseach.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: null
+created_at: 2025-07-14T11:36:05.679800127+08:00
+privacy: PRIVACY.md
+repo: https://cloudsway.com/
+verified: false
