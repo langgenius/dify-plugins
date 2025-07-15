@@ -1,0 +1,71 @@
+identity:
+  name: "smartseach"
+  author: "cloudsway"
+  label:
+    en_US: "Smartsearch"
+    zh_Hans: "智能搜索"
+description:
+  human:
+    en_US: "Search the web using Cloudsway intelligent search API."
+    zh_Hans: "使用 Cloudsway 智能搜索 API 进行网页检索。"
+  llm: "A tool that searches the web and returns structured results using Cloudsway intelligent search API."
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Query string
+      zh_Hans: 查询语句
+    human_description:
+      en_US: "Keywords or question to search for."
+      zh_Hans: "要搜索的关键词或问题。"
+    llm_description: "The keywords or question to search for on the web."
+    form: llm
+  - name: count
+    type: number
+    required: false
+    label:
+      en_US: Result count
+      zh_Hans: 返回数量
+    human_description:
+      en_US: "Number of results to return (default 10)."
+      zh_Hans: "返回结果数量（默认 10）。"
+    llm_description: "How many results to return (1-20), default is 10."
+    form: llm
+  - name: offset
+    type: number
+    required: false
+    label:
+      en_US: Offset
+      zh_Hans: 偏移量
+      pt_BR: Offset
+    human_description:
+      en_US: "Pagination offset (default 0)."
+      zh_Hans: "分页偏移量（默认 0）。"
+    llm_description: "The offset for pagination. Default is 0."
+    form: llm
+  - name: setLang
+    type: string
+    required: false
+    label:
+      en_US: Language
+      zh_Hans: 语言
+    human_description:
+      en_US: "Language filter, e.g. en, zh-CN, ja."
+      zh_Hans: "语言过滤，如 en、zh-CN、ja。"
+    llm_description: "The language to filter results."
+    form: llm
+  - name: safeSearch
+    type: string
+    required: false
+    label:
+      en_US: Safe Search Level
+      zh_Hans: 安全级别
+    human_description:
+      en_US: "Content safety level: Strict, Moderate, Off."
+      zh_Hans: "内容安全级别：Strict、Moderate、Off。"
+    llm_description: "The safety level for content filtering."
+    form: llm
+extra:
+  python:
+    source: tools/smartseach.py
