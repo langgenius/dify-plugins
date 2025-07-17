@@ -30,7 +30,7 @@ class SmartseachTool(Tool):
             return
 
         endpoint, api_key = server_key.split("-", 1)
-        url = f"https://searchapi.cloudsway.net//search/{endpoint}/smart"
+        url = f"https://searchapi.cloudsway.net/search/{endpoint}/smart"
         params = {
             'q': query,
             'count': count,
