@@ -1,0 +1,38 @@
+version: 0.0.1
+type: plugin
+author: rayxing
+name: tencent_cloud_search
+label:
+  en_US: Tencent Cloud Search API
+  zh_Hans: 腾讯云联网搜索API
+description:
+  en_US: Search the internet using Tencent Cloud's networked search API powered by Sogou Search
+  zh_Hans: 使用腾讯云联网搜索API进行互联网搜索，基于搜狗搜索引擎
+icon: icon.svg
+tags:
+  - search
+  - productivity
+created_at: "2024-01-01T00:00:00Z"
+resource:
+  memory: 128
+tool:
+  identity:
+    author: rayxing
+    name: tencent_cloud_search
+    description:
+      en_US: Search the internet using Tencent Cloud's networked search API powered by Sogou Search
+      zh_Hans: 使用腾讯云联网搜索API进行互联网搜索，基于搜狗搜索引擎
+    icon: icon.svg
+    label:
+      en_US: Tencent Cloud Search
+      zh_Hans: 腾讯云搜索
+meta:
+  version: 0.0.1
+  author: rayxing
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.8"
+    entrypoint: provider

@@ -1,0 +1,120 @@
+identity:
+  name: search
+  author: rayxing
+  label:
+    en_US: Internet Search
+    zh_Hans: 互联网搜索
+description:
+  human:
+    en_US: Search the internet using Tencent Cloud's networked search API
+    zh_Hans: 使用腾讯云联网搜索API进行互联网搜索
+  llm: This tool allows you to search the internet for information using Tencent Cloud's networked search API powered by Sogou Search. It returns search results with titles, URLs, abstracts, and metadata.
+
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Search Query
+      zh_Hans: 搜索关键词
+    human_description:
+      en_US: The search query to look for
+      zh_Hans: 要搜索的关键词
+    llm_description: The search query string, maximum 64 characters recommended
+    form: llm
+
+  - name: mode
+    type: select
+    required: false
+    default: "0"
+    label:
+      en_US: Search Mode
+      zh_Hans: 搜索模式
+    human_description:
+      en_US: Type of search results to return
+      zh_Hans: 返回的搜索结果类型
+    llm_description: "Search mode: 0=natural results, 1=multimodal VR cards, 2=mixed results"
+    form: form
+    options:
+      - value: "0"
+        label:
+          en_US: Natural Results
+          zh_Hans: 自然结果
+      - value: "1"
+        label:
+          en_US: Multimodal VR Cards
+          zh_Hans: 多模态VR卡
+      - value: "2"
+        label:
+          en_US: Mixed Results
+          zh_Hans: 混合结果
+
+  - name: site
+    type: string
+    required: false
+    label:
+      en_US: Specific Site
+      zh_Hans: 指定网站
+    human_description:
+      en_US: Search within a specific website (e.g., "qq.com")
+      zh_Hans: 在指定网站内搜索（如："qq.com"）
+    llm_description: Optional domain name to search within (e.g., "qq.com")
+    form: form
+
+  - name: count
+    type: number
+    required: false
+    default: 10
+    label:
+      en_US: Result Count
+      zh_Hans: 结果数量
+    human_description:
+      en_US: Number of results to return (10-50, premium version only)
+      zh_Hans: 返回结果数量（10-50，仅尊享版支持）
+    llm_description: Number of search results to return, between 10-50 (premium version feature)
+    form: form
+
+  - name: from_time
+    type: number
+    required: false
+    label:
+      en_US: From Time
+      zh_Hans: 开始时间
+    human_description:
+      en_US: Start timestamp for time-based filtering
+      zh_Hans: 时间筛选的开始时间戳
+    llm_description: Unix timestamp for start time filtering (must be used with to_time)
+    form: form
+
+  - name: to_time
+    type: number
+    required: false
+    label:
+      en_US: To Time
+      zh_Hans: 结束时间
+    human_description:
+      en_US: End timestamp for time-based filtering
+      zh_Hans: 时间筛选的结束时间戳
+    llm_description: Unix timestamp for end time filtering (must be used with from_time)
+    form: form
+
+  - name: industry
+    type: select
+    required: false
+    label:
+      en_US: Industry Filter
+      zh_Hans: 行业筛选
+    human_description:
+      en_US: Filter by specific industry (premium version only)
+      zh_Hans: 按特定行业筛选（仅尊享版支持）
+    llm_description: "Industry filter: gov=government, news=authoritative media (premium feature)"
+    form: form
+    options:
+      - value: "gov"
+        label:
+          en_US: Government
+          zh_Hans: 党政机关
+      - value: "news"
+        label:
+          en_US: News Media
+          zh_Hans: 权威媒体

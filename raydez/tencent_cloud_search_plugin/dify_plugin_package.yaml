@@ -1,0 +1,23 @@
+package:
+  name: tencent_cloud_search
+  version: 0.0.1
+  author: rayxing
+  description:
+    en_US: Tencent Cloud networked search API integration powered by Sogou Search
+    zh_Hans: 腾讯云联网搜索API集成，基于搜狗搜索引擎
+  license: MIT
+  homepage: https://github.com/your-repo/tencent-cloud-search-plugin
+  repository: https://github.com/your-repo/tencent-cloud-search-plugin
+  keywords:
+    - search
+    - tencent
+    - sogou
+    - internet
+    - api
+
+dependencies:
+  - requests>=2.25.0
+
+providers:
+  - name: tencent_cloud_search
+    path: provider

@@ -1,0 +1,42 @@
+identity:
+  author: rayxing
+  name: tencent_cloud_search
+  label:
+    en_US: Tencent Cloud Search
+    zh_Hans: 腾讯云搜索
+  description:
+    en_US: Tencent Cloud networked search API integration powered by Sogou Search
+    zh_Hans: 腾讯云联网搜索API集成，基于搜狗搜索引擎
+  icon: _assets/icon.svg
+  tags:
+    - search
+    - internet
+    - tencent
+    - sogou
+
+supported_model_types:
+  - llm
+
+configurate_methods:
+  - predefined-model
+
+provider_credential_schema:
+  credential_form_schemas:
+    - variable: secret_id
+      label:
+        en_US: Secret ID
+        zh_Hans: 密钥ID
+      type: secret-input
+      required: true
+      placeholder:
+        en_US: Enter your Tencent Cloud Secret ID
+        zh_Hans: 请输入腾讯云密钥ID
+    - variable: secret_key
+      label:
+        en_US: Secret Key
+        zh_Hans: 密钥Key
+      type: secret-input
+      required: true
+      placeholder:
+        en_US: Enter your Tencent Cloud Secret Key
+        zh_Hans: 请输入腾讯云密钥Key
