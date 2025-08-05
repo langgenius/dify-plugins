@@ -1,0 +1,3 @@
+dify_plugin~=0.0.1b66
+agentsphere==0.1.2
+python-dotenv==1.1.1
