@@ -1,3 +1,8 @@
+# 首先导入 dify_plugin 以确保 monkey patching 在其他模块之前完成
+from dify_plugin.entities.tool import ToolInvokeMessage
+from dify_plugin import Tool
+
+# 然后导入其他模块
 import json
 import time
 import hmac
@@ -6,8 +11,6 @@ import base64
 from urllib.parse import urlencode
 from typing import Any, Dict, List, Union
 import requests
-from dify_plugin.entities.tool import ToolInvokeMessage
-from dify_plugin import Tool
 
 
 class TencentCloudSearchTool(Tool):
@@ -173,7 +176,7 @@ class TencentCloudSearchTool(Tool):
         if not pages:
             return [ToolInvokeMessage(
                 type=ToolInvokeMessage.MessageType.TEXT,
-                message=f"未找到相关搜索结果，查询词：{response_data.get('Query', '')}"
+                message=ToolInvokeMessage.TextMessage(text=f"未找到相关搜索结果，查询词：{response_data.get('Query', '')}")
             )]
         
         results = []
@@ -182,7 +185,7 @@ class TencentCloudSearchTool(Tool):
         query = response_data.get('Query', '')
         results.append(ToolInvokeMessage(
             type=ToolInvokeMessage.MessageType.TEXT,
-            message=f"🔍 搜索结果 - 关键词：{query}\n找到 {len(pages)} 条相关结果\n"
+            message=ToolInvokeMessage.TextMessage(text=f"🔍 搜索结果 - 关键词：{query}\n找到 {len(pages)} 条相关结果\n")
         ))
         
         # 解析每个搜索结果
@@ -239,10 +242,10 @@ class TencentCloudSearchTool(Tool):
         if score > 0:
             text_parts.append(f"**相关性**: {score:.2f}")
         
-        return {
-            'type': 'text',
-            'text': '\n'.join(text_parts) + '\n'
-        }
+        return ToolInvokeMessage(
+            type=ToolInvokeMessage.MessageType.TEXT,
+            message=ToolInvokeMessage.TextMessage(text='\n'.join(text_parts) + '\n')
+        )
     
     def _format_vr_result(self, page_data: Dict[str, Any], index: int) -> ToolInvokeMessage:
         """格式化VR卡结果"""
@@ -275,12 +278,12 @@ class TencentCloudSearchTool(Tool):
         
         return ToolInvokeMessage(
             type=ToolInvokeMessage.MessageType.TEXT,
-            message='\n'.join(text_parts) + '\n'
+            message=ToolInvokeMessage.TextMessage(text='\n'.join(text_parts) + '\n')
         )
     
     def _create_error_result(self, error_message: str) -> List[ToolInvokeMessage]:
         """创建错误结果"""
         return [ToolInvokeMessage(
             type=ToolInvokeMessage.MessageType.TEXT,
-            message=f"❌ 错误: {error_message}"
+            message=ToolInvokeMessage.TextMessage(text=f"❌ 错误: {error_message}")
         )]

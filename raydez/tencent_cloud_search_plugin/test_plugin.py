@@ -5,7 +5,15 @@
 
 import json
 import os
-from tools.search import TencentCloudSearchTool
+import sys
+from pathlib import Path
+
+# 添加项目根目录到Python路径
+project_root = Path(__file__).parent
+sys.path.insert(0, str(project_root))
+
+from provider.tools.search import TencentCloudSearchTool
+from dify_plugin.entities.tool import ToolInvokeMessage
 
 
 class MockRuntime:
@@ -15,6 +23,12 @@ class MockRuntime:
             'secret_id': secret_id,
             'secret_key': secret_key
         }
+
+
+class MockSession:
+    """模拟Dify会话环境"""
+    def __init__(self):
+        pass
 
 
 def test_search():
@@ -30,8 +44,9 @@ def test_search():
         return
     
     # 创建工具实例
-    tool = TencentCloudSearchTool()
-    tool.runtime = MockRuntime(secret_id, secret_key)
+    runtime = MockRuntime(secret_id, secret_key)
+    session = MockSession()
+    tool = TencentCloudSearchTool(runtime=runtime, session=session)
     
     # 测试用例
     test_cases = [
@@ -77,10 +92,15 @@ def test_search():
             if isinstance(result, list):
                 for j, item in enumerate(result):
                     print(f"\n结果 {j+1}:")
-                    if item.get('type') == 'text':
-                        print(item.get('text', ''))
+                    if hasattr(item, 'type') and item.type == ToolInvokeMessage.MessageType.TEXT:
+                        print(item.message.text)
                     else:
-                        print(json.dumps(item, ensure_ascii=False, indent=2))
+                        # For debugging, show the object structure
+                        print(f"Type: {item.type if hasattr(item, 'type') else 'Unknown'}")
+                        if hasattr(item, 'message'):
+                            print(f"Message: {item.message}")
+                        else:
+                            print(f"Raw item: {item}")
             else:
                 print(f"结果: {result}")
                 
