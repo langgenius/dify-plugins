@@ -3,6 +3,13 @@
 
 This is an Agentsphere plugin designed for Dify, enabling seamless integration with the Agentsphere platform to provide users with secure sandbox environment operation capabilities.
 
+## Contact Information
+
+- Developer: zhang
+- Email: sqzhangdi@isoftstone.com
+- GitHub Account: https://github.com/zhangshanqi666
+- Source Code Repository: https://github.com/zhangshanqi666/agentsphere-docs
+
 ### Core Features
 
 - Execute code in an isolated sandbox environment
