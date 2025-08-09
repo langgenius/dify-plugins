@@ -1,0 +1,34 @@
+version: 0.0.1
+type: plugin
+author: zhang
+name: agentsphere
+capabilities:
+  - workflow_tool
+  - chat_app
+label:
+  en_US: agentsphere
+  zh_Hans: agentsphere
+  pt_BR: agentsphere
+description:
+  en_US: Perform functional operations using Agentsphere
+  zh_Hans: 使用agentsphere进行功能操作
+  pt_BR: Operação funcional com agentsphere
+icon: icon.png
+resource:
+  memory: 268435456
+  permission: {}
+plugins:
+  tools:
+    - provider/agentsphere.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+created_at: 2025-08-01T11:45:55.0777384+08:00
+privacy: "./PRIVACY.md"
+verified: false
