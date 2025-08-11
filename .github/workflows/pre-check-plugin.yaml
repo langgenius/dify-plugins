@@ -2,7 +2,7 @@ name: Pre Check Plugin
 
 on:
   pull_request:
-    types: [opened, synchronize, ready_for_review, review_requested, edited]
+#    types: [opened, synchronize, ready_for_review, review_requested, edited]
     branches: 
       - main
       - dev
