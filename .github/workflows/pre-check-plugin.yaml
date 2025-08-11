@@ -2,7 +2,7 @@ name: Pre Check Plugin
 
 on:
   pull_request:
-#    types: [opened, synchronize, ready_for_review, review_requested, edited]
+    types: [opened, synchronize, ready_for_review, review_requested, edited]
     branches: 
       - main
       - dev
@@ -12,6 +12,10 @@ on:
       - "unpacked_plugin/**"
       - "README.md"
       - "LICENSE"
+  push:
+    branches:
+      - main
+      - dev
 
 env:
   REPO_NAME: langgenius/dify-plugins
