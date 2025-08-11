@@ -5,13 +5,6 @@ on:
     branches:
       - main
       - dev
-    # 可选：如需忽略某些文件变更可加 paths-ignore
-    # paths-ignore:
-    #   - ".github/**"
-    #   - ".gitignore"
-    #   - "unpacked_plugin/**"
-    #   - "README.md"
-    #   - "LICENSE"
 
 env:
   REPO_NAME: kenneth-bro/dify-plugins
@@ -27,6 +20,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+          fetch-depth: 0  # 需要完整历史用于计算 diff
 
       - name: Clone Marketplace Toolkit
         run: |
@@ -47,34 +41,70 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests
 
+      - name: Install jq
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+
       - name: yq - portable yaml processor
         uses: mikefarah/yq@v4.44.5
 
       - name: Get Changed .difypkg File
         id: changed-pkg
+        shell: bash
         run: |
-          # 获取 push 变更的 .difypkg 文件（只允许一个）
-          CHANGED_PKG=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep ".difypkg$" || true)
-          echo "CHANGED_PKG=$CHANGED_PKG" >> $GITHUB_ENV
+          set -e
+          BEFORE=${{ github.event.before }}
+          # 处理首次 push/无效 before 的情况
+          if ! git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+            if git rev-parse HEAD~1 >/dev/null 2>&1; then
+              BEFORE=$(git rev-parse HEAD~1)
+            else
+              BEFORE=""
+            fi
+          fi
+
+          if [ -n "$BEFORE" ]; then
+            FILES=$(git diff --name-only "$BEFORE" ${{ github.sha }} || true)
+          else
+            # 初始提交时回退到列出当前跟踪文件
+            FILES=$(git ls-files || true)
+          fi
+
+          echo "Changed files:" && echo "$FILES"
+          CHANGED_PKG=$(echo "$FILES" | grep -E "\.difypkg$" || true)
+
           if [ -z "$CHANGED_PKG" ]; then
+            echo "PLUGIN_PATH=" >> $GITHUB_ENV
+            echo "has_pkg=false" >> $GITHUB_OUTPUT
             echo "No .difypkg file changed in this push. Skipping pre-check."
             exit 0
           fi
-          PKG_COUNT=$(echo "$CHANGED_PKG" | wc -w)
+
+          PKG_COUNT=$(echo "$CHANGED_PKG" | wc -l | tr -d ' ')
           if [ "$PKG_COUNT" -ne 1 ]; then
             echo "Only one .difypkg file change is allowed per push."
+            echo "$CHANGED_PKG"
             exit 1
           fi
-          echo "PLUGIN_PATH=$CHANGED_PKG" >> $GITHUB_ENV
+
+          PLUGIN_PATH=$(echo "$CHANGED_PKG" | head -n 1)
+          echo "PLUGIN_PATH=$PLUGIN_PATH" >> $GITHUB_ENV
+          echo "has_pkg=true" >> $GITHUB_OUTPUT
+          echo "plugin_path=$PLUGIN_PATH" >> $GITHUB_OUTPUT
 
       - name: Unpack File
+        if: steps.changed-pkg.outputs.has_pkg == 'true'
         run: |
-          mv ${{ env.PLUGIN_PATH }} ${{ env.PLUGIN_PATH }}.zip
+          set -e
+          PKG="${{ steps.changed-pkg.outputs.plugin_path }}"
+          mv "$PKG" "$PKG.zip"
           mkdir -p unpacked_plugin
-          unzip ${{ env.PLUGIN_PATH }}.zip -d unpacked_plugin
+          unzip -o "$PKG.zip" -d unpacked_plugin
           echo "PLUGIN_PATH=unpacked_plugin" >> $GITHUB_ENV
 
       - name: Check Plugin Manifest
+        if: steps.changed-pkg.outputs.has_pkg == 'true'
         run: |
           # manifest.yaml author must not be langgenius or dify
           if yq '.author' ${{ env.PLUGIN_PATH }}/manifest.yaml | grep -q "langgenius"; then
@@ -87,6 +117,7 @@ jobs:
           fi
 
       - name: Check Plugin Icon
+        if: steps.changed-pkg.outputs.has_pkg == 'true'
         run: |
           # Get icon filename from manifest.yaml
           PLUGIN_ICON_FILENAME=$(yq '.icon' ${{ env.PLUGIN_PATH }}/manifest.yaml)
@@ -117,6 +148,7 @@ jobs:
           fi
 
       - name: Check If Version Exists
+        if: steps.changed-pkg.outputs.has_pkg == 'true'
         run: |
           # get version, author, name
           VERSION=$(yq '.version' ${{ env.PLUGIN_PATH }}/manifest.yaml)
@@ -134,6 +166,7 @@ jobs:
           fi
 
       - name: Check Plugin Deps
+        if: steps.changed-pkg.outputs.has_pkg == 'true'
         run: |
           if [ -f ${{ env.PLUGIN_PATH }}/requirements.txt ]; then
             echo "Trying to install plugin dependencies..."
@@ -144,13 +177,19 @@ jobs:
           fi
 
       - name: Check Plugin Install
+        if: steps.changed-pkg.outputs.has_pkg == 'true'
         run: |
           if [ -f ${{ env.PLUGIN_PATH }}/requirements.txt ]; then
+              set -e
               source .venv/bin/activate
               pip install packaging
-              dify_version=$(pip list | grep 'dify_plugin' | awk '{print $2}')
+              dify_version=$(pip list | awk '$1=="dify_plugin"{print $2}')
               target_version="0.0.1b64"
-              result=$(python -c "from packaging.version import Version; print(0 if Version('$dify_version') > Version('$target_version') else 1)")
+              if [ -z "$dify_version" ]; then
+                result=1
+              else
+                result=$(python -c "from packaging.version import Version; print(0 if Version('$dify_version') > Version('$target_version') else 1)")
+              fi
               if [ $result == 0 ]; then
                   export INSTALL_METHOD=serverless
                   export SERVERLESS_PORT=8080
@@ -164,5 +203,6 @@ jobs:
           fi
 
       - name: Check Packaging
+        if: steps.changed-pkg.outputs.has_pkg == 'true'
         run: |
           python3 .scripts/uploader/upload-package.py -d ${{ env.PLUGIN_PATH }} -t ${{ env.MARKETPLACE_TOKEN }} --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u ${{ env.MARKETPLACE_BASE_URL }} -f --test
