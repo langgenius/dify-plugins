@@ -1,13 +1,13 @@
-# BigMr AI 插件（BigMrAI Plugin for Dify）
+# InsigmaAI 插件（InsigmaAI Plugin for Dify）
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-本插件为 [Dify](https://github.com/langgenius/dify) 平台提供 AI 功能扩展，支持通过本地或自定义模型服务（如 `BigMrAI`）实现智能推理、文本生成、语音识别、文本嵌入等多种能力。
+本插件为 [Dify](https://github.com/langgenius/dify) 平台提供 AI 功能扩展，支持通过本地或自定义模型服务（如 `InsigmaAI`）实现智能推理、文本生成、语音识别、文本嵌入等多种能力。
 
 ## 📌 插件信息
 
-- **名称**：`bigmrai`
-- **显示名**：BigMrAI
+- **名称**：insigmaai
+- **显示名**：InsigmaAI
 - **作者**：[CloudPureNO1](https://github.com/CloudPureNO1)
 - **版本**：0.0.1
 - **语言**：Python 3.12
@@ -18,7 +18,7 @@
 ## 🧩 功能特性
 
 - 支持调用自定义 LLM、TTS、语音识别、文本嵌入等模型服务；
-- 集成 `BigMrAI` 模型接口（通过 `provider/big_mr_ai.yaml` 配置）；
+- 集成 `InsigmaAI` 模型接口；
 - 支持以下能力：
   - ✅ 大语言模型（LLM）
   - ✅ 文本嵌入（Text Embedding）
@@ -31,13 +31,13 @@
 ## 📦 使用方式
 
 1. 在 Dify 平台中安装本插件（通过 Dify Marketplace 或手动导入 `.pkg` 文件）；
-2. 在工作流中添加 `BigMrAI` 节点；
+2. 在工作流中添加 `InsigmaAI` 节点；
 3. 配置所需参数（如模型地址、API Key 等）；
 4. 连接前后节点，运行流程。
 
 ## 📁 目录结构
 ```
-bigmrai/
+insigma_ai/
 ├── manifest.yaml              # 插件元数据（必选）
 ├── privacy.md                 # 隐私政策（必选）
 ├── README.md                  # 插件说明（推荐）
@@ -47,8 +47,8 @@ bigmrai/
 │   └── llm/
 │       └── llm.py             # LLM 核心逻辑
 └── provider/
-    ├── big_mr_ai.py           # 模型提供方实现类
-    └── big_mr_ai.yaml         # 模型配置定义（供 Dify 加载）
+    ├── insigma_ai.py           # 模型提供方实现类
+    └── insigma_ai.yaml         # 模型配置定义（供 Dify 加载）
 ```
 
 ## 🔐 隐私与安全
