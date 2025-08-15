@@ -51,7 +51,7 @@
 2. 在左侧菜单中点击 "API Keys"
 3. 点击 "Add API KEY"，复制并保存生成的 API 密钥
 
-![API Key 获取示例](https://file.302.ai/gpt/imgs/20250722/7a3597061d9a484ca7358867930a8316.jpg)
+![API Key 获取示例](https://file.302.ai/gpt/imgs/20250722/01abd69fd61540489781fd963e504a04.jpg)
 
 在使用过程中，您可能需要向 API 服务提供商付费。请参考 302.AI 的相关定价政策了解详细费用信息。
 
