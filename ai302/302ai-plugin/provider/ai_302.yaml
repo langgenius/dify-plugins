@@ -1,0 +1,77 @@
+provider: 302ai
+label:
+  en_US: 302.AI
+description:
+  en_US: 302.AI is a pay-as-you-go AI application platform that offers the most comprehensive AI APIs and online applications available.
+  zh_Hans: 302.AI 是一个按需付费的AI应用平台，提供市面上最全的AI API和AI在线应用。
+icon_small:
+  en_US: icon.svg
+icon_large:
+  en_US: icon.svg
+background: "#E5E7EB"
+help:
+  title:
+    en_US: Get your API Key from 302.AI
+    zh_Hans: 从 302.AI 获取 API Key
+  url:
+    en_US: https://302.ai/apis/list
+supported_model_types:
+  - llm
+  - text-embedding
+  - rerank
+  - tts
+configurate_methods:
+  - predefined-model
+  - customizable-model
+model_credential_schema:
+  model:
+    label:
+      en_US: Model Name
+      zh_Hans: 模型名称
+    placeholder:
+      en_US: Enter your model name
+      zh_Hans: 输入模型名称
+  credential_form_schemas:
+    - variable: api_key
+      label:
+        en_US: 302.AI API Key
+      type: secret-input
+      required: true
+      placeholder:
+        zh_Hans: 在此输入您的 302.AI API Key
+        en_US: Enter your 302.AI API Key
+provider_credential_schema:
+  credential_form_schemas:
+    - variable: api_key
+      label:
+        en_US: 302.AI API Key
+      type: secret-input
+      required: true
+      placeholder:
+        zh_Hans: 在此输入您的 302.AI API Key
+        en_US: Enter your 302.AI API Key
+models:
+  llm:
+    position: models/llm/_position.yaml
+    predefined:
+      - models/llm/*.yaml
+  text_embedding:
+    predefined:
+      - models/text_embedding/*.yaml
+    position: models/text_embedding/_position.yaml
+  rerank:
+    predefined:
+      - models/rerank/*.yaml
+    position: models/rerank/_position.yaml
+  tts:
+    predefined:
+      - models/tts/*.yaml
+    position: models/tts/_position.yaml
+extra:
+  python:
+    provider_source: provider/ai_302.py
+    model_sources:
+      - models/llm/llm.py
+      - models/text_embedding/text_embedding.py
+      - models/rerank/rerank.py
+      - models/tts/tts.py
