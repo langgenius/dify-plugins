@@ -1,0 +1,61 @@
+identity:
+  author: "Your Name"
+  name: "ec2_control"
+  label:
+    en_US: "EC2 Instance Control"
+    zh_Hans: "EC2 实例控制"
+  description:
+    en_US: "Start, stop, or check status of AWS EC2 instances"
+    zh_Hans: "启动、停止或检查 AWS EC2 实例状态"
+  icon: "ec2-icon.svg"
+parameters:
+  - name: action
+    type: select
+    required: true
+    options:
+      - value: start
+        label:
+          en_US: Start Instance
+          zh_Hans: 启动实例
+      - value: stop
+        label:
+          en_US: Stop Instance
+          zh_Hans: 停止实例
+      - value: status
+        label:
+          en_US: Check Status
+          zh_Hans: 检查状态
+      - value: reboot
+        label:
+          en_US: Reboot Instance
+          zh_Hans: 重启实例
+    label:
+      en_US: Action
+      zh_Hans: 操作
+    human_description:
+      en_US: The action to perform on the EC2 instance
+      zh_Hans: 对 EC2 实例执行的操作
+  - name: instance_ids
+    type: string
+    required: true
+    label:
+      en_US: Instance IDs
+      zh_Hans: 实例 ID
+    human_description:
+      en_US: Comma-separated list of EC2 instance IDs (e.g., i-1234567890abcdef0,i-0987654321fedcba0)
+      zh_Hans: 逗号分隔的 EC2 实例 ID 列表
+    placeholder:
+      en_US: i-1234567890abcdef0
+      zh_Hans: i-1234567890abcdef0
+  - name: region
+    type: string
+    required: false
+    label:
+      en_US: AWS Region
+      zh_Hans: AWS 区域
+    human_description:
+      en_US: AWS region where the instances are located (optional, uses default from provider)
+      zh_Hans: 实例所在的 AWS 区域（可选，使用提供商默认值）
+    placeholder:
+      en_US: us-east-1
+      zh_Hans: us-east-1

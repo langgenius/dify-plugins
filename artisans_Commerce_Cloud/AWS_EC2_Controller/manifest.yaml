@@ -1,0 +1,16 @@
+version: "1.0.0"
+type: "tool"
+author: "vasu"
+name: "ec2-controller"
+label:
+  en_US: "AWS EC2 Controller"
+  zh_Hans: "AWS EC2 控制器"
+description:
+  en_US: "Control AWS EC2 instances - start, stop, and check status"
+  zh_Hans: "控制 AWS EC2 实例 - 启动、停止和检查状态"
+icon: "ec2-icon.svg"
+tags:
+  - "aws"
+  - "ec2"
+  - "infrastructure"
+  - "cloud"

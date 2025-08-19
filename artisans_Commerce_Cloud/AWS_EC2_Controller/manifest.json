@@ -1,0 +1,12 @@
+{
+  "name": "EC2 Controller",
+  "version": "1.0.0",
+  "description": "Control AWS EC2 instances",
+  "author": "Vasu",
+  "tools": [
+    {
+      "name": "ec2_control",
+      "description": "Start, stop, or check status of EC2 instances"
+    }
+  ]
+}
