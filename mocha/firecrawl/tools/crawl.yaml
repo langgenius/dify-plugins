@@ -1,0 +1,410 @@
+description:
+  human:
+    en_US: Recursively search through a urls subdomains, and gather the content.
+    zh_Hans: 递归爬取一个网址的子域名，并收集内容。
+  llm: This tool initiates a web crawl to extract data from a specified URL. It allows
+    configuring crawler options such as including or excluding URL patterns, generating
+    alt text for images using LLMs (paid plan required), limiting the maximum number
+    of pages to crawl, and returning only the main content of the page. The tool can
+    return either a list of crawled documents or a list of URLs based on the provided
+    options.
+extra:
+  python:
+    source: tools/crawl.py
+identity:
+  author: Richards_Tu
+  label:
+    en_US: Crawl
+    zh_Hans: 深度爬取
+  name: crawl
+parameters:
+- form: llm
+  human_description:
+    en_US: The base URL to start crawling from.
+    zh_Hans: 要爬取网站的起始URL。
+  label:
+    en_US: Start URL
+    zh_Hans: 起始URL
+  llm_description: The URL of the website that needs to be crawled. This is a required
+    parameter.
+  name: url
+  required: true
+  type: string
+- form: form
+  human_description:
+    en_US: If you choose not to wait, it will directly return a job ID. You can use
+      this job ID to check the crawling results or cancel the crawling task, which
+      is usually very useful for a large-scale crawling task.
+    zh_Hans: 如果选择不等待，则会直接返回一个job_id，可以通过job_id查询爬取结果或取消爬取任务，这通常对于一个大型爬取任务来说非常有用。
+  label:
+    en_US: Wait For Results
+    zh_Hans: 等待爬取结果
+  name: wait_for_results
+  type: boolean
+  default: true
+- form: form
+  human_description:
+    en_US: 'Pages matching these patterns will be skipped. Example: blog/*, about/*'
+    zh_Hans: 匹配这些模式的页面将被跳过。示例：blog/*, about/*
+  label:
+    en_US: URL patterns to exclude
+    zh_Hans: 要排除的URL模式
+  name: excludePaths
+  placeholder:
+    en_US: Use commas to separate multiple tags
+    zh_Hans: 多个标签时使用半角逗号分隔
+  type: string
+- form: form
+  human_description:
+    en_US: 'Only pages matching these patterns will be crawled. Example: blog/*, about/*'
+    zh_Hans: 只有与这些模式匹配的页面才会被爬取。示例：blog/*, about/*
+  label:
+    en_US: URL patterns to include
+    zh_Hans: 要包含的URL模式
+  name: includePaths
+  placeholder:
+    en_US: Use commas to separate multiple tags
+    zh_Hans: 多个标签时使用半角逗号分隔
+  required: false
+  type: string
+- form: form
+  human_description:
+    en_US: Maximum depth to crawl relative to the entered URL. A maxDepth of 0 scrapes
+      only the entered URL. A maxDepth of 1 scrapes the entered URL and all pages
+      one level deep. A maxDepth of 2 scrapes the entered URL and all pages up to
+      two levels deep. Higher values follow the same pattern.
+    zh_Hans: 相对于输入的URL，爬取的最大深度。maxDepth为0时，仅抓取输入的URL。maxDepth为1时，抓取输入的URL以及所有一级深层页面。maxDepth为2时，抓取输入的URL以及所有两级深层页面。更高值遵循相同模式。
+  label:
+    en_US: Maximum crawl depth
+    zh_Hans: 爬取深度
+  min: 0
+  name: maxDepth
+  type: number
+  default: 2
+- form: form
+  human_description:
+    en_US: Ignore the website sitemap when crawling.
+    zh_Hans: 爬取时忽略网站站点地图。
+  label:
+    en_US: ignore Sitemap
+    zh_Hans: 忽略站点地图
+  name: ignoreSitemap
+  type: boolean
+  default: true
+- form: form
+  human_description:
+    en_US: Specify the maximum number of pages to crawl. The crawler will stop after
+      reaching this limit.
+    zh_Hans: 指定要爬取的最大页面数。爬虫将在达到此限制后停止。
+  label:
+    en_US: Maximum pages to crawl
+    zh_Hans: 最大爬取页面数
+  min: 1
+  name: limit
+  required: false
+  type: number
+  default: 5
+- form: form
+  human_description:
+    en_US: Enables the crawler to navigate from a specific URL to previously linked
+      pages. For instance, from 'example.com/product/123' back to 'example.com/product'
+    zh_Hans: 使爬虫能够从特定URL导航到之前链接的页面。例如，从'example.com/product/123'返回到'example.com/product'
+  label:
+    en_US: allow Backward Crawling
+    zh_Hans: 允许向后爬取
+  name: allowBackwardLinks
+  type: boolean
+  default: false
+- form: form
+  human_description:
+    en_US: Allows the crawler to follow links to external websites.
+    zh_Hans: null
+  label:
+    en_US: allow External Content Links
+    zh_Hans: 允许爬取外链
+  name: allowExternalLinks
+  type: boolean
+  default: false
+- form: form
+  human_description:
+    en_US: 'Enhanced webhook configuration for v2. Simple URL string or object with url, headers, metadata, and events. Example: {"url": "https://webhook.com", "headers": {}, "metadata": {}, "events": ["completed"]}'
+    zh_Hans: '针对v2的增强的webhook配置。简单的URL字符串或包含url、headers、metadata和events的对象。示例：{"url": "https://webhook.com", "headers": {}, "metadata": {}, "events": ["completed"]}'
+  label:
+    en_US: Enhanced Webhook
+    zh_Hans: 增强版Webhook
+  name: webhook
+  placeholder:
+    en_US: Webhook URL or JSON configuration object
+    zh_Hans: Webhook URL或JSON配置对象
+  type: string
+- form: form
+  human_description:
+    en_US: 'Formats to include in the output. Available options: markdown, html, rawHtml,
+      links, screenshot'
+    zh_Hans: '输出中应包含的格式。可以填入: markdown, html, rawHtml, links, screenshot'
+  label:
+    en_US: Formats
+    zh_Hans: 结果的格式
+  name: formats
+  placeholder:
+    en_US: Use commas to separate multiple tags
+    zh_Hans: 多个标签时使用半角逗号分隔
+  type: string
+- form: form
+  human_description:
+    en_US: 'Headers to send with the request. Can be used to send cookies, user-agent,
+      etc. Example: {"cookies": "testcookies"}'
+    zh_Hans: '随请求发送的头部。可以用来发送cookies、用户代理等。示例：{"cookies": "testcookies"}'
+  label:
+    en_US: headers
+    zh_Hans: 请求头
+  name: headers
+  placeholder:
+    en_US: Please enter an object that can be serialized in JSON
+    zh_Hans: 请输入可以json序列化的对象
+  type: string
+- form: form
+  human_description:
+    en_US: 'Only include tags, classes and ids from the page in the final output.
+      Use comma separated values. Example: script, .ad, #footer'
+    zh_Hans: '仅在最终输出中包含HTML页面的这些标签，可以通过标签名、类或ID来设定，使用逗号分隔值。示例：script, .ad, #footer'
+  label:
+    en_US: Include Tags
+    zh_Hans: 仅抓取这些标签
+  name: includeTags
+  placeholder:
+    en_US: Use commas to separate multiple tags
+    zh_Hans: 多个标签时使用半角逗号分隔
+  type: string
+- form: form
+  human_description:
+    en_US: 'Tags, classes and ids to remove from the page. Use comma separated values.
+      Example: script, .ad, #footer'
+    zh_Hans: '要在最终输出中移除HTML页面的这些标签，可以通过标签名、类或ID来设定，使用逗号分隔值。示例：script, .ad, #footer'
+  label:
+    en_US: Exclude Tags
+    zh_Hans: 要移除这些标签
+  name: excludeTags
+  placeholder:
+    en_US: Use commas to separate multiple tags
+    zh_Hans: 多个标签时使用半角逗号分隔
+  type: string
+- form: form
+  human_description:
+    en_US: Only return the main content of the page excluding headers, navs, footers,
+      etc.
+    zh_Hans: 只返回页面的主要内容，不包括头部、导航栏、尾部等。
+  label:
+    en_US: only Main Content
+    zh_Hans: 仅抓取主要内容
+  name: onlyMainContent
+  type: boolean
+  default: false
+- form: form
+  human_description:
+    en_US: Wait x amount of milliseconds for the page to load to fetch content.
+    zh_Hans: 等待x毫秒以使页面加载并获取内容。
+  label:
+    en_US: wait For
+    zh_Hans: 等待时间
+  min: 0
+  name: waitFor
+  type: number
+- form: form
+  human_description:
+    en_US: 'Natural language prompt to guide the crawling. The system automatically derives paths and limits based on the prompt.'
+    zh_Hans: '指导爬取的自然语言提示。系统会根据提示自动推导路径和限制。'
+  label:
+    en_US: Crawl Prompt
+    zh_Hans: 爬取提示
+  name: prompt
+  type: string
+- form: form
+  human_description:
+    en_US: 'Sitemap handling strategy: "include" (use sitemap + discover other pages), "skip" (ignore sitemap completely), "only" (return only sitemap URLs).'
+    zh_Hans: '站点地图处理策略："include"（使用站点地图+发现其他页面），"skip"（完全忽略站点地图），"only"（仅返回站点地图网址）。'
+  label:
+    en_US: Sitemap Strategy
+    zh_Hans: 站点地图策略
+  name: sitemap
+  type: select
+  options:
+    - value: include
+      label:
+        en_US: Include (use sitemap + discover pages)
+        zh_Hans: 包含（使用站点地图+发现页面）
+    - value: skip
+      label:
+        en_US: Skip (ignore sitemap completely)
+        zh_Hans: 跳过（完全忽略站点地图）
+    - value: only
+      label:
+        en_US: Only (return only sitemap URLs)
+        zh_Hans: 仅限（仅返回站点地图网址）
+  default: include
+- form: form
+  human_description:
+    en_US: Crawl the entire domain instead of just following forward links.
+    zh_Hans: 爬取整个域而不仅仅跟随向前链接。
+  label:
+    en_US: Crawl Entire Domain
+    zh_Hans: 爬取整个域
+  name: crawlEntireDomain
+  type: boolean
+  default: false
+- form: form
+  human_description:
+    en_US: Maximum discovery depth for crawling (replaces maxDepth with more precise semantics).
+    zh_Hans: 爬取的最大发现深度（以更精确的语义替换maxDepth）。
+  label:
+    en_US: Max Discovery Depth
+    zh_Hans: 最大发现深度
+  name: maxDiscoveryDepth
+  type: number
+  min: 0
+  default: 2
+- form: form
+  human_description:
+    en_US: Maximum age in milliseconds for cached content. Use cached data if available and younger than maxAge, otherwise scrape fresh.
+    zh_Hans: 缓存内容的最大生存时间（毫秒）。如果缓存可用且小于maxAge，则使用缓存数据，否则重新抓取。
+  label:
+    en_US: Max Age
+    zh_Hans: 最大缓存时间
+  name: maxAge
+  type: number
+  default: 172800000
+- form: form
+  human_description:
+    en_US: Block advertisements on the page.
+    zh_Hans: 阻止页面上的广告。
+  label:
+    en_US: Block Ads
+    zh_Hans: 阻止广告
+  name: blockAds
+  type: boolean
+  default: true
+- form: form
+  human_description:
+    en_US: Skip TLS certificate verification.
+    zh_Hans: 跳过TLS证书验证。
+  label:
+    en_US: Skip TLS Verification
+    zh_Hans: 跳过TLS验证
+  name: skipTlsVerification
+  type: boolean
+  default: true
+- form: form
+  human_description:
+    en_US: Remove base64 encoded images from output.
+    zh_Hans: 从输出中删除base64编码的图片。
+  label:
+    en_US: Remove Base64 Images
+    zh_Hans: 删除Base64图片
+  name: removeBase64Images
+  type: boolean
+  default: true
+- form: form
+  human_description:
+    en_US: Allow crawling subdomains of the main domain.
+    zh_Hans: 允许爬取主域名的子域名。
+  label:
+    en_US: Allow Subdomains
+    zh_Hans: 允许子域名
+  name: allowSubdomains
+  type: boolean
+  default: false
+- form: form
+  human_description:
+    en_US: Ignore query parameters when determining if a URL has already been crawled.
+    zh_Hans: 在确定URL是否已被爬取时忽略查询参数。
+  label:
+    en_US: Ignore Query Parameters
+    zh_Hans: 忽略查询参数
+  name: ignoreQueryParameters
+  type: boolean
+  default: false
+- form: form
+  human_description:
+    en_US: Delay between requests in milliseconds to be respectful to the target website.
+    zh_Hans: 请求之间的延迟（毫秒），以尊重目标网站。
+  label:
+    en_US: Request Delay (ms)
+    zh_Hans: 请求延迟（毫秒）
+  name: delay
+  type: number
+  min: 0
+- form: form
+  human_description:
+    en_US: Maximum number of concurrent requests for performance optimization.
+    zh_Hans: 用于性能优化的最大并发请求数。
+  label:
+    en_US: Max Concurrency
+    zh_Hans: 最大并发数
+  name: maxConcurrency
+  type: number
+  min: 1
+- form: form
+  human_description:
+    en_US: Store the crawl results in cache for faster subsequent access.
+    zh_Hans: 将爬取结果存储在缓存中以便更快的后续访问。
+  label:
+    en_US: Store In Cache
+    zh_Hans: 存储到缓存
+  name: storeInCache
+  type: boolean
+  default: true
+- form: form
+  human_description:
+    en_US: Enable zero data retention policy for enhanced privacy.
+    zh_Hans: 启用零数据保留政策以增强隐私保护。
+  label:
+    en_US: Zero Data Retention
+    zh_Hans: 零数据保留
+  name: zeroDataRetention
+  type: boolean
+  default: false
+- form: form
+  human_description:
+    en_US: 'Parsers for document processing. Available options: pdf'
+    zh_Hans: '文档处理解析器。可用选项：pdf'
+  label:
+    en_US: Parsers
+    zh_Hans: 解析器
+  name: parsers
+  type: string
+  placeholder:
+    en_US: Use commas to separate multiple parsers
+    zh_Hans: 多个解析器使用半角逗号分隔
+- form: form
+  human_description:
+    en_US: 'Actions to perform on pages before scraping (e.g., wait, click, scroll). Example: [{"type": "wait", "milliseconds": 2000, "selector": "#element"}]'
+    zh_Hans: '抓取前在页面上执行的操作（如等待、点击、滚动）。示例：[{"type": "wait", "milliseconds": 2000, "selector": "#element"}]'
+  label:
+    en_US: Page Actions
+    zh_Hans: 页面操作
+  name: actions
+  placeholder:
+    en_US: Please enter a JSON array of actions
+    zh_Hans: 请输入操作的JSON数组
+  type: string
+- form: form
+  human_description:
+    en_US: 'Location settings for geolocation. Example: {"country": "US", "languages": ["en-US"]}'
+    zh_Hans: '地理位置设置。示例：{"country": "US", "languages": ["en-US"]}'
+  label:
+    en_US: Location Settings
+    zh_Hans: 位置设置
+  name: location
+  placeholder:
+    en_US: Please enter location configuration as JSON
+    zh_Hans: 请输入位置配置的JSON格式
+  type: string
+- form: form
+  human_description:
+    en_US: 'Proxy configuration for crawling. Use "auto" for automatic proxy or provide custom proxy URL.'
+    zh_Hans: '用于爬取的代理配置。使用"auto"进行自动代理或提供自定义代理URL。'
+  label:
+    en_US: Proxy Configuration
+    zh_Hans: 代理配置
+  name: proxy
+  type: string

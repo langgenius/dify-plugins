@@ -1,0 +1,115 @@
+description:
+  human:
+    en_US: Input a website and get all the urls on the website - extremly fast
+    zh_Hans: 输入一个网站，快速获取网站上的所有网址。
+  llm: Input a website and get all the urls on the website - extremly fast
+extra:
+  python:
+    source: tools/map.py
+identity:
+  author: hjlarry
+  label:
+    en_US: Map
+    zh_Hans: 地图式快爬
+  name: map
+parameters:
+- form: llm
+  human_description:
+    en_US: The base URL to start crawling from.
+    zh_Hans: 要爬取网站的起始URL。
+  label:
+    en_US: Start URL
+    zh_Hans: 起始URL
+  llm_description: The URL of the website that needs to be crawled. This is a required
+    parameter.
+  name: url
+  required: true
+  type: string
+- form: llm
+  human_description:
+    en_US: Search query to use for mapping. During the Alpha phase, the 'smart' part
+      of the search functionality is limited to 100 search results. However, if map
+      finds more results, there is no limit applied.
+    zh_Hans: 用于映射的搜索查询。在Alpha阶段，搜索功能的“智能”部分限制为最多100个搜索结果。然而，如果地图找到了更多结果，则不施加任何限制。
+  label:
+    en_US: search
+    zh_Hans: 搜索查询
+  llm_description: Search query to use for mapping. During the Alpha phase, the 'smart'
+    part of the search functionality is limited to 100 search results. However, if
+    map finds more results, there is no limit applied.
+  name: search
+  type: string
+  default: true
+- form: form
+  human_description:
+    en_US: Ignore the website sitemap when crawling.
+    zh_Hans: 爬取时忽略网站站点地图。
+  label:
+    en_US: ignore Sitemap
+    zh_Hans: 忽略站点地图
+  name: ignoreSitemap
+  type: boolean
+  default: false
+- form: form
+  human_description:
+    en_US: include Subdomains.
+    zh_Hans: 包含子域名。
+  label:
+    en_US: include Subdomains
+    zh_Hans: 包含子域名
+  name: includeSubdomains
+  type: boolean
+- form: form
+  human_description:
+    en_US: maximum results.
+    zh_Hans: 最大结果数量。
+  label:
+    en_US: Maximum results
+    zh_Hans: 最大结果数量
+  min: 0
+  name: limit
+  type: number
+  default: 5000
+- form: form
+  human_description:
+    en_US: 'Sitemap handling strategy: "include" (use sitemap + discover other pages), "skip" (ignore sitemap completely), "only" (return only sitemap URLs).'
+    zh_Hans: '站点地图处理策略："include"（使用站点地图+发现其他页面），"skip"（完全忽略站点地图），"only"（仅返回站点地图网址）。'
+  label:
+    en_US: Sitemap Strategy
+    zh_Hans: 站点地图策略
+  name: sitemap
+  type: select
+  options:
+    - value: include
+      label:
+        en_US: Include (use sitemap + discover pages)
+        zh_Hans: 包含（使用站点地图+发现页面）
+    - value: skip
+      label:
+        en_US: Skip (ignore sitemap completely)
+        zh_Hans: 跳过（完全忽略站点地图）
+    - value: only
+      label:
+        en_US: Only (return only sitemap URLs)
+        zh_Hans: 仅限（仅返回站点地图网址）
+  default: include
+- form: form
+  human_description:
+    en_US: Ignore query parameters when determining if a URL has already been mapped.
+    zh_Hans: 在确定URL是否已被映射时忽略查询参数。
+  label:
+    en_US: Ignore Query Parameters
+    zh_Hans: 忽略查询参数
+  name: ignoreQueryParameters
+  type: boolean
+  default: false
+- form: form
+  human_description:
+    en_US: Timeout in milliseconds for the mapping operation.
+    zh_Hans: 映射操作的超时时间（毫秒）。
+  label:
+    en_US: Timeout (ms)
+    zh_Hans: 超时时间（毫秒）
+  name: timeout
+  type: number
+  min: 0

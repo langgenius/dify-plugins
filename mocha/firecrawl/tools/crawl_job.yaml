@@ -1,0 +1,46 @@
+description:
+  human:
+    en_US: Retrieve the scraping results based on the job ID, or cancel the scraping
+      task.
+    zh_Hans: 根据爬取任务ID获取爬取结果，或者取消爬取任务
+  llm: Retrieve the scraping results based on the job ID, or cancel the scraping task.
+extra:
+  python:
+    source: tools/crawl_job.py
+identity:
+  author: hjlarry
+  label:
+    en_US: Crawl Job
+    zh_Hans: 爬取任务处理
+  name: crawl_job
+parameters:
+- form: llm
+  human_description:
+    en_US: Set wait_for_results to false in the Crawl tool can get the job ID.
+    zh_Hans: 在深度爬取工具中将等待爬取结果设置为否可以获取Job ID。
+  label:
+    en_US: Job ID
+  llm_description: Set wait_for_results to false in the Crawl tool can get the job
+    ID.
+  name: job_id
+  required: true
+  type: string
+- form: llm
+  label:
+    en_US: operation
+    zh_Hans: 操作
+  human_description:
+    en_US: choose the operation to perform. `get` is for getting the crawl status, `cancel` is for cancelling the crawl job.
+    zh_Hans: 选择操作类型。
+  llm_description: choose the operation to perform. `get` is for getting the crawl
+    status, `cancel` is for cancelling the crawl job.
+  name: operation
+  options:
+  - label:
+      en_US: get crawl status
+    value: get
+  - label:
+      en_US: cancel crawl job
+    value: cancel
+  required: true
+  type: select
