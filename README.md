@@ -46,17 +46,17 @@
 
 ##### Models
 
-These plugins integrate various AI models (including mainstream LLM providers and custom model) to handle configuration and requests for LLM APIs. For more on creating a model plugin, take refer to [Quick Start: Model Plugin](https://docs.dify.ai/plugins/quick-start/develop-plugins/model-plugin).
+These plugins integrate various AI models (including mainstream LLM providers and custom model) to handle configuration and requests for LLM APIs. For more on creating a model plugin, take refer to [Quick Start: Model Plugin](https://docs.dify.ai/en/plugins/quick-start/develop-plugins/model-plugin/README).
 
 ##### Tools
 
-Tools refer to third-party services that can be invoked by Chatflow, Workflow, or Agent-type applications. They provide a complete API implementation to enhance the capabilities of Dify applications. For example, developing a Google Search plugin, please refer to [Quick Start: Tool Plugin](https://docs.dify.ai/plugins/quick-start/develop-plugins/tool-plugin).
+Tools refer to third-party services that can be invoked by Chatflow, Workflow, or Agent-type applications. They provide a complete API implementation to enhance the capabilities of Dify applications. For example, developing a Google Search plugin, please refer to [Quick Start: Tool Plugin](https://docs.dify.ai/en/plugins/quick-start/develop-plugins/tool-plugin).
 
 ##### Agent Strategies
 
 The Agent Strategy plugin defines the reasoning and decision-making logic within an Agent node, including tool selection, invocation, and result processing.
 
-Agent strategy plugins define the internal reasoning and decision-making logic within agent nodes. They encompass the logic for tool selection, invocation, and handling of returned results by the LLM. For further development guidance, please refer to the [Quick Start: Agent Strategy Plugin](https://docs.dify.ai/plugins/quick-start/develop-plugins/agent-strategy-plugin).
+Agent strategy plugins define the internal reasoning and decision-making logic within agent nodes. They encompass the logic for tool selection, invocation, and handling of returned results by the LLM. For further development guidance, please refer to the [Quick Start: Agent Strategy Plugin](https://docs.dify.ai/en/plugins/quick-start/develop-plugins/agent-strategy-plugin).
 
 ##### Extensions
 
@@ -68,7 +68,7 @@ A "plugin bundle" is a collection of multiple plugins. Bundles allow you to inst
 
 #### Plugin Docs
 
-Check the [Plugins documentation](https://docs.dify.ai/plugins/quick-start/develop-plugins) to learn how to develop and publish plugins.
+Check the [Plugins documentation](https://docs.dify.ai/en/plugins/introduction) to learn how to develop and publish plugins.
 
 ### Publishing to Dify Marketplace
 
