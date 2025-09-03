@@ -1,0 +1,19 @@
+version: 0.0.1
+type: plugin
+author: Dingo Contributors
+name: dingo
+label:
+  en_US: Dingo Data Quality Evaluator
+  zh_Hans: Dingo数据质量评估器
+description:
+  en_US: A data quality evaluation tool that helps automatically detect data quality issues in datasets using Dingo library
+  zh_Hans: 基于Dingo库的数据质量评估工具，帮助自动检测数据集中的质量问题
+icon: icon.svg
+tags:
+  - data-quality
+  - evaluation
+  - text-analysis
+plugins:
+  tools:
+    - provider: dingo_provider
+privacy_policy: privacy-policy.md
