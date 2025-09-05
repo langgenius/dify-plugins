@@ -1,0 +1,1 @@
+# Dingo Plugin Provider

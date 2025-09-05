@@ -1,0 +1,12 @@
+provider: dingo_provider
+label:
+  en_US: Dingo Data Quality
+  zh_Hans: Dingo数据质量
+description:
+  en_US: Data quality evaluation tools powered by Dingo library
+  zh_Hans: 基于Dingo库的数据质量评估工具
+icon: icon.svg
+supported_model_types: []
+configurate_methods: []
+provider_credential_schema:
+  credential_form_schemas: []
