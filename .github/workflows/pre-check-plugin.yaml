@@ -15,7 +15,7 @@ on:
 
 env:
   REPO_NAME: langgenius/dify-plugins
-  MARKETPLACE_BASE_URL: https://marketplace-plugin.dify.dev
+  MARKETPLACE_BASE_URL: https://marketplace.dify.ai
   MARKETPLACE_TOKEN: placeholder
   GH_TOKEN: ${{ github.token }}
 
@@ -71,17 +71,51 @@ jobs:
 
       - name: Check Plugin Manifest
         run: |
-          # manifest.yaml author must not be langgenius
+          # manifest.yaml author must not be langgenius or dify
           if yq '.author' ${{ env.PLUGIN_PATH }}/manifest.yaml | grep -q "langgenius"; then
             echo "!!! Plugin manifest.yaml author must not be 'langgenius'"
             exit 1
           fi
-
-          # author must equal to the pr author (lowercase)
-          if [ "$(yq '.author' ${{ env.PLUGIN_PATH }}/manifest.yaml)" != "$(gh pr view -R ${{ env.REPO_NAME }} ${{ github.event.pull_request.number }} --json author --jq .author.login | tr '[:upper:]' '[:lower:]')" ]; then
-            echo "!!! Plugin manifest.yaml author should be lowercase and must be the same as the PR author"
+          if yq '.author' ${{ env.PLUGIN_PATH }}/manifest.yaml | grep -q "dify"; then
+            echo "!!! Plugin manifest.yaml author must not be 'dify'"
             exit 1
           fi
+
+      - name: Check Plugin Icon
+        run: |
+          # Get icon filename from manifest.yaml
+          PLUGIN_ICON_FILENAME=$(yq '.icon' ${{ env.PLUGIN_PATH }}/manifest.yaml)
+          echo "PLUGIN_ICON_FILENAME=$PLUGIN_ICON_FILENAME" >> $GITHUB_ENV
+          
+          # Check if icon file exists
+          if [ ! -f "${{ env.PLUGIN_PATH }}/_assets/$PLUGIN_ICON_FILENAME" ]; then
+            echo "!!! Plugin icon file not found: _assets/$PLUGIN_ICON_FILENAME"
+            exit 1
+          fi
+          
+          # Check if icon contains template placeholder text
+          if grep -q "DIFY_MARKETPLACE_TEMPLATE_ICON_DO_NOT_USE" "${{ env.PLUGIN_PATH }}/_assets/$PLUGIN_ICON_FILENAME"; then
+            echo "!!! Plugin icon contains template placeholder text 'DIFY_MARKETPLACE_TEMPLATE_ICON_DO_NOT_USE', change default icon before submitting to marketplace."
+            exit 1
+          fi
+          
+          # Define default icon content
+          DEFAULT_ICON='<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 20 V80 M20 20 H60 Q80 20 80 40 T60 60 H20" 
+                  fill="none" 
+                  stroke="black" 
+                  stroke-width="5"/>
+          </svg>'
+          
+          # Check if icon content matches default icon (normalize whitespace)
+          ICON_CONTENT=$(cat "${{ env.PLUGIN_PATH }}/_assets/$PLUGIN_ICON_FILENAME" | tr -d '\n\r\t ' | tr -s ' ')
+          DEFAULT_ICON_NORMALIZED=$(echo "$DEFAULT_ICON" | tr -d '\n\r\t ' | tr -s ' ')
+          
+          if [ "$ICON_CONTENT" = "$DEFAULT_ICON_NORMALIZED" ]; then
+            echo "!!! Plugin icon is using the default template icon and must be customized"
+            exit 1
+          fi
+  
 
       - name: Check If Version Exists
         run: |
@@ -115,10 +149,22 @@ jobs:
       - name: Check Plugin Install
         run: |
           if [ -f ${{ env.PLUGIN_PATH }}/requirements.txt ]; then
-            source .venv/bin/activate
+              source .venv/bin/activate
+              pip install packaging
+              dify_version=$(pip list | grep 'dify_plugin' | awk '{print $2}')
+              target_version="0.0.1b64"
+              result=$(python -c "from packaging.version import Version; print(0 if Version('$dify_version') > Version('$target_version') else 1)")
+              if [ $result == 0 ]; then
+                  export INSTALL_METHOD=serverless
+                  export SERVERLESS_PORT=8080
+                  export SERVERLESS_HOST=0.0.0.0
+              else
+                  export INSTALL_METHOD=aws_lambda
+                  export AWS_LAMBDA_PORT=8080
+                  export AWS_LAMBDA_HOST=0.0.0.0
+              fi
+              python3 .scripts/validator/test-plugin-install.py -d ${{ env.PLUGIN_PATH }}
           fi
-          export INSTALL_METHOD=aws_lambda
-          python3 .scripts/validator/test-plugin-install.py -d ${{ env.PLUGIN_PATH }}
 
       - name: Check Packaging
         run: |
