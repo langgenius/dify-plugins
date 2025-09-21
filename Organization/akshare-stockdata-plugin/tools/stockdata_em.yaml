@@ -1,0 +1,232 @@
+identity:
+  author: shaoxing_xie
+  name: stockdata_em
+  label:
+    zh_Hans: 股票数据接口-东方财富
+    en_US: Stock Data Interface - Eastmoney
+description:
+  human:
+    zh_Hans: 通过东方财富接口获取全面的股票市场数据，支持多种数据接口选择。
+    en_US: Get comprehensive stock market data through Eastmoney interfaces with multiple data interface options.
+  llm: 通过东方财富接口获取全面的股票市场数据，支持行情报价、实时数据、板块数据、历史数据等多种接口。
+parameters:
+  - name: interface
+    type: select
+    required: true
+    form: llm
+    default: stock_bid_ask_em
+    description: 接口名称
+    llm_description: "接口参数说明：1.个股信息查询:股票代码;
+2.行情报价:股票代码;
+3.A股日频率数据:股票代码、周期{'daily', 'weekly', 'monthly'}、开始日期、结束日期、复权类型、超时时间;
+4.股票行情-盘前数据:股票代码、开始时间、结束时间;
+5.B股实时行情数据:无参数;
+6.公司动态:交易日期;
+7.风险警示板:无参数;
+8.沪深新股:无参数;
+9.两网及退市:无参数;
+10.科创板报告数据:无参数;
+11.AH股比价实时行情;
+12.美股实时行情:无参数;
+13.美股每日行情:股票代码、周期{'daily', 'weekly', 'monthly'}、开始日期、结束日期、复权类型;
+14.美股每日分时行情:股票代码、开始日期、结束日期;
+15.港股每日分时行情:股票代码、周期{'1', '5', '15', '30', '60'}、复权类型、开始日期、结束日期."
+    human_description:
+      en_US: "Interface parameter description: 1.Individual stock info: stock code;
+2.Quote (Bid/Ask): stock code;
+3.A-share daily frequency data: stock code, period{'daily', 'weekly', 'monthly'}, start date, end date, adjustment type, timeout;
+4.Stock market - pre-market data: stock code, start time, end time;
+5.B-share real-time market data: no parameters;
+6.Company dynamics: trading date;
+7.Risk warning board: no parameters;
+8.Shanghai-Shenzhen new stocks: no parameters;
+9.Two networks & delisted: no parameters;
+10.STAR board report data: no parameters;
+11.AH share price comparison real-time market;
+12.US stock real-time market: no parameters;
+13.US stock daily market: stock code, period{'daily', 'weekly', 'monthly'}, start date, end date, adjustment type;
+14.US stock daily minute market: stock code, start date, end date;
+15.HK stock daily minute market: stock code, period{'1', '5', '15', '30', '60'}, adjustment type, start date, end date."
+      zh_Hans: "接口参数说明：1.个股信息查询:股票代码;
+2.行情报价:股票代码;
+3.A股日频率数据:股票代码、周期{'daily', 'weekly', 'monthly'}、开始日期、结束日期、复权类型、超时时间;
+4.股票行情-盘前数据:股票代码、开始时间、结束时间;
+5.B股实时行情数据:无参数;
+6.公司动态:交易日期;
+7.风险警示板:无参数;
+8.沪深新股:无参数;
+9.两网及退市:无参数;
+10.科创板报告数据:无参数;
+11.AH股比价实时行情;
+12.美股实时行情:无参数;
+13.美股每日行情:股票代码、周期{'daily', 'weekly', 'monthly'}、开始日期、结束日期、复权类型;
+14.美股每日分时行情:股票代码、开始日期、结束日期;
+15.港股每日分时行情:股票代码、周期{'1', '5', '15', '30', '60'}、复权类型、开始日期、结束日期."
+    label:
+      en_US: Interface
+      zh_Hans: 接口名称
+    options:
+      - label:
+          en_US: Individual Stock Info
+          zh_Hans: 个股信息查询
+        value: stock_individual_info_em
+      - label:
+          en_US: Quote (Bid/Ask)
+          zh_Hans: 行情报价
+        value: stock_bid_ask_em
+      - label:
+          en_US: A-share Daily Frequency Data
+          zh_Hans: A 股日频率数据
+        value: stock_zh_a_hist
+      - label:
+          en_US: Stock Market - Pre-market Data
+          zh_Hans: 股票行情-盘前数据
+        value: stock_zh_a_hist_pre_min_em
+      - label:
+          en_US: B-share Real-time Market Data
+          zh_Hans: B股实时行情数据
+        value: stock_zh_b_spot_em
+      - label:
+          en_US: Stock Calendar - Company News
+          zh_Hans: 股市日历-公司动态
+        value: stock_gsrl_gsdt_em
+      - label:
+          en_US: Shanghai-Shenzhen Stocks - Risk Warning Board
+          zh_Hans: 沪深个股-风险警示板
+        value: stock_zh_a_st_em
+      - label:
+          en_US: Shanghai-Shenzhen Stocks - New Stocks
+          zh_Hans: 沪深个股-新股
+        value: stock_zh_a_new_em
+      - label:
+          en_US: Shanghai-Shenzhen Stocks - Two Networks & Delisted
+          zh_Hans: 沪深个股-两网及退市
+        value: stock_zh_a_stop_em
+      - label:
+          en_US: STAR Board Report Data
+          zh_Hans: 科创板报告数据
+        value: stock_zh_kcb_report_em
+      - label:
+          en_US: AH Share Price Comparison - Real-time (15min delay)
+          zh_Hans: AH股比价-实时行情(延迟 15 分钟更新)
+        value: stock_zh_ah_spot_em
+      - label:
+          en_US: US Stock - Real-time Market
+          zh_Hans: 美股-实时行情
+        value: stock_us_spot_em
+      - label:
+          en_US: US Stock - Daily Market
+          zh_Hans: 美股-每日行情
+        value: stock_us_hist
+      - label:
+          en_US: US Stock - Daily Minute Market
+          zh_Hans: 美股-每日分时行情
+        value: stock_us_hist_min_em
+      - label:
+          en_US: HK Stock - Minute Market Data
+          zh_Hans: 港股分时行情
+        value: stock_hk_hist_min_em
+  - name: symbol
+    type: string
+    required: false
+    form: llm
+    default: "600519"
+    description: 股票代码或板块代码
+    llm_description: 股票代码或板块代码，如600519、000001、SH600519等
+    human_description:
+      en_US: "Symbol. Required for: Individual Stock Info, Quote (Bid/Ask), A-share Daily Frequency Data, Pre-market Data, US Stock Daily Market, US Stock Daily Minute Market, HK Stock Daily Minute Market. Format: A-share (600519), US stock (AAPL), HK stock (00700)."
+      zh_Hans: "股票代码或板块代码。需要此参数的接口：个股信息查询、行情报价、A股日频率数据、盘前数据、美股每日行情、美股每日分时行情、港股每日分时行情。格式：A股(600519)、美股(AAPL)、港股(00700)。"
+    label:
+      en_US: Symbol
+      zh_Hans: 股票代码
+  - name: period
+    type: string
+    required: false
+    form: llm
+    description: 周期
+    llm_description: 数据周期，如daily、weekly、monthly或1、5、15、30、60
+    human_description:
+      en_US: "Period. Required for: A-share Daily Frequency Data, US Stock Daily Market, HK Stock Daily Minute Market. Options: For daily data: 'daily', 'weekly', 'monthly'; For minute data: '1', '5', '15', '30', '60' (minutes)."
+      zh_Hans: "周期。需要此参数的接口：A股日频率数据、美股每日行情、港股每日分时行情。选项：日线数据：'daily'(日线)、'weekly'(周线)、'monthly'(月线)；分钟数据：'1'、'5'、'15'、'30'、'60'(分钟)。"
+    label:
+      en_US: Period
+      zh_Hans: 周期
+  - name: start_date
+    type: string
+    required: false
+    form: llm
+    description: 开始日期
+    llm_description: 开始日期，格式如20240101或2024-03-20 09:30:00
+    human_description:
+      en_US: "Start date. Required for: A-share Daily Frequency Data, Pre-market Data, US Stock Daily Market, US Stock Daily Minute Market, HK Stock Daily Minute Market. Format: YYYYMMDD (20240101) for daily data, YYYY-MM-DD HH:MM:SS (2024-03-20 09:30:00) for minute data."
+      zh_Hans: "开始日期。需要此参数的接口：A股日频率数据、盘前数据、美股每日行情、美股每日分时行情、港股每日分时行情。格式：日线数据用YYYYMMDD(20240101)，分钟数据用YYYY-MM-DD HH:MM:SS(2024-03-20 09:30:00)。"
+    label:
+      en_US: Start Date
+      zh_Hans: 开始日期
+  - name: end_date
+    type: string
+    required: false
+    form: llm
+    description: 结束日期
+    llm_description: 结束日期，格式如20241231或2222-01-01 15:00:00
+    human_description:
+      en_US: "End date. Required for: A-share Daily Frequency Data, Pre-market Data, US Stock Daily Market, US Stock Daily Minute Market, HK Stock Daily Minute Market. Format: YYYYMMDD (20241231) for daily data, YYYY-MM-DD HH:MM:SS (2024-03-20 15:00:00) for minute data."
+      zh_Hans: "结束日期。需要此参数的接口：A股日频率数据、盘前数据、美股每日行情、美股每日分时行情、港股每日分时行情。格式：日线数据用YYYYMMDD(20241231)，分钟数据用YYYY-MM-DD HH:MM:SS(2024-03-20 15:00:00)。"
+    label:
+      en_US: End Date
+      zh_Hans: 结束日期
+  - name: date
+    type: string
+    required: false
+    form: llm
+    description: 交易日期
+    llm_description: 交易日期，格式如20240101，用于公司动态等接口
+    human_description:
+      en_US: "Trading date. Required for: Company Dynamics. Format: YYYYMMDD (20240101)."
+      zh_Hans: "交易日期。需要此参数的接口：公司动态。格式：YYYYMMDD(20240101)。"
+    label:
+      en_US: Trading Date
+      zh_Hans: 交易日期
+  - name: adjust
+    type: string
+    required: false
+    form: llm
+    description: 复权类型
+    llm_description: 复权类型，qfq前复权、hfq后复权、空字符串不复权
+    human_description:
+      en_US: "Adjustment type. Required for: A-share Daily Frequency Data, US Stock Daily Market, HK Stock Daily Minute Market. Options: Empty string '' for no adjustment, 'qfq' for forward adjustment, 'hfq' for backward adjustment."
+      zh_Hans: "复权类型。需要此参数的接口：A股日频率数据、美股每日行情、港股每日分时行情。选项：空字符串''表示不复权，'qfq'表示前复权，'hfq'表示后复权。"
+    label:
+      en_US: Adjust
+      zh_Hans: 复权类型
+  - name: retries
+    type: number
+    required: false
+    form: llm
+    description: 重试次数
+    llm_description: 网络请求重试次数，默认3次
+    human_description:
+      en_US: "Number of retries for network requests. Range: 1-10. Default: 3. Higher values for unstable networks."
+      zh_Hans: "网络请求重试次数。范围：1-10。默认：3。网络不稳定时可设置更高值。"
+    label:
+      en_US: Retries
+      zh_Hans: 重试次数
+    min: 1
+    max: 10
+  - name: timeout
+    type: number
+    required: false
+    form: llm
+    description: 子进程超时时间
+    llm_description: 子进程执行超时时间（秒），默认20秒
+    human_description:
+      en_US: "Subprocess execution timeout in seconds. Range: 5-120. Default: 20. Increase for slow networks or large data requests."
+      zh_Hans: "子进程执行超时时间（秒）。范围：5-120。默认：20。网络较慢或数据量较大时可增加。"
+    label:
+      en_US: Subprocess Timeout
+      zh_Hans: 子进程超时时间
+    min: 5
+    max: 120
+extra:
+  python:
+    source: tools/stockdata_em.py

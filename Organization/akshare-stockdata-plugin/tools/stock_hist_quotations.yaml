@@ -1,0 +1,249 @@
+identity:
+  author: shaoxing_xie
+  name: stock_hist_quotations
+  label:
+    zh_Hans: 股票历史行情
+    en_US: Stock Historical Quotations
+description:
+  human:
+    zh_Hans: 通过AKShare数据接口获取指定股票的历史行情数据，包括A股、港股、美股等各市场的历史价格、成交量、成交额等信息。支持日线、周线、月线等不同周期的数据，并可选择前复权、后复权等调整方式。
+    en_US: Get historical stock market data through AKShare interfaces for specified stocks, including A-shares, HK stocks, US stocks with historical prices, trading volumes, amounts, etc. Supports different periods (daily, weekly, monthly) and adjustment methods (qfq, hfq).
+  llm: 通过AKShare数据接口获取指定股票的历史行情数据，包括A股、港股、美股等各市场的历史价格、成交量、成交额等信息。支持日线、周线、月线等不同周期的数据，并可选择前复权、后复权等调整方式。
+parameters:
+  - name: interface
+    type: select
+    required: true
+    form: llm
+    default: stock_zh_a_hist
+    description: 接口名称
+    llm_description: 选择要调用的历史行情数据接口，支持A股、港股、美股历史数据。历史行情接口使用周期一（历史行情类），分时行情接口使用周期二（分时行情类）
+    human_description:
+      en_US: "Interface parameter description: 1.A-share Daily Data: requires symbol, Period 1 (Historical Data), start_date, end_date, adjust; 2.A-share Daily Minute Data: requires symbol, Period 2 (Minute Data), start_date, end_date, adjust; 3.Recent Trading Day Intraday Data: requires symbol only; 4.Recent Trading Day Pre-market Data: requires symbol, start_time, end_time; 5.STAR Market Historical Data: requires symbol, adjust; 6.HK Stock Historical Data: requires symbol, Period 1 (Historical Data), start_date, end_date, adjust; 7.HK Stock Daily Minute Data: requires symbol, Period 2 (Minute Data), start_date, end_date, adjust; 8.US Stock Daily Data: requires symbol, Period 1 (Historical Data), start_date, end_date, adjust; 9.US Stock Daily Minute Data: requires symbol, start_date, end_date."
+      zh_Hans: "接口参数说明：1.沪深京A股-日频率数据:需要股票代码、周期一（历史行情类）、开始日期、结束日期、调整方式; 2.沪深京 A 股-每日分时行情:需要股票代码、周期二（分时行情类）、开始日期、结束日期、调整方式; 3.最近一个交易日-分时数据:只需要股票代码; 4.最近一个交易日-盘前数据:需要股票代码、开始时间、结束时间; 5.科创板股票历史行情数据:需要股票代码、调整方式; 6.港股-历史行情数据:需要股票代码、周期一（历史行情类）、开始日期、结束日期、调整方式; 7.港股-每日分时行情:需要股票代码、周期二（分时行情类）、开始日期、结束日期、调整方式; 8.美股-每日行情:需要股票代码、周期一（历史行情类）、开始日期、结束日期、调整方式; 9.美股-每日分时行情:需要股票代码、开始日期、结束日期。"
+    label:
+      en_US: Interface
+      zh_Hans: 接口名称
+    options:
+      # A股相关接口
+      - label:
+          en_US: Eastmoney - A-share - Daily Data
+          zh_Hans: 东方财富-沪深京A股-日频率数据
+        value: stock_zh_a_hist
+      - label:
+          en_US: Eastmoney - A-share - Daily Minute Data
+          zh_Hans: 东方财富网-沪深京 A 股-每日分时行情
+        value: stock_zh_a_hist_min_em
+      - label:
+          en_US: Eastmoney - Recent Trading Day - Intraday Data
+          zh_Hans: 东方财富-最近一个交易日-分时数据
+        value: stock_intraday_em
+      - label:
+          en_US: Eastmoney - Recent Trading Day - Pre-market Data
+          zh_Hans: 东方财富-最近一个交易日-盘前数据
+        value: stock_zh_a_hist_pre_min_em
+      - label:
+          en_US: Sina Finance - STAR Market - Historical Data
+          zh_Hans: 新浪财经-科创板股票历史行情数据
+        value: stock_zh_kcb_daily
+      # 港股相关接口
+      - label:
+          en_US: Eastmoney - HK Stock - Historical Data
+          zh_Hans: 东方财富-港股-历史行情数据
+        value: stock_hk_hist
+      - label:
+          en_US: Eastmoney - HK Stock - Daily Minute Data
+          zh_Hans: 东方财富网-港股-每日分时行情
+        value: stock_hk_hist_min_em
+      # 美股相关接口
+      - label:
+          en_US: Eastmoney - US Stock - Daily Data
+          zh_Hans: 东方财富网-美股-每日行情
+        value: stock_us_hist
+      - label:
+          en_US: Eastmoney - US Stock - Daily Minute Data
+          zh_Hans: 东方财富网-美股-每日分时行情
+        value: stock_us_hist_min_em
+  - name: symbol
+    type: string
+    required: true
+    form: llm
+    default: "000001"
+    description: 股票代码
+    llm_description: 股票代码，支持A股、港股、美股格式
+    human_description:
+      en_US: "Stock symbol. Required for: East Money - A-share - Daily Data, East Money - A-share - Daily Minute Data, East Money - Recent Trading Day - Intraday Data, East Money - Recent Trading Day - Pre-market Data, Sina Finance - STAR Market - Historical Data, East Money - HK Stock - Historical Data, East Money - HK Stock - Daily Minute Data, East Money - US Stock - Daily Data, East Money - US Stock - Daily Minute Data. Format: A-shares: 600519, 000001, SH600519, SZ000001; HK stocks: 00700, 03900, HK00700; US stocks: AAPL, MSFT."
+      zh_Hans: "股票代码。需要此参数的接口：东方财富-沪深京A股-日频率数据、东方财富网-沪深京 A 股-每日分时行情、东方财富-最近一个交易日-分时数据、东方财富-最近一个交易日-盘前数据、新浪财经-科创板股票历史行情数据、东方财富-港股-历史行情数据、东方财富网-港股-每日分时行情、东方财富网-美股-每日行情、东方财富网-美股-每日分时行情。格式：A股：600519、000001、SH600519、SZ000001；港股：00700、03900、HK00700；美股：AAPL、MSFT。"
+    label:
+      en_US: Stock Symbol
+      zh_Hans: 股票代码
+  - name: period
+    type: select
+    required: false
+    form: llm
+    default: daily
+    description: 周期一（历史行情类）
+    llm_description: 历史行情接口的周期参数，用于A股、港股、美股历史数据接口
+    human_description:
+      en_US: "Period. Required for: East Money - A-share - Daily Data, East Money - HK Stock - Historical Data, East Money - US Stock - Daily Data. Options: daily (日线), weekly (周线), monthly (月线)."
+      zh_Hans: "周期一（历史行情类）。需要此参数的接口：东方财富-沪深京A股-日频率数据、东方财富-港股-历史行情数据、东方财富网-美股-每日行情。选项：daily(日线)、weekly(周线)、monthly(月线)。"
+    label:
+      en_US: Period 1 (Historical Data)
+      zh_Hans: 周期一（历史行情类）
+    options:
+      - label:
+          en_US: Daily
+          zh_Hans: 日线
+        value: "daily"
+      - label:
+          en_US: Weekly
+          zh_Hans: 周线
+        value: "weekly"
+      - label:
+          en_US: Monthly
+          zh_Hans: 月线
+        value: "monthly"
+  - name: period2
+    type: select
+    required: false
+    form: llm
+    default: "1"
+    description: 周期二（分时行情类）
+    llm_description: 分时行情接口的周期参数，用于A股、港股、美股分时数据接口
+    human_description:
+      en_US: "Period. Required for: East Money - A-share - Daily Minute Data, East Money - HK Stock - Daily Minute Data, East Money - US Stock - Daily Minute Data. Options: 1 (1分钟), 5 (5分钟), 15 (15分钟), 30 (30分钟), 60 (60分钟)."
+      zh_Hans: "周期二（分时行情类）。需要此参数的接口：东方财富网-沪深京 A 股-每日分时行情、东方财富网-港股-每日分时行情、东方财富网-美股-每日分时行情。选项：1(1分钟)、5(5分钟)、15(15分钟)、30(30分钟)、60(60分钟)。"
+    label:
+      en_US: Period 2 (Minute Data)
+      zh_Hans: 周期二（分时行情类）
+    options:
+      - label:
+          en_US: 1 Minute
+          zh_Hans: 1分钟
+        value: "1"
+      - label:
+          en_US: 5 Minutes
+          zh_Hans: 5分钟
+        value: "5"
+      - label:
+          en_US: 15 Minutes
+          zh_Hans: 15分钟
+        value: "15"
+      - label:
+          en_US: 30 Minutes
+          zh_Hans: 30分钟
+        value: "30"
+      - label:
+          en_US: 60 Minutes
+          zh_Hans: 60分钟
+        value: "60"
+  - name: start_date
+    type: string
+    required: false
+    form: llm
+    default: "20250801"
+    description: 开始日期
+    llm_description: 历史数据的开始日期，格式为YYYYMMDD
+    human_description:
+      en_US: "Start date. Required for: East Money - A-share - Daily Data, East Money - HK Stock - Historical Data, East Money - US Stock - Daily Data. Format: YYYYMMDD (20240101)."
+      zh_Hans: "开始日期。需要此参数的接口：东方财富-沪深京A股-日频率数据、东方财富-港股-历史行情数据、东方财富网-美股-每日行情。格式：YYYYMMDD(20240101)。"
+    label:
+      en_US: Start Date
+      zh_Hans: 开始日期
+  - name: end_date
+    type: string
+    required: false
+    form: llm
+    default: "20250915"
+    description: 结束日期
+    llm_description: 历史数据的结束日期，格式为YYYYMMDD。注意：某些接口不需要此参数
+    human_description:
+      en_US: "End date. Required for: East Money - A-share - Daily Data, East Money - HK Stock - Historical Data, East Money - US Stock - Daily Data. Format: YYYYMMDD (20241231)."
+      zh_Hans: "结束日期。需要此参数的接口：东方财富-沪深京A股-日频率数据、东方财富-港股-历史行情数据、东方财富网-美股-每日行情。格式：YYYYMMDD(20241231)。"
+    label:
+      en_US: End Date
+      zh_Hans: 结束日期
+  - name: start_time
+    type: string
+    required: false
+    form: llm
+    default: "09:00:00"
+    description: 开始时间
+    llm_description: 盘前数据的开始时间，格式为HH:MM:SS
+    human_description:
+      en_US: "Start time. Required for: East Money - Recent Trading Day - Pre-market Data. Format: HH:MM:SS (09:00:00)."
+      zh_Hans: "开始时间。需要此参数的接口：东方财富-最近一个交易日-盘前数据。格式：HH:MM:SS(09:00:00)。"
+    label:
+      en_US: Start Time
+      zh_Hans: 开始时间
+  - name: end_time
+    type: string
+    required: false
+    form: llm
+    default: "15:00:00"
+    description: 结束时间
+    llm_description: 盘前数据的结束时间，格式为HH:MM:SS
+    human_description:
+      en_US: "End time. Required for: East Money - Recent Trading Day - Pre-market Data. Format: HH:MM:SS (15:40:00)."
+      zh_Hans: "结束时间。需要此参数的接口：东方财富-最近一个交易日-盘前数据。格式：HH:MM:SS(15:40:00)。"
+    label:
+      en_US: End Time
+      zh_Hans: 结束时间
+  - name: adjust
+    type: select
+    required: false
+    form: llm
+    default: "none"
+    description: 调整方式
+    llm_description: 价格调整方式，支持前复权、后复权、不复权
+    human_description:
+      en_US: "Adjustment method. Required for: East Money - A-share - Daily Data, East Money - HK Stock - Historical Data, East Money - US Stock - Daily Data. Options: qfq (前复权), hfq (后复权), none (不复权)."
+      zh_Hans: "调整方式。需要此参数的接口：东方财富-沪深京A股-日频率数据、东方财富-港股-历史行情数据、东方财富网-美股-每日行情。选项：qfq(前复权)、hfq(后复权)、none(不复权)。"
+    label:
+      en_US: Adjustment
+      zh_Hans: 调整方式
+    options:
+      - label:
+          en_US: No Adjustment
+          zh_Hans: 不复权
+        value: "none"
+      - label:
+          en_US: Forward Adjustment
+          zh_Hans: 前复权
+        value: "qfq"
+      - label:
+          en_US: Backward Adjustment
+          zh_Hans: 后复权
+        value: "hfq"
+  - name: retries
+    type: number
+    required: false
+    form: llm
+    default: 5
+    description: 重试次数
+    llm_description: 网络请求重试次数，默认5次
+    human_description:
+      en_US: "Number of retries for network requests. Range: 1-10. Default: 5. Higher values for unstable networks."
+      zh_Hans: "网络请求重试次数。范围：1-10。默认：5。网络不稳定时可设置更高值。"
+    label:
+      en_US: Retries
+      zh_Hans: 重试次数
+    min: 1
+    max: 10
+  - name: timeout
+    type: number
+    required: false
+    form: llm
+    default: 900
+    description: 子进程超时时间
+    llm_description: 子进程执行超时时间（秒），默认300秒。注意：历史数据接口数据量可能很大，建议设置较长的超时时间。
+    human_description:
+      en_US: "Subprocess execution timeout in seconds. Range: 60-1800. Default: 300. Note: Historical data interfaces may have large data volumes, suggest longer timeout."
+      zh_Hans: "子进程执行超时时间（秒）。范围：60-1800。默认：300。注意：历史数据接口数据量可能很大，建议设置较长的超时时间。"
+    label:
+      en_US: Subprocess Timeout
+      zh_Hans: 子进程超时时间
+    min: 5
+    max: 3600
+extra:
+  python:
+    source: tools/stock_hist_quotations.py

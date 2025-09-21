@@ -1,0 +1,35 @@
+version: 0.5.0
+type: plugin
+author: shaoxing-xie
+contact: sxxiefg@163.com
+name: akshare_stockdata
+label:
+  en_US: AKShare Stock Data
+  zh_Hans: AKShare 股票数据
+  pt_BR: AKShare Dados de Ações
+  zh_Hant: AKShare 股票數據
+description:
+  en_US: AKShare Stock Data Plugin is a comprehensive stock data tool developed specifically for the Dify platform, built on the renowned [AKShare](https://github.com/akfamily/akshare) Python library. This plugin provides users with a one-stop stock market data access solution, covering multiple dimensions of professional stock information including real-time quotes, historical data, financial analysis, capital flow, technical analysis, and Shanghai-Shenzhen-Hong Kong Stock Connect.
+  zh_Hans:AKShare 股票数据插件 是一个专为 Dify 平台开发的综合性股票数据工具，基于知名的 [AKShare](https://github.com/akfamily/akshare) Python 库构建。本插件为用户提供了一站式的股票市场数据访问解决方案，涵盖实时行情、历史数据、财务分析、资金流向、技术分析、沪深港通等多个维度的专业股票信息。
+  pt_BR: Plugin de Dados de Ações AKShare é uma ferramenta abrangente de dados de ações  desenvolvida especificamente para a plataforma Dify, construída na renomada biblioteca Python [AKShare](https://github.com/akfamily/akshare). Este plugin oferece aos usuários uma solução de acesso a dados do mercado de ações em um só lugar, cobrindo múltiplas dimensões de informações profissionais sobre ações, incluindo cotações em tempo real, dados históricos, análise financeira, fluxo de capital, análise técnica e Shanghai-Shenzhen-Hong Kong Stock Connect.
+  zh_Hant: AKShare 股票數據插件 是一個專為 Dify 平台開發的綜合性股票數據工具，基於知名的 [AKShare](https://github.com/akfamily/akshare) Python 庫構建。本插件為用戶提供了一站式的股票市場數據訪問解決方案，涵蓋實時行情、歷史數據、財務分析、資金流向、技術分析、滬深港通等多個維度的專業股票信息。
+icon: icon.png
+resource:
+  memory: 268435456
+  permission: {}
+plugins:
+  tools:
+    - provider/akshare_stockdata.yaml
+meta:
+  version: 0.5.0
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+created_at: 2025-04-21T22:09:22.160377917+08:00
+privacy: PRIVACY.md
+verified: false
+signature: ""

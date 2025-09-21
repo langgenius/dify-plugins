@@ -1,0 +1,31 @@
+identity:
+  author: shaoxing-xie
+  name: akshare_stockdata
+  label:
+    en_US: AKShare Stock Data
+    zh_Hans: AKShare 股票数据
+    pt_BR: AKShare Dados de Ações
+    zh_Hant: AKShare 股票數據
+  description:
+    en_US: Get comprehensive stock market data using AKShare library wrapper. Built on AKShare for academic research. No token required. Provides comprehensive stock market data including real-time quotes, historical data, sector information, and more.
+    zh_Hans: 使用 AKShare 库封装获取全面的股票市场数据，基于 AKShare 构建用于学术研究，无需令牌。提供全面的股票市场数据，包括实时行情、历史数据、板块信息等。
+    pt_BR: Obtenha dados abrangentes do mercado de ações usando wrapper da biblioteca AKShare. Construído no AKShare para pesquisa acadêmica. Sem token. Fornece dados abrangentes do mercado de ações, incluindo cotações em tempo real, dados históricos, informações setoriais e muito mais.
+    zh_Hant: 使用 AKShare 庫封裝獲取全面的股票市場數據，基於 AKShare 構建用於學術研究，無需令牌。提供全面的股票市場數據，包括實時行情、歷史數據、板塊信息等。
+  icon: icon.png
+  tags:
+    - finance
+credentials_for_provider: {}
+tools:
+  - tools/stock_market_summary.yaml
+  - tools/stock_individual_info_summary.yaml
+  - tools/stock_spot_quotations.yaml
+  - tools/stock_hist_quotations.yaml
+  - tools/stock_hsgt_holdings.yaml
+  - tools/stock_fund_flow_analysis.yaml
+  - tools/stock_financial_analysis.yaml
+  - tools/stock_technical_analysis.yaml
+extra:
+  python:
+    source: provider/akshare_stockdata.py
+
+

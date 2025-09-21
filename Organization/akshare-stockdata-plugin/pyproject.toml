@@ -1,0 +1,50 @@
+[project]
+name = "dify-plugin-akshare-stockdata"
+version = "0.5.0"
+description = "AKShare stock data plugin for Dify: comprehensive stock market data wrapper. Built on AKShare library for academic research. No token. Markdown + JSON."
+authors = [
+    {name = "shaoxing xie", email = "sxxiefg@163.com"},
+]
+maintainers = [
+    {name = "shaoxing xie", email = "sxxiefg@163.com"},
+]
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.12"
+keywords = ["dify", "plugin", "akshare", "stock", "finance", "data"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "dify_plugin>=0.2.1,<0.3.0",
+    "akshare>=1.16.92",
+    "pandas>=1.5.0",
+    "requests>=2.28.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/shaoxing-xie/akshare-stockdata-plugin"
+Repository = "https://github.com/shaoxing-xie/akshare-stockdata-plugin"
+Issues = "https://github.com/shaoxing-xie/akshare-stockdata-plugin/issues"
+Documentation = "https://github.com/shaoxing-xie/akshare-stockdata-plugin#readme"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=22.0.0",
+    "flake8>=5.0.0",
+    "mypy>=1.0.0",
+]
+
+[tool.pdm]
+distribution = false

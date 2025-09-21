@@ -1,0 +1,304 @@
+identity:
+  author: shaoxing_xie
+  name: stock_fund_flow_analysis
+  label:
+    zh_Hans: 资金流向分析
+    en_US: Fund Flow Analysis
+description:
+  human:
+    en_US: "Get stock fund flow analysis data including individual stock fund flow, market fund flow, sector fund flow rankings, and chip distribution data"
+    zh_Hans: "获取股票资金流向分析数据，包括个股资金流向、市场资金流向、板块资金流向排行、筹码分布等数据"
+  llm: 通过AKShare数据接口获取资金流向分析相关数据，包括个股资金流向、个股资金流向排行、市场资金流向、板块资金流向排行、主力资金流向、行业个股资金流向、行业历史资金流向、概念历史资金流向、筹码分布等
+parameters:
+  - name: interface
+    type: select
+    required: true
+    form: llm
+    default: stock_individual_fund_flow
+    description: 接口名称
+    llm_description: 通过AKShare数据接口获取资金流向分析相关数据，包括个股资金流向、个股资金流向排行、市场资金流向、板块资金流向排行、主力资金流向、行业个股资金流向、行业历史资金流向、概念历史资金流向、筹码分布等
+    human_description:
+      en_US: "Interface parameter description: 1.East Money - Individual Stock Fund Flow: requires Stock Code and Market; 2.East Money - Fund Flow Rankings: requires Indicator ONLY (no Stock Code or Market needed); 3.East Money - Market Fund Flow: no parameters; 4.East Money - Sector Fund Flow Rankings: requires Indicator and Sector Type; 5.East Money - Main Fund Flow Rankings: requires Market Choice; 6.East Money - Sector Fund Flow - Individual Stocks: requires Sector and Indicator; 7.East Money - Sector Historical Fund Flow: requires Sector; 8.East Money - Concept Historical Fund Flow: requires Sector; 9.Flush - Fund Flow Big Deal Tracking: no parameters; 10.East Money - HSGT Fund Flow Summary: no parameters; 11.East Money - Daily K Chip Distribution: requires Stock Code and Adjust."
+      zh_Hans: "接口参数说明：1.东方财富网-个股资金流向:需要股票代码和市场; 2.东方财富网-资金流向-排名:只需要指标(不需要股票代码或市场); 3.东方财富网-资金流向-大盘:无参数; 4.东方财富网-板块资金流-排名:需要指标和板块类型; 5.东方财富网-主力净流入排名:需要市场选择; 6.东方财富网-行业资金流-xx行业个股资金流:需要行业和指标; 7.东方财富网-行业历史资金流:需要行业; 8.东方财富网-概念历史资金流:需要行业; 9.同花顺--资金流向-大单追踪:无参数; 10.东方财富网-沪深港通资金流向:无参数; 11.东方财富网-日K-筹码分布:需要股票代码和复权方式。"
+    label:
+      en_US: Interface
+      zh_Hans: 接口名称
+    options:
+      - label:
+          en_US: East Money - Individual Stock Fund Flow
+          zh_Hans: 东方财富网-个股资金流向
+        value: stock_individual_fund_flow
+      - label:
+          en_US: East Money - Fund Flow Rankings
+          zh_Hans: 东方财富网-资金流向-排名
+        value: stock_individual_fund_flow_rank
+      - label:
+          en_US: East Money - Market Fund Flow
+          zh_Hans: 东方财富网-资金流向-大盘
+        value: stock_market_fund_flow
+      - label:
+          en_US: East Money - Sector Fund Flow Rankings
+          zh_Hans: 东方财富网-板块资金流-排名
+        value: stock_sector_fund_flow_rank
+      - label:
+          en_US: East Money - Main Fund Flow Rankings
+          zh_Hans: 东方财富网-主力净流入排名
+        value: stock_main_fund_flow
+      - label:
+          en_US: East Money - Sector Fund Flow - Individual Stocks
+          zh_Hans: 东方财富网-行业资金流-xx行业个股资金流
+        value: stock_sector_fund_flow_summary
+      - label:
+          en_US: East Money - Sector Historical Fund Flow
+          zh_Hans: 东方财富网-行业历史资金流
+        value: stock_sector_fund_flow_hist
+      - label:
+          en_US: East Money - Concept Historical Fund Flow
+          zh_Hans: 东方财富网-概念历史资金流
+        value: stock_concept_fund_flow_hist
+      - label:
+          en_US: Flush - Fund Flow Big Deal Tracking
+          zh_Hans: 同花顺--资金流向-大单追踪
+        value: stock_fund_flow_big_deal
+      - label:
+          en_US: East Money - HSGT Fund Flow Summary
+          zh_Hans: 东方财富网-沪深港通资金流向
+        value: stock_hsgt_fund_flow_summary_em
+      - label:
+          en_US: East Money - Daily K Chip Distribution
+          zh_Hans: 东方财富网-日K-筹码分布
+        value: stock_cyq_em
+
+  - name: stock_code
+    type: string
+    required: false
+    form: llm
+    default: "600519"
+    description: 股票代码
+    llm_description: 个股资金流向和筹码分布接口的股票代码参数
+    human_description:
+      en_US: "Stock code. Required for: East Money - Individual Stock Fund Flow, East Money - Fund Flow Rankings, East Money - Sector Fund Flow - Individual Stocks, Flush - Fund Flow Big Deal Tracking. Format: 000001, 600519, 000002, 600036."
+      zh_Hans: "股票代码。需要此参数的接口：东方财富网-个股资金流向、东方财富网-资金流向-排名、东方财富网-行业资金流-xx行业个股资金流、同花顺--资金流向-大单追踪。格式：000001、600519、000002、600036。"
+    label:
+      en_US: Stock Code
+      zh_Hans: 股票代码
+
+  - name: market
+    type: select
+    required: false
+    form: llm
+    default: sh
+    description: 市场
+    llm_description: 个股资金流向接口的市场参数，用于指定股票所属市场
+    human_description:
+      en_US: "Market. Required for: East Money - Individual Stock Fund Flow. Options: Shanghai Stock Exchange (sh), Shenzhen Stock Exchange (sz), Beijing Stock Exchange (bj)."
+      zh_Hans: "市场。需要此参数的接口：东方财富网-个股资金流向。选项：上海证券交易所(sh)、深圳证券交易所(sz)、北京证券交易所(bj)。"
+    label:
+      en_US: Market
+      zh_Hans: 市场
+    options:
+      - label:
+          en_US: Shanghai Stock Exchange
+          zh_Hans: 上海证券交易所
+        value: sh
+      - label:
+          en_US: Shenzhen Stock Exchange
+          zh_Hans: 深圳证券交易所
+        value: sz
+      - label:
+          en_US: Beijing Stock Exchange
+          zh_Hans: 北京证券交易所
+        value: bj
+
+  - name: indicator
+    type: select
+    required: false
+    form: llm
+    default: 今日
+    description: 指标
+    llm_description: 排行类接口的指标参数，用于个股资金流向排行、板块资金流向排行、行业个股资金流向接口。注意：个股资金流向排行接口只需要此参数，不需要股票代码或市场参数。
+    human_description:
+      en_US: "Indicator. Required for: East Money - Fund Flow Rankings, East Money - Sector Fund Flow Rankings, East Money - Main Fund Flow Rankings, East Money - Sector Fund Flow - Individual Stocks. Options: Today, 3 Days, 5 Days, 10 Days."
+      zh_Hans: "指标。需要此参数的接口：东方财富网-资金流向-排名、东方财富网-板块资金流-排名、东方财富网-主力净流入排名、东方财富网-行业资金流-xx行业个股资金流。选项：今日、3日、5日、10日。"
+    label:
+      en_US: Indicator
+      zh_Hans: 指标
+    options:
+      - label:
+          en_US: Today
+          zh_Hans: 今日
+        value: 今日
+      - label:
+          en_US: 3 Days
+          zh_Hans: 3日
+        value: 3日
+      - label:
+          en_US: 5 Days
+          zh_Hans: 5日
+        value: 5日
+      - label:
+          en_US: 10 Days
+          zh_Hans: 10日
+        value: 10日
+
+  - name: sector_type
+    type: select
+    required: false
+    form: llm
+    default: 行业资金流
+    description: 板块类型
+    llm_description: 板块资金流向排行接口的板块类型参数
+    human_description:
+      en_US: "Sector type. Required for: East Money - Sector Fund Flow Rankings. Options: Industry Fund Flow, Concept Fund Flow, Regional Fund Flow."
+      zh_Hans: "板块类型。需要此参数的接口：东方财富网-板块资金流-排名。选项：行业资金流、概念资金流、地域资金流。"
+    label:
+      en_US: Sector Type
+      zh_Hans: 板块类型
+    options:
+      - label:
+          en_US: Industry Fund Flow
+          zh_Hans: 行业资金流
+        value: 行业资金流
+      - label:
+          en_US: Concept Fund Flow
+          zh_Hans: 概念资金流
+        value: 概念资金流
+      - label:
+          en_US: Regional Fund Flow
+          zh_Hans: 地域资金流
+        value: 地域资金流
+
+  - name: market_choice
+    type: select
+    required: false
+    form: llm
+    default: 全部股票
+    description: 市场选择
+    llm_description: 主力资金流向接口的市场选择参数
+    human_description:
+      en_US: "Market choice. Required for: East Money - Main Fund Flow Rankings. Options: All Stocks, Shanghai-Shenzhen A Shares, Shanghai A-shares, STAR Market, Shenzhen A-shares, ChiNext, Shanghai B-shares, Shenzhen B-shares."
+      zh_Hans: "市场选择。需要此参数的接口：东方财富网-主力净流入排名。选项：全部股票、沪深A股、沪市A股、科创板、深市A股、创业板、沪市B股、深市B股。"
+    label:
+      en_US: Market Choice
+      zh_Hans: 市场选择
+    options:
+      - label:
+          en_US: All Stocks
+          zh_Hans: 全部股票
+        value: 全部股票
+      - label:
+          en_US: Shanghai-Shenzhen A Shares
+          zh_Hans: 沪深A股
+        value: 沪深A股
+      - label:
+          en_US: Shanghai A-shares
+          zh_Hans: 沪市A股
+        value: 沪市A股
+      - label:
+          en_US: STAR Market
+          zh_Hans: 科创板
+        value: 科创板
+      - label:
+          en_US: Shenzhen A-shares
+          zh_Hans: 深市A股
+        value: 深市A股
+      - label:
+          en_US: ChiNext
+          zh_Hans: 创业板
+        value: 创业板
+      - label:
+          en_US: Shanghai B-shares
+          zh_Hans: 沪市B股
+        value: 沪市B股
+      - label:
+          en_US: Shenzhen B-shares
+          zh_Hans: 深市B股
+        value: 深市B股
+
+  - name: industry_name
+    type: string
+    required: false
+    form: llm
+    default: 汽车服务
+    description: 行业名称
+    llm_description: 行业相关接口的名称参数，用于行业个股资金流向、行业历史资金流向接口
+    human_description:
+      en_US: "Industry name. Required for: East Money - Sector Fund Flow - Individual Stocks, East Money - Sector Historical Fund Flow. Examples: 'Automobile Services', 'Power Equipment', etc. Reference: https://data.eastmoney.com/bkzj/hy.html."
+      zh_Hans: "行业名称。需要此参数的接口：东方财富网-行业资金流-xx行业个股资金流、东方财富网-行业历史资金流。示例：汽车服务、电源设备等。参照：https://data.eastmoney.com/bkzj/hy.html。"
+    label:
+      en_US: Industry Name
+      zh_Hans: 行业名称
+
+  - name: concept_name
+    type: string
+    required: false
+    form: llm
+    default: 数据要素
+    description: 概念名称
+    llm_description: 概念相关接口的名称参数，用于概念历史资金流向接口
+    human_description:
+      en_US: "Concept name. Required for: East Money - Concept Historical Fund Flow. Examples: 'Data Elements', 'Equal Rights for Rent and Purchase', etc. Reference: https://data.eastmoney.com/bkzj/gn.html."
+      zh_Hans: "概念名称。需要此参数的接口：东方财富网-概念历史资金流。示例：数据要素、租售同权等。参照：https://data.eastmoney.com/bkzj/gn.html。"
+    label:
+      en_US: Concept Name
+      zh_Hans: 概念名称
+
+  - name: adjust
+    type: select
+    required: false
+    form: llm
+    default: qfq
+    description: 复权方式
+    llm_description: 筹码分布接口的复权方式参数
+    human_description:
+      en_US: "Adjustment method. Required for: Flush - Fund Flow Big Deal Tracking. Options: Forward Adjustment (qfq), Backward Adjustment (hfq), No Adjustment (none)."
+      zh_Hans: "复权方式。需要此参数的接口：同花顺--资金流向-大单追踪。选项：前复权(qfq)、后复权(hfq)、不复权(none)。"
+    label:
+      en_US: Adjustment Method
+      zh_Hans: 复权方式
+    options:
+      - label:
+          en_US: Forward Adjustment
+          zh_Hans: 前复权
+        value: qfq
+      - label:
+          en_US: Backward Adjustment
+          zh_Hans: 后复权
+        value: hfq
+      - label:
+          en_US: No Adjustment
+          zh_Hans: 不复权
+        value: "none"
+  - name: retries
+    type: number
+    required: false
+    form: llm
+    default: 5
+    description: 重试次数
+    llm_description: 网络请求失败时的重试次数，默认为5次
+    human_description:
+      en_US: "Number of retries for failed network requests, default is 5"
+      zh_Hans: "网络请求失败时的重试次数，默认为5次"
+    label:
+      en_US: Retries
+      zh_Hans: 重试次数
+    min: 1
+    max: 10
+  - name: timeout
+    type: number
+    required: false
+    form: llm
+    default: 300
+    description: 超时时间（秒）
+    llm_description: 接口调用的超时时间，单位为秒，默认为120秒
+    human_description:
+      en_US: "Timeout for interface calls in seconds, default is 120 seconds"
+      zh_Hans: "接口调用的超时时间，单位为秒，默认为120秒"
+    label:
+      en_US: Timeout (seconds)
+      zh_Hans: 超时时间（秒）
+    min: 5
+    max: 3600
+extra:
+  python:
+    source: tools/stock_fund_flow_analysis.py

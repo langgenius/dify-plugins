@@ -1,0 +1,267 @@
+identity:
+  author: shaoxing_xie
+  name: stock_technical_analysis
+  label:
+    en_US: Stock Technical Analysis
+    zh_Hans: 股票技术分析
+description:
+  human:
+    en_US: "Stock technical analysis tools including technical indicators, ESG ratings, and market indicators"
+    zh_Hans: "股票技术分析工具，包括技术指标、ESG评级和市场指标"
+  llm: 股票技术分析工具，包括技术指标、ESG评级和市场指标
+parameters:
+  - name: interface
+    type: select
+    required: true
+    form: llm
+    default: stock_rank_cxg_ths
+    description: 接口名称
+    llm_description: 通过AKShare数据接口获取股票技术分析相关数据，包括技术选股、ESG评级、个股指标等
+    human_description:
+      en_US: "Interface parameter description: 1.Innovation High: requires Innovation High Indicator; 2.Innovation Low: requires Innovation Low Indicator; 3.Continuous Rise: no parameters; 4.Continuous Fall: no parameters; 5.Continuous Volume Increase: no parameters; 6.Continuous Volume Decrease: no parameters; 7.Upward Breakthrough: requires MA Type; 8.Downward Breakthrough: requires MA Type; 9.Price-Volume Rise: no parameters; 10.Price-Volume Fall: no parameters; 11.Insurance Capital Disclosure: no parameters; 12.ESG MSCI: no parameters; 13.ESG Refinitiv: no parameters; 14.A-share Individual Indicators: requires Stock Code; 15.A-share Dividend Yield: requires Market Type; 16.HK Dividend Yield: no parameters; 17.Equity-Bond Spread: no parameters; 18.Buffett Index: no parameters."
+      zh_Hans: "接口参数说明：1.创新高:需要创新高技术指标; 2.创新低:需要创新低技术指标; 3.连续上涨:无参数; 4.连续下跌:无参数; 5.持续放量:无参数; 6.持续缩量:无参数; 7.向上突破:需要均线类型; 8.向下突破:需要均线类型; 9.量价齐升:无参数; 10.量价齐跌:无参数; 11.险资举牌:无参数; 12.ESG MSCI:无参数; 13.ESG 路孚特:无参数; 14.A股个股指标:需要股票代码; 15.A股股息率:需要市场类型; 16.恒生指数股息率:无参数; 17.股债利差:无参数; 18.巴菲特指标:无参数。"
+    label:
+      en_US: Interface
+      zh_Hans: 接口名称
+    options:
+      # 技术指标类接口
+      - label:
+          en_US: Innovation High
+          zh_Hans: 同花顺-技术选股-创新高
+        value: stock_rank_cxg_ths
+      - label:
+          en_US: Innovation Low
+          zh_Hans: 同花顺-技术选股-创新低
+        value: stock_rank_cxd_ths
+      - label:
+          en_US: Continuous Rise
+          zh_Hans: 同花顺-技术选股-连续上涨
+        value: stock_rank_lxsz_ths
+      - label:
+          en_US: Continuous Fall
+          zh_Hans: 同花顺-技术选股-连续下跌
+        value: stock_rank_lxxd_ths
+      - label:
+          en_US: Continuous Volume Increase
+          zh_Hans: 同花顺-技术选股-持续放量
+        value: stock_rank_cxfl_ths
+      - label:
+          en_US: Continuous Volume Decrease
+          zh_Hans: 同花顺-技术选股-持续缩量
+        value: stock_rank_cxsl_ths
+      - label:
+          en_US: Upward Breakthrough
+          zh_Hans: 同花顺-技术选股-向上突破
+        value: stock_rank_xstp_ths
+      - label:
+          en_US: Downward Breakthrough
+          zh_Hans: 同花顺-技术选股-向下突破
+        value: stock_rank_xxtp_ths
+      - label:
+          en_US: Price-Volume Rise
+          zh_Hans: 同花顺-技术选股-量价齐升
+        value: stock_rank_ljqs_ths
+      - label:
+          en_US: Price-Volume Fall
+          zh_Hans: 同花顺-技术选股-量价齐跌
+        value: stock_rank_ljqd_ths
+      - label:
+          en_US: Insurance Capital Disclosure
+          zh_Hans: 同花顺-技术选股-险资举牌
+        value: stock_rank_xzjp_ths      
+      # ESG评级类接口
+      # 注意：stock_esg_rate_sina 接口处理时间很长（约12分钟），但 Dify 工作流系统超时限制为600秒，暂时禁用
+      # - label:
+      #     en_US: ESG Rating Data
+      #     zh_Hans: 新浪财经-ESG评级-ESG评级数据
+      #   value: stock_esg_rate_sina
+      - label:
+          en_US: ESG MSCI
+          zh_Hans: 新浪财经-ESG评级-MSCI
+        value: stock_esg_msci_sina
+      - label:
+          en_US: ESG Refinitiv
+          zh_Hans: 新浪财经-ESG评级-路孚特
+        value: stock_esg_rft_sina      
+  - name: technical_indicator1
+    type: select
+    required: false
+    form: llm
+    default: 创月新高
+    description: 创新高技术指标类型
+    llm_description: 用于创新高接口的技术指标类型选择
+    human_description:
+      en_US: "Technical indicator. Required for: Innovation High. Options: Monthly High, 6M High, 1Y High, Historical High."
+      zh_Hans: "创新高技术指标。需要此参数的接口：同花顺-技术选股-创新高。选项：创月新高、半年新高、一年新高、历史新高。"
+    label:
+      en_US: Innovation High Indicator
+      zh_Hans: 创新高技术指标
+    options:
+      - label:
+          en_US: Monthly High
+          zh_Hans: 创月新高
+        value: 创月新高
+      - label:
+          en_US: 6M High
+          zh_Hans: 半年新高
+        value: 半年新高
+      - label:
+          en_US: 1Y High
+          zh_Hans: 一年新高
+        value: 一年新高
+      - label:
+          en_US: Historical High
+          zh_Hans: 历史新高
+        value: 历史新高
+  - name: technical_indicator2
+    type: select
+    required: false
+    form: llm
+    default: 创月新低
+    description: 创新低技术指标类型
+    llm_description: 用于创新低接口的技术指标类型选择
+    human_description:
+      en_US: "Technical indicator. Required for: Innovation Low. Options: Monthly Low, 6M Low, 1Y Low, Historical Low."
+      zh_Hans: "创新低技术指标。需要此参数的接口：同花顺-技术选股-创新低。选项：创月新低、半年新低、一年新低、历史新低。"
+    label:
+      en_US: Innovation Low Indicator
+      zh_Hans: 创新低技术指标
+    options:
+      - label:
+          en_US: Monthly Low
+          zh_Hans: 创月新低
+        value: 创月新低
+      - label:
+          en_US: 6M Low
+          zh_Hans: 半年新低
+        value: 半年新低
+      - label:
+          en_US: 1Y Low
+          zh_Hans: 一年新低
+        value: 一年新低
+      - label:
+          en_US: Historical Low
+          zh_Hans: 历史新低
+        value: 历史新低
+  - name: ma_type
+    type: select
+    required: false
+    form: llm
+    default: 5日均线
+    description: 均线类型
+    llm_description: 用于向上/向下突破接口的均线类型选择
+    human_description:
+      en_US: "MA type. Required for: Upward Breakthrough, Downward Breakthrough. Options: 5 Day MA, 10 Day MA, 20 Day MA, 30 Day MA, 60 Day MA, 120 Day MA, 250 Day MA."
+      zh_Hans: "均线类型。需要此参数的接口：同花顺-技术选股-向上突破、同花顺-技术选股-向下突破。选项：5日均线、10日均线、20日均线、30日均线、60日均线、120日均线、250日均线。"
+    label:
+      en_US: MA Type
+      zh_Hans: 均线类型
+    options:
+      - label:
+          en_US: 5 Day MA
+          zh_Hans: 5日均线
+        value: 5日均线
+      - label:
+          en_US: 10 Day MA
+          zh_Hans: 10日均线
+        value: 10日均线
+      - label:
+          en_US: 20 Day MA
+          zh_Hans: 20日均线
+        value: 20日均线
+      - label:
+          en_US: 30 Day MA
+          zh_Hans: 30日均线
+        value: 30日均线
+      - label:
+          en_US: 60 Day MA
+          zh_Hans: 60日均线
+        value: 60日均线
+      - label:
+          en_US: 90 Day MA
+          zh_Hans: 90日均线
+        value: 90日均线
+      - label:
+          en_US: 250 Day MA
+          zh_Hans: 250日均线
+        value: 250日均线
+      - label:
+          en_US: 500 Day MA
+          zh_Hans: 500日均线
+        value: 500日均线
+  - name: stock_code
+    type: string
+    required: false
+    form: llm
+    default: "000001"
+    description: 股票代码
+    llm_description: 用于个股指标接口的股票代码，如000001、600519等
+    human_description:
+      en_US: "Stock code. Required for: A-share Individual Indicators. Format: 000001, 600519, etc."
+      zh_Hans: "股票代码。需要此参数的接口：同花顺-技术选股-A股个股指标。格式：000001、600519等。"
+    label:
+      en_US: Stock Code
+      zh_Hans: 股票代码
+  - name: market_type
+    type: select
+    required: false
+    form: llm
+    default: 上证A股
+    description: 市场类型
+    llm_description: 用于A股股息率接口的市场类型选择
+    human_description:
+      en_US: "Market type. Required for: A-share Dividend Yield. Options: Shanghai A-share, Shenzhen A-share, Beijing A-share, STAR Market, ChiNext."
+      zh_Hans: "市场类型。需要此参数的接口：同花顺-技术选股-A股股息率。选项：上证A股、深证A股、北证A股、科创板、创业板。"
+    label:
+      en_US: Market Type
+      zh_Hans: 市场类型
+    options:
+      - label:
+          en_US: Shanghai A-share
+          zh_Hans: 上证A股
+        value: 上证A股
+      - label:
+          en_US: Shenzhen A-share
+          zh_Hans: 深证A股
+        value: 深证A股
+      - label:
+          en_US: GEM
+          zh_Hans: 创业板
+        value: 创业板
+      - label:
+          en_US: STAR
+          zh_Hans: 科创板
+        value: 科创板
+  - name: retries
+    type: number
+    required: false
+    form: llm
+    default: 5
+    description: 重试次数
+    llm_description: 接口调用失败时的重试次数，默认为5次
+    human_description:
+      en_US: "Number of retries when interface call fails, default is 5"
+      zh_Hans: "接口调用失败时的重试次数，默认为5次"
+    label:
+      en_US: Retries
+      zh_Hans: 重试次数
+    min: 1
+    max: 10
+  - name: timeout
+    type: number
+    required: false
+    form: llm
+    default: 600  
+    description: 超时时间
+    llm_description: 接口调用的超时时间（秒），默认为120秒
+    human_description:
+      en_US: "Timeout for interface calls in seconds, default is 120"
+      zh_Hans: "接口调用的超时时间（秒），默认为120秒"
+    label:
+      en_US: Timeout
+      zh_Hans: 超时时间 
+    min: 5
+    max: 1800
+extra:
+  python:
+    source: tools/stock_technical_analysis.py

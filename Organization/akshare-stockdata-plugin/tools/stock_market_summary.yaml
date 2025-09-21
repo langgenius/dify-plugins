@@ -1,0 +1,151 @@
+identity:
+  author: shaoxing_xie
+  name: stock_market_summary
+  label:
+    zh_Hans: 股票市场总貌
+    en_US: Stock Market Summary
+description:
+  human:
+    zh_Hans: 通过AKShare数据接口获取股票市场总貌数据，包括上交所、深交所市场概况、地区统计、成交数据等。
+    en_US: Get stock market summary data through AKShare interfaces, including SSE, SZSE market overview, regional statistics, trading data, etc.
+  llm: 通过AKShare数据接口获取股票市场总貌数据，包括上交所、深交所市场概况、地区统计、成交数据、公司动态、风险警示板等。
+parameters:
+  - name: interface
+    type: select
+    required: true
+    form: llm
+    default: stock_sse_summary
+    description: 接口名称
+    llm_description: 通过AKShare数据接口获取股票市场总貌数据，包括上交所、深交所市场概况、地区统计、成交数据、公司动态、风险警示板等
+    human_description:
+      en_US: "Interface parameter description: 1.Stock Data Summary: no parameters;
+      2.Market Summary - Securities Category Statistics: trading date required;
+      3.Daily Stock Situation: trading date required;
+      4.Risk Warning Board: no parameters;
+      5.Stock Calendar - Company Dynamics: trading date required;
+      6.Equity Pledge Market Overview: no parameters;
+      7.Industry Pledge Ratio Data: no parameters;
+      8.A-Share Goodwill Market Overview: no parameters;
+      9.Stock Account Statistics: no parameters;
+      10.Stock Comments: no parameters;
+      11.IPO Lottery Yield: no parameters;
+      12.Trading Alert - Suspension & Resumption: no parameters;
+      13.Trading Alert - Dividend Distribution: no parameters."
+      zh_Hans: "接口参数说明：1.股票数据总貌:无参数;
+      2.市场总貌-证券类别统计:需要交易日期;
+      3.每日股票情况:需要交易日期;
+      4.风险警示板:无参数;
+      5.股市日历-公司动态:需要交易日期;
+      6.股权质押市场概况:无参数;
+      7.上市公司质押比例-行业数据:无参数;
+      8.A股商誉市场概况:无参数;
+      9.股票账户统计:无参数;
+      10.千股千评:无参数;
+      11.打新收益率:无参数;
+      12.交易提醒-停复牌:无参数;
+      13.交易提醒-分红派息:无参数."
+    label:
+      en_US: Interface
+      zh_Hans: 接口名称
+    options:
+      # A股相关接口
+      - label:
+          en_US: SSE Stock Data Summary
+          zh_Hans: 上交所-股票数据总貌
+        value: stock_sse_summary
+      - label:
+          en_US: SSE Stock Trading Overview - Daily Stock Situation
+          zh_Hans: 上交所-股票成交概况-每日股票情况
+        value: stock_sse_deal_daily
+      - label:
+          en_US: SZSE Market Summary - Securities Category Statistics
+          zh_Hans: 深交所-市场总貌-证券类别统计
+        value: stock_szse_summary
+      - label:
+          en_US: Eastmoney - A-Share Risk Warning Board
+          zh_Hans: 东方财富网-沪深个股-风险警示板
+        value: stock_zh_a_st_em
+      - label:
+          en_US: Eastmoney - Stock Calendar - Company Dynamics
+          zh_Hans: 东方财富网-股市日历-公司动态
+        value: stock_gsrl_gsdt_em
+      # 新增的7个接口
+      - label:
+          en_US: Eastmoney - Equity Pledge - Market Overview
+          zh_Hans: 东方财富网-股权质押-股权质押市场概况
+        value: stock_gpzy_profile_em
+      - label:
+          en_US: Eastmoney - Equity Pledge - Industry Pledge Ratio Data
+          zh_Hans: 东方财富网-股权质押-上市公司质押比例-行业数据
+        value: stock_gpzy_industry_data_em
+      - label:
+          en_US: Eastmoney - Goodwill - A-Share Market Overview
+          zh_Hans: 东方财富网-商誉-A股商誉市场概况
+        value: stock_sy_profile_em
+      - label:
+          en_US: Eastmoney - Special Data - Stock Account Statistics
+          zh_Hans: 东方财富网-特色数据-股票账户统计
+        value: stock_account_statistics_em
+      - label:
+          en_US: Eastmoney - Special Data - Stock Comments
+          zh_Hans: 东方财富网-特色数据-千股千评
+        value: stock_comment_em
+      - label:
+          en_US: Eastmoney - IPO Subscription - Lottery Yield
+          zh_Hans: 东方财富网-新股申购-打新收益率
+        value: stock_dxsyl_em
+      # 停复牌和分红派息
+      - label:
+          en_US: Baidu Stock - Trading Alert - Suspension & Resumption
+          zh_Hans: 百度股市通-交易提醒-停复牌
+        value: news_trade_notify_suspend_baidu
+      - label:
+          en_US: Baidu Stock - Trading Alert - Dividend Distribution
+          zh_Hans: 百度股市通-交易提醒-分红派息
+        value: news_trade_notify_dividend_baidu
+  - name: date
+    type: string
+    required: false
+    form: llm
+    default: "20250808"
+    description: 交易日期
+    llm_description: 交易日期，格式如20240101；"上交所-股票数据总貌"、"沪深个股-风险警示板"、"股权质押-股权质押市场概况"、"股权质押-上市公司质押比例-行业数据"、"商誉-A股商誉市场概况"、"特色数据-股票账户统计"、"特色数据-千股千评"、"资金流向-沪深港通资金流向"接口不需要此参数，其他接口都需要
+    human_description:
+      en_US: "Trading date. Format: YYYYMMDD (20240101). Required for: SZSE Market Summary, SSE Daily Trading, Company Dynamics."
+      zh_Hans: "交易日期。格式：YYYYMMDD(20240101)。需要此参数的接口：深交所-市场总貌-证券类别统计、上交所-每日股票情况、股市日历-公司动态。"
+    label:
+      en_US: Trading Date
+      zh_Hans: 交易日期
+  - name: retries
+    type: number
+    required: false
+    form: llm
+    default: 5
+    description: 重试次数
+    llm_description: 网络请求重试次数，默认3次
+    human_description:
+      en_US: "Number of retries for network requests. Range: 1-10. Default: 3. Higher values for unstable networks."
+      zh_Hans: "网络请求重试次数。范围：1-10。默认：3。网络不稳定时可设置更高值。"
+    label:
+      en_US: Retries
+      zh_Hans: 重试次数
+    min: 1
+    max: 10
+  - name: timeout
+    type: number
+    required: false
+    form: llm
+    default: 450
+    description: 子进程超时时间
+    llm_description: 子进程执行超时时间（秒），默认240秒；历史数据接口（股权质押市场概况、股票账户统计、千股千评）默认300秒
+    human_description:
+      en_US: "Subprocess execution timeout in seconds. Range: 5-3600. Default: 240. Historical data interfaces (Equity Pledge Market Overview, Stock Account Statistics, Stock Comments) default to 300 seconds. Increase for slow networks or large data requests."
+      zh_Hans: "子进程执行超时时间（秒）。范围：5-3600。默认：240。历史数据接口（股权质押市场概况、股票账户统计、千股千评）默认300秒。网络较慢或数据量较大时可增加。"
+    label:
+      en_US: Subprocess Timeout
+      zh_Hans: 子进程超时时间
+    min: 5
+    max: 3600
+extra:
+  python:
+    source: tools/stock_market_summary.py

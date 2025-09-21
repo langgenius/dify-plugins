@@ -1,0 +1,200 @@
+identity:
+  author: shaoxing_xie
+  name: stock_spot_quotations
+  label:
+    zh_Hans: 股票实时行情
+    en_US: Stock Spot Quotations
+description:
+  human:
+    zh_Hans: 通过AKShare数据接口获取指定股票市场的实时行情数据，包括A股、港股、美股等各市场的实时价格、涨跌幅、成交量等信息。由于相关股票市场的实时行情数据往往比较大，在调用时，要考虑后续节点能否合适处理大数据量的能力。
+    en_US: Get real-time stock market data through AKShare interfaces for specified markets, including A-shares, HK stocks, US stocks with real-time prices, changes, trading volumes, etc. Note that real-time market data can be quite large, so consider whether subsequent nodes can handle large data volumes.
+  llm: 通过AKShare数据接口获取指定股票市场的实时行情数据，包括A股、港股、美股等各市场的实时价格、涨跌幅、成交量、换手率等信息。由于相关股票市场的实时行情数据往往比较大，在调用时，要考虑后续节点能否合适处理大数据量的能力。
+parameters:
+  - name: interface
+    type: select
+    required: true
+    form: llm
+    default: stock_sh_a_spot_em
+    description: 接口名称
+    llm_description: 通过AKShare数据接口获取指定股票市场的实时行情数据，包括A股、港股、美股等各市场的实时价格、涨跌幅、成交量、换手率等信息
+    human_description:
+      en_US: "Interface parameter description: 1.Shanghai A-share - Real-time Quotes: no parameters;
+      2.Shenzhen A-share - Real-time Quotes: no parameters;
+      3.Beijing A-share - Real-time Quotes: no parameters;
+      4.New Shares - Real-time Quotes: no parameters;
+      5.Growth Enterprise Market - Real-time Quotes: no parameters;
+      6.Science and Technology Innovation Board - Real-time Quotes: no parameters;
+      7.AH Stock Comparison - Real-time Quotes: no parameters;
+      8.All AB Stock Comparison: no parameters;
+      9.New Stock Board: no parameters;
+      10.Secondary New Stocks: no parameters;
+      11.New Stock First Day: no parameters;
+      12.Two Networks & Delisted: no parameters;
+      13.HK Stock - Real-time Quotes: no parameters;
+      14.HK Main Board - Real-time Quotes: no parameters;
+      15.Famous HK Stocks Real-time Quotes: no parameters;
+      16.US Stock - Real-time Quotes: no parameters;
+      17.Famous US Stocks Real-time Quotes: requires US stock category."
+      zh_Hans: "接口参数说明：1. 沪A股-实时行情数据:无参数;
+      2.深A股-实时行情数据:无参数;
+      3.京A股-实时行情数据:无参数;
+      4.新股-实时行情数据:无参数;
+      5.创业板-实时行情:无参数;
+      6.科创板-实时行情:无参数;
+      7.AH股比价-实时行情:无参数;
+      8.全量AB股比价:无参数;
+      9.新股板块实时行情:无参数;      
+      10.次新股-实时行情:无参数;
+      11.新股上市首日:无参数;
+      12.两网及退市:无参数;
+      13.港股-实时行情:无参数;
+      14.港股主板-实时行情:无参数;
+      15.知名港股实时行情数据:无参数;
+      16.美股-实时行情:无参数;
+      17.知名美股的实时行情数据:需要美股类别."
+    label:
+      en_US: Interface
+      zh_Hans: 接口名称
+    options:
+      # A股相关接口
+      - label:
+          en_US: Eastmoney - Shanghai A-share - Real-time Quotes
+          zh_Hans: 东方财富-沪A股-实时行情数据
+        value: stock_sh_a_spot_em
+      - label:
+          en_US: Eastmoney - Shenzhen A-share - Real-time Quotes
+          zh_Hans: 东方财富-深A股-实时行情数据
+        value: stock_sz_a_spot_em
+      - label:
+          en_US: Eastmoney - Beijing A-share - Real-time Quotes
+          zh_Hans: 东方财富-京A股-实时行情数据
+        value: stock_bj_a_spot_em
+      - label:
+          en_US: Eastmoney - New Shares - Real-time Quotes
+          zh_Hans: 东方财富-新股-实时行情数据
+        value: stock_new_a_spot_em
+      - label:
+          en_US: Eastmoney - Growth Enterprise Market - Real-time Quotes
+          zh_Hans: 东方财富-创业板-实时行情
+        value: stock_cy_a_spot_em
+      - label:
+          en_US: Eastmoney - Science and Technology Innovation Board - Real-time Quotes
+          zh_Hans: 东方财富-科创板-实时行情
+        value: stock_kc_a_spot_em
+      - label:
+          en_US: Eastmoney - HSGT - AH Stock Comparison - Real-time Quotes
+          zh_Hans: 东方财富-沪深港通-AH股比价-实时行情
+        value: stock_zh_ah_spot_em
+      - label:
+          en_US: Eastmoney - Shanghai-Shenzhen - All AB Stock Comparison
+          zh_Hans: 东方财富-沪深京A股-全量AB股比价
+        value: stock_zh_ab_comparison_em
+      - label:
+          en_US: Eastmoney - Shanghai-Shenzhen Individual Stocks - New Stock Board
+          zh_Hans: 东方财富-沪深个股-新股板块实时行情
+        value: stock_zh_a_new_em        
+      - label:
+          en_US: Sina Finance - Shanghai-Shenzhen Stock Market - Secondary New Stocks
+          zh_Hans: 新浪财经-沪深股市-次新股-实时行情
+        value: stock_zh_a_new
+      - label:
+          en_US: THS - New Stock Listing - New Stock First Day
+          zh_Hans: 同花顺-新股上市-新股上市首日
+        value: stock_xgsr_ths
+      - label:
+          en_US: Eastmoney - Shanghai-Shenzhen Individual Stocks - Two Networks & Delisted
+          zh_Hans: 东方财富-沪深个股-两网及退市
+        value: stock_zh_a_stop_em
+      # 港股相关接口
+      - label:
+          en_US: Eastmoney - HK Stock - Real-time Quotes (15min delay)
+          zh_Hans: 东方财富-港股-实时行情(延15分钟)
+        value: stock_hk_spot_em
+      - label:
+          en_US: Eastmoney - HK Main Board - Real-time Quotes (15min delay)
+          zh_Hans: 东方财富-港股主板-实时行情(延15分钟)
+        value: stock_hk_main_board_spot_em
+      - label:
+          en_US: Eastmoney - HK Stock Market - Famous HK Stocks Real-time Quotes
+          zh_Hans: 东方财富-港股市场-知名港股实时行情数据
+        value: stock_hk_famous_spot_em
+      # 美股相关接口
+      - label:
+          en_US: Eastmoney - US Stock - Real-time Quotes
+          zh_Hans: 东方财富-美股-实时行情
+        value: stock_us_spot_em
+      - label:
+          en_US: Eastmoney - US Stock - Famous US Stocks Real-time Quotes
+          zh_Hans: 东方财富-美股-知名美股的实时行情数据
+        value: stock_us_famous_spot_em
+  - name: symbol
+    type: select
+    required: false
+    form: llm
+    default: 科技类
+    description: 美股类别
+    llm_description: 美股知名股票类别，用于美股-知名美股的实时行情数据接口
+    human_description:
+      en_US: "US stock category. Required for: East Money - US Stock - Famous US Stocks Real-time Quotes. Options: '科技类'/'金融类'/'医药食品类'/'媒体类'/'汽车能源类'/'制造零售类'."
+      zh_Hans: "美股类别。需要此参数的接口：东方财富-美股-知名美股的实时行情数据。选项：'科技类'/'金融类'/'医药食品类'/'媒体类'/'汽车能源类'/'制造零售类'。"
+    label:
+      en_US: US Stock Category
+      zh_Hans: 美股类别
+    options:
+      - label:
+          en_US: Technology
+          zh_Hans: 科技类
+        value: 科技类
+      - label:
+          en_US: Finance
+          zh_Hans: 金融类
+        value: 金融类
+      - label:
+          en_US: Healthcare & Food
+          zh_Hans: 医药食品类
+        value: 医药食品类
+      - label:
+          en_US: Media
+          zh_Hans: 媒体类
+        value: 媒体类
+      - label:
+          en_US: Auto & Energy
+          zh_Hans: 汽车能源类
+        value: 汽车能源类
+      - label:
+          en_US: Manufacturing & Retail
+          zh_Hans: 制造零售类
+        value: 制造零售类
+  - name: retries
+    type: number
+    required: false
+    form: llm
+    default: 5
+    description: 重试次数
+    llm_description: 网络请求重试次数，默认5次
+    human_description:
+      en_US: "Number of retries for network requests. Range: 1-10. Default: 5. Higher values for unstable networks."
+      zh_Hans: "网络请求重试次数。范围：1-10。默认：5。网络不稳定时可设置更高值。"
+    label:
+      en_US: Retries
+      zh_Hans: 重试次数
+    min: 1
+    max: 10
+  - name: timeout
+    type: number
+    required: false
+    form: llm
+    default: 900
+    description: 子进程超时时间
+    llm_description: 子进程执行超时时间（秒），默认900秒。注意：实时行情接口数据量大，建议设置较长的超时时间。
+    human_description:
+      en_US: "Subprocess execution timeout in seconds. Range: 5-1800. Default: 900. Note: Real-time market data interfaces have large data volumes, recommend setting longer timeout."
+      zh_Hans: "子进程执行超时时间（秒）。范围：5-1800。默认：900。注意：实时行情接口数据量大，建议设置较长的超时时间。"
+    label:
+      en_US: Subprocess Timeout
+      zh_Hans: 子进程超时时间
+    min: 5
+    max: 3600
+extra:
+  python:
+    source: tools/stock_spot_quotations.py

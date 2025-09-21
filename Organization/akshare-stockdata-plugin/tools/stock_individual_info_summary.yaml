@@ -1,0 +1,156 @@
+identity:
+  author: shaoxing_xie
+  name: stock_individual_info_summary
+  label:
+    zh_Hans: 个股信息总貌
+    en_US: Stock Individual Information Summary
+description:
+  human:
+    zh_Hans: 通过AKShare数据接口获取指定股票代码(symbol)的个股详细信息，包括基本信息、财务数据、新闻资讯、研究报告等。
+    en_US: Get detailed individual stock information through AKShare interfaces for specified stock codes, including basic info, financial data, news, research reports, etc.
+  llm: 通过AKShare数据接口获取指定股票代码(symbol)的个股详细信息，包括基本信息、财务数据、新闻资讯、研究报告、分红配股、资产负债表等。
+parameters:
+  - name: interface
+    type: select
+    required: true
+    form: llm
+    default: stock_individual_info_em
+    description: 接口名称
+    llm_description: 通过AKShare数据接口获取指定股票代码(symbol)的个股详细信息，包括基本信息、财务数据、新闻资讯、研究报告、分红配股、资产负债表等
+    human_description:
+      en_US: "Interface parameter description: 1.Stock Information: stock code required;
+      2.Bid/Ask Quote: stock code required;
+      3.Main Business Introduction: stock code required;
+      4.Main Business Composition: stock code required;
+      5.News Information: stock code required;
+      6.Company Profile: stock code required;
+      7.IPO Related Information: stock code required;
+      8.Dividend Distribution Details: stock code required;
+      9.Research Report - Individual Stock Report: stock code required;
+      10.Balance Sheet by Report Period: stock code required;
+      11.Financial Key Indicators: stock code required;
+      12.HK Stock - Security Profile: HK stock code required;
+      13.HK Stock - Company Profile: HK stock code required;
+      14.HK Stock - Dividend Distribution: HK stock code required."
+      zh_Hans: "接口参数说明：1.股票信息:需要股票代码;
+      2.行情报价:需要股票代码;
+      3.主营介绍:需要股票代码;
+      4.主营构成:需要股票代码;
+      5.新闻资讯数据:需要股票代码;
+      6.公司概况:需要股票代码;
+      7.上市相关资讯:需要股票代码;
+      8.分红送配详情:需要股票代码;
+      9.研究报告-个股研报:需要股票代码;
+      10.资产负债表-按报告期:需要股票代码;
+      11.财务报表-关键指标:需要股票代码;
+      12.港股-个股-证券资料:需要港股代码;
+      13.港股-个股-公司资料:需要港股代码;
+      14.港股-个股-分红派息:需要港股代码."
+    label:
+      en_US: Interface
+      zh_Hans: 接口名称
+    options:
+      # A股相关接口
+      - label:
+          en_US: Eastmoney - Individual Stock - Stock Information
+          zh_Hans: 东方财富-个股-股票信息
+        value: stock_individual_info_em
+      - label:
+          en_US: Eastmoney - Individual Stock - Bid/Ask Quote
+          zh_Hans: 东方财富-个股-行情报价
+        value: stock_bid_ask_em
+      - label:
+          en_US: THS - Individual Stock - Main Business Introduction
+          zh_Hans: 同花顺-个股-主营介绍
+        value: stock_zyjs_ths
+      - label:
+          en_US: Eastmoney - Individual Stock - Main Business Composition
+          zh_Hans: 东方财富网-个股-主营构成
+        value: stock_zygc_em
+      - label:
+          en_US: Eastmoney - Individual Stock - News Information
+          zh_Hans: 东方财富-个股-新闻资讯数据
+        value: stock_news_em
+      - label:
+          en_US: CNINFO - A-share - Company Profile
+          zh_Hans: 巨潮资讯-个股-公司概况
+        value: stock_profile_cninfo
+      - label:
+          en_US: CNINFO - A-share - IPO Related Information
+          zh_Hans: 巨潮资讯-个股-上市相关资讯
+        value: stock_ipo_summary_cninfo
+      - label:
+          en_US: Eastmoney - Individual Stock - Dividend Distribution Details
+          zh_Hans: 东方财富网-个股-分红送配详情
+        value: stock_fhps_detail_em
+      - label:
+          en_US: Eastmoney - Research Report - Individual Stock Report
+          zh_Hans: 东方财富网-研究报告-个股研报
+        value: stock_research_report_em
+      - label:
+          en_US: Eastmoney - Individual Stock - Balance Sheet by Report Period
+          zh_Hans: 东方财富-个股-资产负债表-按报告期
+        value: stock_balance_sheet_by_report_em
+      - label:
+          en_US: Sina Finance - Individual Stock - Financial Key Indicators
+          zh_Hans: 新浪财经-个股-财务报表-关键指标
+        value: stock_financial_abstract
+      # 港股相关接口
+      - label:
+          en_US: Eastmoney - HK Stock - Individual Stock - Security Profile
+          zh_Hans: 东方财富-港股-个股-证券资料
+        value: stock_hk_security_profile_em
+      - label:
+          en_US: Eastmoney - HK Stock - Individual Stock - Company Profile
+          zh_Hans: 东方财富-港股-个股-公司资料
+        value: stock_hk_company_profile_em
+      - label:
+          en_US: THS - HK Stock - Individual Stock - Dividend Distribution
+          zh_Hans: 同花顺-港股-个股-分红派息
+        value: stock_hk_fhpx_detail_ths
+  - name: symbol
+    type: string
+    required: false
+    form: llm
+    default: "000001"
+    description: 股票代码
+    llm_description: 股票代码，格式：600519、000001、SH600519、SZ000001；A股：6位数字代码(600519)或市场前缀(SH600519)；B股：9位数字代码(900001)或市场前缀(SH900001)；美股：股票代码(AAPL、MSFT)；港股：5位数字代码(00700)或市场前缀(HK00700)
+    human_description:
+      en_US: "Stock code. Required for: East Money - Individual Stock - Stock Information, East Money - Individual Stock - Bid/Ask Quote, THS - Individual Stock - Main Business Introduction, East Money - Individual Stock - Main Business Composition, East Money - Individual Stock - News Information, East Money - Individual Stock - Company Profile, East Money - Individual Stock - IPO Related Information, East Money - Individual Stock - Dividend Distribution Details, East Money - Research Report - Individual Stock Report, East Money - Balance Sheet by Report Period, East Money - Financial Key Indicators, East Money - HK Stock - Security Profile, East Money - HK Stock - Company Profile, East Money - HK Stock - Dividend Distribution. Format: 600519, 000001, SH600519, SZ000001; A-share: 6-digit code (600519) or market prefix (SH600519); B-share: 9-digit code (900001) or market prefix (SH900001); US stock: stock code (AAPL, MSFT); HK stock: 5-digit code (00700) or market prefix (HK00700)."
+      zh_Hans: "股票代码。需要此参数的接口：东方财富-个股-股票信息、东方财富-个股-行情报价、同花顺-个股-主营介绍、东方财富网-个股-主营构成、东方财富-个股-新闻资讯数据、东方财富-个股-公司概况、东方财富-个股-上市相关资讯、东方财富-个股-分红送配详情、东方财富-研究报告-个股研报、东方财富-资产负债表-按报告期、东方财富-财务报表-关键指标、东方财富-港股-个股-证券资料、东方财富-港股-个股-公司资料、东方财富-港股-个股-分红派息。格式：600519、000001、SH600519、SZ000001；A股：6位数字代码(600519)或市场前缀(SH600519)；B股：9位数字代码(900001)或市场前缀(SH900001)；美股：股票代码(AAPL、MSFT)；港股：5位数字代码(00700)或市场前缀(HK00700)。"
+    label:
+      en_US: Stock Code
+      zh_Hans: 股票代码
+  - name: retries
+    type: number
+    required: false
+    form: llm
+    default: 5
+    description: 重试次数
+    llm_description: 网络请求重试次数，默认3次
+    human_description:
+      en_US: "Number of retries for network requests. Range: 1-10. Default: 3. Higher values for unstable networks."
+      zh_Hans: "网络请求重试次数。范围：1-10。默认：3。网络不稳定时可设置更高值。"
+    label:
+      en_US: Retries
+      zh_Hans: 重试次数
+    min: 1
+    max: 10
+  - name: timeout
+    type: number
+    required: false
+    form: llm
+    default: 600
+    description: 子进程超时时间
+    llm_description: 子进程执行超时时间（秒），默认240秒
+    human_description:
+      en_US: "Subprocess execution timeout in seconds. Range: 5-120. Default: 120. Increase for slow networks or large data requests."
+      zh_Hans: "子进程执行超时时间（秒）。范围：5-120。默认：120。网络较慢或数据量较大时可增加。"
+    label:
+      en_US: Subprocess Timeout
+      zh_Hans: 子进程超时时间
+    min: 5
+    max: 3600
+extra:
+  python:
+    source: tools/stock_individual_info_summary.py

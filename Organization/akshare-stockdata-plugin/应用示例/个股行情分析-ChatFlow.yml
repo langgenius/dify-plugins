@@ -1,0 +1,1832 @@
+app:
+  description: 基于AKShare股票数据插件的个股深度分析ChatFlow应用，提供实时行情、财务数据、技术分析、资金流向等多维度股票分析
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: 个股行情分析-ChatFlow
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/deepseek:0.0.6@dd589dc093c8084925858034ab5ec1fdf0d33819f43226c2f8c4a749a9acbbb2
+- current_identifier: null
+  type: github
+  value:
+    github_plugin_unique_identifier: shaoxing-xie/akshare_stockdata:0.5.0@18aa8d5222895dae9b49f1438ed1adbcb9373a692424aaed549ec624d7ebb81e
+    package: AKShare-Stockdata-plugin.difypkg
+    repo: shaoxing-xie/akshare-stockdata-plugin
+    version: v0.5.0
+kind: app
+version: 0.3.1
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 10
+        file_size_limit: 50
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: '您好！我是专业的股票分析助手 🤖
+
+      我可以为您提供全面的A股个股深度分析，包括：
+
+      📊 **技术面分析** - 基于历史行情数据的技术指标分析 📈 **基本面分析** - 基于财务指标的公司基本面评估 💰 **资金面分析** - 基于资金流向的资金动向分析
+      📋 **专业研报** - 获取最新的个股研究报告
+
+      **支持的A股市场：** • 沪市A股：600xxx、601xxx、603xxx、605xxx、688xxx、689xxx • 深市A股：000xxx、001xxx、002xxx、003xxx、300xxx、301xxx
+      • 北交所（京A）：430xxx、830xxx、870xxx
+
+      **使用方法：** 直接输入股票代码或名称即可，例如： • 600519（贵州茅台） • 000001（平安银行） • 贵州茅台 • 平安银行
+
+      请告诉我您想分析哪只股票？'
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: llm
+      id: 1758335478551-source-1758335745350-target
+      source: '1758335478551'
+      sourceHandle: source
+      target: '1758335745350'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: tool
+      id: 1758335955184-true-1758336201198-target
+      source: '1758335955184'
+      sourceHandle: 'true'
+      target: '1758336201198'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: tool
+        targetType: tool
+      id: 1758336201198-source-1758336425699-target
+      source: '1758336201198'
+      sourceHandle: source
+      target: '1758336425699'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: tool
+        targetType: tool
+      id: 1758336425699-source-1758336563200-target
+      source: '1758336425699'
+      sourceHandle: source
+      target: '1758336563200'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: tool
+        targetType: tool
+      id: 1758336563200-source-1758336900001-target
+      source: '1758336563200'
+      sourceHandle: source
+      target: '1758336900001'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: tool
+        targetType: llm
+      id: 1758336900001-source-1758336719191-target
+      source: '1758336900001'
+      sourceHandle: source
+      target: '1758336719191'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: llm
+      id: 1758335955184-false-1758337010582-target
+      source: '1758335955184'
+      sourceHandle: 'false'
+      target: '1758337010582'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: answer
+      id: 1758337010582-source-1758337149858-target
+      source: '1758337010582'
+      sourceHandle: source
+      target: '1758337149858'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: answer
+      id: 1758336719191-source-answer-target
+      source: '1758336719191'
+      sourceHandle: source
+      target: answer
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: code
+      id: 1758335745350-source-1758347882989-target
+      source: '1758335745350'
+      sourceHandle: source
+      target: '1758347882989'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: if-else
+      id: 1758347882989-source-1758335955184-target
+      source: '1758347882989'
+      sourceHandle: source
+      target: '1758335955184'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 开始
+        type: start
+        variables: []
+      height: 53
+      id: '1758335478551'
+      position:
+        x: -190.78018302734583
+        y: 124.6530601800543
+      positionAbsolute:
+        x: -190.78018302734583
+        y: 124.6530601800543
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1758336719191.text#}}'
+        desc: ''
+        selected: false
+        title: 分析输出
+        type: answer
+        variables: []
+      height: 104
+      id: answer
+      position:
+        x: 1172.8096219526506
+        y: 242.58080464363826
+      positionAbsolute:
+        x: 1172.8096219526506
+        y: 242.58080464363826
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params: {}
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: 5f8b4521-bffc-4203-8405-507dcff49a04
+          role: system
+          text: '你是一个专业的股票代码和市场识别助手。请从用户输入中准确提取股票代码和A股市场信息。
+
+            支持的格式： - 6位数字代码：600519、000001、002594 - 市场前缀：SH600519、SZ000001、BJ430047
+            - 股票名称：平安银行、贵州茅台、比亚迪 - 港股：00700、HK00700 - 美股：AAPL、MSFT、TSLA
+
+            A股市场识别规则： - 600xxx、601xxx、603xxx、605xxx、688xxx、689xxx → 沪市A股 - 000xxx、001xxx、002xxx、003xxx、300xxx、301xxx
+            → 深市A股 - 430xxx、830xxx、870xxx → 北交所（京A）
+
+            输出格式（JSON）： { "stock_code": "股票代码", "market": "市场类型", "is_a_stock": true/false
+            }
+
+            市场类型选项： - 沪市A股 - 深市A股 - 北交所（京A） - 港股 - 美股 - 其他
+
+            用户输入：{{#sys.query#}} 请直接返回JSON格式，不要其他内容：'
+        selected: false
+        structured_output_enabled: false
+        title: 股票代码提取
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 89
+      id: '1758335745350'
+      position:
+        x: 176.613965482063
+        y: 43.88227889125966
+      positionAbsolute:
+        x: 176.613965482063
+        y: 43.88227889125966
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is not
+            id: 688d3efc-fca2-4314-b55f-f109f53b0608
+            value: 'false'
+            varType: string
+            variable_selector:
+            - '1758347882989'
+            - is_a_stock
+          id: 'true'
+          logical_operator: and
+        desc: 股票代码验证
+        selected: false
+        title: 股票代码验证
+        type: if-else
+      height: 153
+      id: '1758335955184'
+      position:
+        x: 176.613965482063
+        y: 345.86320340581744
+      positionAbsolute:
+        x: 176.613965482063
+        y: 345.86320340581744
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        is_team_authorization: true
+        output_schema: null
+        paramSchemas:
+        - auto_generate: null
+          default: stock_sh_a_spot_em
+          form: llm
+          human_description:
+            en_US: 'Interface parameter description: 1.Shanghai A-share - Real-time
+              Quotes: no parameters; 2.Shenzhen A-share - Real-time Quotes: no parameters;
+              3.Beijing A-share - Real-time Quotes: no parameters; 4.New Shares -
+              Real-time Quotes: no parameters; 5.Growth Enterprise Market - Real-time
+              Quotes: no parameters; 6.Science and Technology Innovation Board - Real-time
+              Quotes: no parameters; 7.AH Stock Comparison - Real-time Quotes: no
+              parameters; 8.All AB Stock Comparison: no parameters; 9.New Stock Board:
+              no parameters; 10.Secondary New Stocks: no parameters; 11.New Stock
+              First Day: no parameters; 12.Two Networks & Delisted: no parameters;
+              13.HK Stock - Real-time Quotes: no parameters; 14.HK Main Board - Real-time
+              Quotes: no parameters; 15.Famous HK Stocks Real-time Quotes: no parameters;
+              16.US Stock - Real-time Quotes: no parameters; 17.Famous US Stocks Real-time
+              Quotes: requires US stock category.'
+            ja_JP: 'Interface parameter description: 1.Shanghai A-share - Real-time
+              Quotes: no parameters; 2.Shenzhen A-share - Real-time Quotes: no parameters;
+              3.Beijing A-share - Real-time Quotes: no parameters; 4.New Shares -
+              Real-time Quotes: no parameters; 5.Growth Enterprise Market - Real-time
+              Quotes: no parameters; 6.Science and Technology Innovation Board - Real-time
+              Quotes: no parameters; 7.AH Stock Comparison - Real-time Quotes: no
+              parameters; 8.All AB Stock Comparison: no parameters; 9.New Stock Board:
+              no parameters; 10.Secondary New Stocks: no parameters; 11.New Stock
+              First Day: no parameters; 12.Two Networks & Delisted: no parameters;
+              13.HK Stock - Real-time Quotes: no parameters; 14.HK Main Board - Real-time
+              Quotes: no parameters; 15.Famous HK Stocks Real-time Quotes: no parameters;
+              16.US Stock - Real-time Quotes: no parameters; 17.Famous US Stocks Real-time
+              Quotes: requires US stock category.'
+            pt_BR: 'Interface parameter description: 1.Shanghai A-share - Real-time
+              Quotes: no parameters; 2.Shenzhen A-share - Real-time Quotes: no parameters;
+              3.Beijing A-share - Real-time Quotes: no parameters; 4.New Shares -
+              Real-time Quotes: no parameters; 5.Growth Enterprise Market - Real-time
+              Quotes: no parameters; 6.Science and Technology Innovation Board - Real-time
+              Quotes: no parameters; 7.AH Stock Comparison - Real-time Quotes: no
+              parameters; 8.All AB Stock Comparison: no parameters; 9.New Stock Board:
+              no parameters; 10.Secondary New Stocks: no parameters; 11.New Stock
+              First Day: no parameters; 12.Two Networks & Delisted: no parameters;
+              13.HK Stock - Real-time Quotes: no parameters; 14.HK Main Board - Real-time
+              Quotes: no parameters; 15.Famous HK Stocks Real-time Quotes: no parameters;
+              16.US Stock - Real-time Quotes: no parameters; 17.Famous US Stocks Real-time
+              Quotes: requires US stock category.'
+            zh_Hans: 接口参数说明：1. 沪A股-实时行情数据:无参数; 2.深A股-实时行情数据:无参数; 3.京A股-实时行情数据:无参数;
+              4.新股-实时行情数据:无参数; 5.创业板-实时行情:无参数; 6.科创板-实时行情:无参数; 7.AH股比价-实时行情:无参数; 8.全量AB股比价:无参数;
+              9.新股板块实时行情:无参数; 10.次新股-实时行情:无参数; 11.新股上市首日:无参数; 12.两网及退市:无参数; 13.港股-实时行情:无参数;
+              14.港股主板-实时行情:无参数; 15.知名港股实时行情数据:无参数; 16.美股-实时行情:无参数; 17.知名美股的实时行情数据:需要美股类别.
+          label:
+            en_US: Interface
+            ja_JP: Interface
+            pt_BR: Interface
+            zh_Hans: 接口名称
+          llm_description: 通过AKShare数据接口获取指定股票市场的实时行情数据，包括A股、港股、美股等各市场的实时价格、涨跌幅、成交量、换手率等信息
+          max: null
+          min: null
+          name: interface
+          options:
+          - icon: ''
+            label:
+              en_US: Eastmoney - Shanghai A-share - Real-time Quotes
+              ja_JP: Eastmoney - Shanghai A-share - Real-time Quotes
+              pt_BR: Eastmoney - Shanghai A-share - Real-time Quotes
+              zh_Hans: 东方财富-沪A股-实时行情数据
+            value: stock_sh_a_spot_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - Shenzhen A-share - Real-time Quotes
+              ja_JP: Eastmoney - Shenzhen A-share - Real-time Quotes
+              pt_BR: Eastmoney - Shenzhen A-share - Real-time Quotes
+              zh_Hans: 东方财富-深A股-实时行情数据
+            value: stock_sz_a_spot_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - Beijing A-share - Real-time Quotes
+              ja_JP: Eastmoney - Beijing A-share - Real-time Quotes
+              pt_BR: Eastmoney - Beijing A-share - Real-time Quotes
+              zh_Hans: 东方财富-京A股-实时行情数据
+            value: stock_bj_a_spot_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - New Shares - Real-time Quotes
+              ja_JP: Eastmoney - New Shares - Real-time Quotes
+              pt_BR: Eastmoney - New Shares - Real-time Quotes
+              zh_Hans: 东方财富-新股-实时行情数据
+            value: stock_new_a_spot_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - Growth Enterprise Market - Real-time Quotes
+              ja_JP: Eastmoney - Growth Enterprise Market - Real-time Quotes
+              pt_BR: Eastmoney - Growth Enterprise Market - Real-time Quotes
+              zh_Hans: 东方财富-创业板-实时行情
+            value: stock_cy_a_spot_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - Science and Technology Innovation Board - Real-time
+                Quotes
+              ja_JP: Eastmoney - Science and Technology Innovation Board - Real-time
+                Quotes
+              pt_BR: Eastmoney - Science and Technology Innovation Board - Real-time
+                Quotes
+              zh_Hans: 东方财富-科创板-实时行情
+            value: stock_kc_a_spot_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - HSGT - AH Stock Comparison - Real-time Quotes
+              ja_JP: Eastmoney - HSGT - AH Stock Comparison - Real-time Quotes
+              pt_BR: Eastmoney - HSGT - AH Stock Comparison - Real-time Quotes
+              zh_Hans: 东方财富-沪深港通-AH股比价-实时行情
+            value: stock_zh_ah_spot_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - Shanghai-Shenzhen - All AB Stock Comparison
+              ja_JP: Eastmoney - Shanghai-Shenzhen - All AB Stock Comparison
+              pt_BR: Eastmoney - Shanghai-Shenzhen - All AB Stock Comparison
+              zh_Hans: 东方财富-沪深京A股-全量AB股比价
+            value: stock_zh_ab_comparison_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - Shanghai-Shenzhen Individual Stocks - New Stock Board
+              ja_JP: Eastmoney - Shanghai-Shenzhen Individual Stocks - New Stock Board
+              pt_BR: Eastmoney - Shanghai-Shenzhen Individual Stocks - New Stock Board
+              zh_Hans: 东方财富-沪深个股-新股板块实时行情
+            value: stock_zh_a_new_em
+          - icon: ''
+            label:
+              en_US: Sina Finance - Shanghai-Shenzhen Stock Market - Secondary New
+                Stocks
+              ja_JP: Sina Finance - Shanghai-Shenzhen Stock Market - Secondary New
+                Stocks
+              pt_BR: Sina Finance - Shanghai-Shenzhen Stock Market - Secondary New
+                Stocks
+              zh_Hans: 新浪财经-沪深股市-次新股-实时行情
+            value: stock_zh_a_new
+          - icon: ''
+            label:
+              en_US: THS - New Stock Listing - New Stock First Day
+              ja_JP: THS - New Stock Listing - New Stock First Day
+              pt_BR: THS - New Stock Listing - New Stock First Day
+              zh_Hans: 同花顺-新股上市-新股上市首日
+            value: stock_xgsr_ths
+          - icon: ''
+            label:
+              en_US: Eastmoney - Shanghai-Shenzhen Individual Stocks - Two Networks
+                & Delisted
+              ja_JP: Eastmoney - Shanghai-Shenzhen Individual Stocks - Two Networks
+                & Delisted
+              pt_BR: Eastmoney - Shanghai-Shenzhen Individual Stocks - Two Networks
+                & Delisted
+              zh_Hans: 东方财富-沪深个股-两网及退市
+            value: stock_zh_a_stop_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - HK Stock - Real-time Quotes (15min delay)
+              ja_JP: Eastmoney - HK Stock - Real-time Quotes (15min delay)
+              pt_BR: Eastmoney - HK Stock - Real-time Quotes (15min delay)
+              zh_Hans: 东方财富-港股-实时行情(延15分钟)
+            value: stock_hk_spot_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - HK Main Board - Real-time Quotes (15min delay)
+              ja_JP: Eastmoney - HK Main Board - Real-time Quotes (15min delay)
+              pt_BR: Eastmoney - HK Main Board - Real-time Quotes (15min delay)
+              zh_Hans: 东方财富-港股主板-实时行情(延15分钟)
+            value: stock_hk_main_board_spot_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - HK Stock Market - Famous HK Stocks Real-time Quotes
+              ja_JP: Eastmoney - HK Stock Market - Famous HK Stocks Real-time Quotes
+              pt_BR: Eastmoney - HK Stock Market - Famous HK Stocks Real-time Quotes
+              zh_Hans: 东方财富-港股市场-知名港股实时行情数据
+            value: stock_hk_famous_spot_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - US Stock - Real-time Quotes
+              ja_JP: Eastmoney - US Stock - Real-time Quotes
+              pt_BR: Eastmoney - US Stock - Real-time Quotes
+              zh_Hans: 东方财富-美股-实时行情
+            value: stock_us_spot_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - US Stock - Famous US Stocks Real-time Quotes
+              ja_JP: Eastmoney - US Stock - Famous US Stocks Real-time Quotes
+              pt_BR: Eastmoney - US Stock - Famous US Stocks Real-time Quotes
+              zh_Hans: 东方财富-美股-知名美股的实时行情数据
+            value: stock_us_famous_spot_em
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: 科技类
+          form: llm
+          human_description:
+            en_US: 'US stock category. Required for: East Money - US Stock - Famous
+              US Stocks Real-time Quotes. Options: ''科技类''/''金融类''/''医药食品类''/''媒体类''/''汽车能源类''/''制造零售类''.'
+            ja_JP: 'US stock category. Required for: East Money - US Stock - Famous
+              US Stocks Real-time Quotes. Options: ''科技类''/''金融类''/''医药食品类''/''媒体类''/''汽车能源类''/''制造零售类''.'
+            pt_BR: 'US stock category. Required for: East Money - US Stock - Famous
+              US Stocks Real-time Quotes. Options: ''科技类''/''金融类''/''医药食品类''/''媒体类''/''汽车能源类''/''制造零售类''.'
+            zh_Hans: 美股类别。需要此参数的接口：东方财富-美股-知名美股的实时行情数据。选项：'科技类'/'金融类'/'医药食品类'/'媒体类'/'汽车能源类'/'制造零售类'。
+          label:
+            en_US: US Stock Category
+            ja_JP: US Stock Category
+            pt_BR: US Stock Category
+            zh_Hans: 美股类别
+          llm_description: 美股知名股票类别，用于美股-知名美股的实时行情数据接口
+          max: null
+          min: null
+          name: symbol
+          options:
+          - icon: ''
+            label:
+              en_US: Technology
+              ja_JP: Technology
+              pt_BR: Technology
+              zh_Hans: 科技类
+            value: 科技类
+          - icon: ''
+            label:
+              en_US: Finance
+              ja_JP: Finance
+              pt_BR: Finance
+              zh_Hans: 金融类
+            value: 金融类
+          - icon: ''
+            label:
+              en_US: Healthcare & Food
+              ja_JP: Healthcare & Food
+              pt_BR: Healthcare & Food
+              zh_Hans: 医药食品类
+            value: 医药食品类
+          - icon: ''
+            label:
+              en_US: Media
+              ja_JP: Media
+              pt_BR: Media
+              zh_Hans: 媒体类
+            value: 媒体类
+          - icon: ''
+            label:
+              en_US: Auto & Energy
+              ja_JP: Auto & Energy
+              pt_BR: Auto & Energy
+              zh_Hans: 汽车能源类
+            value: 汽车能源类
+          - icon: ''
+            label:
+              en_US: Manufacturing & Retail
+              ja_JP: Manufacturing & Retail
+              pt_BR: Manufacturing & Retail
+              zh_Hans: 制造零售类
+            value: 制造零售类
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: 5
+          form: llm
+          human_description:
+            en_US: 'Number of retries for network requests. Range: 1-10. Default:
+              5. Higher values for unstable networks.'
+            ja_JP: 'Number of retries for network requests. Range: 1-10. Default:
+              5. Higher values for unstable networks.'
+            pt_BR: 'Number of retries for network requests. Range: 1-10. Default:
+              5. Higher values for unstable networks.'
+            zh_Hans: 网络请求重试次数。范围：1-10。默认：5。网络不稳定时可设置更高值。
+          label:
+            en_US: Retries
+            ja_JP: Retries
+            pt_BR: Retries
+            zh_Hans: 重试次数
+          llm_description: 网络请求重试次数，默认5次
+          max: 10
+          min: 1
+          name: retries
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: 900
+          form: llm
+          human_description:
+            en_US: 'Subprocess execution timeout in seconds. Range: 5-1800. Default:
+              900. Note: Real-time market data interfaces have large data volumes,
+              recommend setting longer timeout.'
+            ja_JP: 'Subprocess execution timeout in seconds. Range: 5-1800. Default:
+              900. Note: Real-time market data interfaces have large data volumes,
+              recommend setting longer timeout.'
+            pt_BR: 'Subprocess execution timeout in seconds. Range: 5-1800. Default:
+              900. Note: Real-time market data interfaces have large data volumes,
+              recommend setting longer timeout.'
+            zh_Hans: 子进程执行超时时间（秒）。范围：5-1800。默认：900。注意：实时行情接口数据量大，建议设置较长的超时时间。
+          label:
+            en_US: Subprocess Timeout
+            ja_JP: Subprocess Timeout
+            pt_BR: Subprocess Timeout
+            zh_Hans: 子进程超时时间
+          llm_description: 子进程执行超时时间（秒），默认900秒。注意：实时行情接口数据量大，建议设置较长的超时时间。
+          max: 3600
+          min: 5
+          name: timeout
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        params:
+          interface: ''
+          retries: ''
+          symbol: ''
+          timeout: ''
+        provider_id: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_name: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_type: builtin
+        selected: false
+        title: 获取历史行情
+        tool_configurations: {}
+        tool_description: 通过AKShare数据接口获取指定股票的历史行情数据，包括A股、港股、美股等各市场的历史价格、成交量、成交额等信息。支持日线、周线、月线等不同周期的数据，并可选择前复权、后复权等调整方式。
+        tool_label: 股票历史行情
+        tool_name: stock_hist_quotations
+        tool_node_version: '2'
+        tool_parameters:
+          adjust:
+            type: constant
+            value: qfq
+          end_date:
+            type: mixed
+            value: '{{#1758347882989.end_date#}}'
+          interface:
+            type: constant
+            value: stock_zh_a_hist
+          period:
+            type: constant
+            value: daily
+          retries:
+            type: constant
+            value: 5
+          start_date:
+            type: mixed
+            value: '{{#1758347882989.start_date#}}'
+          symbol:
+            type: mixed
+            value: '{{#1758347882989.stock_code#}}'
+          timeout:
+            type: constant
+            value: 600
+        type: tool
+      height: 53
+      id: '1758336201198'
+      position:
+        x: 544.5126176722628
+        y: 138.06687859847273
+      positionAbsolute:
+        x: 544.5126176722628
+        y: 138.06687859847273
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        is_team_authorization: true
+        output_schema: null
+        paramSchemas:
+        - auto_generate: null
+          default: stock_individual_info_em
+          form: llm
+          human_description:
+            en_US: 'Interface parameter description: 1.Stock Information: stock code
+              required; 2.Bid/Ask Quote: stock code required; 3.Main Business Introduction:
+              stock code required; 4.Main Business Composition: stock code required;
+              5.News Information: stock code required; 6.Company Profile: stock code
+              required; 7.IPO Related Information: stock code required; 8.Dividend
+              Distribution Details: stock code required; 9.Research Report - Individual
+              Stock Report: stock code required; 10.Balance Sheet by Report Period:
+              stock code required; 11.Financial Key Indicators: stock code required;
+              12.HK Stock - Security Profile: HK stock code required; 13.HK Stock
+              - Company Profile: HK stock code required; 14.HK Stock - Dividend Distribution:
+              HK stock code required.'
+            ja_JP: 'Interface parameter description: 1.Stock Information: stock code
+              required; 2.Bid/Ask Quote: stock code required; 3.Main Business Introduction:
+              stock code required; 4.Main Business Composition: stock code required;
+              5.News Information: stock code required; 6.Company Profile: stock code
+              required; 7.IPO Related Information: stock code required; 8.Dividend
+              Distribution Details: stock code required; 9.Research Report - Individual
+              Stock Report: stock code required; 10.Balance Sheet by Report Period:
+              stock code required; 11.Financial Key Indicators: stock code required;
+              12.HK Stock - Security Profile: HK stock code required; 13.HK Stock
+              - Company Profile: HK stock code required; 14.HK Stock - Dividend Distribution:
+              HK stock code required.'
+            pt_BR: 'Interface parameter description: 1.Stock Information: stock code
+              required; 2.Bid/Ask Quote: stock code required; 3.Main Business Introduction:
+              stock code required; 4.Main Business Composition: stock code required;
+              5.News Information: stock code required; 6.Company Profile: stock code
+              required; 7.IPO Related Information: stock code required; 8.Dividend
+              Distribution Details: stock code required; 9.Research Report - Individual
+              Stock Report: stock code required; 10.Balance Sheet by Report Period:
+              stock code required; 11.Financial Key Indicators: stock code required;
+              12.HK Stock - Security Profile: HK stock code required; 13.HK Stock
+              - Company Profile: HK stock code required; 14.HK Stock - Dividend Distribution:
+              HK stock code required.'
+            zh_Hans: 接口参数说明：1.股票信息:需要股票代码; 2.行情报价:需要股票代码; 3.主营介绍:需要股票代码; 4.主营构成:需要股票代码;
+              5.新闻资讯数据:需要股票代码; 6.公司概况:需要股票代码; 7.上市相关资讯:需要股票代码; 8.分红送配详情:需要股票代码; 9.研究报告-个股研报:需要股票代码;
+              10.资产负债表-按报告期:需要股票代码; 11.财务报表-关键指标:需要股票代码; 12.港股-个股-证券资料:需要港股代码; 13.港股-个股-公司资料:需要港股代码;
+              14.港股-个股-分红派息:需要港股代码.
+          label:
+            en_US: Interface
+            ja_JP: Interface
+            pt_BR: Interface
+            zh_Hans: 接口名称
+          llm_description: 通过AKShare数据接口获取指定股票代码(symbol)的个股详细信息，包括基本信息、财务数据、新闻资讯、研究报告、分红配股、资产负债表等
+          max: null
+          min: null
+          name: interface
+          options:
+          - icon: ''
+            label:
+              en_US: Eastmoney - Individual Stock - Stock Information
+              ja_JP: Eastmoney - Individual Stock - Stock Information
+              pt_BR: Eastmoney - Individual Stock - Stock Information
+              zh_Hans: 东方财富-个股-股票信息
+            value: stock_individual_info_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - Individual Stock - Bid/Ask Quote
+              ja_JP: Eastmoney - Individual Stock - Bid/Ask Quote
+              pt_BR: Eastmoney - Individual Stock - Bid/Ask Quote
+              zh_Hans: 东方财富-个股-行情报价
+            value: stock_bid_ask_em
+          - icon: ''
+            label:
+              en_US: THS - Individual Stock - Main Business Introduction
+              ja_JP: THS - Individual Stock - Main Business Introduction
+              pt_BR: THS - Individual Stock - Main Business Introduction
+              zh_Hans: 同花顺-个股-主营介绍
+            value: stock_zyjs_ths
+          - icon: ''
+            label:
+              en_US: Eastmoney - Individual Stock - Main Business Composition
+              ja_JP: Eastmoney - Individual Stock - Main Business Composition
+              pt_BR: Eastmoney - Individual Stock - Main Business Composition
+              zh_Hans: 东方财富网-个股-主营构成
+            value: stock_zygc_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - Individual Stock - News Information
+              ja_JP: Eastmoney - Individual Stock - News Information
+              pt_BR: Eastmoney - Individual Stock - News Information
+              zh_Hans: 东方财富-个股-新闻资讯数据
+            value: stock_news_em
+          - icon: ''
+            label:
+              en_US: CNINFO - A-share - Company Profile
+              ja_JP: CNINFO - A-share - Company Profile
+              pt_BR: CNINFO - A-share - Company Profile
+              zh_Hans: 巨潮资讯-个股-公司概况
+            value: stock_profile_cninfo
+          - icon: ''
+            label:
+              en_US: CNINFO - A-share - IPO Related Information
+              ja_JP: CNINFO - A-share - IPO Related Information
+              pt_BR: CNINFO - A-share - IPO Related Information
+              zh_Hans: 巨潮资讯-个股-上市相关资讯
+            value: stock_ipo_summary_cninfo
+          - icon: ''
+            label:
+              en_US: Eastmoney - Individual Stock - Dividend Distribution Details
+              ja_JP: Eastmoney - Individual Stock - Dividend Distribution Details
+              pt_BR: Eastmoney - Individual Stock - Dividend Distribution Details
+              zh_Hans: 东方财富网-个股-分红送配详情
+            value: stock_fhps_detail_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - Research Report - Individual Stock Report
+              ja_JP: Eastmoney - Research Report - Individual Stock Report
+              pt_BR: Eastmoney - Research Report - Individual Stock Report
+              zh_Hans: 东方财富网-研究报告-个股研报
+            value: stock_research_report_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - Individual Stock - Balance Sheet by Report Period
+              ja_JP: Eastmoney - Individual Stock - Balance Sheet by Report Period
+              pt_BR: Eastmoney - Individual Stock - Balance Sheet by Report Period
+              zh_Hans: 东方财富-个股-资产负债表-按报告期
+            value: stock_balance_sheet_by_report_em
+          - icon: ''
+            label:
+              en_US: Sina Finance - Individual Stock - Financial Key Indicators
+              ja_JP: Sina Finance - Individual Stock - Financial Key Indicators
+              pt_BR: Sina Finance - Individual Stock - Financial Key Indicators
+              zh_Hans: 新浪财经-个股-财务报表-关键指标
+            value: stock_financial_abstract
+          - icon: ''
+            label:
+              en_US: Eastmoney - HK Stock - Individual Stock - Security Profile
+              ja_JP: Eastmoney - HK Stock - Individual Stock - Security Profile
+              pt_BR: Eastmoney - HK Stock - Individual Stock - Security Profile
+              zh_Hans: 东方财富-港股-个股-证券资料
+            value: stock_hk_security_profile_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - HK Stock - Individual Stock - Company Profile
+              ja_JP: Eastmoney - HK Stock - Individual Stock - Company Profile
+              pt_BR: Eastmoney - HK Stock - Individual Stock - Company Profile
+              zh_Hans: 东方财富-港股-个股-公司资料
+            value: stock_hk_company_profile_em
+          - icon: ''
+            label:
+              en_US: THS - HK Stock - Individual Stock - Dividend Distribution
+              ja_JP: THS - HK Stock - Individual Stock - Dividend Distribution
+              pt_BR: THS - HK Stock - Individual Stock - Dividend Distribution
+              zh_Hans: 同花顺-港股-个股-分红派息
+            value: stock_hk_fhpx_detail_ths
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: '000001'
+          form: llm
+          human_description:
+            en_US: 'Stock code. Required for: East Money - Individual Stock - Stock
+              Information, East Money - Individual Stock - Bid/Ask Quote, THS - Individual
+              Stock - Main Business Introduction, East Money - Individual Stock -
+              Main Business Composition, East Money - Individual Stock - News Information,
+              East Money - Individual Stock - Company Profile, East Money - Individual
+              Stock - IPO Related Information, East Money - Individual Stock - Dividend
+              Distribution Details, East Money - Research Report - Individual Stock
+              Report, East Money - Balance Sheet by Report Period, East Money - Financial
+              Key Indicators, East Money - HK Stock - Security Profile, East Money
+              - HK Stock - Company Profile, East Money - HK Stock - Dividend Distribution.
+              Format: 600519, 000001, SH600519, SZ000001; A-share: 6-digit code (600519)
+              or market prefix (SH600519); B-share: 9-digit code (900001) or market
+              prefix (SH900001); US stock: stock code (AAPL, MSFT); HK stock: 5-digit
+              code (00700) or market prefix (HK00700).'
+            ja_JP: 'Stock code. Required for: East Money - Individual Stock - Stock
+              Information, East Money - Individual Stock - Bid/Ask Quote, THS - Individual
+              Stock - Main Business Introduction, East Money - Individual Stock -
+              Main Business Composition, East Money - Individual Stock - News Information,
+              East Money - Individual Stock - Company Profile, East Money - Individual
+              Stock - IPO Related Information, East Money - Individual Stock - Dividend
+              Distribution Details, East Money - Research Report - Individual Stock
+              Report, East Money - Balance Sheet by Report Period, East Money - Financial
+              Key Indicators, East Money - HK Stock - Security Profile, East Money
+              - HK Stock - Company Profile, East Money - HK Stock - Dividend Distribution.
+              Format: 600519, 000001, SH600519, SZ000001; A-share: 6-digit code (600519)
+              or market prefix (SH600519); B-share: 9-digit code (900001) or market
+              prefix (SH900001); US stock: stock code (AAPL, MSFT); HK stock: 5-digit
+              code (00700) or market prefix (HK00700).'
+            pt_BR: 'Stock code. Required for: East Money - Individual Stock - Stock
+              Information, East Money - Individual Stock - Bid/Ask Quote, THS - Individual
+              Stock - Main Business Introduction, East Money - Individual Stock -
+              Main Business Composition, East Money - Individual Stock - News Information,
+              East Money - Individual Stock - Company Profile, East Money - Individual
+              Stock - IPO Related Information, East Money - Individual Stock - Dividend
+              Distribution Details, East Money - Research Report - Individual Stock
+              Report, East Money - Balance Sheet by Report Period, East Money - Financial
+              Key Indicators, East Money - HK Stock - Security Profile, East Money
+              - HK Stock - Company Profile, East Money - HK Stock - Dividend Distribution.
+              Format: 600519, 000001, SH600519, SZ000001; A-share: 6-digit code (600519)
+              or market prefix (SH600519); B-share: 9-digit code (900001) or market
+              prefix (SH900001); US stock: stock code (AAPL, MSFT); HK stock: 5-digit
+              code (00700) or market prefix (HK00700).'
+            zh_Hans: 股票代码。需要此参数的接口：东方财富-个股-股票信息、东方财富-个股-行情报价、同花顺-个股-主营介绍、东方财富网-个股-主营构成、东方财富-个股-新闻资讯数据、东方财富-个股-公司概况、东方财富-个股-上市相关资讯、东方财富-个股-分红送配详情、东方财富-研究报告-个股研报、东方财富-资产负债表-按报告期、东方财富-财务报表-关键指标、东方财富-港股-个股-证券资料、东方财富-港股-个股-公司资料、东方财富-港股-个股-分红派息。格式：600519、000001、SH600519、SZ000001；A股：6位数字代码(600519)或市场前缀(SH600519)；B股：9位数字代码(900001)或市场前缀(SH900001)；美股：股票代码(AAPL、MSFT)；港股：5位数字代码(00700)或市场前缀(HK00700)。
+          label:
+            en_US: Stock Code
+            ja_JP: Stock Code
+            pt_BR: Stock Code
+            zh_Hans: 股票代码
+          llm_description: 股票代码，格式：600519、000001、SH600519、SZ000001；A股：6位数字代码(600519)或市场前缀(SH600519)；B股：9位数字代码(900001)或市场前缀(SH900001)；美股：股票代码(AAPL、MSFT)；港股：5位数字代码(00700)或市场前缀(HK00700)
+          max: null
+          min: null
+          name: symbol
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: 5
+          form: llm
+          human_description:
+            en_US: 'Number of retries for network requests. Range: 1-10. Default:
+              3. Higher values for unstable networks.'
+            ja_JP: 'Number of retries for network requests. Range: 1-10. Default:
+              3. Higher values for unstable networks.'
+            pt_BR: 'Number of retries for network requests. Range: 1-10. Default:
+              3. Higher values for unstable networks.'
+            zh_Hans: 网络请求重试次数。范围：1-10。默认：3。网络不稳定时可设置更高值。
+          label:
+            en_US: Retries
+            ja_JP: Retries
+            pt_BR: Retries
+            zh_Hans: 重试次数
+          llm_description: 网络请求重试次数，默认3次
+          max: 10
+          min: 1
+          name: retries
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: 600
+          form: llm
+          human_description:
+            en_US: 'Subprocess execution timeout in seconds. Range: 5-120. Default:
+              120. Increase for slow networks or large data requests.'
+            ja_JP: 'Subprocess execution timeout in seconds. Range: 5-120. Default:
+              120. Increase for slow networks or large data requests.'
+            pt_BR: 'Subprocess execution timeout in seconds. Range: 5-120. Default:
+              120. Increase for slow networks or large data requests.'
+            zh_Hans: 子进程执行超时时间（秒）。范围：5-120。默认：120。网络较慢或数据量较大时可增加。
+          label:
+            en_US: Subprocess Timeout
+            ja_JP: Subprocess Timeout
+            pt_BR: Subprocess Timeout
+            zh_Hans: 子进程超时时间
+          llm_description: 子进程执行超时时间（秒），默认240秒
+          max: 3600
+          min: 5
+          name: timeout
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        params:
+          interface: ''
+          retries: ''
+          symbol: ''
+          timeout: ''
+        provider_id: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_name: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_type: builtin
+        selected: false
+        title: 获取个股研报
+        tool_configurations: {}
+        tool_description: 通过AKShare数据接口获取指定股票代码(symbol)的个股详细信息，包括基本信息、财务数据、新闻资讯、研究报告等。
+        tool_label: 个股信息总貌
+        tool_name: stock_individual_info_summary
+        tool_node_version: '2'
+        tool_parameters:
+          interface:
+            type: constant
+            value: stock_research_report_em
+          retries:
+            type: constant
+            value: 5
+          symbol:
+            type: mixed
+            value: '{{#1758347882989.stock_code#}}'
+          timeout:
+            type: constant
+            value: 600
+        type: tool
+      height: 53
+      id: '1758336425699'
+      position:
+        x: 544.5126176722628
+        y: 242.58080464363826
+      positionAbsolute:
+        x: 544.5126176722628
+        y: 242.58080464363826
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        desc: ''
+        is_team_authorization: true
+        output_schema: null
+        paramSchemas:
+        - auto_generate: null
+          default: stock_lrb_em
+          form: llm
+          human_description:
+            en_US: 'Interface parameter description: 1.Performance Report - Profit
+              Statement: requires Date; 2.Performance Report - Cash Flow Statement:
+              requires Date; 3.Performance Report - Balance Sheet: requires Date;
+              4.BJ Exchange - Performance Report - Balance Sheet: requires Date; 5-7.Financial
+              Indicators: requires Stock Code and Indicator (By Report Period/By Year/By
+              Single Quarter); 8.Financial Statements - Key Indicators: requires Stock
+              Code ONLY; 9.Financial Indicators - Main Indicators: requires Stock
+              Code and Indicator; 10.Financial Analysis - Financial Indicators: requires
+              Stock Code and Start Year; 11.HK - Main Indicators: requires Stock Code
+              and Indicator (Annual/Report Period); 12.US - Main Indicators: requires
+              Stock Code and Indicator (Annual Report/Single Quarter/Cumulative Quarter);
+              13.HK - Three Major Reports: requires Stock Code, Report Type and Indicator;
+              14.US - Three Major Reports: requires Stock Code, Report Type and Indicator.'
+            ja_JP: 'Interface parameter description: 1.Performance Report - Profit
+              Statement: requires Date; 2.Performance Report - Cash Flow Statement:
+              requires Date; 3.Performance Report - Balance Sheet: requires Date;
+              4.BJ Exchange - Performance Report - Balance Sheet: requires Date; 5-7.Financial
+              Indicators: requires Stock Code and Indicator (By Report Period/By Year/By
+              Single Quarter); 8.Financial Statements - Key Indicators: requires Stock
+              Code ONLY; 9.Financial Indicators - Main Indicators: requires Stock
+              Code and Indicator; 10.Financial Analysis - Financial Indicators: requires
+              Stock Code and Start Year; 11.HK - Main Indicators: requires Stock Code
+              and Indicator (Annual/Report Period); 12.US - Main Indicators: requires
+              Stock Code and Indicator (Annual Report/Single Quarter/Cumulative Quarter);
+              13.HK - Three Major Reports: requires Stock Code, Report Type and Indicator;
+              14.US - Three Major Reports: requires Stock Code, Report Type and Indicator.'
+            pt_BR: 'Interface parameter description: 1.Performance Report - Profit
+              Statement: requires Date; 2.Performance Report - Cash Flow Statement:
+              requires Date; 3.Performance Report - Balance Sheet: requires Date;
+              4.BJ Exchange - Performance Report - Balance Sheet: requires Date; 5-7.Financial
+              Indicators: requires Stock Code and Indicator (By Report Period/By Year/By
+              Single Quarter); 8.Financial Statements - Key Indicators: requires Stock
+              Code ONLY; 9.Financial Indicators - Main Indicators: requires Stock
+              Code and Indicator; 10.Financial Analysis - Financial Indicators: requires
+              Stock Code and Start Year; 11.HK - Main Indicators: requires Stock Code
+              and Indicator (Annual/Report Period); 12.US - Main Indicators: requires
+              Stock Code and Indicator (Annual Report/Single Quarter/Cumulative Quarter);
+              13.HK - Three Major Reports: requires Stock Code, Report Type and Indicator;
+              14.US - Three Major Reports: requires Stock Code, Report Type and Indicator.'
+            zh_Hans: 接口参数说明：1.业绩快报-利润表:需要日期; 2.业绩快报-现金流量表:需要日期; 3.业绩快报-资产负债表:需要日期;
+              4.北交所-业绩快报-资产负债表:需要日期; 5-7.财务指标:需要股票代码和指标(按报告期/按年度/按单季度); 8.财务报表-关键指标:只需要股票代码;
+              9.财务指标-主要指标:需要股票代码和指标; 10.财务分析-财务指标:需要股票代码和起始年份; 11.港股-主要指标:需要股票代码和指标(年度/报告期);
+              12.美股-主要指标:需要股票代码和指标(年报/单季报/累计季报); 13.港股-三大报表:需要股票代码、报表类型和指标; 14.美股-三大报表:需要股票代码、报表类型和指标。
+          label:
+            en_US: Interface
+            ja_JP: Interface
+            pt_BR: Interface
+            zh_Hans: 接口名称
+          llm_description: 通过AKShare数据接口获取股票财务数据分析相关数据，包括A股业绩快报利润表、现金流量表、资产负债表，以及同花顺财务指标、新浪关键指标、财务分析指标等
+          max: null
+          min: null
+          name: interface
+          options:
+          - icon: ''
+            label:
+              en_US: East Money - Performance Report - Profit Statement
+              ja_JP: East Money - Performance Report - Profit Statement
+              pt_BR: East Money - Performance Report - Profit Statement
+              zh_Hans: 东方财富-业绩快报-利润表
+            value: stock_lrb_em
+          - icon: ''
+            label:
+              en_US: East Money - Performance Report - Cash Flow Statement
+              ja_JP: East Money - Performance Report - Cash Flow Statement
+              pt_BR: East Money - Performance Report - Cash Flow Statement
+              zh_Hans: 东方财富-业绩快报-现金流量表
+            value: stock_xjll_em
+          - icon: ''
+            label:
+              en_US: East Money - Performance Report - Balance Sheet
+              ja_JP: East Money - Performance Report - Balance Sheet
+              pt_BR: East Money - Performance Report - Balance Sheet
+              zh_Hans: 东方财富-业绩快报-资产负债表
+            value: stock_zcfz_em
+          - icon: ''
+            label:
+              en_US: East Money - BJ Exchange - Performance Report - Balance Sheet
+              ja_JP: East Money - BJ Exchange - Performance Report - Balance Sheet
+              pt_BR: East Money - BJ Exchange - Performance Report - Balance Sheet
+              zh_Hans: 东方财富-北交所-业绩快报-资产负债表
+            value: stock_zcfz_bj_em
+          - icon: ''
+            label:
+              en_US: Flush - Financial Indicators - Balance Sheet
+              ja_JP: Flush - Financial Indicators - Balance Sheet
+              pt_BR: Flush - Financial Indicators - Balance Sheet
+              zh_Hans: 同花顺-财务指标-资产负债表
+            value: stock_financial_debt_ths
+          - icon: ''
+            label:
+              en_US: Flush - Financial Indicators - Profit Statement
+              ja_JP: Flush - Financial Indicators - Profit Statement
+              pt_BR: Flush - Financial Indicators - Profit Statement
+              zh_Hans: 同花顺-财务指标-利润表
+            value: stock_financial_benefit_ths
+          - icon: ''
+            label:
+              en_US: Flush - Financial Indicators - Cash Flow Statement
+              ja_JP: Flush - Financial Indicators - Cash Flow Statement
+              pt_BR: Flush - Financial Indicators - Cash Flow Statement
+              zh_Hans: 同花顺-财务指标-现金流量表
+            value: stock_financial_cash_ths
+          - icon: ''
+            label:
+              en_US: Sina Finance - Financial Statements - Key Indicators
+              ja_JP: Sina Finance - Financial Statements - Key Indicators
+              pt_BR: Sina Finance - Financial Statements - Key Indicators
+              zh_Hans: 新浪财经-财务报表-关键指标
+            value: stock_financial_abstract
+          - icon: ''
+            label:
+              en_US: Flush - Financial Indicators - Main Indicators
+              ja_JP: Flush - Financial Indicators - Main Indicators
+              pt_BR: Flush - Financial Indicators - Main Indicators
+              zh_Hans: 同花顺-财务指标-主要指标
+            value: stock_financial_abstract_ths
+          - icon: ''
+            label:
+              en_US: Sina Finance - Financial Analysis - Financial Indicators
+              ja_JP: Sina Finance - Financial Analysis - Financial Indicators
+              pt_BR: Sina Finance - Financial Analysis - Financial Indicators
+              zh_Hans: 新浪财经-财务分析-财务指标
+            value: stock_financial_analysis_indicator
+          - icon: ''
+            label:
+              en_US: East Money - HK - Financial Analysis - Main Indicators
+              ja_JP: East Money - HK - Financial Analysis - Main Indicators
+              pt_BR: East Money - HK - Financial Analysis - Main Indicators
+              zh_Hans: 东方财富-港股-财务分析-主要指标
+            value: stock_financial_hk_analysis_indicator_em
+          - icon: ''
+            label:
+              en_US: East Money - US - Financial Analysis - Main Indicators
+              ja_JP: East Money - US - Financial Analysis - Main Indicators
+              pt_BR: East Money - US - Financial Analysis - Main Indicators
+              zh_Hans: 东方财富-美股-财务分析-主要指标
+            value: stock_financial_us_analysis_indicator_em
+          - icon: ''
+            label:
+              en_US: East Money - HK - Financial Statements - Three Major Reports
+              ja_JP: East Money - HK - Financial Statements - Three Major Reports
+              pt_BR: East Money - HK - Financial Statements - Three Major Reports
+              zh_Hans: 东方财富-港股-财务报表-三大报表
+            value: stock_financial_hk_report_em
+          - icon: ''
+            label:
+              en_US: East Money - US - Financial Analysis - Three Major Reports
+              ja_JP: East Money - US - Financial Analysis - Three Major Reports
+              pt_BR: East Money - US - Financial Analysis - Three Major Reports
+              zh_Hans: 东方财富-美股-财务分析-三大报表
+            value: stock_financial_us_report_em
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: '000001'
+          form: llm
+          human_description:
+            en_US: 'Stock code. Required for: Flush - Financial Indicators - Balance
+              Sheet, Flush - Financial Indicators - Profit Statement, Flush - Financial
+              Indicators - Cash Flow Statement, Financial Statements - Key Indicators,
+              Flush - Financial Indicators - Main Indicators, Financial Analysis -
+              Financial Indicators, HK - Main Indicators, US - Main Indicators, HK
+              - Three Major Reports, US - Three Major Reports.'
+            ja_JP: 'Stock code. Required for: Flush - Financial Indicators - Balance
+              Sheet, Flush - Financial Indicators - Profit Statement, Flush - Financial
+              Indicators - Cash Flow Statement, Financial Statements - Key Indicators,
+              Flush - Financial Indicators - Main Indicators, Financial Analysis -
+              Financial Indicators, HK - Main Indicators, US - Main Indicators, HK
+              - Three Major Reports, US - Three Major Reports.'
+            pt_BR: 'Stock code. Required for: Flush - Financial Indicators - Balance
+              Sheet, Flush - Financial Indicators - Profit Statement, Flush - Financial
+              Indicators - Cash Flow Statement, Financial Statements - Key Indicators,
+              Flush - Financial Indicators - Main Indicators, Financial Analysis -
+              Financial Indicators, HK - Main Indicators, US - Main Indicators, HK
+              - Three Major Reports, US - Three Major Reports.'
+            zh_Hans: 股票代码。需要此参数的接口：同花顺-财务指标-资产负债表、同花顺-财务指标-利润表、同花顺-财务指标-现金流量表、财务报表-关键指标、财务指标-主要指标、财务分析-财务指标、港股-主要指标、美股-主要指标、港股-三大报表、美股-三大报表。
+          label:
+            en_US: Stock Code
+            ja_JP: Stock Code
+            pt_BR: Stock Code
+            zh_Hans: 股票代码
+          llm_description: 股票代码，用于需要股票代码的接口
+          max: null
+          min: null
+          name: symbol
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: '20240331'
+          form: llm
+          human_description:
+            en_US: 'Report date. Format: ''XXXX0331'', ''XXXX0630'', ''XXXX0930'',
+              ''XXXX1231''; Starting from 20120331. Required for: Performance Report
+              - Profit Statement, Performance Report - Cash Flow Statement, Performance
+              Report - Balance Sheet, BJ Exchange - Performance Report - Balance Sheet.'
+            ja_JP: 'Report date. Format: ''XXXX0331'', ''XXXX0630'', ''XXXX0930'',
+              ''XXXX1231''; Starting from 20120331. Required for: Performance Report
+              - Profit Statement, Performance Report - Cash Flow Statement, Performance
+              Report - Balance Sheet, BJ Exchange - Performance Report - Balance Sheet.'
+            pt_BR: 'Report date. Format: ''XXXX0331'', ''XXXX0630'', ''XXXX0930'',
+              ''XXXX1231''; Starting from 20120331. Required for: Performance Report
+              - Profit Statement, Performance Report - Cash Flow Statement, Performance
+              Report - Balance Sheet, BJ Exchange - Performance Report - Balance Sheet.'
+            zh_Hans: 报告日期。格式："XXXX0331", "XXXX0630", "XXXX0930", "XXXX1231"; 从 20120331
+              开始。需要此参数的接口：业绩快报-利润表、业绩快报-现金流量表、业绩快报-资产负债表、北交所-业绩快报-资产负债表。
+          label:
+            en_US: Report Date
+            ja_JP: Report Date
+            pt_BR: Report Date
+            zh_Hans: 报告日期
+          llm_description: 报告日期，格式为YYYYMMDD，用于业绩快报类接口
+          max: null
+          min: null
+          name: date
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: 按报告期
+          form: llm
+          human_description:
+            en_US: 'A-share THS indicator type. Required for: Flush - Financial Indicators
+              - Balance Sheet, Flush - Financial Indicators - Profit Statement, Flush
+              - Financial Indicators - Cash Flow Statement, Flush - Financial Indicators
+              - Main Indicators.'
+            ja_JP: 'A-share THS indicator type. Required for: Flush - Financial Indicators
+              - Balance Sheet, Flush - Financial Indicators - Profit Statement, Flush
+              - Financial Indicators - Cash Flow Statement, Flush - Financial Indicators
+              - Main Indicators.'
+            pt_BR: 'A-share THS indicator type. Required for: Flush - Financial Indicators
+              - Balance Sheet, Flush - Financial Indicators - Profit Statement, Flush
+              - Financial Indicators - Cash Flow Statement, Flush - Financial Indicators
+              - Main Indicators.'
+            zh_Hans: A股同花顺指标类型。需要此参数的接口：同花顺-财务指标-资产负债表、同花顺-财务指标-利润表、同花顺-财务指标-现金流量表、同花顺-财务指标-主要指标。
+          label:
+            en_US: A-share THS Indicator Type
+            ja_JP: A-share THS Indicator Type
+            pt_BR: A-share THS Indicator Type
+            zh_Hans: A股同花顺指标类型
+          llm_description: A股同花顺财务指标接口的指标类型参数
+          max: null
+          min: null
+          name: indicator_ths
+          options:
+          - icon: ''
+            label:
+              en_US: By Report Period
+              ja_JP: By Report Period
+              pt_BR: By Report Period
+              zh_Hans: 按报告期
+            value: 按报告期
+          - icon: ''
+            label:
+              en_US: By Year
+              ja_JP: By Year
+              pt_BR: By Year
+              zh_Hans: 按年度
+            value: 按年度
+          - icon: ''
+            label:
+              en_US: By Single Quarter
+              ja_JP: By Single Quarter
+              pt_BR: By Single Quarter
+              zh_Hans: 按单季度
+            value: 按单季度
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: 年度
+          form: llm
+          human_description:
+            en_US: 'HK indicator type. Required for: HK - Main Indicators, HK - Three
+              Major Reports.'
+            ja_JP: 'HK indicator type. Required for: HK - Main Indicators, HK - Three
+              Major Reports.'
+            pt_BR: 'HK indicator type. Required for: HK - Main Indicators, HK - Three
+              Major Reports.'
+            zh_Hans: 港股指标类型。需要此参数的接口：港股-主要指标、港股-三大报表。
+          label:
+            en_US: HK Indicator Type
+            ja_JP: HK Indicator Type
+            pt_BR: HK Indicator Type
+            zh_Hans: 港股指标类型
+          llm_description: 港股财务分析接口的指标类型参数
+          max: null
+          min: null
+          name: indicator_hk
+          options:
+          - icon: ''
+            label:
+              en_US: Annual
+              ja_JP: Annual
+              pt_BR: Annual
+              zh_Hans: 年度
+            value: 年度
+          - icon: ''
+            label:
+              en_US: Report Period
+              ja_JP: Report Period
+              pt_BR: Report Period
+              zh_Hans: 报告期
+            value: 报告期
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: 年报
+          form: llm
+          human_description:
+            en_US: 'US indicator type. Required for: US - Main Indicators, US - Three
+              Major Reports.'
+            ja_JP: 'US indicator type. Required for: US - Main Indicators, US - Three
+              Major Reports.'
+            pt_BR: 'US indicator type. Required for: US - Main Indicators, US - Three
+              Major Reports.'
+            zh_Hans: 美股指标类型。需要此参数的接口：美股-主要指标、美股-三大报表。
+          label:
+            en_US: US Indicator Type
+            ja_JP: US Indicator Type
+            pt_BR: US Indicator Type
+            zh_Hans: 美股指标类型
+          llm_description: 美股财务分析接口的指标类型参数
+          max: null
+          min: null
+          name: indicator_us
+          options:
+          - icon: ''
+            label:
+              en_US: Annual Report
+              ja_JP: Annual Report
+              pt_BR: Annual Report
+              zh_Hans: 年报
+            value: 年报
+          - icon: ''
+            label:
+              en_US: Single Quarter
+              ja_JP: Single Quarter
+              pt_BR: Single Quarter
+              zh_Hans: 单季报
+            value: 单季报
+          - icon: ''
+            label:
+              en_US: Cumulative Quarter
+              ja_JP: Cumulative Quarter
+              pt_BR: Cumulative Quarter
+              zh_Hans: 累计季报
+            value: 累计季报
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: 资产负债表
+          form: llm
+          human_description:
+            en_US: 'Report type. Required for: HK - Three Major Reports, US - Three
+              Major Reports. HK options: Balance Sheet/Profit Statement/Cash Flow
+              Statement; US options: Balance Sheet/Comprehensive Income Statement/Cash
+              Flow Statement.'
+            ja_JP: 'Report type. Required for: HK - Three Major Reports, US - Three
+              Major Reports. HK options: Balance Sheet/Profit Statement/Cash Flow
+              Statement; US options: Balance Sheet/Comprehensive Income Statement/Cash
+              Flow Statement.'
+            pt_BR: 'Report type. Required for: HK - Three Major Reports, US - Three
+              Major Reports. HK options: Balance Sheet/Profit Statement/Cash Flow
+              Statement; US options: Balance Sheet/Comprehensive Income Statement/Cash
+              Flow Statement.'
+            zh_Hans: 报表类型。需要此参数的接口：港股-三大报表、美股-三大报表。港股选项：资产负债表/利润表/现金流量表；美股选项：资产负债表/综合损益表/现金流量表。
+          label:
+            en_US: Report Type
+            ja_JP: Report Type
+            pt_BR: Report Type
+            zh_Hans: 报表类型
+          llm_description: 报表类型，用于财务报表类接口。港股：资产负债表/利润表/现金流量表；美股：资产负债表/综合损益表/现金流量表
+          max: null
+          min: null
+          name: report_type
+          options:
+          - icon: ''
+            label:
+              en_US: Balance Sheet (HK)
+              ja_JP: Balance Sheet (HK)
+              pt_BR: Balance Sheet (HK)
+              zh_Hans: 资产负债表 (港股)
+            value: 资产负债表
+          - icon: ''
+            label:
+              en_US: Profit Statement (HK)
+              ja_JP: Profit Statement (HK)
+              pt_BR: Profit Statement (HK)
+              zh_Hans: 利润表 (港股)
+            value: 利润表
+          - icon: ''
+            label:
+              en_US: Cash Flow Statement (HK)
+              ja_JP: Cash Flow Statement (HK)
+              pt_BR: Cash Flow Statement (HK)
+              zh_Hans: 现金流量表 (港股)
+            value: 现金流量表
+          - icon: ''
+            label:
+              en_US: Balance Sheet (US)
+              ja_JP: Balance Sheet (US)
+              pt_BR: Balance Sheet (US)
+              zh_Hans: 资产负债表 (美股)
+            value: 资产负债表
+          - icon: ''
+            label:
+              en_US: Comprehensive Income Statement (US)
+              ja_JP: Comprehensive Income Statement (US)
+              pt_BR: Comprehensive Income Statement (US)
+              zh_Hans: 综合损益表 (美股)
+            value: 综合损益表
+          - icon: ''
+            label:
+              en_US: Cash Flow Statement (US)
+              ja_JP: Cash Flow Statement (US)
+              pt_BR: Cash Flow Statement (US)
+              zh_Hans: 现金流量表 (美股)
+            value: 现金流量表
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: '2024'
+          form: llm
+          human_description:
+            en_US: 'Start year. Required for: Financial Analysis - Financial Indicators.'
+            ja_JP: 'Start year. Required for: Financial Analysis - Financial Indicators.'
+            pt_BR: 'Start year. Required for: Financial Analysis - Financial Indicators.'
+            zh_Hans: 起始年份。需要此参数的接口：财务分析-财务指标。
+          label:
+            en_US: Start Year
+            ja_JP: Start Year
+            pt_BR: Start Year
+            zh_Hans: 起始年份
+          llm_description: 起始年份，用于财务分析指标接口
+          max: null
+          min: null
+          name: start_year
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: 5
+          form: llm
+          human_description:
+            en_US: Number of retries when interface call fails
+            ja_JP: Number of retries when interface call fails
+            pt_BR: Number of retries when interface call fails
+            zh_Hans: 接口调用失败时的重试次数
+          label:
+            en_US: Retries
+            ja_JP: Retries
+            pt_BR: Retries
+            zh_Hans: 重试次数
+          llm_description: 接口调用失败时的重试次数
+          max: 10
+          min: 1
+          name: retries
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: 900
+          form: llm
+          human_description:
+            en_US: Timeout for interface calls in seconds
+            ja_JP: Timeout for interface calls in seconds
+            pt_BR: Timeout for interface calls in seconds
+            zh_Hans: 接口调用的超时时间（秒）
+          label:
+            en_US: Timeout
+            ja_JP: Timeout
+            pt_BR: Timeout
+            zh_Hans: 超时时间
+          llm_description: 接口调用的超时时间（秒）
+          max: 3600
+          min: 5
+          name: timeout
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        params:
+          date: ''
+          indicator_hk: ''
+          indicator_ths: ''
+          indicator_us: ''
+          interface: ''
+          report_type: ''
+          retries: ''
+          start_year: ''
+          symbol: ''
+          timeout: ''
+        provider_id: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_name: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_type: builtin
+        selected: false
+        title: 获取财务指标
+        tool_configurations: {}
+        tool_description: 获取股票财务数据分析，包括利润表、现金流量表、资产负债表、财务指标等数据
+        tool_label: 股票财务数据分析
+        tool_name: stock_financial_analysis
+        tool_node_version: '2'
+        tool_parameters:
+          interface:
+            type: constant
+            value: stock_financial_abstract_ths
+          retries:
+            type: constant
+            value: 5
+          symbol:
+            type: mixed
+            value: '{{#1758347882989.stock_code#}}'
+          timeout:
+            type: constant
+            value: 600
+        type: tool
+      height: 53
+      id: '1758336563200'
+      position:
+        x: 544.5126176722628
+        y: 345.86320340581744
+      positionAbsolute:
+        x: 544.5126176722628
+        y: 345.86320340581744
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        provider_id: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_name: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_type: builtin
+        selected: false
+        title: 获取资金流向
+        tool_configurations: {}
+        tool_description: 获取股票资金流向分析数据，包括个股资金流向、市场资金流向、板块资金流向排行、筹码分布等数据
+        tool_label: 资金流向分析
+        tool_name: stock_fund_flow_analysis
+        tool_node_version: '2'
+        tool_parameters:
+          interface:
+            type: constant
+            value: stock_individual_fund_flow
+          market:
+            type: mixed
+            value: '{{#1758347882989.market#}}'
+          retries:
+            type: constant
+            value: 5
+          stock_code:
+            type: mixed
+            value: '{{#1758347882989.stock_code#}}'
+          timeout:
+            type: constant
+            value: 600
+        type: tool
+      height: 53
+      id: '1758336900001'
+      position:
+        x: 544.5126176722628
+        y: 420.58080464363826
+      positionAbsolute:
+        x: 544.5126176722628
+        y: 420.58080464363826
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params: {}
+          mode: chat
+          name: deepseek-reasoner
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: c90cb7a9-9986-4ea6-9fc8-ca926c64bacd
+          role: system
+          text: '你是一位资深的股票分析师。请基于以下数据生成简洁的股票分析报告（控制在1200字以内）：
+
+            股票代码：{{#1758347882989.stock_code#}} 历史行情：{{#1758336201198.text#}} 个股研报：{{#1758336425699.text#}}
+            财务指标：{{#1758336563200.text#}} 资金流向：{{#1758336900001.text#}}
+
+            请生成包含以下内容的分析报告： 1. **股票概况** - 基于个股研报的基本概况 2. **技术面分析** - 基于历史行情数据的技术分析
+            3. **基本面分析** - 基于财务指标的关键指标分析 4. **资金面分析** - 基于资金流向的资金动向分析 5. **投资建议**
+            - 综合分析和投资建议
+
+            要求：简洁明了，重点突出，基于现有数据进行分析。'
+        selected: false
+        title: 股票深度分析
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 89
+      id: '1758336719191'
+      position:
+        x: 827.8561379198269
+        y: 242.58080464363826
+      positionAbsolute:
+        x: 827.8561379198269
+        y: 242.58080464363826
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - role: system
+          text: '抱歉，本分析工具目前仅支持A股市场股票分析。
+
+            您输入的股票不是A股股票，无法进行分析。
+
+            支持的A股格式：
+
+            - 6位数字代码：600519、000001、002594
+
+            - 市场前缀：SH600519、SZ000001、BJ430047
+
+            - 股票名称：平安银行、贵州茅台、比亚迪
+
+            - 沪市A股：600xxx、601xxx、603xxx、605xxx、688xxx、689xxx
+
+            - 深市A股：000xxx、001xxx、002xxx、003xxx、300xxx、301xxx
+
+            - 北交所（京A）：430xxx、830xxx、870xxx
+
+            请重新输入A股股票代码或名称。'
+        selected: false
+        title: 错误提示
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 89
+      id: '1758337010582'
+      position:
+        x: 534.9297847878272
+        y: 496.975473932756
+      positionAbsolute:
+        x: 534.9297847878272
+        y: 496.975473932756
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1758337010582.text#}}'
+        desc: ''
+        selected: false
+        title: 错误提示输出
+        type: answer
+        variables: []
+      height: 104
+      id: '1758337149858'
+      position:
+        x: 900.9496123557328
+        y: 442.98650809270157
+      positionAbsolute:
+        x: 900.9496123557328
+        y: 442.98650809270157
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: "import json\nimport re\nfrom datetime import datetime, timedelta\n\n\
+          def main(llm_output: str) -> dict:\n    \"\"\"\n    解析股票代码提取节点的JSON输出，提取股票代码和A股市场信息\n\
+          \    同时计算动态的开始和结束日期\n    \"\"\"\n    # 计算日期\n    today = datetime.now()\n\
+          \    end_date = today - timedelta(days=1)  # 昨天\n    start_date = end_date\
+          \ - timedelta(days=365)  # 前推1年\n    \n    # 格式化日期为YYYYMMDD\n    end_date_str\
+          \ = end_date.strftime('%Y%m%d')\n    start_date_str = start_date.strftime('%Y%m%d')\n\
+          \    \n    try:\n        # 尝试解析JSON\n        data = json.loads(llm_output)\n\
+          \        \n        stock_code = data.get('stock_code', '')\n        market\
+          \ = data.get('market', '')\n        is_a_stock = data.get('is_a_stock',\
+          \ False)\n        \n        return {\n            'stock_code': stock_code,\n\
+          \            'market': market,\n            'is_a_stock': str(is_a_stock).lower(),\
+          \  # 转换为字符串\n            'start_date': start_date_str,\n            'end_date':\
+          \ end_date_str\n        }\n    except json.JSONDecodeError:\n        # 如果不是JSON格式，尝试从文本中提取\n\
+          \        # 查找6位数字代码\n        code_match = re.search(r'\\b(\\d{6})\\b', llm_output)\n\
+          \        if code_match:\n            code = code_match.group(1)\n      \
+          \      # 判断A股市场\n            if code.startswith(('600', '601', '603', '605',\
+          \ '688', '689')):\n                market = '沪市A股'\n                is_a_stock\
+          \ = 'true'\n            elif code.startswith(('000', '001', '002', '003',\
+          \ '300', '301')):\n                market = '深市A股'\n                is_a_stock\
+          \ = 'true'\n            elif code.startswith(('430', '830', '870')):\n \
+          \               market = '北交所（京A）'\n                is_a_stock = 'true'\n\
+          \            else:\n                market = '其他'\n                is_a_stock\
+          \ = 'false'\n            \n            return {\n                'stock_code':\
+          \ code,\n                'market': market,\n                'is_a_stock':\
+          \ is_a_stock,\n                'start_date': start_date_str,\n         \
+          \       'end_date': end_date_str\n            }\n        else:\n       \
+          \     return {\n                'stock_code': '',\n                'market':\
+          \ '',\n                'is_a_stock': 'false',\n                'start_date':\
+          \ start_date_str,\n                'end_date': end_date_str\n          \
+          \  }\n\n"
+        code_language: python3
+        desc: 解析股票代码提取节点的JSON输出，提取股票代码和A股市场信息
+        outputs:
+          end_date:
+            children: null
+            type: string
+          is_a_stock:
+            children: null
+            type: string
+          market:
+            children: null
+            type: string
+          start_date:
+            children: null
+            type: string
+          stock_code:
+            children: null
+            type: string
+        selected: false
+        title: 代码执行
+        type: code
+        variables:
+        - value_selector:
+          - '1758335745350'
+          - text
+          variable: llm_output
+      height: 97
+      id: '1758347882989'
+      position:
+        x: 182.24755086909096
+        y: 204.46641343433438
+      positionAbsolute:
+        x: 182.24755086909096
+        y: 204.46641343433438
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: 72.39236977346957
+      y: 142.38123813220392
+      zoom: 0.30202237347597916

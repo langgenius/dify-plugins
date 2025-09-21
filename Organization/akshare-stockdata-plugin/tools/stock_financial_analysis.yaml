@@ -1,0 +1,298 @@
+identity:
+  author: shaoxing_xie
+  name: stock_financial_analysis
+  label:
+    zh_Hans: 股票财务数据分析
+    en_US: Stock Financial Data Analysis
+description:
+  human:
+    en_US: "Get stock financial data analysis including profit statements, cash flow statements, balance sheets, and financial indicators"
+    zh_Hans: "获取股票财务数据分析，包括利润表、现金流量表、资产负债表、财务指标等数据"
+  llm: 通过AKShare数据接口获取股票财务数据分析相关数据，包括A股业绩快报利润表、现金流量表、资产负债表，以及同花顺财务指标、新浪关键指标、财务分析指标等
+parameters:
+  - name: interface
+    type: select
+    required: true
+    form: llm
+    default: stock_lrb_em
+    description: 接口名称
+    llm_description: 通过AKShare数据接口获取股票财务数据分析相关数据，包括A股业绩快报利润表、现金流量表、资产负债表，以及同花顺财务指标、新浪关键指标、财务分析指标等
+    human_description:
+      en_US: "Interface parameter description: 1.Performance Report - Profit Statement: requires Date;
+      2.Performance Report - Cash Flow Statement: requires Date;
+      3.Performance Report - Balance Sheet: requires Date;
+      4.BJ Exchange - Performance Report - Balance Sheet: requires Date;
+      5-7.Financial Indicators: requires Stock Code and Indicator (By Report Period/By Year/By Single Quarter);
+      8.Financial Statements - Key Indicators: requires Stock Code ONLY;
+      9.Financial Indicators - Main Indicators: requires Stock Code and Indicator;
+      10.Financial Analysis - Financial Indicators: requires Stock Code and Start Year;
+      11.HK - Main Indicators: requires Stock Code and Indicator (Annual/Report Period);
+      12.US - Main Indicators: requires Stock Code and Indicator (Annual Report/Single Quarter/Cumulative Quarter);
+      13.HK - Three Major Reports: requires Stock Code, Report Type and Indicator;
+      14.US - Three Major Reports: requires Stock Code, Report Type and Indicator."
+      zh_Hans: "接口参数说明：1.业绩快报-利润表:需要日期;
+      2.业绩快报-现金流量表:需要日期;
+      3.业绩快报-资产负债表:需要日期;
+      4.北交所-业绩快报-资产负债表:需要日期;
+      5-7.财务指标:需要股票代码和指标(按报告期/按年度/按单季度);
+      8.财务报表-关键指标:只需要股票代码;
+      9.财务指标-主要指标:需要股票代码和指标;
+      10.财务分析-财务指标:需要股票代码和起始年份;
+      11.港股-主要指标:需要股票代码和指标(年度/报告期);
+      12.美股-主要指标:需要股票代码和指标(年报/单季报/累计季报);
+      13.港股-三大报表:需要股票代码、报表类型和指标;
+      14.美股-三大报表:需要股票代码、报表类型和指标。"
+    label:
+      en_US: Interface
+      zh_Hans: 接口名称
+    options:
+      - label:
+          en_US: East Money - Performance Report - Profit Statement
+          zh_Hans: 东方财富-业绩快报-利润表
+        value: stock_lrb_em
+      - label:
+          en_US: East Money - Performance Report - Cash Flow Statement
+          zh_Hans: 东方财富-业绩快报-现金流量表
+        value: stock_xjll_em
+      - label:
+          en_US: East Money - Performance Report - Balance Sheet
+          zh_Hans: 东方财富-业绩快报-资产负债表
+        value: stock_zcfz_em
+      - label:
+          en_US: East Money - BJ Exchange - Performance Report - Balance Sheet
+          zh_Hans: 东方财富-北交所-业绩快报-资产负债表
+        value: stock_zcfz_bj_em
+      - label:
+          en_US: Flush - Financial Indicators - Balance Sheet
+          zh_Hans: 同花顺-财务指标-资产负债表
+        value: stock_financial_debt_ths
+      - label:
+          en_US: Flush - Financial Indicators - Profit Statement
+          zh_Hans: 同花顺-财务指标-利润表
+        value: stock_financial_benefit_ths
+      - label:
+          en_US: Flush - Financial Indicators - Cash Flow Statement
+          zh_Hans: 同花顺-财务指标-现金流量表
+        value: stock_financial_cash_ths
+      - label:
+          en_US: Sina Finance - Financial Statements - Key Indicators
+          zh_Hans: 新浪财经-财务报表-关键指标
+        value: stock_financial_abstract
+      - label:
+          en_US: Flush - Financial Indicators - Main Indicators
+          zh_Hans: 同花顺-财务指标-主要指标
+        value: stock_financial_abstract_ths
+      - label:
+          en_US: Sina Finance - Financial Analysis - Financial Indicators
+          zh_Hans: 新浪财经-财务分析-财务指标
+        value: stock_financial_analysis_indicator
+      - label:
+          en_US: East Money - HK - Financial Analysis - Main Indicators
+          zh_Hans: 东方财富-港股-财务分析-主要指标
+        value: stock_financial_hk_analysis_indicator_em
+      - label:
+          en_US: East Money - US - Financial Analysis - Main Indicators
+          zh_Hans: 东方财富-美股-财务分析-主要指标
+        value: stock_financial_us_analysis_indicator_em
+      - label:
+          en_US: East Money - HK - Financial Statements - Three Major Reports
+          zh_Hans: 东方财富-港股-财务报表-三大报表
+        value: stock_financial_hk_report_em
+      - label:
+          en_US: East Money - US - Financial Analysis - Three Major Reports
+          zh_Hans: 东方财富-美股-财务分析-三大报表
+        value: stock_financial_us_report_em
+
+  - name: symbol
+    type: string
+    required: false
+    form: llm
+    default: "000001"
+    description: 股票代码
+    llm_description: 股票代码，用于需要股票代码的接口
+    human_description:
+      en_US: "Stock code. Required for: Flush - Financial Indicators - Balance Sheet, Flush - Financial Indicators - Profit Statement, Flush - Financial Indicators - Cash Flow Statement, Financial Statements - Key Indicators, Flush - Financial Indicators - Main Indicators, Financial Analysis - Financial Indicators, HK - Main Indicators, US - Main Indicators, HK - Three Major Reports, US - Three Major Reports."
+      zh_Hans: "股票代码。需要此参数的接口：同花顺-财务指标-资产负债表、同花顺-财务指标-利润表、同花顺-财务指标-现金流量表、财务报表-关键指标、财务指标-主要指标、财务分析-财务指标、港股-主要指标、美股-主要指标、港股-三大报表、美股-三大报表。"
+    label:
+      en_US: Stock Code
+      zh_Hans: 股票代码
+
+  - name: date
+    type: string
+    required: false
+    form: llm
+    default: "20240331"
+    description: 报告日期
+    llm_description: 报告日期，格式为YYYYMMDD，用于业绩快报类接口
+    human_description:
+      en_US: "Report date. Format: 'XXXX0331', 'XXXX0630', 'XXXX0930', 'XXXX1231'; Starting from 20120331. Required for: Performance Report - Profit Statement, Performance Report - Cash Flow Statement, Performance Report - Balance Sheet, BJ Exchange - Performance Report - Balance Sheet."
+      zh_Hans: "报告日期。格式：\"XXXX0331\", \"XXXX0630\", \"XXXX0930\", \"XXXX1231\"; 从 20120331 开始。需要此参数的接口：业绩快报-利润表、业绩快报-现金流量表、业绩快报-资产负债表、北交所-业绩快报-资产负债表。"
+    label:
+      en_US: Report Date
+      zh_Hans: 报告日期
+
+  - name: indicator_ths
+    type: select
+    required: false
+    form: llm
+    default: 按报告期
+    description: A股同花顺指标类型
+    llm_description: A股同花顺财务指标接口的指标类型参数
+    human_description:
+      en_US: "A-share THS indicator type. Required for: Flush - Financial Indicators - Balance Sheet, Flush - Financial Indicators - Profit Statement, Flush - Financial Indicators - Cash Flow Statement, Flush - Financial Indicators - Main Indicators."
+      zh_Hans: "A股同花顺指标类型。需要此参数的接口：同花顺-财务指标-资产负债表、同花顺-财务指标-利润表、同花顺-财务指标-现金流量表、同花顺-财务指标-主要指标。"
+    label:
+      en_US: A-share THS Indicator Type
+      zh_Hans: A股同花顺指标类型
+    options:
+      - label:
+          en_US: By Report Period
+          zh_Hans: 按报告期
+        value: 按报告期
+      - label:
+          en_US: By Year
+          zh_Hans: 按年度
+        value: 按年度
+      - label:
+          en_US: By Single Quarter
+          zh_Hans: 按单季度
+        value: 按单季度
+
+  - name: indicator_hk
+    type: select
+    required: false
+    form: llm
+    default: 年度
+    description: 港股指标类型
+    llm_description: 港股财务分析接口的指标类型参数
+    human_description:
+      en_US: "HK indicator type. Required for: HK - Main Indicators, HK - Three Major Reports."
+      zh_Hans: "港股指标类型。需要此参数的接口：港股-主要指标、港股-三大报表。"
+    label:
+      en_US: HK Indicator Type
+      zh_Hans: 港股指标类型
+    options:
+      - label:
+          en_US: Annual
+          zh_Hans: 年度
+        value: 年度
+      - label:
+          en_US: Report Period
+          zh_Hans: 报告期
+        value: 报告期
+
+  - name: indicator_us
+    type: select
+    required: false
+    form: llm
+    default: 年报
+    description: 美股指标类型
+    llm_description: 美股财务分析接口的指标类型参数
+    human_description:
+      en_US: "US indicator type. Required for: US - Main Indicators, US - Three Major Reports."
+      zh_Hans: "美股指标类型。需要此参数的接口：美股-主要指标、美股-三大报表。"
+    label:
+      en_US: US Indicator Type
+      zh_Hans: 美股指标类型
+    options:
+      - label:
+          en_US: Annual Report
+          zh_Hans: 年报
+        value: 年报
+      - label:
+          en_US: Single Quarter
+          zh_Hans: 单季报
+        value: 单季报
+      - label:
+          en_US: Cumulative Quarter
+          zh_Hans: 累计季报
+        value: 累计季报
+
+  - name: report_type
+    type: select
+    required: false
+    form: llm
+    default: "资产负债表"
+    description: 报表类型
+    llm_description: 报表类型，用于财务报表类接口。港股：资产负债表/利润表/现金流量表；美股：资产负债表/综合损益表/现金流量表
+    human_description:
+      en_US: "Report type. Required for: HK - Three Major Reports, US - Three Major Reports. HK options: Balance Sheet/Profit Statement/Cash Flow Statement; US options: Balance Sheet/Comprehensive Income Statement/Cash Flow Statement."
+      zh_Hans: "报表类型。需要此参数的接口：港股-三大报表、美股-三大报表。港股选项：资产负债表/利润表/现金流量表；美股选项：资产负债表/综合损益表/现金流量表。"
+    label:
+      en_US: Report Type
+      zh_Hans: 报表类型
+    options:
+      # 港股报表类型选项
+      - label:
+          en_US: Balance Sheet (HK)
+          zh_Hans: 资产负债表 (港股)
+        value: 资产负债表
+      - label:
+          en_US: Profit Statement (HK)
+          zh_Hans: 利润表 (港股)
+        value: 利润表
+      - label:
+          en_US: Cash Flow Statement (HK)
+          zh_Hans: 现金流量表 (港股)
+        value: 现金流量表
+      # 美股报表类型选项
+      - label:
+          en_US: Balance Sheet (US)
+          zh_Hans: 资产负债表 (美股)
+        value: 资产负债表
+      - label:
+          en_US: Comprehensive Income Statement (US)
+          zh_Hans: 综合损益表 (美股)
+        value: 综合损益表
+      - label:
+          en_US: Cash Flow Statement (US)
+          zh_Hans: 现金流量表 (美股)
+        value: 现金流量表
+
+  - name: start_year
+    type: string
+    required: false
+    form: llm
+    default: "2024"
+    description: 起始年份
+    llm_description: 起始年份，用于财务分析指标接口
+    human_description:
+      en_US: "Start year. Required for: Financial Analysis - Financial Indicators."
+      zh_Hans: "起始年份。需要此参数的接口：财务分析-财务指标。"
+    label:
+      en_US: Start Year
+      zh_Hans: 起始年份
+  - name: retries
+    type: number
+    required: false
+    form: llm
+    default: 5
+    description: 重试次数
+    llm_description: 接口调用失败时的重试次数
+    human_description:
+      en_US: "Number of retries when interface call fails"
+      zh_Hans: "接口调用失败时的重试次数"
+    label:
+      en_US: Retries
+      zh_Hans: 重试次数
+    min: 1
+    max: 10
+  - name: timeout
+    type: number
+    required: false
+    form: llm
+    default: 900
+    description: 超时时间（秒）
+    llm_description: 接口调用的超时时间（秒）
+    human_description:
+      en_US: "Timeout for interface calls in seconds"
+      zh_Hans: "接口调用的超时时间（秒）"
+    label:
+      en_US: Timeout
+      zh_Hans: 超时时间
+    min: 5
+    max: 3600
+
+extra:
+  python:
+    source: tools/stock_financial_analysis.py
