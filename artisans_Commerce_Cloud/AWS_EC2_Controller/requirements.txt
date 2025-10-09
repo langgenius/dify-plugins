@@ -1,0 +1,4 @@
+boto3>=1.26.0
+botocore>=1.29.0
+dify-plugin>=0.1.0
+python-dotenv>=1.0.0
