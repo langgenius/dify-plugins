@@ -50,7 +50,7 @@ jobs:
       - name: yq - portable yaml processor
         uses: mikefarah/yq@v4.44.5
         with:
-          cmd: --version
+          cmd: yq --version
 
       - name: Get PR Path
         run: |
