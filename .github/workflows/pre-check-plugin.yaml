@@ -73,31 +73,47 @@ jobs:
 
       - name: Check Plugin Manifest
         run: |
+          # Create error tracking file
+          ERROR_FILE="/tmp/manifest_errors.txt"
+          touch $ERROR_FILE
+          
           # manifest.yaml author must not be langgenius or dify
-          if yq '.author' ${{ env.PLUGIN_PATH }}/manifest.yaml | grep -q "langgenius"; then
-            echo "!!! Plugin manifest.yaml author must not be 'langgenius'"
+          if yq '.author' "$PLUGIN_PATH/manifest.yaml" | grep -q "langgenius"; then
+            ERROR_MSG="!!! Plugin manifest.yaml author must not be 'langgenius'"
+            echo "$ERROR_MSG"
+            echo "$ERROR_MSG" >> $ERROR_FILE
             exit 1
           fi
-          if yq '.author' ${{ env.PLUGIN_PATH }}/manifest.yaml | grep -q "dify"; then
-            echo "!!! Plugin manifest.yaml author must not be 'dify'"
+          if yq '.author' "$PLUGIN_PATH/manifest.yaml" | grep -q "dify"; then
+            ERROR_MSG="!!! Plugin manifest.yaml author must not be 'dify'"
+            echo "$ERROR_MSG"
+            echo "$ERROR_MSG" >> $ERROR_FILE
             exit 1
           fi
 
       - name: Check Plugin Icon
         run: |
+          # Create error tracking file
+          ERROR_FILE="/tmp/icon_errors.txt"
+          touch $ERROR_FILE
+          
           # Get icon filename from manifest.yaml
-          PLUGIN_ICON_FILENAME=$(yq '.icon' ${{ env.PLUGIN_PATH }}/manifest.yaml)
+          PLUGIN_ICON_FILENAME=$(yq '.icon' "$PLUGIN_PATH/manifest.yaml")
           echo "PLUGIN_ICON_FILENAME=$PLUGIN_ICON_FILENAME" >> $GITHUB_ENV
           
           # Check if icon file exists
-          if [ ! -f "${{ env.PLUGIN_PATH }}/_assets/$PLUGIN_ICON_FILENAME" ]; then
-            echo "!!! Plugin icon file not found: _assets/$PLUGIN_ICON_FILENAME"
+          if [ ! -f "$PLUGIN_PATH/_assets/$PLUGIN_ICON_FILENAME" ]; then
+            ERROR_MSG="!!! Plugin icon file not found: _assets/$PLUGIN_ICON_FILENAME"
+            echo "$ERROR_MSG"
+            echo "$ERROR_MSG" >> $ERROR_FILE
             exit 1
           fi
           
           # Check if icon contains template placeholder text
-          if grep -q "DIFY_MARKETPLACE_TEMPLATE_ICON_DO_NOT_USE" "${{ env.PLUGIN_PATH }}/_assets/$PLUGIN_ICON_FILENAME"; then
-            echo "!!! Plugin icon contains template placeholder text 'DIFY_MARKETPLACE_TEMPLATE_ICON_DO_NOT_USE', change default icon before submitting to marketplace."
+          if grep -q "DIFY_MARKETPLACE_TEMPLATE_ICON_DO_NOT_USE" "$PLUGIN_PATH/_assets/$PLUGIN_ICON_FILENAME"; then
+            ERROR_MSG="!!! Plugin icon contains template placeholder text 'DIFY_MARKETPLACE_TEMPLATE_ICON_DO_NOT_USE', change default icon before submitting to marketplace."
+            echo "$ERROR_MSG"
+            echo "$ERROR_MSG" >> $ERROR_FILE
             exit 1
           fi
           
@@ -110,21 +126,27 @@ jobs:
           </svg>'
           
           # Check if icon content matches default icon (normalize whitespace)
-          ICON_CONTENT=$(cat "${{ env.PLUGIN_PATH }}/_assets/$PLUGIN_ICON_FILENAME" | tr -d '\n\r\t ' | tr -s ' ')
+          ICON_CONTENT=$(cat "$PLUGIN_PATH/_assets/$PLUGIN_ICON_FILENAME" | tr -d '\n\r\t ' | tr -s ' ')
           DEFAULT_ICON_NORMALIZED=$(echo "$DEFAULT_ICON" | tr -d '\n\r\t ' | tr -s ' ')
           
           if [ "$ICON_CONTENT" = "$DEFAULT_ICON_NORMALIZED" ]; then
-            echo "!!! Plugin icon is using the default template icon and must be customized"
+            ERROR_MSG="!!! Plugin icon is using the default template icon and must be customized"
+            echo "$ERROR_MSG"
+            echo "$ERROR_MSG" >> $ERROR_FILE
             exit 1
           fi
   
 
       - name: Check If Version Exists
         run: |
+          # Create error tracking file
+          ERROR_FILE="/tmp/version_errors.txt"
+          touch $ERROR_FILE
+          
           # Extract plugin metadata
-          VERSION=$(yq '.version' ${{ env.PLUGIN_PATH }}/manifest.yaml)
-          AUTHOR=$(yq '.author' ${{ env.PLUGIN_PATH }}/manifest.yaml)
-          NAME=$(yq '.name' ${{ env.PLUGIN_PATH }}/manifest.yaml)
+          VERSION=$(yq '.version' "$PLUGIN_PATH/manifest.yaml")
+          AUTHOR=$(yq '.author' "$PLUGIN_PATH/manifest.yaml")
+          NAME=$(yq '.name' "$PLUGIN_PATH/manifest.yaml")
           
           echo "Plugin information:"
           echo "- Name: $NAME"
@@ -136,14 +158,16 @@ jobs:
           API_URL="${MARKETPLACE_BASE_URL}/api/v1/plugins/${AUTHOR}/${NAME}/${VERSION}"
           echo "API URL: $API_URL"
           
-          RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$API_URL")
+          # Add a timeout to curl to prevent hanging
+          RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$API_URL" --connect-timeout 10 --max-time 30)
           echo "API Response Code: $RESPONSE_CODE"
           
           if [ "$RESPONSE_CODE" = "200" ]; then
-            RESPONSE=$(curl -s "$API_URL")
+            RESPONSE=$(curl -s "$API_URL" --connect-timeout 10 --max-time 30)
             if [ "$(echo "$RESPONSE" | jq -r '.code')" = "0" ]; then
-              echo "!!! Plugin version $VERSION by $AUTHOR already exists in the marketplace."
-              echo "!!! Please update the version number in manifest.yaml before submitting."
+              ERROR_MSG="!!! Plugin version $VERSION by $AUTHOR already exists in the marketplace. Please update the version number in manifest.yaml before submitting."
+              echo "$ERROR_MSG"
+              echo "$ERROR_MSG" >> $ERROR_FILE
               exit 1
             fi
           else
@@ -164,29 +188,70 @@ jobs:
       
       - name: Output Plugin Files Content
         run: |
+          # Create temporary directory for comments
+          mkdir -p /tmp/plugin_comments
+          
+          # Create a single combined file for all plugin content
+          COMBINED_FILE="/tmp/plugin_comments/combined.md"
+          echo "# Plugin Content" > $COMBINED_FILE
+          echo "" >> $COMBINED_FILE
+          
+          # Process manifest.yaml
           echo "::group::manifest.yaml"
           if [ -f "$PLUGIN_PATH/manifest.yaml" ]; then
             cat "$PLUGIN_PATH/manifest.yaml"
+            # Add to combined content file
+            echo "## Plugin Manifest (manifest.yaml)" >> $COMBINED_FILE
+            echo '```yaml' >> $COMBINED_FILE
+            cat "$PLUGIN_PATH/manifest.yaml" >> $COMBINED_FILE
+            echo '```' >> $COMBINED_FILE
+            echo "" >> $COMBINED_FILE
           else
             echo "manifest.yaml not found"
+            echo "⚠️ **Warning:** manifest.yaml file not found in plugin package" >> $COMBINED_FILE
+            echo "" >> $COMBINED_FILE
           fi
           echo "::endgroup::"
           
+          # Process README.md
           echo "::group::README.md"
           if [ -f "$PLUGIN_PATH/README.md" ]; then
             cat "$PLUGIN_PATH/README.md"
+            # Add to combined content file
+            echo "## Plugin Documentation (README.md)" >> $COMBINED_FILE
+            echo '```markdown' >> $COMBINED_FILE
+            cat "$PLUGIN_PATH/README.md" >> $COMBINED_FILE
+            echo '```' >> $COMBINED_FILE
+            echo "" >> $COMBINED_FILE
           else
             echo "README.md not found"
+            echo "⚠️ **Warning:** README.md file not found in plugin package" >> $COMBINED_FILE
+            echo "" >> $COMBINED_FILE
           fi
           echo "::endgroup::"
           
+          # Process requirements.txt
           echo "::group::requirements.txt"
           if [ -f "$PLUGIN_PATH/requirements.txt" ]; then
             cat "$PLUGIN_PATH/requirements.txt"
+            # Add to combined content file
+            echo "## Plugin Dependencies (requirements.txt)" >> $COMBINED_FILE
+            echo '```' >> $COMBINED_FILE
+            cat "$PLUGIN_PATH/requirements.txt" >> $COMBINED_FILE
+            echo '```' >> $COMBINED_FILE
+            echo "" >> $COMBINED_FILE
           else
             echo "requirements.txt not found"
+            echo "ℹ️ **Note:** No requirements.txt file found in plugin package" >> $COMBINED_FILE
+            echo "" >> $COMBINED_FILE
           fi
           echo "::endgroup::"
+          
+          # Post a single combined comment to the PR
+          echo "Posting plugin content to PR..."
+          if ! gh pr comment ${{ github.event.pull_request.number }} -F $COMBINED_FILE -R ${{ env.REPO_NAME }}; then
+            echo "Warning: Failed to post plugin content comment. This is non-fatal, continuing..."
+          fi
 
       - name: Check Plugin Install
         run: |
@@ -228,3 +293,78 @@ jobs:
         run: |
           echo "Running packaging check..."
           python3 .scripts/uploader/upload-package.py -d "$PLUGIN_PATH" -t "$MARKETPLACE_TOKEN" --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u "$MARKETPLACE_BASE_URL" -f --test
+        
+      - name: Comment CI Status on PR
+        if: always()
+        run: |
+          # Create a status report markdown file
+          echo "# Plugin Pre-Check Results" > /tmp/ci_status.md
+          echo "" >> /tmp/ci_status.md
+          
+          # Extract plugin info (if available)
+          if [ -f "$PLUGIN_PATH/manifest.yaml" ]; then
+            PLUGIN_NAME=$(yq '.name' "$PLUGIN_PATH/manifest.yaml")
+            PLUGIN_VERSION=$(yq '.version' "$PLUGIN_PATH/manifest.yaml")
+            PLUGIN_AUTHOR=$(yq '.author' "$PLUGIN_PATH/manifest.yaml")
+            PLUGIN_DESCRIPTION=$(yq '.description' "$PLUGIN_PATH/manifest.yaml")
+            
+            echo "## Plugin Information" >> /tmp/ci_status.md
+            echo "" >> /tmp/ci_status.md
+            echo "**Name:** $PLUGIN_NAME" >> /tmp/ci_status.md
+            echo "**Version:** $PLUGIN_VERSION" >> /tmp/ci_status.md
+            echo "**Author:** $PLUGIN_AUTHOR" >> /tmp/ci_status.md
+            echo "**Description:** $PLUGIN_DESCRIPTION" >> /tmp/ci_status.md
+            echo "" >> /tmp/ci_status.md
+          fi
+          
+          echo "## CI Steps Status" >> /tmp/ci_status.md
+          echo "" >> /tmp/ci_status.md
+          echo "| Check | Status | Details |" >> /tmp/ci_status.md
+          echo "| ----- | ------ | ------- |" >> /tmp/ci_status.md
+          
+          # Get job status from GitHub context
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "| **Overall Status** | ✅ **Passed** | All checks completed successfully |" >> /tmp/ci_status.md
+          else
+            echo "| **Overall Status** | ❌ **Failed** | One or more checks failed |" >> /tmp/ci_status.md
+          fi
+          
+          # Check for manifest errors
+          if [ -f "/tmp/manifest_errors.txt" ] && [ -s "/tmp/manifest_errors.txt" ]; then
+            echo "| Manifest Validation | ❌ Failed | See comments above |" >> /tmp/ci_status.md
+          else
+            echo "| Manifest Validation | ✅ Passed | - |" >> /tmp/ci_status.md
+          fi
+          
+          # Check for icon errors
+          if [ -f "/tmp/icon_errors.txt" ] && [ -s "/tmp/icon_errors.txt" ]; then
+            echo "| Icon Validation | ❌ Failed | See comments above |" >> /tmp/ci_status.md
+          else
+            echo "| Icon Validation | ✅ Passed | - |" >> /tmp/ci_status.md
+          fi
+          
+          # Check for version errors
+          if [ -f "/tmp/version_errors.txt" ] && [ -s "/tmp/version_errors.txt" ]; then
+            echo "| Version Check | ❌ Failed | See comments above |" >> /tmp/ci_status.md
+          else
+            echo "| Version Check | ✅ Passed | - |" >> /tmp/ci_status.md
+          fi
+          
+          # Add dependency status
+          if [ -f "$PLUGIN_PATH/requirements.txt" ]; then
+            echo "| Dependencies | ✅ Checked | See requirements.txt comment above |" >> /tmp/ci_status.md
+          else
+            echo "| Dependencies | ⚠️ Skipped | No requirements.txt found |" >> /tmp/ci_status.md
+          fi
+          
+          # Add workflow run link
+          echo "" >> /tmp/ci_status.md
+          echo "## Workflow Details" >> /tmp/ci_status.md
+          echo "" >> /tmp/ci_status.md
+          echo "[View workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> /tmp/ci_status.md
+          
+          # Post status comment to PR
+          echo "Posting CI status comment to PR..."
+          if ! gh pr comment ${{ github.event.pull_request.number }} -F /tmp/ci_status.md -R ${{ env.REPO_NAME }}; then
+            echo "Warning: Failed to post comment to PR. This is non-fatal, continuing..."
+          fi
