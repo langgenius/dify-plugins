@@ -42,10 +42,18 @@ jobs:
         with:
           python-version: 3.12.7
       
-      - name: Install Python Dependencies
+      - name: Install Dependencies
         run: |
+          echo "Installing Python dependencies..."
           python -m pip install --upgrade pip
           pip install requests
+          
+          echo "Ensuring required system dependencies are available..."
+          if ! command -v jq &> /dev/null; then
+            echo "Installing jq..."
+            sudo apt-get update -q
+            sudo apt-get install -y jq
+          fi
 
       - name: yq - portable yaml processor
         uses: mikefarah/yq@v4.44.5
@@ -54,21 +62,38 @@ jobs:
 
       - name: Get PR Path
         run: |
-          export PR_FILES=$(gh pr view -R ${{ env.REPO_NAME }} ${{ github.event.pull_request.number }} --json files --jq .files)
-
+          echo "Retrieving PR files information..."
+          if ! PR_FILES=$(gh pr view -R ${{ env.REPO_NAME }} ${{ github.event.pull_request.number }} --json files --jq .files); then
+            echo "Failed to retrieve PR files. Make sure PR number and repository are correct."
+            exit 1
+          fi
+          
+          export PR_FILES
+          
+          echo "Checking for plugin package file changes..."
           if PLUGIN_PATH=$(python3 .scripts/validator/check-pkg-paths.py); then
-              echo $PLUGIN_PATH
+              echo "Found plugin path: $PLUGIN_PATH"
               echo "PLUGIN_PATH=$PLUGIN_PATH" >> $GITHUB_ENV
           else
-            echo "Only one .difypkg file change is allowed in a single PR."
+            echo "ERROR: Only one .difypkg file change is allowed in a single PR."
             exit 1
           fi
 
       - name: Unpack File
         run: |
-          mv ${{ env.PLUGIN_PATH }} ${{ env.PLUGIN_PATH }}.zip
+          # Store the plugin path in a variable
+          PLUGIN_PATH_VALUE="${PLUGIN_PATH}"
+          
+          echo "Moving plugin file to add .zip extension"
+          mv "$PLUGIN_PATH_VALUE" "$PLUGIN_PATH_VALUE.zip"
+          
+          echo "Creating unpacked_plugin directory"
           mkdir -p unpacked_plugin
-          unzip ${{ env.PLUGIN_PATH }}.zip -d unpacked_plugin
+          
+          echo "Unzipping plugin file to unpacked_plugin directory"
+          unzip "$PLUGIN_PATH_VALUE.zip" -d unpacked_plugin
+          
+          # Update the PLUGIN_PATH for future steps
           echo "PLUGIN_PATH=unpacked_plugin" >> $GITHUB_ENV
 
       - name: Check Plugin Manifest
@@ -255,44 +280,100 @@ jobs:
 
       - name: Check Plugin Install
         run: |
+          # Create error tracking file
+          ERROR_FILE="/tmp/install_errors.txt"
+          touch $ERROR_FILE
+          
           if [ -f "$PLUGIN_PATH/requirements.txt" ]; then
-              source .venv/bin/activate
+              source .venv/bin/activate || {
+                echo "Failed to activate virtual environment" >> $ERROR_FILE
+                echo "Failed to activate virtual environment"
+                exit 1
+              }
               
               # Install packaging for version comparison
-              pip install packaging
+              echo "Installing packaging module..."
+              pip install packaging || {
+                echo "Failed to install packaging module" >> $ERROR_FILE
+                echo "Failed to install packaging module"
+                exit 1
+              }
               
               # Determine installation method based on dify_plugin version
               echo "Detecting dify_plugin version..."
-              dify_version=$(pip list | grep 'dify_plugin' | awk '{print $2}')
-              target_version="0.0.1b64"
+              dify_version=$(pip list | grep -o 'dify_plugin\s\+[0-9.]\+' | awk '{print $2}' || echo "not_found")
               
-              echo "Found dify_plugin version: $dify_version"
-              echo "Comparing with target version: $target_version"
-              
-              # Set environment variables based on version comparison
-              if python -c "from packaging.version import Version; exit(0 if Version('$dify_version') > Version('$target_version') else 1)"; then
-                  echo "Using serverless installation method"
-                  export INSTALL_METHOD=serverless
-                  export SERVERLESS_PORT=8080
-                  export SERVERLESS_HOST=0.0.0.0
+              if [ "$dify_version" = "not_found" ]; then
+                echo "dify_plugin not found in installed packages, using default configuration"
+                export INSTALL_METHOD=aws_lambda
+                export AWS_LAMBDA_PORT=8080
+                export AWS_LAMBDA_HOST=0.0.0.0
               else
-                  echo "Using aws_lambda installation method"
-                  export INSTALL_METHOD=aws_lambda
-                  export AWS_LAMBDA_PORT=8080
-                  export AWS_LAMBDA_HOST=0.0.0.0
+                target_version="0.0.1b64"
+                echo "Found dify_plugin version: $dify_version"
+                echo "Comparing with target version: $target_version"
+                
+                # Set environment variables based on version comparison
+                if python -c "from packaging.version import Version; exit(0 if Version('$dify_version') > Version('$target_version') else 1)"; then
+                    echo "Using serverless installation method"
+                    export INSTALL_METHOD=serverless
+                    export SERVERLESS_PORT=8080
+                    export SERVERLESS_HOST=0.0.0.0
+                else
+                    echo "Using aws_lambda installation method"
+                    export INSTALL_METHOD=aws_lambda
+                    export AWS_LAMBDA_PORT=8080
+                    export AWS_LAMBDA_HOST=0.0.0.0
+                fi
               fi
               
-              # Run the plugin installation test
+              # Run the plugin installation test with timeout
               echo "Running plugin installation test..."
-              python3 .scripts/validator/test-plugin-install.py -d "$PLUGIN_PATH"
+              timeout 300 python3 .scripts/validator/test-plugin-install.py -d "$PLUGIN_PATH" || {
+                echo "Plugin installation test failed or timed out" >> $ERROR_FILE
+                echo "Plugin installation test failed or timed out"
+                exit 1
+              }
+              
+              echo "Plugin installation test completed successfully"
           else
               echo "No requirements.txt found, skipping installation test"
           fi
 
       - name: Check Packaging
         run: |
+          # Create error tracking file
+          ERROR_FILE="/tmp/packaging_errors.txt"
+          touch $ERROR_FILE
+          
           echo "Running packaging check..."
-          python3 .scripts/uploader/upload-package.py -d "$PLUGIN_PATH" -t "$MARKETPLACE_TOKEN" --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u "$MARKETPLACE_BASE_URL" -f --test
+          
+          # Check if plugin daemon exists and is executable
+          if [ ! -f ".scripts/dify-plugin-linux-amd64" ]; then
+            ERROR_MSG="Plugin daemon file not found"
+            echo "$ERROR_MSG" >> $ERROR_FILE
+            echo "$ERROR_MSG"
+            exit 1
+          fi
+          
+          if [ ! -x ".scripts/dify-plugin-linux-amd64" ]; then
+            chmod +x .scripts/dify-plugin-linux-amd64 || {
+              ERROR_MSG="Failed to make plugin daemon executable"
+              echo "$ERROR_MSG" >> $ERROR_FILE
+              echo "$ERROR_MSG"
+              exit 1
+            }
+          fi
+          
+          # Run the packaging check with a timeout
+          timeout 300 python3 .scripts/uploader/upload-package.py -d "$PLUGIN_PATH" -t "$MARKETPLACE_TOKEN" --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u "$MARKETPLACE_BASE_URL" -f --test || {
+            ERROR_MSG="Packaging check failed or timed out"
+            echo "$ERROR_MSG" >> $ERROR_FILE
+            echo "$ERROR_MSG"
+            exit 1
+          }
+          
+          echo "Packaging check completed successfully"
         
       - name: Comment CI Status on PR
         if: always()
@@ -303,10 +384,11 @@ jobs:
           
           # Extract plugin info (if available)
           if [ -f "$PLUGIN_PATH/manifest.yaml" ]; then
-            PLUGIN_NAME=$(yq '.name' "$PLUGIN_PATH/manifest.yaml")
-            PLUGIN_VERSION=$(yq '.version' "$PLUGIN_PATH/manifest.yaml")
-            PLUGIN_AUTHOR=$(yq '.author' "$PLUGIN_PATH/manifest.yaml")
-            PLUGIN_DESCRIPTION=$(yq '.description' "$PLUGIN_PATH/manifest.yaml")
+            # Use || to prevent script failure if any field is missing
+            PLUGIN_NAME=$(yq '.name' "$PLUGIN_PATH/manifest.yaml" 2>/dev/null || echo "Unknown")
+            PLUGIN_VERSION=$(yq '.version' "$PLUGIN_PATH/manifest.yaml" 2>/dev/null || echo "Unknown")
+            PLUGIN_AUTHOR=$(yq '.author' "$PLUGIN_PATH/manifest.yaml" 2>/dev/null || echo "Unknown")
+            PLUGIN_DESCRIPTION=$(yq '.description' "$PLUGIN_PATH/manifest.yaml" 2>/dev/null || echo "No description provided")
             
             echo "## Plugin Information" >> /tmp/ci_status.md
             echo "" >> /tmp/ci_status.md
@@ -331,39 +413,57 @@ jobs:
           
           # Check for manifest errors
           if [ -f "/tmp/manifest_errors.txt" ] && [ -s "/tmp/manifest_errors.txt" ]; then
-            echo "| Manifest Validation | ❌ Failed | See comments above |" >> /tmp/ci_status.md
+            ERROR_CONTENT=$(cat /tmp/manifest_errors.txt | sed -e 's/^/- /')
+            echo "| Manifest Validation | ❌ Failed | $ERROR_CONTENT |" >> /tmp/ci_status.md
           else
             echo "| Manifest Validation | ✅ Passed | - |" >> /tmp/ci_status.md
           fi
           
           # Check for icon errors
           if [ -f "/tmp/icon_errors.txt" ] && [ -s "/tmp/icon_errors.txt" ]; then
-            echo "| Icon Validation | ❌ Failed | See comments above |" >> /tmp/ci_status.md
+            ERROR_CONTENT=$(cat /tmp/icon_errors.txt | sed -e 's/^/- /')
+            echo "| Icon Validation | ❌ Failed | $ERROR_CONTENT |" >> /tmp/ci_status.md
           else
             echo "| Icon Validation | ✅ Passed | - |" >> /tmp/ci_status.md
           fi
           
           # Check for version errors
           if [ -f "/tmp/version_errors.txt" ] && [ -s "/tmp/version_errors.txt" ]; then
-            echo "| Version Check | ❌ Failed | See comments above |" >> /tmp/ci_status.md
+            ERROR_CONTENT=$(cat /tmp/version_errors.txt | sed -e 's/^/- /')
+            echo "| Version Check | ❌ Failed | $ERROR_CONTENT |" >> /tmp/ci_status.md
           else
             echo "| Version Check | ✅ Passed | - |" >> /tmp/ci_status.md
           fi
           
-          # Add dependency status
-          if [ -f "$PLUGIN_PATH/requirements.txt" ]; then
-            echo "| Dependencies | ✅ Checked | See requirements.txt comment above |" >> /tmp/ci_status.md
+          # Check for install errors
+          if [ -f "/tmp/install_errors.txt" ] && [ -s "/tmp/install_errors.txt" ]; then
+            ERROR_CONTENT=$(cat /tmp/install_errors.txt | sed -e 's/^/- /')
+            echo "| Installation | ❌ Failed | $ERROR_CONTENT |" >> /tmp/ci_status.md
+          elif [ -f "$PLUGIN_PATH/requirements.txt" ]; then
+            echo "| Installation | ✅ Passed | Requirements installed successfully |" >> /tmp/ci_status.md
           else
-            echo "| Dependencies | ⚠️ Skipped | No requirements.txt found |" >> /tmp/ci_status.md
+            echo "| Installation | ⚠️ Skipped | No requirements.txt found |" >> /tmp/ci_status.md
+          fi
+          
+          # Check for packaging errors
+          if [ -f "/tmp/packaging_errors.txt" ] && [ -s "/tmp/packaging_errors.txt" ]; then
+            ERROR_CONTENT=$(cat /tmp/packaging_errors.txt | sed -e 's/^/- /')
+            echo "| Packaging | ❌ Failed | $ERROR_CONTENT |" >> /tmp/ci_status.md
+          else
+            echo "| Packaging | ✅ Passed | Package valid for marketplace |" >> /tmp/ci_status.md
           fi
           
           # Add workflow run link
           echo "" >> /tmp/ci_status.md
           echo "## Workflow Details" >> /tmp/ci_status.md
           echo "" >> /tmp/ci_status.md
+          echo "**Run ID:** ${{ github.run_id }}" >> /tmp/ci_status.md
+          echo "**Repository:** ${{ github.repository }}" >> /tmp/ci_status.md
+          echo "**Ref:** ${{ github.ref }}" >> /tmp/ci_status.md
+          echo "" >> /tmp/ci_status.md
           echo "[View workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> /tmp/ci_status.md
           
-          # Post status comment to PR
+          # Post status comment to PR with better error handling
           echo "Posting CI status comment to PR..."
           if ! gh pr comment ${{ github.event.pull_request.number }} -F /tmp/ci_status.md -R ${{ env.REPO_NAME }}; then
             echo "Warning: Failed to post comment to PR. This is non-fatal, continuing..."
