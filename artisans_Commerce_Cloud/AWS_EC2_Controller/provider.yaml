@@ -1,0 +1,39 @@
+provider: "ec2-controller"
+label:
+  en_US: "AWS EC2 Controller"
+  zh_Hans: "AWS EC2 控制器"
+description:
+  en_US: "Manage AWS EC2 instances directly from Dify workflows"
+  zh_Hans: "直接从 Dify 工作流管理 AWS EC2 实例"
+icon: "ec2-icon.svg"
+supported_model_types:
+  - llm
+credentials_for_provider:
+  aws_access_key_id:
+    type: secret-input
+    required: true
+    label:
+      en_US: AWS Access Key ID
+      zh_Hans: AWS 访问密钥 ID
+    placeholder:
+      en_US: Enter your AWS Access Key ID
+      zh_Hans: 输入您的 AWS 访问密钥 ID
+  aws_secret_access_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: AWS Secret Access Key
+      zh_Hans: AWS 秘密访问密钥
+    placeholder:
+      en_US: Enter your AWS Secret Access Key
+      zh_Hans: 输入您的 AWS 秘密访问密钥
+  aws_region:
+    type: text-input
+    required: false
+    default: "us-east-1"
+    label:
+      en_US: Default AWS Region
+      zh_Hans: 默认 AWS 区域
+    placeholder:
+      en_US: us-east-1
+      zh_Hans: us-east-1
