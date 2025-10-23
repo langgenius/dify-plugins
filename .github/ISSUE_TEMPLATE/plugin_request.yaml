@@ -1,0 +1,28 @@
+name: Request a New Plugin on Dify Marketplace
+description: Didn't find the plugin you want in the Marketplace? Please tell us here. Your feedback is crucial for enriching the Dify ecosystem.
+title: "[Plugin Request]: "
+labels: ["plugin-request"]
+body:
+  - type: input
+    id: plugin-name
+    attributes:
+      label: Plugin Name
+      description: What would you like to name this plugin?
+    validations:
+      required: true
+
+  - type: textarea
+    id: function-description
+    attributes:
+      label: Function Description
+      description: What core functionality do you want this plugin to achieve? Or in what specific scenarios would you use it?
+    validations:
+      required: true
+
+  - type: input
+    id: official-website
+    attributes:
+      label: Official Website URL
+      description: Please provide the official website or API documentation link if known. This greatly helps us quickly identify the service and evaluate feasibility.
+    validations:
+      required: false 
