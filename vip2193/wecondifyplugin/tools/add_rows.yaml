@@ -1,0 +1,60 @@
+identity:
+  name: "add_rows"
+  author: "neo"
+  label:
+    en_US: "Add Records"
+    zh_Hans: "添加记录"
+description:
+  human:
+    en_US: "Add records to WeCom smartsheet"
+    zh_Hans: "向企业微信智能表格添加记录"
+  llm: "Add records to WeCom smartsheet"
+parameters:
+  - name: sheet_id
+    type: string
+    required: true
+    label:
+      en_US: Sheet ID
+      zh_Hans: 表格ID
+    human_description:
+      en_US: "Smartsheet document ID"
+      zh_Hans: "智能表格文档ID"
+    llm_description: "Smartsheet document ID"
+    form: llm
+  - name: sheet_name
+    type: string
+    required: true
+    label:
+      en_US: Sheet Name
+      zh_Hans: 子表ID
+    human_description:
+      en_US: "Sub-sheet ID"
+      zh_Hans: "子表ID"
+    llm_description: "Sub-sheet ID"
+    form: llm
+  - name: key_type
+    type: string
+    required: false
+    default: "CELL_VALUE_KEY_TYPE_FIELD_TITLE"
+    label:
+      en_US: Key Type
+      zh_Hans: 键类型
+    human_description:
+      en_US: "Use field title or field ID (default: CELL_VALUE_KEY_TYPE_FIELD_TITLE)"
+      zh_Hans: "使用字段标题或字段ID (默认: CELL_VALUE_KEY_TYPE_FIELD_TITLE)"
+    llm_description: "Key type for field identification"
+    form: llm
+  - name: rows_data
+    type: string
+    required: true
+    label:
+      en_US: Records Data
+      zh_Hans: 记录数据
+    human_description:
+      en_US: "JSON array format: [{\"字段名\": \"值\"}]. Example: [{\"姓名\": \"张三\", \"年龄\": \"25\"}]"
+      zh_Hans: "JSON数组格式: [{\"字段名\": \"值\"}]. 示例: [{\"姓名\": \"张三\", \"年龄\": \"25\"}]"
+    llm_description: "Records data in JSON array format with field names as keys"
+    form: llm
+extra:
+  python:
+    source: tools/add_rows.py

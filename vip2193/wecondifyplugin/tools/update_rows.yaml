@@ -1,0 +1,59 @@
+identity:
+  name: "update_rows"
+  author: "neo"
+  label:
+    en_US: "Update Records"
+    zh_Hans: "更新记录"
+description:
+  human:
+    en_US: "Update records in WeCom smartsheet"
+    zh_Hans: "更新企业微信智能表格中的记录"
+  llm: "Update records in WeCom smartsheet"
+parameters:
+  - name: sheet_id
+    type: string
+    required: true
+    label:
+      en_US: Sheet ID
+      zh_Hans: 表格ID
+    human_description:
+      en_US: "Smartsheet document ID"
+      zh_Hans: "智能表格文档ID"
+    llm_description: "Smartsheet document ID"
+    form: llm
+  - name: sheet_name
+    type: string
+    required: true
+    label:
+      en_US: Sheet Name
+      zh_Hans: 子表ID
+    human_description:
+      en_US: "Sub-sheet ID"
+      zh_Hans: "子表ID"
+    llm_description: "Sub-sheet ID"
+    form: llm
+  - name: record_id
+    type: string
+    required: true
+    label:
+      en_US: Record ID
+      zh_Hans: 记录ID
+    human_description:
+      en_US: "Record ID to update"
+      zh_Hans: "要更新的记录ID"
+    llm_description: "Record ID"
+    form: llm
+  - name: row_data
+    type: string
+    required: true
+    label:
+      en_US: Record Data
+      zh_Hans: 记录数据
+    human_description:
+      en_US: "JSON object format: {\"字段名\": \"值\"}. Example: {\"姓名\": \"王五\", \"年龄\": \"35\"}"
+      zh_Hans: "JSON对象格式: {\"字段名\": \"值\"}. 示例: {\"姓名\": \"王五\", \"年龄\": \"35\"}"
+    llm_description: "Record data in JSON object format"
+    form: llm
+extra:
+  python:
+    source: tools/update_rows.py
