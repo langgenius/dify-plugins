@@ -1,0 +1,50 @@
+identity:
+  author: "neo"
+  name: "wecondifyplugin"
+  label:
+    en_US: "WeCom Smartsheet"
+    zh_Hans: "企业微信智能表格"
+    pt_BR: "WeCom Smartsheet"
+    ja_JP: "WeCom Smartsheet"
+  description:
+    en_US: "Manage WeCom smartsheet - create, add, update records"
+    zh_Hans: "管理企业微信智能表格 - 创建、添加、更新记录"
+    pt_BR: "Manage WeCom smartsheet"
+    ja_JP: "Manage WeCom smartsheet"
+  icon: "icon.svg"
+
+credentials_for_provider:
+  corpid:
+    type: secret-input
+    required: true
+    label:
+      en_US: Corp ID
+      zh_Hans: 企业ID
+    placeholder:
+      en_US: Please input your Corp ID
+      zh_Hans: 请输入企业ID
+    help:
+      en_US: Get from WeCom Admin > My Company
+      zh_Hans: 在企业微信管理后台 > 我的企业中获取
+  corpsecret:
+    type: secret-input
+    required: true
+    label:
+      en_US: Corp Secret
+      zh_Hans: 应用Secret
+    placeholder:
+      en_US: Please input your Corp Secret
+      zh_Hans: 请输入应用Secret
+    help:
+      en_US: Get from WeCom Admin > Application Management. Ensure 'Document/Spreadsheet' API permission is enabled
+      zh_Hans: 在企业微信管理后台 > 应用管理中获取。确保已开启「文档/在线表格」API权限
+
+tools:
+  - tools/create_sheet.yaml
+  - tools/get_sheets.yaml
+  - tools/add_rows.yaml
+  - tools/get_rows.yaml
+  - tools/update_rows.yaml
+extra:
+  python:
+    source: provider/wecondifyplugin.py

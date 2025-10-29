@@ -1,0 +1,37 @@
+identity:
+  name: "create_sheet"
+  author: "neo"
+  label:
+    en_US: "Create Sheet"
+    zh_Hans: "创建表格"
+description:
+  human:
+    en_US: "Create a new WeCom spreadsheet"
+    zh_Hans: "创建新的企业微信表格"
+  llm: "Create a new WeCom spreadsheet"
+parameters:
+  - name: sheet_name
+    type: string
+    required: true
+    label:
+      en_US: Sheet Name
+      zh_Hans: 表格名称
+    human_description:
+      en_US: "Name of the new spreadsheet"
+      zh_Hans: "新表格的名称"
+    llm_description: "Name of the new spreadsheet"
+    form: llm
+  - name: admin_users
+    type: string
+    required: false
+    label:
+      en_US: Admin Users
+      zh_Hans: 管理员
+    human_description:
+      en_US: "Admin user IDs, comma separated (optional)"
+      zh_Hans: "管理员用户ID,逗号分隔 (可选)"
+    llm_description: "Admin user IDs"
+    form: llm
+extra:
+  python:
+    source: tools/create_sheet.py

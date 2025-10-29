@@ -1,0 +1,49 @@
+identity:
+  name: "get_sheets"
+  author: "neo"
+  label:
+    en_US: "Get Sheets"
+    zh_Hans: "查询子表"
+description:
+  human:
+    en_US: "Get all sub-sheets in smartsheet"
+    zh_Hans: "查询智能表格中的所有子表"
+  llm: "Get all sub-sheets in smartsheet"
+parameters:
+  - name: sheet_id
+    type: string
+    required: true
+    label:
+      en_US: Sheet ID
+      zh_Hans: 表格ID
+    human_description:
+      en_US: "Smartsheet document ID (docid)"
+      zh_Hans: "智能表格文档ID (docid)"
+    llm_description: "Smartsheet document ID"
+    form: llm
+  - name: sub_sheet_id
+    type: string
+    required: false
+    label:
+      en_US: Sub-Sheet ID
+      zh_Hans: 子表ID
+    human_description:
+      en_US: "Specific sub-sheet ID to query (optional)"
+      zh_Hans: "指定要查询的子表ID (可选)"
+    llm_description: "Specific sub-sheet ID"
+    form: llm
+  - name: need_all_type_sheet
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: Include All Types
+      zh_Hans: 包含所有类型
+    human_description:
+      en_US: "Include dashboard and description pages (default: false)"
+      zh_Hans: "包含仪表盘和说明页 (默认: false)"
+    llm_description: "Include all types of sheets"
+    form: llm
+extra:
+  python:
+    source: tools/get_sheets.py

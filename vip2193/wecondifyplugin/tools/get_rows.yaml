@@ -1,0 +1,26 @@
+identity:
+  name: "get_rows"
+  author: "neo"
+  label:
+    en_US: "Get Sheet Properties"
+    zh_Hans: "获取表格信息"
+description:
+  human:
+    en_US: "Get spreadsheet properties (sheet names, row count, column count)"
+    zh_Hans: "获取表格属性信息(工作表名称、行数、列数)"
+  llm: "Get spreadsheet properties"
+parameters:
+  - name: sheet_id
+    type: string
+    required: true
+    label:
+      en_US: Sheet ID
+      zh_Hans: 表格ID
+    human_description:
+      en_US: "Spreadsheet document ID"
+      zh_Hans: "表格文档ID"
+    llm_description: "Spreadsheet document ID"
+    form: llm
+extra:
+  python:
+    source: tools/get_rows.py
