@@ -48,6 +48,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests
           
+          echo "Ensuring required build tools system dependencies are available..."
+          sudo apt-get update -q
+          sudo apt-get install \
+            cmake pkg-config \
+            libcairo2-dev libjpeg-dev libgif-dev
+          
           echo "Ensuring required system dependencies are available..."
           if ! command -v jq &> /dev/null; then
             echo "Installing jq..."
