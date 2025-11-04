@@ -59,7 +59,6 @@ jobs:
           echo "Ensuring required system dependencies are available..."
           if ! command -v jq &> /dev/null; then
             echo "Installing jq..."
-            sudo apt-get update -q
             sudo apt-get install -y jq
           fi
 
