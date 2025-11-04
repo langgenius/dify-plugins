@@ -51,6 +51,8 @@ jobs:
           echo "Ensuring required build tools system dependencies are available..."
           sudo apt-get update -q
           sudo apt-get install -y \
+            ffmpeg \
+            build-essential git \
             cmake pkg-config \
             libcairo2-dev libjpeg-dev libgif-dev
           
