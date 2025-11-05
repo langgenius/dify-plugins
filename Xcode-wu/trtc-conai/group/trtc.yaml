@@ -1,0 +1,85 @@
+settings:
+  - name: dify_app
+    type: app-selector
+    scope: chat
+    required: true
+    label:
+      zh_Hans: Dify 应用
+      en_US: Dify App
+
+  - name: tcloud_secret_id
+    type: secret-input
+    required: true
+    label:
+      zh_Hans: 腾讯云 SecretId
+      en_US: TCloud SecretId
+
+  - name: tcloud_secret_key
+    type: secret-input
+    required: true
+    label:
+      zh_Hans: 腾讯云 SecretKey
+      en_US: TCloud SecretKey
+
+  - name: tcloud_region
+    type: text-input
+    required: true
+    default: "ap-singapore"
+    label:
+      zh_Hans: 区域
+      en_US: Region
+
+  - name: trtc_sdk_app_id
+    type: text-input
+    required: true
+    label:
+      zh_Hans: TRTC SdkAppId
+      en_US: TRTC SdkAppId
+
+  - name: trtc_secret_key
+    type: secret-input
+    required: true
+    label:
+      zh_Hans: TRTC SecretKey
+      en_US: TRTC SecretKey
+
+  - name: stt_config
+    type: text-input
+    required: true
+    label:
+      zh_Hans: STT 配置 (JSON)
+      en_US: STT Config (JSON)
+    placeholder:
+      zh_Hans: 参考 TRTC STT config 文档
+      en_US: Refer to TRTC STT config doc
+
+  - name: stt_language
+    type: text-input
+    required: false
+    default: "en"
+    label:
+      zh_Hans: STT 语言
+      en_US: STT Language
+
+
+  - name: tts_config
+    type: text-input
+    required: true
+    label:
+      zh_Hans: TTS 配置 (JSON)
+      en_US: TTS Config (JSON)
+    placeholder:
+      zh_Hans: 参考 TRTC TTS config 文档
+      en_US: Refer to TRTC TTS config doc
+
+  - name: dify_endpoint_api_key
+    type: secret-input
+    required: false
+    label:
+      zh_Hans: 插件端点 API Key（保护 LLM 代理端点）
+      en_US: Endpoint API Key (protect LLM proxy)
+
+endpoints:
+  - endpoints/trtc.yaml
+  - endpoints/web.yaml
+

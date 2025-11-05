@@ -1,0 +1,6 @@
+path: "/trtc/<action>"
+method: "POST"
+extra:
+  python:
+    source: "endpoints/trtc.py"
+
