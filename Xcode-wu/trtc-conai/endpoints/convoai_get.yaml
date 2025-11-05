@@ -1,0 +1,6 @@
+path: "/convoai-token/<channel>/<uid>"
+method: "GET"
+extra:
+  python:
+    source: "endpoints/convoai_get.py"
+

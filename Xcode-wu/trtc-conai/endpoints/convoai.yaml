@@ -1,0 +1,6 @@
+path: "/convoai/<action>"
+method: "POST"
+extra:
+  python:
+    source: "endpoints/convoai.py"
+
