@@ -1,5 +1,0 @@
-dify_plugin==0.0.1b76
-requests~=2.32.3
-gevent~=24.11.1
-tencentcloud-sdk-python-trtc~=3.0.1198
-tls-sig-api-v2~=1.1
