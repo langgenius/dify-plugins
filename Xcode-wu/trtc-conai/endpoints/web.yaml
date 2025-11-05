@@ -1,5 +1,0 @@
-path: "/trtc-web/<file>"
-method: "GET"
-extra:
-  python:
-    source: "endpoints/web.py"
