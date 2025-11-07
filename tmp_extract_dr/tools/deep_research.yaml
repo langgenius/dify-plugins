@@ -1,0 +1,30 @@
+identity:
+  name: deep_research
+  author: pragnyan_ramtha
+  label:
+    en_US: deep_research
+    zh_Hans: deep_research
+    pt_BR: deep_research
+description:
+  human:
+    en_US: Deep Research is a tool that can delve deep into any topic, synthesize information, and spark curiosity by leveraging the Tavily API for comprehensive web searches and content retrieval.
+    zh_Hans: Deep Research 是一个可以深入任何主题、综合信息并激发好奇心的工具，它利用 Tavily API 进行全面的网络搜索和内容检索。
+    pt_BR: Deep Research é uma ferramenta que pode aprofundar em qualquer tópico, sintetizar informações e despertar curiosidade, aproveitando a API Tavily para pesquisas abrangentes na web e recuperação de conteúdo.
+  llm: this a tool that can conduct comprehensive deep dives into user-provided topics, synthesize information, identify key findings, and highlight interesting or unexpected details to stimulate curiosity. When given a research topic, strategically use the results provided to gather relevant information. Iterate on your searches by generating follow-up questions if initial results are insufficient. Once enough information is gathered, synthesize it into a well-structured, informative, and engaging report, highlighting key facts and fostering further curiosity.
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Query string
+      zh_Hans: 查询语句
+      pt_BR: Query string
+    human_description:
+      en_US: used for discovering information on a specific topic, generating follow-up questions, and synthesizing findings into a comprehensive report.
+      zh_Hans: 用于发现特定主题的信息，生成后续问题，并将发现综合成一份全面的报告。
+      pt_BR: usado para descobrir informações sobre um tópico específico, gerar perguntas de acompanhamento e sintetizar descobertas em um relatório abrangente.
+    llm_description: use the query string to conduct comprehensive deep dives into user-provided topics, synthesize information, identify key findings, and highlight interesting or unexpected details to stimulate curiosity. When given a research topic, strategically use the results provided to gather relevant information. Iterate on your searches by generating follow-up questions if initial results are insufficient. Once enough information is gathered, synthesize it into a well-structured, informative, and engaging report, highlighting key facts and fostering further curiosity.
+    form: llm
+extra:
+  python:
+    source: tools/deep_research.py
