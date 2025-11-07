@@ -1,0 +1,20 @@
+identity:
+  author: cursor
+  name: starter_agent
+  label:
+    en_US: starter_agent
+    zh_Hans: 入门智能体
+  description:
+    en_US: A minimal example agent providing an echo tool.
+    zh_Hans: 一个提供 Echo 工具的最小示例智能体。
+  icon: icon.svg
+  tags:
+    - example
+
+# No provider credentials are required for this agent
+
+tools:
+  - tools/echo.yaml
+extra:
+  python:
+    source: provider/starter_agent.py

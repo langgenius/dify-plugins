@@ -1,0 +1,31 @@
+identity:
+  author: pragnyan_ramtha
+  name: deep_research
+  label:
+    en_US: deep_research
+    zh_Hans: deep_research
+    pt_BR: deep_research
+  description:
+    en_US: Deep Research, is a powerful tool designed to enhance Dify&#39;s capabilities by providing a robust web search interface. It leverages the Tavily API to conduct comprehensive web searches and optionally retrieve the full content of relevant web pages. This real-time data access, combined with Dify&#39;s internal LLM orchestration, enables dynamic, multi-step research workflows that can delve deep into any topic, synthesize information, and spark curiosity.
+    zh_Hans: Deep Research, is a powerful tool designed to enhance Dify&#39;s capabilities by providing a robust web search interface. It leverages the Tavily API to conduct comprehensive web searches and optionally retrieve the full content of relevant web pages. This real-time data access, combined with Dify&#39;s internal LLM orchestration, enables dynamic, multi-step research workflows that can delve deep into any topic, synthesize information, and spark curiosity.
+    pt_BR: Deep Research, is a powerful tool designed to enhance Dify&#39;s capabilities by providing a robust web search interface. It leverages the Tavily API to conduct comprehensive web searches and optionally retrieve the full content of relevant web pages. This real-time data access, combined with Dify&#39;s internal LLM orchestration, enables dynamic, multi-step research workflows that can delve deep into any topic, synthesize information, and spark curiosity.
+  icon: icon.svg
+  tags:
+    - search
+credentials_for_provider:
+  tavily_api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: Tavily API Key
+    placeholder:
+      en_US: Enter your Tavily API key here
+    help:
+      en_US: Get your Tavily API key from tavily
+    url: https://tavily.com/
+
+tools:
+  - tools/deep_research.yaml
+extra:
+  python:
+    source: provider/deep_research.py

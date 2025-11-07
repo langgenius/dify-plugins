@@ -1,0 +1,26 @@
+identity:
+  name: echo
+  author: cursor
+  label:
+    en_US: echo
+    zh_Hans: 回声
+description:
+  human:
+    en_US: Echo back the provided text.
+    zh_Hans: 原样返回提供的文本。
+  llm: Echo back the provided text for testing and wiring verification.
+parameters:
+  - name: text
+    type: string
+    required: true
+    label:
+      en_US: Text
+      zh_Hans: 文本
+    human_description:
+      en_US: Text to echo back.
+      zh_Hans: 要返回的文本。
+    llm_description: Text to echo back.
+    form: llm
+extra:
+  python:
+    source: tools/echo.py
