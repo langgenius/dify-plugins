@@ -1,0 +1,3786 @@
+app:
+  description: ''
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: 个股诊断助手
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/deepseek:0.0.6@dd589dc093c8084925858034ab5ec1fdf0d33819f43226c2f8c4a749a9acbbb2
+    version: null
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: bowenliang123/md_exporter:2.0.0@13e1aca1995328e41c080ff9f7f6d898df60ff74a3f4d98d6de4b18ab5b92c2e
+    version: null
+- current_identifier: null
+  type: github
+  value:
+    github_plugin_unique_identifier: shaoxing-xie/akshare_stockdata:0.7.0@ac476cc87cb07c9553b07b5520ec804e3f3266e63f89ae9e8532b22077526465
+    package: AKShare-Stockdata-plugin-v0.7.0-20251106.difypkg
+    repo: shaoxing-xie/akshare-stockdata-plugin
+    version: v0.7.0
+kind: app
+version: 0.4.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 50
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: code
+      id: 1760390449027-source-1760392261128-target
+      selected: false
+      source: '1760390449027'
+      sourceHandle: source
+      target: '1760392261128'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: iteration
+      id: 1760392261128-source-1760391592346-target
+      selected: false
+      source: '1760392261128'
+      sourceHandle: source
+      target: '1760391592346'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: iteration-start
+        targetType: if-else
+      id: 1760391592346start-source-1760392417675-target
+      selected: false
+      source: 1760391592346start
+      sourceHandle: source
+      target: '1760392417675'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: variable-aggregator
+        targetType: llm
+      id: 1760436189278-source-1760392848433-target
+      selected: false
+      source: '1760436189278'
+      sourceHandle: source
+      target: '1760392848433'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: iteration
+        targetType: code
+      id: 1760391592346-source-1760445568936-target
+      source: '1760391592346'
+      sourceHandle: source
+      target: '1760445568936'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: tool
+      id: 1760512727733-source-1760657403135-target
+      source: '1760512727733'
+      sourceHandle: source
+      target: '1760657403135'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: tool
+        targetType: answer
+      id: 1760657403135-source-answer-target
+      source: '1760657403135'
+      sourceHandle: source
+      target: answer
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: if-else
+        targetType: tool
+      id: 1760392417675-true-1762435352472-target
+      source: '1760392417675'
+      sourceHandle: 'true'
+      target: '1762435352472'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: tool
+        targetType: variable-aggregator
+      id: 1762435352472-source-1760436189278-target
+      source: '1762435352472'
+      sourceHandle: source
+      target: '1760436189278'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: if-else
+        targetType: tool
+      id: 1760392417675-61bfa8d3-c108-40be-be4f-87a409d89caf-1762435664985-target
+      source: '1760392417675'
+      sourceHandle: 61bfa8d3-c108-40be-be4f-87a409d89caf
+      target: '1762435664985'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: tool
+        targetType: variable-aggregator
+      id: 1762435664985-source-1760436189278-target
+      source: '1762435664985'
+      sourceHandle: source
+      target: '1760436189278'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: if-else
+        targetType: tool
+      id: 1760392417675-c342dbd0-5a97-4b2d-b472-91b595d722bf-1762435726032-target
+      source: '1760392417675'
+      sourceHandle: c342dbd0-5a97-4b2d-b472-91b595d722bf
+      target: '1762435726032'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: tool
+        targetType: variable-aggregator
+      id: 1762435726032-source-1760436189278-target
+      source: '1762435726032'
+      sourceHandle: source
+      target: '1760436189278'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: if-else
+        targetType: tool
+      id: 1760392417675-331d5ee8-db5c-41b3-894a-7bdd509fce97-1762435798150-target
+      source: '1760392417675'
+      sourceHandle: 331d5ee8-db5c-41b3-894a-7bdd509fce97
+      target: '1762435798150'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: tool
+        targetType: variable-aggregator
+      id: 1762435798150-source-1760436189278-target
+      source: '1762435798150'
+      sourceHandle: source
+      target: '1760436189278'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: if-else
+        targetType: tool
+      id: 1760392417675-306cff76-de40-422d-a3bd-a6e37af94623-1762435928184-target
+      source: '1760392417675'
+      sourceHandle: 306cff76-de40-422d-a3bd-a6e37af94623
+      target: '1762435928184'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: tool
+        targetType: variable-aggregator
+      id: 1762435928184-source-1760436189278-target
+      source: '1762435928184'
+      sourceHandle: source
+      target: '1760436189278'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: if-else
+        targetType: tool
+      id: 1760392417675-46372912-b7af-40a4-8443-481b3cd406a5-1762436137233-target
+      source: '1760392417675'
+      sourceHandle: 46372912-b7af-40a4-8443-481b3cd406a5
+      target: '1762436137233'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: tool
+        targetType: variable-aggregator
+      id: 1762436137233-source-1760436189278-target
+      source: '1762436137233'
+      sourceHandle: source
+      target: '1760436189278'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: if-else
+        targetType: tool
+      id: 1760392417675-c8e15ad5-1b9a-4680-9a19-b673ae1b3dae-1762436241388-target
+      source: '1760392417675'
+      sourceHandle: c8e15ad5-1b9a-4680-9a19-b673ae1b3dae
+      target: '1762436241388'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: tool
+        targetType: variable-aggregator
+      id: 1762436241388-source-1760436189278-target
+      source: '1762436241388'
+      sourceHandle: source
+      target: '1760436189278'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: if-else
+        targetType: tool
+      id: 1760392417675-e2f63a0c-8ed1-443e-9f3f-f718d5000726-1762436308143-target
+      source: '1760392417675'
+      sourceHandle: e2f63a0c-8ed1-443e-9f3f-f718d5000726
+      target: '1762436308143'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: tool
+        targetType: variable-aggregator
+      id: 1762436308143-source-1760436189278-target
+      source: '1762436308143'
+      sourceHandle: source
+      target: '1760436189278'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: if-else
+        targetType: tool
+      id: 1760392417675-c75e6ff2-f5e8-4a50-a426-5a63b5193186-1762436386884-target
+      source: '1760392417675'
+      sourceHandle: c75e6ff2-f5e8-4a50-a426-5a63b5193186
+      target: '1762436386884'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: tool
+        targetType: variable-aggregator
+      id: 1762436386884-source-1760436189278-target
+      source: '1762436386884'
+      sourceHandle: source
+      target: '1760436189278'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: if-else
+        targetType: tool
+      id: 1760392417675-4dd53d92-b6c3-4a17-b671-ff8db67d21a9-1762436528963-target
+      source: '1760392417675'
+      sourceHandle: 4dd53d92-b6c3-4a17-b671-ff8db67d21a9
+      target: '1762436528963'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: tool
+        targetType: variable-aggregator
+      id: 1762436528963-source-1760436189278-target
+      source: '1762436528963'
+      sourceHandle: source
+      target: '1760436189278'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: if-else
+        targetType: tool
+      id: 1760392417675-1f23e00e-46c0-4558-a53c-efdaf906b5db-1762436652519-target
+      source: '1760392417675'
+      sourceHandle: 1f23e00e-46c0-4558-a53c-efdaf906b5db
+      target: '1762436652519'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        sourceType: tool
+        targetType: variable-aggregator
+      id: 1762436652519-source-1760436189278-target
+      source: '1762436652519'
+      sourceHandle: source
+      target: '1760436189278'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: tool
+      id: 1760445568936-source-1762436858807-target
+      source: '1760445568936'
+      sourceHandle: source
+      target: '1762436858807'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: tool
+        targetType: llm
+      id: 1762436858807-source-1760512727733-target
+      source: '1762436858807'
+      sourceHandle: source
+      target: '1760512727733'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        selected: false
+        title: 开始
+        type: start
+        variables:
+        - default: 个股基本信息汇总,趋势动量震荡指标(日频),趋势动量震荡指标(分钟),动态估值指标,历史估值指标,A股-财务分析,个股资金流向,沪深港通持股-具体股票,利润表-按报告期,同行比较-成长性比较,同行比较-估值比较
+          hint: ''
+          label: 轮次列表
+          max_length: 256
+          options:
+          - basic
+          - financial
+          - technical
+          - fund_flow
+          - history
+          placeholder: ''
+          required: true
+          type: text-input
+          variable: phases_string
+        - default: '600519'
+          hint: ''
+          label: 股票代码
+          max_length: 48
+          options: []
+          placeholder: ''
+          required: true
+          type: text-input
+          variable: symbol
+        - default: daily
+          hint: ''
+          label: 周期(日频)
+          max_length: 48
+          options:
+          - daily
+          - weekly
+          - monthly
+          placeholder: ''
+          required: true
+          type: select
+          variable: period_daily
+        - default: '20250101'
+          hint: ''
+          label: 开始日期(日频)
+          max_length: 48
+          options: []
+          placeholder: ''
+          required: true
+          type: text-input
+          variable: start_date
+        - default: '15'
+          hint: ''
+          label: 周期(分钟)
+          max_length: 48
+          options:
+          - '1'
+          - '5'
+          - '15'
+          - '30'
+          - '60'
+          placeholder: ''
+          required: true
+          type: select
+          variable: period_minute
+        - default: '20250801'
+          hint: ''
+          label: 开始日期(分钟）
+          max_length: 48
+          options: []
+          placeholder: ''
+          required: true
+          type: text-input
+          variable: start_time
+      height: 218
+      id: '1760390449027'
+      position:
+        x: -786.3136632129138
+        y: 186.29309674962235
+      positionAbsolute:
+        x: -786.3136632129138
+        y: 186.29309674962235
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        answer: '{{#1760657403135.files#}}'
+        selected: false
+        title: 直接回复
+        type: answer
+        variables: []
+      height: 103
+      id: answer
+      position:
+        x: 1592.704232805264
+        y: 392.9636255088157
+      positionAbsolute:
+        x: 1592.704232805264
+        y: 392.9636255088157
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        error_handle_mode: terminated
+        height: 907.6146448843327
+        is_parallel: false
+        iterator_input_type: array[string]
+        iterator_selector:
+        - '1760392261128'
+        - phases
+        output_selector:
+        - '1760392848433'
+        - text
+        output_type: array[string]
+        parallel_nums: 10
+        selected: false
+        start_node_id: 1760391592346start
+        title: 迭代
+        type: iteration
+        width: 1230
+      height: 908
+      id: '1760391592346'
+      position:
+        x: -355.78999793355626
+        y: 97.42609346471488
+      positionAbsolute:
+        x: -355.78999793355626
+        y: 97.42609346471488
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 1230
+      zIndex: 1
+    - data:
+        desc: ''
+        isInIteration: true
+        selected: false
+        title: ''
+        type: iteration-start
+      draggable: false
+      height: 48
+      id: 1760391592346start
+      parentId: '1760391592346'
+      position:
+        x: 24
+        y: 68
+      positionAbsolute:
+        x: -331.78999793355626
+        y: 165.42609346471488
+      selectable: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-iteration-start
+      width: 44
+      zIndex: 1002
+    - data:
+        code: "import datetime\n\ndef main(phases_string: str):\n    phases = phases_string.split(\"\
+          ,\")\n    current_date = datetime.datetime.now().strftime(\"%Y-%m-%d %H:%M:%S\"\
+          )\n    end_date = datetime.datetime.now().strftime(\"%Y%m%d\")\n    return\
+          \ {\"phases\": phases, \"current_date\": current_date, \"end_date\": end_date}"
+        code_language: python3
+        outputs:
+          current_date:
+            children: null
+            type: string
+          end_date:
+            children: null
+            type: string
+          phases:
+            children: null
+            type: array[string]
+        selected: false
+        title: 代码执行
+        type: code
+        variables:
+        - value_selector:
+          - '1760390449027'
+          - phases_string
+          value_type: string
+          variable: phases_string
+      height: 52
+      id: '1760392261128'
+      position:
+        x: -677.1916344193316
+        y: 10.217650648382715
+      positionAbsolute:
+        x: -677.1916344193316
+        y: 10.217650648382715
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: contains
+            id: ed27429c-c6db-4857-bd08-8ae35b41772e
+            value: 个股基本信息汇总
+            varType: string
+            variable_selector:
+            - '1760391592346'
+            - item
+          id: 'true'
+          logical_operator: and
+        - case_id: 61bfa8d3-c108-40be-be4f-87a409d89caf
+          conditions:
+          - comparison_operator: contains
+            id: 05d6f2cc-8289-4140-82e2-e59ea390d00a
+            value: 趋势动量震荡指标(日频)
+            varType: string
+            variable_selector:
+            - '1760391592346'
+            - item
+          id: 61bfa8d3-c108-40be-be4f-87a409d89caf
+          logical_operator: and
+        - case_id: c342dbd0-5a97-4b2d-b472-91b595d722bf
+          conditions:
+          - comparison_operator: contains
+            id: b2897634-b111-4638-af4d-9f30f8276e7e
+            value: 趋势动量震荡指标(分钟)
+            varType: string
+            variable_selector:
+            - '1760391592346'
+            - item
+          id: c342dbd0-5a97-4b2d-b472-91b595d722bf
+          logical_operator: and
+        - case_id: 331d5ee8-db5c-41b3-894a-7bdd509fce97
+          conditions:
+          - comparison_operator: contains
+            id: b8c1186f-eaef-4520-9573-c6418bb0374e
+            value: 动态估值指标
+            varType: string
+            variable_selector:
+            - '1760391592346'
+            - item
+          id: 331d5ee8-db5c-41b3-894a-7bdd509fce97
+          logical_operator: and
+        - case_id: 46372912-b7af-40a4-8443-481b3cd406a5
+          conditions:
+          - comparison_operator: contains
+            id: 6c12760c-edc7-480d-8f63-d6c9ba8323bf
+            value: 历史估值指标
+            varType: string
+            variable_selector:
+            - '1760391592346'
+            - item
+          id: 46372912-b7af-40a4-8443-481b3cd406a5
+          logical_operator: and
+        - case_id: 306cff76-de40-422d-a3bd-a6e37af94623
+          conditions:
+          - comparison_operator: contains
+            id: d0baa176-d241-4834-8295-7cdc5477e55d
+            value: A股-财务分析
+            varType: string
+            variable_selector:
+            - '1760391592346'
+            - item
+          id: 306cff76-de40-422d-a3bd-a6e37af94623
+          logical_operator: and
+        - case_id: c8e15ad5-1b9a-4680-9a19-b673ae1b3dae
+          conditions:
+          - comparison_operator: contains
+            id: 41eb8cd7-306d-4804-aac8-b0331167c386
+            value: 个股资金流向
+            varType: string
+            variable_selector:
+            - '1760391592346'
+            - item
+          id: c8e15ad5-1b9a-4680-9a19-b673ae1b3dae
+          logical_operator: and
+        - case_id: e2f63a0c-8ed1-443e-9f3f-f718d5000726
+          conditions:
+          - comparison_operator: contains
+            id: a423f254-d694-4cdf-be67-47b25e313091
+            value: 同行比较-成长性比较
+            varType: string
+            variable_selector:
+            - '1760391592346'
+            - item
+          id: e2f63a0c-8ed1-443e-9f3f-f718d5000726
+          logical_operator: and
+        - case_id: 4dd53d92-b6c3-4a17-b671-ff8db67d21a9
+          conditions:
+          - comparison_operator: contains
+            id: 2ef93dc3-33ab-443e-b389-a8f050d2a1ad
+            value: 同行比较-估值比较
+            varType: string
+            variable_selector:
+            - '1760391592346'
+            - item
+          id: 4dd53d92-b6c3-4a17-b671-ff8db67d21a9
+          logical_operator: and
+        - case_id: c75e6ff2-f5e8-4a50-a426-5a63b5193186
+          conditions:
+          - comparison_operator: contains
+            id: dca8e12b-8b6e-4f42-ac38-c8526986b04f
+            value: 沪深港通持股-具体股票
+            varType: string
+            variable_selector:
+            - '1760391592346'
+            - item
+          id: c75e6ff2-f5e8-4a50-a426-5a63b5193186
+          logical_operator: and
+        - case_id: 1f23e00e-46c0-4558-a53c-efdaf906b5db
+          conditions:
+          - comparison_operator: contains
+            id: b50e3cf1-6929-4d57-8b79-54277e6ab488
+            value: 利润表-按报告期
+            varType: string
+            variable_selector:
+            - '1760391592346'
+            - item
+          logical_operator: and
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        selected: false
+        title: 条件分支
+        type: if-else
+      height: 604
+      id: '1760392417675'
+      parentId: '1760391592346'
+      position:
+        x: 16
+        y: 140.81302120325248
+      positionAbsolute:
+        x: -339.78999793355626
+        y: 238.23911466796736
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        memory:
+          query_prompt_template: ''
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 50
+        model:
+          completion_params: {}
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: 739c454f-5cd9-4e08-8f61-9240d52336d5
+          role: system
+          text: '      您是一位经验丰富的股票数据分析师，专注于基于AKShare股票数据的单接口个股数据，生成针对性的诊断分析段落。请严格基于本轮迭代的单个数据源（{{#1760391592346.item#}}），结合传入的原始数据{{#1760436189278.output#}}，生成一段独立、模块化的诊断分析文字。利用内置记忆，轻微参考历史迭代的分析（如果相关），但优先聚焦当前数据。严禁使用外部知识、训练数据或主观推测；如果数据缺失/异常/限量（如"当前交易日数据需收盘后获取"），标记"数据缺失"或"限量数据（待更新）"，并简要说明原因。
+
+
+            **任务**：生成一段针对当前数据源（{{#1760391592346.item#}}）的诊断分析文字（150-250字），以标题开头（如"基于[（{{#1760391592346.item#}}）]的个股诊断分析"），结构包括：1)
+            数据概述（引用关键字段）；2) 关键洞察（客观解读，如趋势判断、风险点）；3) 与整体诊断的初步连接（e.g., "此数据支持短期多头，但需结合基本面"）。确保数据引用>70%（e.g.,
+            “根据XXXXXX，最新价为X元，总市值Y亿元”）。分析客观、事实导向，使用列表/简表突出指标。
+
+
+            **输出要求**：纯文本段落（Markdown格式，仅标题+正文），不带完整报告结构。结尾添加"分析基于AKShare数据，更新至{{current_date}}"。'
+        selected: false
+        title: LLM 诊断
+        type: llm
+        vision:
+          enabled: false
+      height: 88
+      id: '1760392848433'
+      parentId: '1760391592346'
+      position:
+        x: 938.9926813134152
+        y: 149.93870311375957
+      positionAbsolute:
+        x: 583.202683379859
+        y: 247.36479657847445
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1760391592346'
+        output_type: string
+        selected: false
+        title: 变量聚合器
+        type: variable-aggregator
+        variables:
+        - - '1762435352472'
+          - text
+        - - '1762435664985'
+          - text
+        - - '1762435726032'
+          - text
+        - - '1762435798150'
+          - text
+        - - '1762436137233'
+          - text
+        - - '1762435928184'
+          - text
+        - - '1762436241388'
+          - text
+        - - '1762436308143'
+          - text
+        - - '1762436528963'
+          - text
+        - - '1762436386884'
+          - text
+        - - '1762436652519'
+          - text
+      height: 369
+      id: '1760436189278'
+      parentId: '1760391592346'
+      position:
+        x: 695.3615361789196
+        y: 106.76408080423158
+      positionAbsolute:
+        x: 339.5715382453633
+        y: 204.19017426894646
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        code: "from typing import List\n\ndef main(reports: List[str]) -> dict:\n\
+          \    \n    cumulative = \"\"\n    for i, report in enumerate(reports):\n\
+          \      cumulative += f\"\\n\\n## 阶段 {i+1} 更新\\n\" + report\n    return {\"\
+          merge_report\": cumulative}"
+        code_language: python3
+        outputs:
+          merge_report:
+            children: null
+            type: string
+        selected: false
+        title: 诊断信息合并
+        type: code
+        variables:
+        - value_selector:
+          - '1760391592346'
+          - output
+          value_type: array[string]
+          variable: reports
+      height: 52
+      id: '1760445568936'
+      position:
+        x: 1054.182228324668
+        y: 125.39650434104118
+      positionAbsolute:
+        x: 1054.182228324668
+        y: 125.39650434104118
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1762436858807'
+          - text
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: b9aa7e97-1a35-434d-bbb0-36e4985132fd
+          role: system
+          text: "您是一位拥有15年经验的资深股票分析师。请基于以下所有阶段的中间报告，进行全面整合：去除阶段标签、融合重复或互补数据、填补缺失部分、解决任何冲突，生成连贯的最终报告。必须保持客观，只使用提供的数据，不添加外部信息或主观意见。如果数据冲突，以最新或最完整的数据为主；如果某部分缺失，从其他阶段合理推断或标记\"\
+            基于有限数据\"。\n\n针对股票{{#1760390449027.symbol#}}，分析基于AKShare股票数据，更新至{{#1760392261128.current_date#}}的所有阶段中间报告:{{#1760445568936.merge_report#}}\n\
+            结合大盘指数日频行情{{#context#}}\n\n生成最终报告（结构化，基于所有数据）：\n完整整合所有内容到以下结构，确保每个部分有具体数据支撑、逻辑连贯，避免空洞描述；总字数控制在1200-1500字。\n\
+            \n**报告要求：**\n请严格按照以下结构生成专业分析报告，每个部分必须引用具体数据支撑：\n\n## 1. 股票概况 (200-250字)\n\
+            - 基于\"个股基本信息汇总\"数据，分析公司基本面：行业地位、主营业务、市值规模、股本结构（引用股票代码、总市值、收入占比等字段）。\n\
+            - 总结公司核心业务特点（基于经营范围和产品类型）。\n- 说明当前股价和市场表现（基于最新价格和市值）。\n\n## 2. 技术面分析 (400-500字)\n\
+            - **趋势分析**：基于\"趋势动量震荡指标(日频)\"的MA均线系统，判断短中长期趋势方向（引用MA5/MA10等值）。\n- **动量指标**：解读RSI、MACD、KDJ等指标，评估超买超卖状态和动能变化（引用RSI>70超买、MACD金叉等）。\n\
+            - **技术形态**：分析布林带位置、支撑阻力位（基于日频数据）。\n- **成交量分析**：结合VMA成交量指标，判断量价配合情况（引用成交量字段）。\n\
+            - **估值位置**：基于\"历史估值指标\"，判断当前估值水平是否合理（引用历史PE/PB百分位）。\n- **大盘关联性分析**：结合上证指数日频和分时数据，分析个股走势与大盘的关联程度，评估系统性风险和市场环境对个股的影响。\n\
+            \n## 3. 基本面分析 (300-400字)\n- **盈利能力**：分析每股收益、净资产收益率、销售净利率等盈利指标（基于\"A股-财务分析\"\
+            的ROE、毛利率等）。\n- **成长性**：评估营收增长率、净利润增长率等成长指标（引用增长率字段）。\n- **财务健康度**：基于\"\
+            动态估值指标\"和\"A股-财务分析\"数据，重点分析：\n  - 财务健康度评分：综合盈利能力、偿债能力、运营效率（引用评分/等级）。\n\
+            \  - 成长性评分：收入增长、利润增长、净资产增长的综合评估（引用评分）。\n  - 运营效率评分：资产周转、存货管理、应收账款管理等效率指标（引用周转率等）。\n\
+            \  - 综合财务评分和等级：整体财务质量评估（引用总分）。\n- **估值分析**：基于\"动态估值指标\"，分析动态PE、PB、PCF、PEG等（引用PEG<1低估等）；结合\"\
+            历史估值指标\"对比历史水平。\n- **行业对比**：将关键财务指标与行业平均水平对比（如果数据提供，否则标记无数据）。\n\n## 4.\
+            \ 历史行情分析 (150-200字)\n- 基于\"历史估值指标\"和日频技术数据，分析近期短线走势特征（引用日期、PE/PB变化）。\n\
+            - 关注历史技术指标的变化，判断短线信号（引用MACD/RSI历史值）。\n- 分析历史波动幅度和成交量变化（基于日频数据）。\n\n##\
+            \ 5. 日内行情分析 (150-200字)\n- 基于\"趋势动量震荡指标(分钟)\"，分析当日或近期短线走势特征（引用分钟时间、价格、RSI/MACD）。\n\
+            - 关注分钟级技术指标的变化，判断短线信号（引用KDJ超买/超卖）。\n- 分析日内波动幅度和成交量变化（引用成交量字段）。\n\n## 6.\
+            \ 资金面分析 (150-200字)\n- 基于\"个股资金流向\"数据，分析主力/散户资金流入流出（引用净流入额、总资金净额）。\n- 评估资金动向趋势（引用日期序列）。\n\
+            \n## 7. 投资建议与风险提醒 (150-200字)\n- **风险提醒**：基于数据指出潜在问题，如估值过高（PE异常）、资金流出（负净额）、财务评分低等，指出主要投资风险点。\n\
+            - **短期建议**（1个月内）：基于技术面给出操作建议和关键点位\n- **中长期建议**（3-12个月）：基于基本面给出投资价值判断\n\
+            - **目标价位**：给出合理的价格区间预期\n\n## 8. 综合诊断评级\n- **综合评分**：基于多个维度的股票数据的综合分析，给出0-100分的综合评分\n\
+            - **投资评级**：强烈推荐、推荐、中性、谨慎、回避\n- **风险等级**：低风险、中风险、高风险\n- **适合投资者类型**：保守型、稳健型、积极型\n\
+            \n**注意事项：**\n1. 必须基于提供的真实数据进行分析，不得编造数据。\n2. 对于数据中的异常值要合理解释（如负PE表示亏损）。\n\
+            3. 分析要客观中性，避免过度乐观或悲观。\n4. 使用专业术语但保持通俗易懂。\n5. 每个部分都要有具体数据支撑，避免空洞描述。\n6.\
+            \ 如果某项数据缺失或异常，请如实说明。\n7. 对于财务比率（如存货周转率）的解释，必须基于数据中的行业对比、公司业务描述和交叉指标（如ROE、毛利率）进行客观分析，避免通用负面假设；\n\
+            8. **重点关注财务健康度评分**：将综合财务评分、成长性评分、运营效率评分作为关键参考。\n9. **动态估值分析**：结合PE、PB、PEG等动态估值指标，判断当前股价的合理性和投资价值（仅描述事实）。\n\
+            \n**新增要求：在技术面分析和投资建议部分，必须结合大盘指数-上证指数的日频行情和分时行情数据，分析个股走势与大盘的关联性，评估系统性风险和市场环境对个股的影响。**\n\
+            \n请开始生成最终分析报告。\n\n输出为 Markdown 格式的完整报告。"
+        selected: false
+        title: LLM 最终整合
+        type: llm
+        vision:
+          enabled: false
+      height: 88
+      id: '1760512727733'
+      position:
+        x: 1004.2897336704807
+        y: 589.3986671863678
+      positionAbsolute:
+        x: 1004.2897336704807
+        y: 589.3986671863678
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        is_team_authorization: true
+        paramSchemas:
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: Markdown text
+            ja_JP: Markdown text
+            pt_BR: Markdown text
+            zh_Hans: Markdown格式文本
+          label:
+            en_US: Markdown text
+            ja_JP: Markdown text
+            pt_BR: Markdown text
+            zh_Hans: Markdown格式文本
+          llm_description: ''
+          max: null
+          min: null
+          name: md_text
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: Optional docx template file for styling。Use "Home"-"Styles Pane"
+              in Microsoft Word to edit styles of the docx file.
+            ja_JP: Optional docx template file for styling。Use "Home"-"Styles Pane"
+              in Microsoft Word to edit styles of the docx file.
+            pt_BR: Optional docx template file for styling。Use "Home"-"Styles Pane"
+              in Microsoft Word to edit styles of the docx file.
+            zh_Hans: 可选的docx模板文件，用于样式控制。使用Microsoft Word中“开始”-“样式窗格”对docx文件的样式进行编辑。
+          label:
+            en_US: DOCX Template File
+            ja_JP: DOCX Template File
+            pt_BR: DOCX Template File
+            zh_Hans: DOCX 模板文件
+          llm_description: An optional .pptx file that serves as a template for the
+            generated presentation
+          max: null
+          min: null
+          name: docx_template_file
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: file
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: Optional custom output file name, and the filename suffix is not
+              required.
+            ja_JP: Optional custom output file name, and the filename suffix is not
+              required.
+            pt_BR: Optional custom output file name, and the filename suffix is not
+              required.
+            zh_Hans: 可选的自定义输出文件名，后缀名无需指定
+          label:
+            en_US: Output Filename
+            ja_JP: Output Filename
+            pt_BR: Output Filename
+            zh_Hans: 输出文件名
+          llm_description: ''
+          max: null
+          min: null
+          name: output_filename
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        params:
+          docx_template_file: ''
+          md_text: ''
+          output_filename: ''
+        provider_id: bowenliang123/md_exporter/md_exporter
+        provider_name: bowenliang123/md_exporter/md_exporter
+        provider_type: builtin
+        selected: false
+        title: Markdown 转 DOCX 文件
+        tool_configurations: {}
+        tool_description: 将 Markdown 转换为 DOCX 文件的工具
+        tool_label: Markdown 转 DOCX 文件
+        tool_name: md_to_docx
+        tool_node_version: '2'
+        tool_parameters:
+          docx_template_file:
+            type: constant
+            value: null
+          md_text:
+            type: mixed
+            value: '{{#1760512727733.text#}}'
+          output_filename:
+            type: mixed
+            value: 输出报告
+        type: tool
+      height: 52
+      id: '1760657403135'
+      position:
+        x: 1286.598982529897
+        y: 589.3986671863678
+      positionAbsolute:
+        x: 1286.598982529897
+        y: 589.3986671863678
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        isInIteration: true
+        isInLoop: false
+        is_team_authorization: true
+        iteration_id: '1760391592346'
+        paramSchemas:
+        - auto_generate: null
+          default: '000001'
+          form: llm
+          human_description:
+            en_US: 'Stock code. Format: 000001, 600519, 688356, etc.'
+            ja_JP: 'Stock code. Format: 000001, 600519, 688356, etc.'
+            pt_BR: 'Stock code. Format: 000001, 600519, 688356, etc.'
+            zh_Hans: 股票代码。格式：000001、600519、688356等。
+          label:
+            en_US: Stock Code
+            ja_JP: Stock Code
+            pt_BR: Stock Code
+            zh_Hans: 股票代码
+          llm_description: 股票代码，格式：000001、600519、688356等
+          max: null
+          min: null
+          name: symbol
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: 5
+          form: llm
+          human_description:
+            en_US: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            ja_JP: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            pt_BR: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            zh_Hans: 网络请求重试次数。范围：1-10。默认：5。
+          label:
+            en_US: Retries
+            ja_JP: Retries
+            pt_BR: Retries
+            zh_Hans: 重试次数
+          llm_description: 网络请求重试次数，默认5次
+          max: 10
+          min: 1
+          name: retries
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: 600
+          form: llm
+          human_description:
+            en_US: 'Timeout for interface calls in seconds. Range: 5-3000. Default:
+              600.'
+            ja_JP: 'Timeout for interface calls in seconds. Range: 5-3000. Default:
+              600.'
+            pt_BR: 'Timeout for interface calls in seconds. Range: 5-3000. Default:
+              600.'
+            zh_Hans: 接口调用的超时时间（秒）。范围：5-3000。默认：600。
+          label:
+            en_US: Timeout
+            ja_JP: Timeout
+            pt_BR: Timeout
+            zh_Hans: 超时时间
+          llm_description: 接口调用的超时时间（秒），默认600秒
+          max: 3000
+          min: 5
+          name: timeout
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        params:
+          retries: ''
+          symbol: ''
+          timeout: ''
+        provider_id: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_name: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_type: builtin
+        selected: false
+        title: 获取个股基本信息汇总
+        tool_configurations: {}
+        tool_description: 获取个股基本信息汇总。整合多个数据接口，一次性获取个股的全面基本信息，包括证券资料（股票代码、股票简称、所属行业、最新价格、总市值、流通市值、总股本、流通股等）、公司概况（公司全称、所属市场、成立时间、上市时间、法人代表、注册地址、办公地址、官方网站、联系方式等）、主营业务（主营业务、经营范围、产品类型、产品名称等）、主营业务构成（业务构成详情）等。适用于股票研究、投资分析和公司基本面了解。可帮助投资者快速了解公司的基本情况、业务范围和行业地位，为投资决策提供基础信息支持。
+        tool_label: 获取个股基本信息汇总
+        tool_name: get_stock_basic_info_summary
+        tool_node_version: '2'
+        tool_parameters:
+          retries:
+            type: constant
+            value: 5
+          symbol:
+            type: mixed
+            value: '{{#1760390449027.symbol#}}'
+          timeout:
+            type: constant
+            value: 600
+        type: tool
+      height: 52
+      id: '1762435352472'
+      parentId: '1760391592346'
+      position:
+        x: 322.6055631426488
+        y: 76.09684713751733
+      positionAbsolute:
+        x: -33.18443479090746
+        y: 173.5229406022322
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        is_team_authorization: true
+        iteration_id: '1760391592346'
+        paramSchemas:
+        - auto_generate: null
+          default: '000001'
+          form: llm
+          human_description:
+            en_US: 'Stock code. Format: 000001, 600519, 688356, etc.'
+            ja_JP: 'Stock code. Format: 000001, 600519, 688356, etc.'
+            pt_BR: 'Stock code. Format: 000001, 600519, 688356, etc.'
+            zh_Hans: 股票代码。格式：000001、600519、688356等。
+          label:
+            en_US: Stock Code
+            ja_JP: Stock Code
+            pt_BR: Stock Code
+            zh_Hans: 股票代码
+          llm_description: 股票代码，格式：000001、600519、688356等
+          max: null
+          min: null
+          name: symbol
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: daily
+          form: llm
+          human_description:
+            en_US: 'Period. Options: daily (日线), weekly (周线), monthly (月线).'
+            ja_JP: 'Period. Options: daily (日线), weekly (周线), monthly (月线).'
+            pt_BR: 'Period. Options: daily (日线), weekly (周线), monthly (月线).'
+            zh_Hans: 周期。选项：daily(日线)、weekly(周线)、monthly(月线)。
+          label:
+            en_US: Period
+            ja_JP: Period
+            pt_BR: Period
+            zh_Hans: 周期
+          llm_description: 数据周期类型，用于日频趋势动量震荡指标
+          max: null
+          min: null
+          name: period
+          options:
+          - icon: ''
+            label:
+              en_US: Daily
+              ja_JP: Daily
+              pt_BR: Daily
+              zh_Hans: 日线
+            value: daily
+          - icon: ''
+            label:
+              en_US: Weekly
+              ja_JP: Weekly
+              pt_BR: Weekly
+              zh_Hans: 周线
+            value: weekly
+          - icon: ''
+            label:
+              en_US: Monthly
+              ja_JP: Monthly
+              pt_BR: Monthly
+              zh_Hans: 月线
+            value: monthly
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: '20250101'
+          form: llm
+          human_description:
+            en_US: 'Start date. Format: YYYYMMDD (20250101) or YYYY-MM-DD (2025-01-01).'
+            ja_JP: 'Start date. Format: YYYYMMDD (20250101) or YYYY-MM-DD (2025-01-01).'
+            pt_BR: 'Start date. Format: YYYYMMDD (20250101) or YYYY-MM-DD (2025-01-01).'
+            zh_Hans: 开始日期。格式：YYYYMMDD(20250101)或YYYY-MM-DD(2025-01-01)。
+          label:
+            en_US: Start Date
+            ja_JP: Start Date
+            pt_BR: Start Date
+            zh_Hans: 开始日期
+          llm_description: 历史数据的开始日期，格式为YYYYMMDD
+          max: null
+          min: null
+          name: start_date
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: ''
+          form: llm
+          human_description:
+            en_US: 'End date. Format: YYYYMMDD (20250915) or YYYY-MM-DD (2025-09-15).
+              Default: current date.'
+            ja_JP: 'End date. Format: YYYYMMDD (20250915) or YYYY-MM-DD (2025-09-15).
+              Default: current date.'
+            pt_BR: 'End date. Format: YYYYMMDD (20250915) or YYYY-MM-DD (2025-09-15).
+              Default: current date.'
+            zh_Hans: 结束日期。格式：YYYYMMDD(20250915)或YYYY-MM-DD(2025-09-15)。默认：当前日期。
+          label:
+            en_US: End Date
+            ja_JP: End Date
+            pt_BR: End Date
+            zh_Hans: 结束日期
+          llm_description: 历史数据的结束日期，格式为YYYYMMDD，默认为当前日期
+          max: null
+          min: null
+          name: end_date
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: qfq
+          form: llm
+          human_description:
+            en_US: 'Adjustment method. Options: qfq (前复权), hfq (后复权), none (不复权).'
+            ja_JP: 'Adjustment method. Options: qfq (前复权), hfq (后复权), none (不复权).'
+            pt_BR: 'Adjustment method. Options: qfq (前复权), hfq (后复权), none (不复权).'
+            zh_Hans: 复权方式。选项：qfq(前复权)、hfq(后复权)、none(不复权)。
+          label:
+            en_US: Adjustment Method
+            ja_JP: Adjustment Method
+            pt_BR: Adjustment Method
+            zh_Hans: 复权方式
+          llm_description: 价格复权方式，支持前复权、后复权、不复权
+          max: null
+          min: null
+          name: adjust
+          options:
+          - icon: ''
+            label:
+              en_US: Forward Adjustment
+              ja_JP: Forward Adjustment
+              pt_BR: Forward Adjustment
+              zh_Hans: 前复权
+            value: qfq
+          - icon: ''
+            label:
+              en_US: Backward Adjustment
+              ja_JP: Backward Adjustment
+              pt_BR: Backward Adjustment
+              zh_Hans: 后复权
+            value: hfq
+          - icon: ''
+            label:
+              en_US: No Adjustment
+              ja_JP: No Adjustment
+              pt_BR: No Adjustment
+              zh_Hans: 不复权
+            value: none
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: 5
+          form: llm
+          human_description:
+            en_US: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            ja_JP: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            pt_BR: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            zh_Hans: 网络请求重试次数。范围：1-10。默认：5。
+          label:
+            en_US: Retries
+            ja_JP: Retries
+            pt_BR: Retries
+            zh_Hans: 重试次数
+          llm_description: 网络请求重试次数，默认5次
+          max: 10
+          min: 1
+          name: retries
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: 600
+          form: llm
+          human_description:
+            en_US: 'Timeout for interface calls in seconds. Range: 5-3000. Default:
+              600.'
+            ja_JP: 'Timeout for interface calls in seconds. Range: 5-3000. Default:
+              600.'
+            pt_BR: 'Timeout for interface calls in seconds. Range: 5-3000. Default:
+              600.'
+            zh_Hans: 接口调用的超时时间（秒）。范围：5-3000。默认：600。
+          label:
+            en_US: Timeout
+            ja_JP: Timeout
+            pt_BR: Timeout
+            zh_Hans: 超时时间
+          llm_description: 接口调用的超时时间（秒），默认600秒
+          max: 3000
+          min: 5
+          name: timeout
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        params:
+          adjust: ''
+          end_date: ''
+          period: ''
+          retries: ''
+          start_date: ''
+          symbol: ''
+          timeout: ''
+        provider_id: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_name: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_type: builtin
+        selected: false
+        title: 获取个股趋势动量震荡指标(日频)
+        tool_configurations: {}
+        tool_description: 获取个股趋势动量震荡指标(日频)。基于历史行情数据自动计算多种技术分析指标，包括移动平均线（MA5/MA10/MA20/MA30/MA60）、RSI相对强弱指标（RSI6/RSI12/RSI24）、MACD指标、KDJ随机指标、布林带指标、成交量均线（VMA5/VMA10/VMA20）等。支持日线、周线、月线周期，适用于股票技术分析、趋势判断和交易决策。可帮助投资者识别股票的趋势方向、买卖信号和超买超卖状态。
+        tool_label: 获取个股趋势动量震荡指标(日频)
+        tool_name: get_stock_trend_momentum_daily
+        tool_node_version: '2'
+        tool_parameters:
+          adjust:
+            type: constant
+            value: qfq
+          end_date:
+            type: mixed
+            value: ''
+          period:
+            type: constant
+            value: daily
+          retries:
+            type: constant
+            value: 5
+          start_date:
+            type: mixed
+            value: '20250101'
+          symbol:
+            type: mixed
+            value: '{{#1760390449027.symbol#}}'
+          timeout:
+            type: constant
+            value: 600
+        type: tool
+      height: 52
+      id: '1762435664985'
+      parentId: '1760391592346'
+      position:
+        x: 326.08776539583334
+        y: 135.96440450636914
+      positionAbsolute:
+        x: -29.70223253772292
+        y: 233.39049797108402
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        is_team_authorization: true
+        iteration_id: '1760391592346'
+        paramSchemas:
+        - auto_generate: null
+          default: '000001'
+          form: llm
+          human_description:
+            en_US: 'Stock code. Format: 000001, 600519, 688356, etc.'
+            ja_JP: 'Stock code. Format: 000001, 600519, 688356, etc.'
+            pt_BR: 'Stock code. Format: 000001, 600519, 688356, etc.'
+            zh_Hans: 股票代码。格式：000001、600519、688356等。
+          label:
+            en_US: Stock Code
+            ja_JP: Stock Code
+            pt_BR: Stock Code
+            zh_Hans: 股票代码
+          llm_description: 股票代码，格式：000001、600519、688356等
+          max: null
+          min: null
+          name: symbol
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: '5'
+          form: llm
+          human_description:
+            en_US: 'Minute period. Options: 1 (1分钟), 5 (5分钟), 15 (15分钟), 30 (30分钟),
+              60 (60分钟).'
+            ja_JP: 'Minute period. Options: 1 (1分钟), 5 (5分钟), 15 (15分钟), 30 (30分钟),
+              60 (60分钟).'
+            pt_BR: 'Minute period. Options: 1 (1分钟), 5 (5分钟), 15 (15分钟), 30 (30分钟),
+              60 (60分钟).'
+            zh_Hans: 分钟周期。选项：1(1分钟)、5(5分钟)、15(15分钟)、30(30分钟)、60(60分钟)。
+          label:
+            en_US: Minute Period
+            ja_JP: Minute Period
+            pt_BR: Minute Period
+            zh_Hans: 分钟周期
+          llm_description: 分钟级数据周期类型，用于分钟级趋势动量震荡指标
+          max: null
+          min: null
+          name: period
+          options:
+          - icon: ''
+            label:
+              en_US: 1 Minute
+              ja_JP: 1 Minute
+              pt_BR: 1 Minute
+              zh_Hans: 1分钟
+            value: '1'
+          - icon: ''
+            label:
+              en_US: 5 Minutes
+              ja_JP: 5 Minutes
+              pt_BR: 5 Minutes
+              zh_Hans: 5分钟
+            value: '5'
+          - icon: ''
+            label:
+              en_US: 15 Minutes
+              ja_JP: 15 Minutes
+              pt_BR: 15 Minutes
+              zh_Hans: 15分钟
+            value: '15'
+          - icon: ''
+            label:
+              en_US: 30 Minutes
+              ja_JP: 30 Minutes
+              pt_BR: 30 Minutes
+              zh_Hans: 30分钟
+            value: '30'
+          - icon: ''
+            label:
+              en_US: 60 Minutes
+              ja_JP: 60 Minutes
+              pt_BR: 60 Minutes
+              zh_Hans: 60分钟
+            value: '60'
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: '20250101'
+          form: llm
+          human_description:
+            en_US: 'Start date. Format: YYYYMMDD (20250101) or YYYY-MM-DD (2025-01-01).
+              Automatically converts to YYYY-MM-DD 09:30:00.'
+            ja_JP: 'Start date. Format: YYYYMMDD (20250101) or YYYY-MM-DD (2025-01-01).
+              Automatically converts to YYYY-MM-DD 09:30:00.'
+            pt_BR: 'Start date. Format: YYYYMMDD (20250101) or YYYY-MM-DD (2025-01-01).
+              Automatically converts to YYYY-MM-DD 09:30:00.'
+            zh_Hans: 开始日期。格式：YYYYMMDD(20250101)或YYYY-MM-DD(2025-01-01)。会自动转换为YYYY-MM-DD
+              09:30:00。
+          label:
+            en_US: Start Date
+            ja_JP: Start Date
+            pt_BR: Start Date
+            zh_Hans: 开始日期
+          llm_description: 历史数据的开始日期，格式为YYYYMMDD，会自动转换为YYYY-MM-DD 09:30:00
+          max: null
+          min: null
+          name: start_date
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: ''
+          form: llm
+          human_description:
+            en_US: 'End date. Format: YYYYMMDD (20250915) or YYYY-MM-DD (2025-09-15).
+              Automatically converts to YYYY-MM-DD 15:00:00. Default: current date.'
+            ja_JP: 'End date. Format: YYYYMMDD (20250915) or YYYY-MM-DD (2025-09-15).
+              Automatically converts to YYYY-MM-DD 15:00:00. Default: current date.'
+            pt_BR: 'End date. Format: YYYYMMDD (20250915) or YYYY-MM-DD (2025-09-15).
+              Automatically converts to YYYY-MM-DD 15:00:00. Default: current date.'
+            zh_Hans: 结束日期。格式：YYYYMMDD(20250915)或YYYY-MM-DD(2025-09-15)。会自动转换为YYYY-MM-DD
+              15:00:00。默认：当前日期。
+          label:
+            en_US: End Date
+            ja_JP: End Date
+            pt_BR: End Date
+            zh_Hans: 结束日期
+          llm_description: 历史数据的结束日期，格式为YYYYMMDD，会自动转换为YYYY-MM-DD 15:00:00，默认为当前日期
+          max: null
+          min: null
+          name: end_date
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: qfq
+          form: llm
+          human_description:
+            en_US: 'Adjustment method. Options: qfq (前复权), hfq (后复权), none (不复权).'
+            ja_JP: 'Adjustment method. Options: qfq (前复权), hfq (后复权), none (不复权).'
+            pt_BR: 'Adjustment method. Options: qfq (前复权), hfq (后复权), none (不复权).'
+            zh_Hans: 复权方式。选项：qfq(前复权)、hfq(后复权)、none(不复权)。
+          label:
+            en_US: Adjustment Method
+            ja_JP: Adjustment Method
+            pt_BR: Adjustment Method
+            zh_Hans: 复权方式
+          llm_description: 价格复权方式，支持前复权、后复权、不复权
+          max: null
+          min: null
+          name: adjust
+          options:
+          - icon: ''
+            label:
+              en_US: Forward Adjustment
+              ja_JP: Forward Adjustment
+              pt_BR: Forward Adjustment
+              zh_Hans: 前复权
+            value: qfq
+          - icon: ''
+            label:
+              en_US: Backward Adjustment
+              ja_JP: Backward Adjustment
+              pt_BR: Backward Adjustment
+              zh_Hans: 后复权
+            value: hfq
+          - icon: ''
+            label:
+              en_US: No Adjustment
+              ja_JP: No Adjustment
+              pt_BR: No Adjustment
+              zh_Hans: 不复权
+            value: none
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: 5
+          form: llm
+          human_description:
+            en_US: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            ja_JP: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            pt_BR: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            zh_Hans: 网络请求重试次数。范围：1-10。默认：5。
+          label:
+            en_US: Retries
+            ja_JP: Retries
+            pt_BR: Retries
+            zh_Hans: 重试次数
+          llm_description: 网络请求重试次数，默认5次
+          max: 10
+          min: 1
+          name: retries
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: 600
+          form: llm
+          human_description:
+            en_US: 'Timeout for interface calls in seconds. Range: 5-3000. Default:
+              600.'
+            ja_JP: 'Timeout for interface calls in seconds. Range: 5-3000. Default:
+              600.'
+            pt_BR: 'Timeout for interface calls in seconds. Range: 5-3000. Default:
+              600.'
+            zh_Hans: 接口调用的超时时间（秒）。范围：5-3000。默认：600。
+          label:
+            en_US: Timeout
+            ja_JP: Timeout
+            pt_BR: Timeout
+            zh_Hans: 超时时间
+          llm_description: 接口调用的超时时间（秒），默认600秒
+          max: 3000
+          min: 5
+          name: timeout
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        params:
+          adjust: ''
+          end_date: ''
+          period: ''
+          retries: ''
+          start_date: ''
+          symbol: ''
+          timeout: ''
+        provider_id: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_name: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_type: builtin
+        selected: false
+        title: 获取个股趋势动量震荡指标(分钟)
+        tool_configurations: {}
+        tool_description: 获取个股趋势动量震荡指标(分钟)。基于分钟级历史行情数据自动计算多种技术分析指标，包括移动平均线（MA5/MA10/MA20/MA30/MA60）、RSI相对强弱指标（RSI6/RSI12/RSI24）、MACD指标、KDJ随机指标、布林带指标、成交量均线（VMA5/VMA10/VMA20）等。支持1分钟、5分钟、15分钟、30分钟、60分钟周期，适用于日内短线交易、分时图技术分析和盘中交易决策。可帮助投资者捕捉短期价格波动、识别日内买卖时机和监控盘中资金流向。
+        tool_label: 获取个股趋势动量震荡指标(分钟)
+        tool_name: get_stock_trend_momentum_minute
+        tool_node_version: '2'
+        tool_parameters:
+          adjust:
+            type: constant
+            value: qfq
+          end_date:
+            type: mixed
+            value: ''
+          period:
+            type: constant
+            value: '5'
+          retries:
+            type: constant
+            value: 5
+          start_date:
+            type: mixed
+            value: '20250101'
+          symbol:
+            type: mixed
+            value: '{{#1760390449027.symbol#}}'
+          timeout:
+            type: constant
+            value: 600
+        type: tool
+      height: 52
+      id: '1762435726032'
+      parentId: '1760391592346'
+      position:
+        x: 325.1233608894644
+        y: 179.51779774681563
+      positionAbsolute:
+        x: -30.666637044091885
+        y: 276.9438912115305
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        is_team_authorization: true
+        iteration_id: '1760391592346'
+        paramSchemas:
+        - auto_generate: null
+          default: '000001'
+          form: llm
+          human_description:
+            en_US: 'Stock code. Format: 000001, 600519, 688356, etc.'
+            ja_JP: 'Stock code. Format: 000001, 600519, 688356, etc.'
+            pt_BR: 'Stock code. Format: 000001, 600519, 688356, etc.'
+            zh_Hans: 股票代码。格式：000001、600519、688356等。
+          label:
+            en_US: Stock Code
+            ja_JP: Stock Code
+            pt_BR: Stock Code
+            zh_Hans: 股票代码
+          llm_description: 股票代码，格式：000001、600519、688356等
+          max: null
+          min: null
+          name: symbol
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: 5
+          form: llm
+          human_description:
+            en_US: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            ja_JP: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            pt_BR: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            zh_Hans: 网络请求重试次数。范围：1-10。默认：5。
+          label:
+            en_US: Retries
+            ja_JP: Retries
+            pt_BR: Retries
+            zh_Hans: 重试次数
+          llm_description: 网络请求重试次数，默认5次
+          max: 10
+          min: 1
+          name: retries
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: 600
+          form: llm
+          human_description:
+            en_US: 'Timeout for interface calls in seconds. Range: 5-3000. Default:
+              600.'
+            ja_JP: 'Timeout for interface calls in seconds. Range: 5-3000. Default:
+              600.'
+            pt_BR: 'Timeout for interface calls in seconds. Range: 5-3000. Default:
+              600.'
+            zh_Hans: 接口调用的超时时间（秒）。范围：5-3000。默认：600。
+          label:
+            en_US: Timeout
+            ja_JP: Timeout
+            pt_BR: Timeout
+            zh_Hans: 超时时间
+          llm_description: 接口调用的超时时间（秒），默认600秒
+          max: 3000
+          min: 5
+          name: timeout
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        params:
+          retries: ''
+          symbol: ''
+          timeout: ''
+        provider_id: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_name: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_type: builtin
+        selected: false
+        title: 获取个股动态估值指标
+        tool_configurations: {}
+        tool_description: 获取个股动态估值指标。基于最新财务数据和当前股价实时计算多种估值指标，包括PE动态、PB动态、PCF动态、PE加权、PE扣非、PB调整后、每股资本公积金比率、每股未分配利润比率、PEG、市净率×ROE等估值指标，以及财务健康度评分、成长性评分、运营效率评分、综合财务评分、评分等级等。适用于股票价值评估、投资决策和基本面分析。可帮助投资者判断股票是否被高估或低估，评估公司的财务健康状况和成长潜力。
+        tool_label: 获取个股动态估值指标
+        tool_name: get_stock_dynamic_valuation
+        tool_node_version: '2'
+        tool_parameters:
+          retries:
+            type: constant
+            value: 5
+          symbol:
+            type: mixed
+            value: '{{#1760390449027.symbol#}}'
+          timeout:
+            type: constant
+            value: 600
+        type: tool
+      height: 52
+      id: '1762435798150'
+      parentId: '1760391592346'
+      position:
+        x: 328.0877653958333
+        y: 244.61464488433285
+      positionAbsolute:
+        x: -27.702232537722978
+        y: 342.04073834904773
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        is_team_authorization: true
+        iteration_id: '1760391592346'
+        paramSchemas:
+        - auto_generate: null
+          default: stock_financial_analysis_indicator_em
+          form: llm
+          human_description:
+            en_US: 'Select financial analysis indicators data interface. Options:
+              East Money A-share Financial Analysis, Sina Finance Financial Analysis.'
+            ja_JP: 'Select financial analysis indicators data interface. Options:
+              East Money A-share Financial Analysis, Sina Finance Financial Analysis.'
+            pt_BR: 'Select financial analysis indicators data interface. Options:
+              East Money A-share Financial Analysis, Sina Finance Financial Analysis.'
+            zh_Hans: 选择财务分析指标数据接口。选项包括：东方财富网-A股财务分析-主要指标、新浪财经-财务分析-财务指标。
+          label:
+            en_US: Interface
+            ja_JP: Interface
+            pt_BR: Interface
+            zh_Hans: 接口名称
+          llm_description: 选择财务分析指标数据接口。包括：东方财富网-A股财务分析-主要指标（需要股票代码和报告类型，返回指定股票指定报告类型的财务分析指标所有历史数据）、新浪财经-财务分析-财务指标（需要股票代码和起始年份，返回指定股票从起始年份开始的财务分析指标所有历史数据）。根据不同接口提供相应参数。
+          max: null
+          min: null
+          name: interface
+          options:
+          - icon: ''
+            label:
+              en_US: East Money - A-share Financial Analysis - Main Indicators - Specified
+                Stock, Report Type
+              ja_JP: East Money - A-share Financial Analysis - Main Indicators - Specified
+                Stock, Report Type
+              pt_BR: East Money - A-share Financial Analysis - Main Indicators - Specified
+                Stock, Report Type
+              zh_Hans: 东方财富网-A股财务分析-主要指标-指定股票、报告类型
+            value: stock_financial_analysis_indicator_em
+          - icon: ''
+            label:
+              en_US: Sina Finance - Financial Analysis - Financial Indicators - Specified
+                Stock, Start Year
+              ja_JP: Sina Finance - Financial Analysis - Financial Indicators - Specified
+                Stock, Start Year
+              pt_BR: Sina Finance - Financial Analysis - Financial Indicators - Specified
+                Stock, Start Year
+              zh_Hans: 新浪财经-财务分析-财务指标-指定股票、起始年份
+            value: stock_financial_analysis_indicator
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: '000001'
+          form: llm
+          human_description:
+            en_US: Stock code. Supports A-share formats, e.g., 600519 (Shanghai),
+              000001 (Shenzhen), 430xxx (Beijing Stock Exchange), etc.
+            ja_JP: Stock code. Supports A-share formats, e.g., 600519 (Shanghai),
+              000001 (Shenzhen), 430xxx (Beijing Stock Exchange), etc.
+            pt_BR: Stock code. Supports A-share formats, e.g., 600519 (Shanghai),
+              000001 (Shenzhen), 430xxx (Beijing Stock Exchange), etc.
+            zh_Hans: 股票代码。支持A股格式，如600519（沪市）、000001（深市）、430xxx（北交所）等。
+          label:
+            en_US: Stock Code
+            ja_JP: Stock Code
+            pt_BR: Stock Code
+            zh_Hans: 股票代码
+          llm_description: 股票代码，支持A股格式，如600519（沪市）、000001（深市）、430xxx（北交所）等。
+          max: null
+          min: null
+          name: stock_code
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: 按报告期
+          form: llm
+          human_description:
+            en_US: 'Report type. Required for East Money financial analysis indicators
+              interface. Options: By Report Period (按报告期), By Single Quarter (按单季度).'
+            ja_JP: 'Report type. Required for East Money financial analysis indicators
+              interface. Options: By Report Period (按报告期), By Single Quarter (按单季度).'
+            pt_BR: 'Report type. Required for East Money financial analysis indicators
+              interface. Options: By Report Period (按报告期), By Single Quarter (按单季度).'
+            zh_Hans: 报告类型。用于东方财富网财务分析指标接口。选项：按报告期、按单季度。
+          label:
+            en_US: Report Type
+            ja_JP: Report Type
+            pt_BR: Report Type
+            zh_Hans: 报告类型
+          llm_description: 报告类型参数，用于东方财富网财务分析指标接口。选项：按报告期、按单季度。
+          max: null
+          min: null
+          name: indicator_ths
+          options:
+          - icon: ''
+            label:
+              en_US: By Report Period
+              ja_JP: By Report Period
+              pt_BR: By Report Period
+              zh_Hans: 按报告期
+            value: 按报告期
+          - icon: ''
+            label:
+              en_US: By Single Quarter
+              ja_JP: By Single Quarter
+              pt_BR: By Single Quarter
+              zh_Hans: 按单季度
+            value: 按单季度
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: '2024'
+          form: llm
+          human_description:
+            en_US: 'Start year. Required for Sina Finance financial analysis indicators
+              interface. Format: YYYY, e.g., 2024 means starting from 2024 to get
+              financial indicator data.'
+            ja_JP: 'Start year. Required for Sina Finance financial analysis indicators
+              interface. Format: YYYY, e.g., 2024 means starting from 2024 to get
+              financial indicator data.'
+            pt_BR: 'Start year. Required for Sina Finance financial analysis indicators
+              interface. Format: YYYY, e.g., 2024 means starting from 2024 to get
+              financial indicator data.'
+            zh_Hans: 起始年份。用于新浪财经财务分析指标接口。格式：YYYY，如2024表示从2024年开始获取财务指标数据。
+          label:
+            en_US: Start Year
+            ja_JP: Start Year
+            pt_BR: Start Year
+            zh_Hans: 起始年份
+          llm_description: 起始年份参数，用于新浪财经财务分析指标接口。格式：YYYY，如2024表示从2024年开始获取财务指标数据。
+          max: null
+          min: null
+          name: start_year
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: 5
+          form: llm
+          human_description:
+            en_US: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            ja_JP: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            pt_BR: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            zh_Hans: 网络请求重试次数。范围：1-10。默认：5。
+          label:
+            en_US: Retries
+            ja_JP: Retries
+            pt_BR: Retries
+            zh_Hans: 重试次数
+          llm_description: 网络请求重试次数，范围1-10，默认5次。
+          max: 10
+          min: 1
+          name: retries
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: 600
+          form: llm
+          human_description:
+            en_US: 'Subprocess execution timeout in seconds. Range: 5-3600. Default:
+              600 (10 minutes). Financial analysis indicator data may be large, suggest
+              longer timeout.'
+            ja_JP: 'Subprocess execution timeout in seconds. Range: 5-3600. Default:
+              600 (10 minutes). Financial analysis indicator data may be large, suggest
+              longer timeout.'
+            pt_BR: 'Subprocess execution timeout in seconds. Range: 5-3600. Default:
+              600 (10 minutes). Financial analysis indicator data may be large, suggest
+              longer timeout.'
+            zh_Hans: 子进程执行超时时间（秒）。范围：5-3600。默认：600（10分钟）。财务分析指标数据量可能较大，建议设置较长的超时时间。
+          label:
+            en_US: Subprocess Timeout
+            ja_JP: Subprocess Timeout
+            pt_BR: Subprocess Timeout
+            zh_Hans: 子进程超时时间
+          llm_description: 子进程执行超时时间（秒），范围5-3600，默认600秒（10分钟）。财务分析指标数据量可能较大，建议设置较长的超时时间。
+          max: 3600
+          min: 5
+          name: timeout
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        params:
+          indicator_ths: ''
+          interface: ''
+          retries: ''
+          start_year: ''
+          stock_code: ''
+          timeout: ''
+        provider_id: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_name: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_type: builtin
+        selected: false
+        title: 获取个股财务分析指标
+        tool_configurations: {}
+        tool_description: 获取指定股票的详细财务分析指标数据，包括140项详细的财务分析指标，提供全面的财务健康状况分析，支持多年度的财务指标对比分析。
+        tool_label: 获取个股财务分析指标
+        tool_name: get_stock_financial_analysis_indicators
+        tool_node_version: '2'
+        tool_parameters:
+          indicator_ths:
+            type: constant
+            value: 按报告期
+          interface:
+            type: constant
+            value: stock_financial_analysis_indicator_em
+          retries:
+            type: constant
+            value: 5
+          start_year:
+            type: mixed
+            value: '2024'
+          stock_code:
+            type: mixed
+            value: '{{#1760390449027.symbol#}}'
+          timeout:
+            type: constant
+            value: 600
+        type: tool
+      height: 52
+      id: '1762435928184'
+      parentId: '1760391592346'
+      position:
+        x: 319.7123496235419
+        y: 358.61464488433285
+      positionAbsolute:
+        x: -36.077648310014354
+        y: 456.04073834904773
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        is_team_authorization: true
+        iteration_id: '1760391592346'
+        paramSchemas:
+        - auto_generate: null
+          default: '000001'
+          form: llm
+          human_description:
+            en_US: 'Stock code. Format: 000001, 600519, 688356, etc.'
+            ja_JP: 'Stock code. Format: 000001, 600519, 688356, etc.'
+            pt_BR: 'Stock code. Format: 000001, 600519, 688356, etc.'
+            zh_Hans: 股票代码。格式：000001、600519、688356等。
+          label:
+            en_US: Stock Code
+            ja_JP: Stock Code
+            pt_BR: Stock Code
+            zh_Hans: 股票代码
+          llm_description: 股票代码，格式：000001、600519、688356等
+          max: null
+          min: null
+          name: symbol
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: daily
+          form: llm
+          human_description:
+            en_US: 'Period. Options: daily (日线), weekly (周线), monthly (月线).'
+            ja_JP: 'Period. Options: daily (日线), weekly (周线), monthly (月线).'
+            pt_BR: 'Period. Options: daily (日线), weekly (周线), monthly (月线).'
+            zh_Hans: 周期。选项：daily(日线)、weekly(周线)、monthly(月线)。
+          label:
+            en_US: Period
+            ja_JP: Period
+            pt_BR: Period
+            zh_Hans: 周期
+          llm_description: 数据周期类型，用于历史估值指标
+          max: null
+          min: null
+          name: period
+          options:
+          - icon: ''
+            label:
+              en_US: Daily
+              ja_JP: Daily
+              pt_BR: Daily
+              zh_Hans: 日线
+            value: daily
+          - icon: ''
+            label:
+              en_US: Weekly
+              ja_JP: Weekly
+              pt_BR: Weekly
+              zh_Hans: 周线
+            value: weekly
+          - icon: ''
+            label:
+              en_US: Monthly
+              ja_JP: Monthly
+              pt_BR: Monthly
+              zh_Hans: 月线
+            value: monthly
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: '20250101'
+          form: llm
+          human_description:
+            en_US: 'Start date. Format: YYYYMMDD (20250101) or YYYY-MM-DD (2025-01-01).'
+            ja_JP: 'Start date. Format: YYYYMMDD (20250101) or YYYY-MM-DD (2025-01-01).'
+            pt_BR: 'Start date. Format: YYYYMMDD (20250101) or YYYY-MM-DD (2025-01-01).'
+            zh_Hans: 开始日期。格式：YYYYMMDD(20250101)或YYYY-MM-DD(2025-01-01)。
+          label:
+            en_US: Start Date
+            ja_JP: Start Date
+            pt_BR: Start Date
+            zh_Hans: 开始日期
+          llm_description: 历史数据的开始日期，格式为YYYYMMDD
+          max: null
+          min: null
+          name: start_date
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: ''
+          form: llm
+          human_description:
+            en_US: 'End date. Format: YYYYMMDD (20250915) or YYYY-MM-DD (2025-09-15).
+              Default: current date.'
+            ja_JP: 'End date. Format: YYYYMMDD (20250915) or YYYY-MM-DD (2025-09-15).
+              Default: current date.'
+            pt_BR: 'End date. Format: YYYYMMDD (20250915) or YYYY-MM-DD (2025-09-15).
+              Default: current date.'
+            zh_Hans: 结束日期。格式：YYYYMMDD(20250915)或YYYY-MM-DD(2025-09-15)。默认：当前日期。
+          label:
+            en_US: End Date
+            ja_JP: End Date
+            pt_BR: End Date
+            zh_Hans: 结束日期
+          llm_description: 历史数据的结束日期，格式为YYYYMMDD，默认为当前日期
+          max: null
+          min: null
+          name: end_date
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: qfq
+          form: llm
+          human_description:
+            en_US: 'Adjustment method. Options: qfq (前复权), hfq (后复权), none (不复权).'
+            ja_JP: 'Adjustment method. Options: qfq (前复权), hfq (后复权), none (不复权).'
+            pt_BR: 'Adjustment method. Options: qfq (前复权), hfq (后复权), none (不复权).'
+            zh_Hans: 复权方式。选项：qfq(前复权)、hfq(后复权)、none(不复权)。
+          label:
+            en_US: Adjustment Method
+            ja_JP: Adjustment Method
+            pt_BR: Adjustment Method
+            zh_Hans: 复权方式
+          llm_description: 价格复权方式，支持前复权、后复权、不复权
+          max: null
+          min: null
+          name: adjust
+          options:
+          - icon: ''
+            label:
+              en_US: Forward Adjustment
+              ja_JP: Forward Adjustment
+              pt_BR: Forward Adjustment
+              zh_Hans: 前复权
+            value: qfq
+          - icon: ''
+            label:
+              en_US: Backward Adjustment
+              ja_JP: Backward Adjustment
+              pt_BR: Backward Adjustment
+              zh_Hans: 后复权
+            value: hfq
+          - icon: ''
+            label:
+              en_US: No Adjustment
+              ja_JP: No Adjustment
+              pt_BR: No Adjustment
+              zh_Hans: 不复权
+            value: none
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: 5
+          form: llm
+          human_description:
+            en_US: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            ja_JP: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            pt_BR: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            zh_Hans: 网络请求重试次数。范围：1-10。默认：5。
+          label:
+            en_US: Retries
+            ja_JP: Retries
+            pt_BR: Retries
+            zh_Hans: 重试次数
+          llm_description: 网络请求重试次数，默认5次
+          max: 10
+          min: 1
+          name: retries
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: 600
+          form: llm
+          human_description:
+            en_US: 'Timeout for interface calls in seconds. Range: 5-3000. Default:
+              600.'
+            ja_JP: 'Timeout for interface calls in seconds. Range: 5-3000. Default:
+              600.'
+            pt_BR: 'Timeout for interface calls in seconds. Range: 5-3000. Default:
+              600.'
+            zh_Hans: 接口调用的超时时间（秒）。范围：5-3000。默认：600。
+          label:
+            en_US: Timeout
+            ja_JP: Timeout
+            pt_BR: Timeout
+            zh_Hans: 超时时间
+          llm_description: 接口调用的超时时间（秒），默认600秒
+          max: 3000
+          min: 5
+          name: timeout
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        params:
+          adjust: ''
+          end_date: ''
+          period: ''
+          retries: ''
+          start_date: ''
+          symbol: ''
+          timeout: ''
+        provider_id: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_name: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_type: builtin
+        selected: false
+        title: 获取个股历史估值指标
+        tool_configurations: {}
+        tool_description: 获取个股历史估值指标。基于历史行情数据和历史财务数据计算历史估值指标，包括PE历史、PB历史、PCF历史、PE加权历史、PE扣非历史、PB调整后历史、每股资本公积金比率历史、每股未分配利润比率历史、PEG历史、市净率×ROE历史等，按交易日显示历史估值变化趋势。支持日线、周线、月线周期，适用于估值趋势分析、历史估值对比和投资时机判断。可帮助投资者了解股票估值的历史变化规律，识别估值波动周期，辅助判断最佳买入或卖出时机。
+        tool_label: 获取个股历史估值指标
+        tool_name: get_stock_historical_valuation
+        tool_node_version: '2'
+        tool_parameters:
+          adjust:
+            type: constant
+            value: qfq
+          end_date:
+            type: mixed
+            value: ''
+          period:
+            type: constant
+            value: daily
+          retries:
+            type: constant
+            value: 5
+          start_date:
+            type: mixed
+            value: '20250101'
+          symbol:
+            type: mixed
+            value: '{{#1760390449027.symbol#}}'
+          timeout:
+            type: constant
+            value: 600
+        type: tool
+      height: 52
+      id: '1762436137233'
+      parentId: '1760391592346'
+      position:
+        x: 323.1233608894643
+        y: 297.13244263114836
+      positionAbsolute:
+        x: -32.66663704409194
+        y: 394.55853609586325
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        is_team_authorization: true
+        iteration_id: '1760391592346'
+        paramSchemas:
+        - auto_generate: null
+          default: stock_individual_fund_flow
+          form: llm
+          human_description:
+            en_US: 'Select individual stock fund flow data interface. Options: East
+              Money - Individual Stock Fund Flow (requires stock code and stock exchange,
+              returns fund flow data for the specified stock for nearly 100 trading
+              days, including main force net inflow, super large order net inflow,
+              large order net inflow, medium order net inflow, small order net inflow,
+              etc.). Requires stock code and stock exchange parameters.'
+            ja_JP: 'Select individual stock fund flow data interface. Options: East
+              Money - Individual Stock Fund Flow (requires stock code and stock exchange,
+              returns fund flow data for the specified stock for nearly 100 trading
+              days, including main force net inflow, super large order net inflow,
+              large order net inflow, medium order net inflow, small order net inflow,
+              etc.). Requires stock code and stock exchange parameters.'
+            pt_BR: 'Select individual stock fund flow data interface. Options: East
+              Money - Individual Stock Fund Flow (requires stock code and stock exchange,
+              returns fund flow data for the specified stock for nearly 100 trading
+              days, including main force net inflow, super large order net inflow,
+              large order net inflow, medium order net inflow, small order net inflow,
+              etc.). Requires stock code and stock exchange parameters.'
+            zh_Hans: 选择个股资金流向数据接口。选项包括：东方财富网-个股资金流向（需要股票代码和证交所，返回指定个股近100个交易日的资金流向数据，包括主力净流入、超大单净流入、大单净流入、中单净流入、小单净流入等）。需要提供股票代码和证交所参数。
+          label:
+            en_US: Interface
+            ja_JP: Interface
+            pt_BR: Interface
+            zh_Hans: 接口名称
+          llm_description: 选择个股资金流向数据接口。包括：东方财富网-个股资金流向（需要股票代码和证交所，返回指定个股近100个交易日的资金流向数据，包括主力净流入、超大单净流入、大单净流入、中单净流入、小单净流入等）。需要提供股票代码和证交所参数。
+          max: null
+          min: null
+          name: interface
+          options:
+          - icon: ''
+            label:
+              en_US: East Money - Individual Stock Fund Flow - Specified Stock, Stock
+                Exchange
+              ja_JP: East Money - Individual Stock Fund Flow - Specified Stock, Stock
+                Exchange
+              pt_BR: East Money - Individual Stock Fund Flow - Specified Stock, Stock
+                Exchange
+              zh_Hans: 东方财富网-个股资金流向-指定股票、证交所
+            value: stock_individual_fund_flow
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: '600519'
+          form: llm
+          human_description:
+            en_US: Stock code. Supports A-share formats, e.g., 600519 (Shanghai),
+              000001 (Shenzhen), 430xxx (Beijing Stock Exchange), etc.
+            ja_JP: Stock code. Supports A-share formats, e.g., 600519 (Shanghai),
+              000001 (Shenzhen), 430xxx (Beijing Stock Exchange), etc.
+            pt_BR: Stock code. Supports A-share formats, e.g., 600519 (Shanghai),
+              000001 (Shenzhen), 430xxx (Beijing Stock Exchange), etc.
+            zh_Hans: 股票代码。支持A股格式，如600519（沪市）、000001（深市）、430xxx（北交所）等。
+          label:
+            en_US: Stock Code
+            ja_JP: Stock Code
+            pt_BR: Stock Code
+            zh_Hans: 股票代码
+          llm_description: 股票代码，支持A股格式，如600519（沪市）、000001（深市）、430xxx（北交所）等。
+          max: null
+          min: null
+          name: stock_code
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: sh
+          form: llm
+          human_description:
+            en_US: 'Stock exchange code. Used to specify the stock exchange to which
+              the stock belongs. Options: sh (Shanghai Stock Exchange), sz (Shenzhen
+              Stock Exchange), bj (Beijing Stock Exchange).'
+            ja_JP: 'Stock exchange code. Used to specify the stock exchange to which
+              the stock belongs. Options: sh (Shanghai Stock Exchange), sz (Shenzhen
+              Stock Exchange), bj (Beijing Stock Exchange).'
+            pt_BR: 'Stock exchange code. Used to specify the stock exchange to which
+              the stock belongs. Options: sh (Shanghai Stock Exchange), sz (Shenzhen
+              Stock Exchange), bj (Beijing Stock Exchange).'
+            zh_Hans: 证交所代码。用于指定股票所属证交所。选项：sh（上海证券交易所）、sz（深圳证券交易所）、bj（北京证券交易所）。
+          label:
+            en_US: Stock Exchange
+            ja_JP: Stock Exchange
+            pt_BR: Stock Exchange
+            zh_Hans: 证交所
+          llm_description: 证交所代码，用于指定股票所属证交所。选项：sh（上海证券交易所）、sz（深圳证券交易所）、bj（北京证券交易所）。
+          max: null
+          min: null
+          name: market
+          options:
+          - icon: ''
+            label:
+              en_US: Shanghai Stock Exchange
+              ja_JP: Shanghai Stock Exchange
+              pt_BR: Shanghai Stock Exchange
+              zh_Hans: 上海证券交易所
+            value: sh
+          - icon: ''
+            label:
+              en_US: Shenzhen Stock Exchange
+              ja_JP: Shenzhen Stock Exchange
+              pt_BR: Shenzhen Stock Exchange
+              zh_Hans: 深圳证券交易所
+            value: sz
+          - icon: ''
+            label:
+              en_US: Beijing Stock Exchange
+              ja_JP: Beijing Stock Exchange
+              pt_BR: Beijing Stock Exchange
+              zh_Hans: 北京证券交易所
+            value: bj
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: 5
+          form: llm
+          human_description:
+            en_US: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            ja_JP: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            pt_BR: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            zh_Hans: 网络请求重试次数。范围：1-10。默认：5。
+          label:
+            en_US: Retries
+            ja_JP: Retries
+            pt_BR: Retries
+            zh_Hans: 重试次数
+          llm_description: 网络请求重试次数，范围1-10，默认5次。
+          max: 10
+          min: 1
+          name: retries
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: 600
+          form: llm
+          human_description:
+            en_US: 'Subprocess execution timeout in seconds. Range: 5-3600. Default:
+              600 (10 minutes).'
+            ja_JP: 'Subprocess execution timeout in seconds. Range: 5-3600. Default:
+              600 (10 minutes).'
+            pt_BR: 'Subprocess execution timeout in seconds. Range: 5-3600. Default:
+              600 (10 minutes).'
+            zh_Hans: 子进程执行超时时间（秒）。范围：5-3600。默认：600（10分钟）。
+          label:
+            en_US: Subprocess Timeout
+            ja_JP: Subprocess Timeout
+            pt_BR: Subprocess Timeout
+            zh_Hans: 子进程超时时间
+          llm_description: 子进程执行超时时间（秒），范围5-3600，默认600秒（10分钟）。
+          max: 3600
+          min: 5
+          name: timeout
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        params:
+          interface: ''
+          market: ''
+          retries: ''
+          stock_code: ''
+          timeout: ''
+        provider_id: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_name: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_type: builtin
+        selected: false
+        title: 获取个股资金流向数据
+        tool_configurations: {}
+        tool_description: 获取指定个股的资金流向数据，包括主力资金、散户资金的流入流出情况，用于分析资金面对个股的影响。
+        tool_label: 获取个股资金流向数据
+        tool_name: get_stock_fund_flow
+        tool_node_version: '2'
+        tool_parameters:
+          interface:
+            type: constant
+            value: stock_individual_fund_flow
+          market:
+            type: constant
+            value: sh
+          retries:
+            type: constant
+            value: 5
+          stock_code:
+            type: mixed
+            value: '{{#1760390449027.symbol#}}'
+          timeout:
+            type: constant
+            value: 600
+        type: tool
+      height: 52
+      id: '1762436241388'
+      parentId: '1760391592346'
+      position:
+        x: 318.3013383576194
+        y: 426.09684713751733
+      positionAbsolute:
+        x: -37.48865957593688
+        y: 523.5229406022322
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        is_team_authorization: true
+        iteration_id: '1760391592346'
+        paramSchemas:
+        - auto_generate: null
+          default: stock_zh_growth_comparison_em
+          form: llm
+          human_description:
+            en_US: 'Select peer comparison data interface. Options: Growth Comparison
+              (returns growth comparison data with peer companies, including revenue
+              growth rate, profit growth rate, etc.), Valuation Comparison (returns
+              valuation comparison data with peer companies, including PE ratio, PB
+              ratio, etc.), DuPont Analysis Comparison (returns DuPont analysis comparison
+              data with peer companies, including ROE, ROA, etc.), Company Scale (returns
+              scale comparison data with peer companies, including total assets, net
+              assets, etc.). All interfaces require stock symbol.'
+            ja_JP: 'Select peer comparison data interface. Options: Growth Comparison
+              (returns growth comparison data with peer companies, including revenue
+              growth rate, profit growth rate, etc.), Valuation Comparison (returns
+              valuation comparison data with peer companies, including PE ratio, PB
+              ratio, etc.), DuPont Analysis Comparison (returns DuPont analysis comparison
+              data with peer companies, including ROE, ROA, etc.), Company Scale (returns
+              scale comparison data with peer companies, including total assets, net
+              assets, etc.). All interfaces require stock symbol.'
+            pt_BR: 'Select peer comparison data interface. Options: Growth Comparison
+              (returns growth comparison data with peer companies, including revenue
+              growth rate, profit growth rate, etc.), Valuation Comparison (returns
+              valuation comparison data with peer companies, including PE ratio, PB
+              ratio, etc.), DuPont Analysis Comparison (returns DuPont analysis comparison
+              data with peer companies, including ROE, ROA, etc.), Company Scale (returns
+              scale comparison data with peer companies, including total assets, net
+              assets, etc.). All interfaces require stock symbol.'
+            zh_Hans: 选择同行比较数据接口。选项包括：成长性比较（返回与同行业公司的成长性对比数据，包括营收增长率、利润增长率等）、估值比较（返回与同行业公司的估值对比数据，包括市盈率、市净率等）、杜邦分析比较（返回与同行业公司的杜邦分析对比数据，包括ROE、ROA等）、公司规模（返回与同行业公司的规模对比数据，包括总资产、净资产等）。所有接口都需要股票代码参数。
+          label:
+            en_US: Interface
+            ja_JP: Interface
+            pt_BR: Interface
+            zh_Hans: 接口名称
+          llm_description: 选择同行比较数据接口。包括：成长性比较（返回与同行业公司的成长性对比数据，包括营收增长率、利润增长率等）、估值比较（返回与同行业公司的估值对比数据，包括市盈率、市净率等）、杜邦分析比较（返回与同行业公司的杜邦分析对比数据，包括ROE、ROA等）、公司规模（返回与同行业公司的规模对比数据，包括总资产、净资产等）。所有接口都需要股票代码参数。
+          max: null
+          min: null
+          name: interface
+          options:
+          - icon: ''
+            label:
+              en_US: Eastmoney - Peer Comparison - Growth Comparison - Specified Stock
+              ja_JP: Eastmoney - Peer Comparison - Growth Comparison - Specified Stock
+              pt_BR: Eastmoney - Peer Comparison - Growth Comparison - Specified Stock
+              zh_Hans: 东方财富网-同行比较-成长性比较-指定股票
+            value: stock_zh_growth_comparison_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - Peer Comparison - Valuation Comparison - Specified
+                Stock
+              ja_JP: Eastmoney - Peer Comparison - Valuation Comparison - Specified
+                Stock
+              pt_BR: Eastmoney - Peer Comparison - Valuation Comparison - Specified
+                Stock
+              zh_Hans: 东方财富网-同行比较-估值比较-指定股票
+            value: stock_zh_valuation_comparison_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - Peer Comparison - DuPont Analysis Comparison - Specified
+                Stock
+              ja_JP: Eastmoney - Peer Comparison - DuPont Analysis Comparison - Specified
+                Stock
+              pt_BR: Eastmoney - Peer Comparison - DuPont Analysis Comparison - Specified
+                Stock
+              zh_Hans: 东方财富网-同行比较-杜邦分析比较-指定股票
+            value: stock_zh_dupont_comparison_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - Peer Comparison - Company Scale - Specified Stock
+              ja_JP: Eastmoney - Peer Comparison - Company Scale - Specified Stock
+              pt_BR: Eastmoney - Peer Comparison - Company Scale - Specified Stock
+              zh_Hans: 东方财富网-同行比较-公司规模-指定股票
+            value: stock_zh_scale_comparison_em
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: 000895
+          form: llm
+          human_description:
+            en_US: 'Stock symbol. Format: A-shares: 600519 (Shanghai), 000001 (Shenzhen).'
+            ja_JP: 'Stock symbol. Format: A-shares: 600519 (Shanghai), 000001 (Shenzhen).'
+            pt_BR: 'Stock symbol. Format: A-shares: 600519 (Shanghai), 000001 (Shenzhen).'
+            zh_Hans: 股票代码。格式：A股：600519（沪市）、000001（深市）。
+          label:
+            en_US: Stock Symbol
+            ja_JP: Stock Symbol
+            pt_BR: Stock Symbol
+            zh_Hans: 股票代码
+          llm_description: 股票代码，支持A股格式，如600519（沪市）、000001（深市）。
+          max: null
+          min: null
+          name: symbol
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: 5
+          form: llm
+          human_description:
+            en_US: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            ja_JP: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            pt_BR: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            zh_Hans: 网络请求重试次数。范围：1-10。默认：5。
+          label:
+            en_US: Retries
+            ja_JP: Retries
+            pt_BR: Retries
+            zh_Hans: 重试次数
+          llm_description: 网络请求重试次数，范围1-10，默认5次。
+          max: 10
+          min: 1
+          name: retries
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: 600
+          form: llm
+          human_description:
+            en_US: 'Subprocess execution timeout in seconds. Range: 5-3600. Default:
+              600 (10 minutes).'
+            ja_JP: 'Subprocess execution timeout in seconds. Range: 5-3600. Default:
+              600 (10 minutes).'
+            pt_BR: 'Subprocess execution timeout in seconds. Range: 5-3600. Default:
+              600 (10 minutes).'
+            zh_Hans: 子进程执行超时时间（秒）。范围：5-3600。默认：600（10分钟）。
+          label:
+            en_US: Subprocess Timeout
+            ja_JP: Subprocess Timeout
+            pt_BR: Subprocess Timeout
+            zh_Hans: 子进程超时时间
+          llm_description: 子进程执行超时时间（秒），范围5-3600，默认600秒（10分钟）。
+          max: 3600
+          min: 5
+          name: timeout
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        params:
+          interface: ''
+          retries: ''
+          symbol: ''
+          timeout: ''
+        provider_id: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_name: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_type: builtin
+        selected: false
+        title: 获取个股同行比较数据-成长性比较
+        tool_configurations: {}
+        tool_description: 获取指定股票与同行业公司的比较数据，包括成长性比较、估值比较、杜邦分析比较、公司规模比较等。帮助了解股票在同行业中的地位和表现。
+        tool_label: 获取个股同行比较数据
+        tool_name: get_stock_peer_comparison
+        tool_node_version: '2'
+        tool_parameters:
+          interface:
+            type: constant
+            value: stock_zh_growth_comparison_em
+          retries:
+            type: constant
+            value: 5
+          symbol:
+            type: mixed
+            value: '{{#1760390449027.symbol#}}'
+          timeout:
+            type: constant
+            value: 600
+        type: tool
+      height: 52
+      id: '1762436308143'
+      parentId: '1760391592346'
+      position:
+        x: 317.3369338512504
+        y: 486.09684713751733
+      positionAbsolute:
+        x: -38.45306408230584
+        y: 583.5229406022322
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        is_team_authorization: true
+        iteration_id: '1760391592346'
+        paramSchemas:
+        - auto_generate: null
+          default: stock_hsgt_individual_em
+          form: llm
+          human_description:
+            en_US: 'Select HSGT individual stock holdings data interface. Options:
+              East Money - HSGT Holdings Specific Stock (requires stock code, returns
+              HSGT holdings data for specified stock, including holding ratio, holding
+              quantity, holding market value, etc.). Requires stock code parameter.'
+            ja_JP: 'Select HSGT individual stock holdings data interface. Options:
+              East Money - HSGT Holdings Specific Stock (requires stock code, returns
+              HSGT holdings data for specified stock, including holding ratio, holding
+              quantity, holding market value, etc.). Requires stock code parameter.'
+            pt_BR: 'Select HSGT individual stock holdings data interface. Options:
+              East Money - HSGT Holdings Specific Stock (requires stock code, returns
+              HSGT holdings data for specified stock, including holding ratio, holding
+              quantity, holding market value, etc.). Requires stock code parameter.'
+            zh_Hans: 选择沪深港通个股持股数据接口。选项包括：东方财富网-沪深港通持股-具体股票（需要股票代码，返回指定股票在沪深港通中的持股数据，包括持股比例、持股数量、持股市值等信息）。需要提供股票代码参数。
+          label:
+            en_US: Interface
+            ja_JP: Interface
+            pt_BR: Interface
+            zh_Hans: 接口名称
+          llm_description: 选择沪深港通个股持股数据接口。包括：东方财富网-沪深港通持股-具体股票（需要股票代码，返回指定股票在沪深港通中的持股数据，包括持股比例、持股数量、持股市值等信息）。需要提供股票代码参数。
+          max: null
+          min: null
+          name: interface
+          options:
+          - icon: ''
+            label:
+              en_US: East Money - HSGT Holdings Specific Stock - Specify A-share and
+                HK Stock
+              ja_JP: East Money - HSGT Holdings Specific Stock - Specify A-share and
+                HK Stock
+              pt_BR: East Money - HSGT Holdings Specific Stock - Specify A-share and
+                HK Stock
+              zh_Hans: 东方财富网-沪深港通持股-具体股票-指定A股和港股
+            value: stock_hsgt_individual_em
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: '600519'
+          form: llm
+          human_description:
+            en_US: Stock code. Supports A-share and HK stock formats, e.g., 600519
+              (Shanghai), 000001 (Shenzhen), 00700 (HK stock), etc.
+            ja_JP: Stock code. Supports A-share and HK stock formats, e.g., 600519
+              (Shanghai), 000001 (Shenzhen), 00700 (HK stock), etc.
+            pt_BR: Stock code. Supports A-share and HK stock formats, e.g., 600519
+              (Shanghai), 000001 (Shenzhen), 00700 (HK stock), etc.
+            zh_Hans: 股票代码。支持A股和港股格式，如600519（沪市）、000001（深市）、00700（港股）等。
+          label:
+            en_US: Stock Code
+            ja_JP: Stock Code
+            pt_BR: Stock Code
+            zh_Hans: 股票代码
+          llm_description: 股票代码，支持A股和港股格式，如600519（沪市）、000001（深市）、00700（港股）等。
+          max: null
+          min: null
+          name: symbol
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: 5
+          form: llm
+          human_description:
+            en_US: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            ja_JP: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            pt_BR: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            zh_Hans: 网络请求重试次数。范围：1-10。默认：5。
+          label:
+            en_US: Retries
+            ja_JP: Retries
+            pt_BR: Retries
+            zh_Hans: 重试次数
+          llm_description: 网络请求重试次数，范围1-10，默认5次。
+          max: 10
+          min: 1
+          name: retries
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: 600
+          form: llm
+          human_description:
+            en_US: 'Subprocess execution timeout in seconds. Range: 5-3600. Default:
+              600 (10 minutes).'
+            ja_JP: 'Subprocess execution timeout in seconds. Range: 5-3600. Default:
+              600 (10 minutes).'
+            pt_BR: 'Subprocess execution timeout in seconds. Range: 5-3600. Default:
+              600 (10 minutes).'
+            zh_Hans: 子进程执行超时时间（秒）。范围：5-3600。默认：600（10分钟）。
+          label:
+            en_US: Subprocess Timeout
+            ja_JP: Subprocess Timeout
+            pt_BR: Subprocess Timeout
+            zh_Hans: 子进程超时时间
+          llm_description: 子进程执行超时时间（秒），范围5-3600，默认600秒（10分钟）。
+          max: 3600
+          min: 5
+          name: timeout
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        params:
+          interface: ''
+          retries: ''
+          symbol: ''
+          timeout: ''
+        provider_id: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_name: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_type: builtin
+        selected: false
+        title: 获取沪深港通个股持股数据
+        tool_configurations: {}
+        tool_description: 获取指定股票的沪深港通持股数据，包括A股和港股的持股情况。帮助了解特定股票在沪深港通中的持股情况。
+        tool_label: 获取沪深港通个股持股数据
+        tool_name: get_hsgt_individual_holdings
+        tool_node_version: '2'
+        tool_parameters:
+          interface:
+            type: constant
+            value: stock_hsgt_individual_em
+          retries:
+            type: constant
+            value: 5
+          symbol:
+            type: mixed
+            value: '{{#1760390449027.symbol#}}'
+          timeout:
+            type: constant
+            value: 600
+        type: tool
+      height: 52
+      id: '1762436386884'
+      parentId: '1760391592346'
+      position:
+        x: 320.3013383576194
+        y: 592.6146448843327
+      positionAbsolute:
+        x: -35.48865957593688
+        y: 690.0407383490476
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        is_team_authorization: true
+        iteration_id: '1760391592346'
+        paramSchemas:
+        - auto_generate: null
+          default: stock_zh_growth_comparison_em
+          form: llm
+          human_description:
+            en_US: 'Select peer comparison data interface. Options: Growth Comparison
+              (returns growth comparison data with peer companies, including revenue
+              growth rate, profit growth rate, etc.), Valuation Comparison (returns
+              valuation comparison data with peer companies, including PE ratio, PB
+              ratio, etc.), DuPont Analysis Comparison (returns DuPont analysis comparison
+              data with peer companies, including ROE, ROA, etc.), Company Scale (returns
+              scale comparison data with peer companies, including total assets, net
+              assets, etc.). All interfaces require stock symbol.'
+            ja_JP: 'Select peer comparison data interface. Options: Growth Comparison
+              (returns growth comparison data with peer companies, including revenue
+              growth rate, profit growth rate, etc.), Valuation Comparison (returns
+              valuation comparison data with peer companies, including PE ratio, PB
+              ratio, etc.), DuPont Analysis Comparison (returns DuPont analysis comparison
+              data with peer companies, including ROE, ROA, etc.), Company Scale (returns
+              scale comparison data with peer companies, including total assets, net
+              assets, etc.). All interfaces require stock symbol.'
+            pt_BR: 'Select peer comparison data interface. Options: Growth Comparison
+              (returns growth comparison data with peer companies, including revenue
+              growth rate, profit growth rate, etc.), Valuation Comparison (returns
+              valuation comparison data with peer companies, including PE ratio, PB
+              ratio, etc.), DuPont Analysis Comparison (returns DuPont analysis comparison
+              data with peer companies, including ROE, ROA, etc.), Company Scale (returns
+              scale comparison data with peer companies, including total assets, net
+              assets, etc.). All interfaces require stock symbol.'
+            zh_Hans: 选择同行比较数据接口。选项包括：成长性比较（返回与同行业公司的成长性对比数据，包括营收增长率、利润增长率等）、估值比较（返回与同行业公司的估值对比数据，包括市盈率、市净率等）、杜邦分析比较（返回与同行业公司的杜邦分析对比数据，包括ROE、ROA等）、公司规模（返回与同行业公司的规模对比数据，包括总资产、净资产等）。所有接口都需要股票代码参数。
+          label:
+            en_US: Interface
+            ja_JP: Interface
+            pt_BR: Interface
+            zh_Hans: 接口名称
+          llm_description: 选择同行比较数据接口。包括：成长性比较（返回与同行业公司的成长性对比数据，包括营收增长率、利润增长率等）、估值比较（返回与同行业公司的估值对比数据，包括市盈率、市净率等）、杜邦分析比较（返回与同行业公司的杜邦分析对比数据，包括ROE、ROA等）、公司规模（返回与同行业公司的规模对比数据，包括总资产、净资产等）。所有接口都需要股票代码参数。
+          max: null
+          min: null
+          name: interface
+          options:
+          - icon: ''
+            label:
+              en_US: Eastmoney - Peer Comparison - Growth Comparison - Specified Stock
+              ja_JP: Eastmoney - Peer Comparison - Growth Comparison - Specified Stock
+              pt_BR: Eastmoney - Peer Comparison - Growth Comparison - Specified Stock
+              zh_Hans: 东方财富网-同行比较-成长性比较-指定股票
+            value: stock_zh_growth_comparison_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - Peer Comparison - Valuation Comparison - Specified
+                Stock
+              ja_JP: Eastmoney - Peer Comparison - Valuation Comparison - Specified
+                Stock
+              pt_BR: Eastmoney - Peer Comparison - Valuation Comparison - Specified
+                Stock
+              zh_Hans: 东方财富网-同行比较-估值比较-指定股票
+            value: stock_zh_valuation_comparison_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - Peer Comparison - DuPont Analysis Comparison - Specified
+                Stock
+              ja_JP: Eastmoney - Peer Comparison - DuPont Analysis Comparison - Specified
+                Stock
+              pt_BR: Eastmoney - Peer Comparison - DuPont Analysis Comparison - Specified
+                Stock
+              zh_Hans: 东方财富网-同行比较-杜邦分析比较-指定股票
+            value: stock_zh_dupont_comparison_em
+          - icon: ''
+            label:
+              en_US: Eastmoney - Peer Comparison - Company Scale - Specified Stock
+              ja_JP: Eastmoney - Peer Comparison - Company Scale - Specified Stock
+              pt_BR: Eastmoney - Peer Comparison - Company Scale - Specified Stock
+              zh_Hans: 东方财富网-同行比较-公司规模-指定股票
+            value: stock_zh_scale_comparison_em
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: 000895
+          form: llm
+          human_description:
+            en_US: 'Stock symbol. Format: A-shares: 600519 (Shanghai), 000001 (Shenzhen).'
+            ja_JP: 'Stock symbol. Format: A-shares: 600519 (Shanghai), 000001 (Shenzhen).'
+            pt_BR: 'Stock symbol. Format: A-shares: 600519 (Shanghai), 000001 (Shenzhen).'
+            zh_Hans: 股票代码。格式：A股：600519（沪市）、000001（深市）。
+          label:
+            en_US: Stock Symbol
+            ja_JP: Stock Symbol
+            pt_BR: Stock Symbol
+            zh_Hans: 股票代码
+          llm_description: 股票代码，支持A股格式，如600519（沪市）、000001（深市）。
+          max: null
+          min: null
+          name: symbol
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: 5
+          form: llm
+          human_description:
+            en_US: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            ja_JP: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            pt_BR: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            zh_Hans: 网络请求重试次数。范围：1-10。默认：5。
+          label:
+            en_US: Retries
+            ja_JP: Retries
+            pt_BR: Retries
+            zh_Hans: 重试次数
+          llm_description: 网络请求重试次数，范围1-10，默认5次。
+          max: 10
+          min: 1
+          name: retries
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: 600
+          form: llm
+          human_description:
+            en_US: 'Subprocess execution timeout in seconds. Range: 5-3600. Default:
+              600 (10 minutes).'
+            ja_JP: 'Subprocess execution timeout in seconds. Range: 5-3600. Default:
+              600 (10 minutes).'
+            pt_BR: 'Subprocess execution timeout in seconds. Range: 5-3600. Default:
+              600 (10 minutes).'
+            zh_Hans: 子进程执行超时时间（秒）。范围：5-3600。默认：600（10分钟）。
+          label:
+            en_US: Subprocess Timeout
+            ja_JP: Subprocess Timeout
+            pt_BR: Subprocess Timeout
+            zh_Hans: 子进程超时时间
+          llm_description: 子进程执行超时时间（秒），范围5-3600，默认600秒（10分钟）。
+          max: 3600
+          min: 5
+          name: timeout
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        params:
+          interface: ''
+          retries: ''
+          symbol: ''
+          timeout: ''
+        provider_id: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_name: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_type: builtin
+        selected: false
+        title: 获取个股同行比较数据-估值比较
+        tool_configurations: {}
+        tool_description: 获取指定股票与同行业公司的比较数据，包括成长性比较、估值比较、杜邦分析比较、公司规模比较等。帮助了解股票在同行业中的地位和表现。
+        tool_label: 获取个股同行比较数据
+        tool_name: get_stock_peer_comparison
+        tool_node_version: '2'
+        tool_parameters:
+          interface:
+            type: constant
+            value: stock_zh_valuation_comparison_em
+          retries:
+            type: constant
+            value: 5
+          symbol:
+            type: mixed
+            value: '{{#1760390449027.symbol#}}'
+          timeout:
+            type: constant
+            value: 600
+        type: tool
+      height: 52
+      id: '1762436528963'
+      parentId: '1760391592346'
+      position:
+        x: 314.3013383576194
+        y: 534.0968471375172
+      positionAbsolute:
+        x: -41.48865957593688
+        y: 631.5229406022321
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        is_team_authorization: true
+        iteration_id: '1760391592346'
+        paramSchemas:
+        - auto_generate: null
+          default: stock_profit_sheet_by_report_em
+          form: llm
+          human_description:
+            en_US: 'Select income statement data interface. Options: East Money Income
+              Statement (by Report Period/Year/Quarter), Flush Income Statement.'
+            ja_JP: 'Select income statement data interface. Options: East Money Income
+              Statement (by Report Period/Year/Quarter), Flush Income Statement.'
+            pt_BR: 'Select income statement data interface. Options: East Money Income
+              Statement (by Report Period/Year/Quarter), Flush Income Statement.'
+            zh_Hans: 选择利润表数据接口。选项包括：东方财富网-利润表(按报告期/年度/单季度)、同花顺-个股利润表。
+          label:
+            en_US: Interface
+            ja_JP: Interface
+            pt_BR: Interface
+            zh_Hans: 接口名称
+          llm_description: 选择利润表数据接口。包括：东方财富网-利润表(按报告期)（需要股票代码，返回指定股票所有报告期的利润表数据）、东方财富网-利润表(按年度)（需要股票代码，返回指定股票所有年度的利润表数据）、东方财富网-利润表(按单季度)（需要股票代码，返回指定股票所有季度的利润表数据）、同花顺-个股利润表（需要股票代码和报告类型，返回指定股票指定报告类型的利润表所有历史数据）。根据不同接口提供相应参数。
+          max: null
+          min: null
+          name: interface
+          options:
+          - icon: ''
+            label:
+              en_US: East Money - Income Statement (by Report Period) - Specified
+                Stock
+              ja_JP: East Money - Income Statement (by Report Period) - Specified
+                Stock
+              pt_BR: East Money - Income Statement (by Report Period) - Specified
+                Stock
+              zh_Hans: 东方财富网-利润表(按报告期)-指定股票
+            value: stock_profit_sheet_by_report_em
+          - icon: ''
+            label:
+              en_US: East Money - Income Statement (by Year) - Specified Stock
+              ja_JP: East Money - Income Statement (by Year) - Specified Stock
+              pt_BR: East Money - Income Statement (by Year) - Specified Stock
+              zh_Hans: 东方财富网-利润表(按年度)-指定股票
+            value: stock_profit_sheet_by_yearly_em
+          - icon: ''
+            label:
+              en_US: East Money - Income Statement (by Single Quarter) - Specified
+                Stock
+              ja_JP: East Money - Income Statement (by Single Quarter) - Specified
+                Stock
+              pt_BR: East Money - Income Statement (by Single Quarter) - Specified
+                Stock
+              zh_Hans: 东方财富网-利润表(按单季度)-指定股票
+            value: stock_profit_sheet_by_quarterly_em
+          - icon: ''
+            label:
+              en_US: Flush - Individual Stock Income Statement - Specified Stock,
+                Report Type
+              ja_JP: Flush - Individual Stock Income Statement - Specified Stock,
+                Report Type
+              pt_BR: Flush - Individual Stock Income Statement - Specified Stock,
+                Report Type
+              zh_Hans: 同花顺-个股利润表-指定股票、报告类型
+            value: stock_financial_benefit_ths
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: '000001'
+          form: llm
+          human_description:
+            en_US: Stock code. Supports A-share formats, e.g., 600519 (Shanghai),
+              000001 (Shenzhen), 430xxx (Beijing Stock Exchange), etc.
+            ja_JP: Stock code. Supports A-share formats, e.g., 600519 (Shanghai),
+              000001 (Shenzhen), 430xxx (Beijing Stock Exchange), etc.
+            pt_BR: Stock code. Supports A-share formats, e.g., 600519 (Shanghai),
+              000001 (Shenzhen), 430xxx (Beijing Stock Exchange), etc.
+            zh_Hans: 股票代码。支持A股格式，如600519（沪市）、000001（深市）、430xxx（北交所）等。
+          label:
+            en_US: Stock Code
+            ja_JP: Stock Code
+            pt_BR: Stock Code
+            zh_Hans: 股票代码
+          llm_description: 股票代码，支持A股格式，如600519（沪市）、000001（深市）、430xxx（北交所）等。
+          max: null
+          min: null
+          name: stock_code
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: 年报
+          form: llm
+          human_description:
+            en_US: 'Report type. Required for Flush income statement interface. Options:
+              Annual Report (年报), Quarterly Report (季报), Interim Report (中报).'
+            ja_JP: 'Report type. Required for Flush income statement interface. Options:
+              Annual Report (年报), Quarterly Report (季报), Interim Report (中报).'
+            pt_BR: 'Report type. Required for Flush income statement interface. Options:
+              Annual Report (年报), Quarterly Report (季报), Interim Report (中报).'
+            zh_Hans: 报告类型。用于同花顺利润表接口。选项：年报、季报、中报。
+          label:
+            en_US: Report Type
+            ja_JP: Report Type
+            pt_BR: Report Type
+            zh_Hans: 报告类型
+          llm_description: 报告类型参数，用于同花顺利润表接口。选项：年报、季报、中报。
+          max: null
+          min: null
+          name: report_type
+          options:
+          - icon: ''
+            label:
+              en_US: Annual Report
+              ja_JP: Annual Report
+              pt_BR: Annual Report
+              zh_Hans: 年报
+            value: 年报
+          - icon: ''
+            label:
+              en_US: Quarterly Report
+              ja_JP: Quarterly Report
+              pt_BR: Quarterly Report
+              zh_Hans: 季报
+            value: 季报
+          - icon: ''
+            label:
+              en_US: Interim Report
+              ja_JP: Interim Report
+              pt_BR: Interim Report
+              zh_Hans: 中报
+            value: 中报
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: 5
+          form: llm
+          human_description:
+            en_US: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            ja_JP: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            pt_BR: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            zh_Hans: 网络请求重试次数。范围：1-10。默认：5。
+          label:
+            en_US: Retries
+            ja_JP: Retries
+            pt_BR: Retries
+            zh_Hans: 重试次数
+          llm_description: 网络请求重试次数，范围1-10，默认5次。
+          max: 10
+          min: 1
+          name: retries
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: 600
+          form: llm
+          human_description:
+            en_US: 'Subprocess execution timeout in seconds. Range: 5-3600. Default:
+              600 (10 minutes). Financial statement data may be large, suggest longer
+              timeout.'
+            ja_JP: 'Subprocess execution timeout in seconds. Range: 5-3600. Default:
+              600 (10 minutes). Financial statement data may be large, suggest longer
+              timeout.'
+            pt_BR: 'Subprocess execution timeout in seconds. Range: 5-3600. Default:
+              600 (10 minutes). Financial statement data may be large, suggest longer
+              timeout.'
+            zh_Hans: 子进程执行超时时间（秒）。范围：5-3600。默认：600（10分钟）。财务报表数据量可能较大，建议设置较长的超时时间。
+          label:
+            en_US: Subprocess Timeout
+            ja_JP: Subprocess Timeout
+            pt_BR: Subprocess Timeout
+            zh_Hans: 子进程超时时间
+          llm_description: 子进程执行超时时间（秒），范围5-3600，默认600秒（10分钟）。财务报表数据量可能较大，建议设置较长的超时时间。
+          max: 3600
+          min: 5
+          name: timeout
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        params:
+          interface: ''
+          report_type: ''
+          retries: ''
+          stock_code: ''
+          timeout: ''
+        provider_id: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_name: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_type: builtin
+        selected: false
+        title: 获取个股财务报表-利润表
+        tool_configurations: {}
+        tool_description: 获取指定股票的利润表数据，包括营业收入、营业成本、净利润等完整的利润表信息，支持东方财富网、同花顺等多个数据源。
+        tool_label: 获取个股财务报表-利润表
+        tool_name: get_stock_profit_sheet
+        tool_node_version: '2'
+        tool_parameters:
+          interface:
+            type: constant
+            value: stock_profit_sheet_by_report_em
+          report_type:
+            type: constant
+            value: 年报
+          retries:
+            type: constant
+            value: 5
+          stock_code:
+            type: mixed
+            value: '{{#1760390449027.symbol#}}'
+          timeout:
+            type: constant
+            value: 600
+        type: tool
+      height: 52
+      id: '1762436652519'
+      parentId: '1760391592346'
+      position:
+        x: 328.81913610443485
+        y: 658.6146448843327
+      positionAbsolute:
+        x: -26.970861829121418
+        y: 756.0407383490476
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        is_team_authorization: true
+        paramSchemas:
+        - auto_generate: null
+          default: index_trend_momentum_oscillator
+          form: llm
+          human_description:
+            en_US: Select the index trend momentum oscillator (daily) interface.
+            ja_JP: Select the index trend momentum oscillator (daily) interface.
+            pt_BR: Select the index trend momentum oscillator (daily) interface.
+            zh_Hans: 选择指数趋势动量震荡指标(日频)接口。
+          label:
+            en_US: Interface
+            ja_JP: Interface
+            pt_BR: Interface
+            zh_Hans: 接口名称
+          llm_description: 选择指数趋势动量震荡指标(日频)接口
+          max: null
+          min: null
+          name: interface
+          options:
+          - icon: ''
+            label:
+              en_US: Index Trend Momentum Oscillator - Specific Index, Date Range
+              ja_JP: Index Trend Momentum Oscillator - Specific Index, Date Range
+              pt_BR: Index Trend Momentum Oscillator - Specific Index, Date Range
+              zh_Hans: 指数趋势动量震荡指标-指定指数、日期范围
+            value: index_trend_momentum_oscillator
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: sh000001
+          form: llm
+          human_description:
+            en_US: 'Index code. Format: prefix format (sh000001, sz399552, etc.).'
+            ja_JP: 'Index code. Format: prefix format (sh000001, sz399552, etc.).'
+            pt_BR: 'Index code. Format: prefix format (sh000001, sz399552, etc.).'
+            zh_Hans: 指数代码。格式：带市场标识格式（sh000001、sz399552等）。
+          label:
+            en_US: Index Code
+            ja_JP: Index Code
+            pt_BR: Index Code
+            zh_Hans: 指数代码
+          llm_description: 指数代码，需要带市场标识格式，如sh000001、sz399552等
+          max: null
+          min: null
+          name: symbol
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: '20250101'
+          form: llm
+          human_description:
+            en_US: 'Start date. Format: YYYYMMDD (20250101) or YYYY-MM-DD (2025-01-01).'
+            ja_JP: 'Start date. Format: YYYYMMDD (20250101) or YYYY-MM-DD (2025-01-01).'
+            pt_BR: 'Start date. Format: YYYYMMDD (20250101) or YYYY-MM-DD (2025-01-01).'
+            zh_Hans: 开始日期。格式：YYYYMMDD(20250101)或YYYY-MM-DD(2025-01-01)。
+          label:
+            en_US: Start Date
+            ja_JP: Start Date
+            pt_BR: Start Date
+            zh_Hans: 开始日期
+          llm_description: 历史数据的开始日期，格式为YYYYMMDD
+          max: null
+          min: null
+          name: start_date
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: '20251231'
+          form: llm
+          human_description:
+            en_US: 'End date. Format: YYYYMMDD (20251231) or YYYY-MM-DD (2025-12-31).'
+            ja_JP: 'End date. Format: YYYYMMDD (20251231) or YYYY-MM-DD (2025-12-31).'
+            pt_BR: 'End date. Format: YYYYMMDD (20251231) or YYYY-MM-DD (2025-12-31).'
+            zh_Hans: 结束日期。格式：YYYYMMDD(20251231)或YYYY-MM-DD(2025-12-31)。
+          label:
+            en_US: End Date
+            ja_JP: End Date
+            pt_BR: End Date
+            zh_Hans: 结束日期
+          llm_description: 历史数据的结束日期，格式为YYYYMMDD
+          max: null
+          min: null
+          name: end_date
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: 5
+          form: llm
+          human_description:
+            en_US: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            ja_JP: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            pt_BR: 'Number of retries for network requests. Range: 1-10. Default:
+              5.'
+            zh_Hans: 网络请求重试次数。范围：1-10。默认：5。
+          label:
+            en_US: Retries
+            ja_JP: Retries
+            pt_BR: Retries
+            zh_Hans: 重试次数
+          llm_description: 网络请求重试次数，默认5次
+          max: 10
+          min: 1
+          name: retries
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: 900
+          form: llm
+          human_description:
+            en_US: 'Timeout for interface calls in seconds. Range: 5-3600. Default:
+              900.'
+            ja_JP: 'Timeout for interface calls in seconds. Range: 5-3600. Default:
+              900.'
+            pt_BR: 'Timeout for interface calls in seconds. Range: 5-3600. Default:
+              900.'
+            zh_Hans: 接口调用的超时时间（秒）。范围：5-3600。默认：900。
+          label:
+            en_US: Timeout
+            ja_JP: Timeout
+            pt_BR: Timeout
+            zh_Hans: 超时时间
+          llm_description: 接口调用的超时时间（秒），默认900秒
+          max: 3600
+          min: 5
+          name: timeout
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        params:
+          end_date: ''
+          interface: ''
+          retries: ''
+          start_date: ''
+          symbol: ''
+          timeout: ''
+        provider_id: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_name: shaoxing-xie/akshare_stockdata/akshare_stockdata
+        provider_type: builtin
+        selected: false
+        title: 获取指数趋势动量震荡指标(日频)
+        tool_configurations: {}
+        tool_description: 获取指数趋势动量震荡指标(日频)。基于历史行情数据自动计算多种技术分析指标，包括移动平均线（MA5/MA10/MA20/MA30/MA60）、RSI相对强弱指标（RSI6/RSI12/RSI24）、MACD指标、KDJ随机指标、布林带指标、成交量均线（VMA5/VMA10/VMA20）等。适用于指数技术分析、趋势判断和交易决策。可帮助投资者识别指数的趋势方向、买卖信号和超买超卖状态。
+        tool_label: 获取指数趋势动量震荡指标(日频)
+        tool_name: get_index_trend_momentum_daily
+        tool_node_version: '2'
+        tool_parameters:
+          end_date:
+            type: mixed
+            value: '{{#1760392261128.end_date#}}'
+          interface:
+            type: constant
+            value: index_trend_momentum_oscillator
+          retries:
+            type: constant
+            value: 5
+          start_date:
+            type: mixed
+            value: '{{#1760390449027.start_date#}}'
+          symbol:
+            type: mixed
+            value: sh000001
+          timeout:
+            type: constant
+            value: 900
+        type: tool
+      height: 52
+      id: '1762436858807'
+      position:
+        x: 1048.1598387777874
+        y: 352.5944100953682
+      positionAbsolute:
+        x: 1048.1598387777874
+        y: 352.5944100953682
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    viewport:
+      x: 329.60546665454467
+      y: 84.37427366832148
+      zoom: 0.2871745887492588
+  rag_pipeline_variables: []
