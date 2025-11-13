@@ -1,0 +1,13 @@
+[[source]]
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+verify_ssl = true
+name = "pip_conf_index_global"
+
+[packages]
+dify-plugin = "<0.2.0,>=0.1.0"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"
+python_full_version = "3.12.9"
