@@ -1,30 +1,15 @@
-# AKShare 股票数据插件 for Dify
+# AKShare 股票数据插件 v0.7.0 - 工具拆分优化版综合性股票数据工具
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
-[![Dify Plugin](https://img.shields.io/badge/Dify-Plugin-green.svg)](https://dify.ai/)
-[![AKShare](https://img.shields.io/badge/AKShare-Latest-blue.svg)](https://github.com/akfamily/akshare)
-[![Download Plugin](https://img.shields.io/badge/Download-Plugin%20Package-blue)](https://github.com/shaoxing-xie/akshare-stockdata-plugin/releases/tag/v0.7.0)
-[![工具数量](https://img.shields.io/badge/工具数量-78-blue.svg)](https://github.com/shaoxing-xie/akshare-stockdata-plugin/blob/main/AKShare%20股票数据插件详细功能文档.md)
-[![接口数量](https://img.shields.io/badge/接口数量-190+-blue.svg)](https://github.com/shaoxing-xie/akshare-stockdata-plugin/blob/main/AKShare%20股票数据插件详细功能文档.md)
-[![详细文档](https://img.shields.io/badge/详细文档-查看-green.svg)](https://github.com/shaoxing-xie/akshare-stockdata-plugin/blob/main/AKShare%20股票数据插件详细功能文档.md)
+**发布日期**：2025-11-06  
 
-## 📥 快速下载
+**标签**：v0.7.0
 
-[![Download Plugin](https://img.shields.io/badge/Download-Plugin%20Package-blue)](https://github.com/shaoxing-xie/akshare-stockdata-plugin/releases/tag/v0.7.0)
-
-**直接下载最新版本插件包** | [查看所有版本](https://github.com/shaoxing-xie/akshare-stockdata-plugin/releases)
-
-## 📞 联系方式
-
-- **作者**: shaoxing-xie
-- **邮箱**: sxxiefg@163.com
-- **代码库**: [https://github.com/shaoxing-xie/akshare-stockdata-plugin](https://github.com/shaoxing-xie/akshare-stockdata-plugin)
-- **问题反馈**: [GitHub Issues](https://github.com/shaoxing-xie/akshare-stockdata-plugin/issues)
+**下载插件包**：[AKShare-Stockdata-plugin-v0.7.0-20251106.difypkg](https://github.com/shaoxing-xie/akshare-stockdata-plugin/releases/tag/v0.7.0)
 
 ## 📋 概述
 
-**AKShare 股票数据插件** 是一个专为 Dify 平台开发的综合性股票数据工具，基于知名的 [AKShare](https://github.com/akfamily/akshare) Python 库构建。本插件为用户提供了一站式的股票市场数据访问解决方案，涵盖实时行情、历史数据、财务分析、资金流向、技术分析、沪深港通等多个维度的专业股票信息。
+**AKShare 股票数据插件** 是一个专为 Dify 平台开发的综合性股票数据工具，基于知名的 [AKShare](https://github.com/akfamily/akshare) Python 库构建。本插件为用户提供了一站式的股票市场数据访问解决方案，涵盖实时行情、历史数据、财务分析、资金流向、技术分析、沪深港通等多个维度的专业股票信息。v0.7.0版本聚焦于工具拆分优化和功能域分类，将12个大工具拆分为78个细粒度工具，更便于精确调用和使用。
+
 > **功能亮点**: 提供78个专业工具、190+个数据接口，覆盖全球股票市场。查看 [完整功能文档](https://github.com/shaoxing-xie/akshare-stockdata-plugin/blob/main/AKShare%20股票数据插件详细功能文档.md) 获取所有接口详情、参数指南和技术参考。
 
 > **重要声明**: 本插件是 AKShare 库的 Dify 平台集成工具，AKShare 是一个专为学术研究目的设计的开源金融数据接口库。我们对 AKShare 项目团队的卓越工作表示诚挚感谢。
@@ -63,7 +48,7 @@
 
 ### 🛠️ **强大功能矩阵**
 - 🎯 **78个专业工具**: 覆盖股票数据分析的各个方面
-  - **按功能域分类**: 市场总貌、个股信息、行情数据、财务数据、资金流向、技术分析等12大功能域
+  - **按功能域分类**: 市场总貌、个股信息、行情数据、财务数据、资金流向、技术分析等11大功能域
   - **细粒度设计**: 每个工具专注于特定功能，便于精确调用
 - 🌍 **190+个数据接口**: 广泛覆盖全球主要股票市场
 - 📊 **多市场支持**: A股、B股、港股、美股、科创板、北交所
@@ -89,101 +74,9 @@
 - 开发股票分析和预测模型
 - 创建自动化投资决策系统
 
+## 📚 详细功能文档
 
-## 📦 如何安装
-
-### 方式一：直接下载安装（推荐）
-
-[![Download Plugin](https://img.shields.io/badge/Download-Plugin%20Package-blue)](https://github.com/shaoxing-xie/akshare-stockdata-plugin/releases/tag/v0.7.0)
-
-1. **快速下载**：点击上方按钮直接下载最新版本插件包
-2. **在Dify中安装**：
-   - 打开您的 Dify 工作空间
-   - 导航至 **工具** → **插件** → **安装插件**
-   - 选择 **"从文件安装"**
-   - 上传下载的 `.difypkg` 文件
-   - 点击 **安装** 按钮
-
-### 方式二：从releases目录下载
-1. 访问 [releases目录](https://github.com/shaoxing-xie/akshare-stockdata-plugin/tree/main/releases)
-2. 下载 **"AKShare-Stockdata-plugin-v0.7.0-20251106.difypkg"** 文件
-3. 按照方式一的步骤在Dify中安装
-
-### 方式三：通过GitHub Releases
-1. 访问 [GitHub Releases](https://github.com/shaoxing-xie/akshare-stockdata-plugin/releases)
-2. 下载最新版本的插件包
-3. 按照方式一的步骤在Dify中安装
-
-### 方式三：手动安装
-1. 克隆本仓库到本地
-   ```bash
-   git clone https://github.com/shaoxing-xie/akshare-stockdata-plugin.git
-   ```
-2. 安装Python依赖
-   ```bash
-   cd akshare-stockdata-plugin
-   pip install -r requirements.txt
-   ```
-3. 使用 Dify CLI 打包插件
-   ```bash
-   dify plugin package
-   ```
-4. 在 Dify 中上传生成的 .difypkg 文件
-
-安装后，参考 [详细功能文档](https://github.com/shaoxing-xie/akshare-stockdata-plugin/blob/main/AKShare%20股票数据插件详细功能文档.md) 快速了解所有接口。
-
-## 🎯 如何使用
-
-### 快速上手三步骤
-1. **选择工具**: 从78个专业工具中选择适合的工具（按功能域分类）
-2. **选择接口**: 从190+个数据接口中选择具体的数据源
-3. **设置参数**: 配置股票代码、日期范围等参数
-
-### 使用示例
-
-#### 获取股票历史行情
-```json
-{
-  "interface": "东方财富网-A股历史行情数据",
-  "symbol": "600519",
-  "period": "daily",
-  "start_date": "20240101",
-  "end_date": "20241231",
-  "adjust": "qfq"
-}
-```
-
-#### 获取实时行情数据
-```json
-{
-  "interface": "东方财富网-沪A股票实时行情",
-  "symbol": "600519"
-}
-```
-
-#### 查询个股财务数据
-```json
-{
-  "interface": "东方财富网-业绩快报-资产负债表",
-  "date": "20240331"
-}
-```
-
-更多示例见 [详细功能文档](https://github.com/shaoxing-xie/akshare-stockdata-plugin/blob/main/AKShare%20股票数据插件详细功能文档.md)。
-
-## 🎨 应用示例展示
-
-### 📊 个股诊断报告示例
-
-我们基于插件构建了一个完整的个股诊断工作流，可以自动生成专业的个股诊断报告：
-
-<img src="_assets/result.png" alt="个股诊断报告示例" width="800"/>
-
-### 🔄 工作流配置
-
-以下是个股诊断助手的工作流配置，展示了如何组合使用多个工具来实现复杂的股票分析：
-
-<img src="_assets/workflow.png" alt="个股诊断助手工作流" width="800"/>
+插件提供78个专业工具共190+个数据接口的完整功能。查看 [完整功能文档](https://github.com/shaoxing-xie/akshare-stockdata-plugin/blob/main/AKShare%20股票数据插件详细功能文档.md) 获取所有接口详情、参数指南和技术参考。
 
 ## 🛠️ 工具详情
 
@@ -338,190 +231,39 @@ A股指数相关的数据接口，包括指数实时行情、历史数据、技�
 **工具统计**：
 - **总计**: 78个专业工具
 - **数据接口**: 190+个数据接口
-- **功能覆盖**: 市场总貌、个股信息、行情数据、财务数据、资金流向、技术分析、技术指标、沪深港通、指数数据、港股数据、美股数据等12大功能域
+- **功能覆盖**: 市场总貌、个股信息、行情数据、财务数据、资金流向、技术分析、技术指标、沪深港通、指数数据、港股数据、美股数据等11大功能域
 
-## 🔒 隐私与安全
+## 🔄 版本更新亮点（从 v0.6.0 到 v0.7.0）
 
-本插件严格遵循数据隐私保护原则：
-- ✅ **不存储用户数据**: 所有数据仅在内存中处理，不进行持久化存储
-- ✅ **不收集个人信息**: 不获取或传输任何用户个人敏感信息  
-- ✅ **透明数据处理**: 所有数据来源和处理过程完全透明
-- ✅ **开源可审计**: 源代码完全开放，可供审查和验证
+* **工具拆分优化**：从12个大工具拆分为78个细粒度工具，更便于精确调用和使用
+  - 市场总貌类：从1个大工具拆分为20个专业工具
+  - 个股信息类：从1个大工具拆分为6个专业工具
+  - 行情数据类：从2个大工具拆分为8个专业工具
+  - 财务数据类：从1个大工具拆分为6个专业工具
+  - 资金流向类：从1个大工具拆分为6个专业工具
+  - 技术分析类：从1个大工具拆分为7个专业工具
+  - 技术指标类：从1个大工具拆分为5个专业工具
+  - 沪深港通类：从1个大工具拆分为4个专业工具
+  - 指数数据类：从1个大工具拆分为3个专业工具
+  - 港股数据类：从1个大工具拆分为8个专业工具
+  - 美股数据类：从1个大工具拆分为5个专业工具
 
-详细信息请参阅 [隐私政策](PRIVACY.md)
+* **功能域分类**：按功能域分类展示，包含11大功能域，更便于查找和使用
 
-结合 [详细功能文档](https://github.com/shaoxing-xie/akshare-stockdata-plugin/blob/main/AKShare%20股票数据插件详细功能文档.md)，了解数据处理细节。
+* **接口标准化**：统一接口命名规范，所有接口标签包含数据源和参数要求信息
 
-## ⚖️ 合规声明
+* **接口数量更新**：从175个接口增加到190+个接口，功能更强大
 
-本插件完全符合相关法律法规要求：
-- 📋 **开源合规**: 基于MIT许可证的开源项目
-- 🌐 **数据合规**: 仅使用公开可访问的数据源
-- 🔍 **透明运营**: 数据获取方式和处理流程完全透明
-- ⚖️ **法律合规**: 严格遵守相关金融数据使用法规
+* **文档完善**：
+  - 更新所有README文件（中文、英文、繁体中文、葡萄牙语）
+  - 重写详细功能文档，包含所有78个工具共190+个接口的完整说明
+  - 文档按功能域分类组织，便于查找
 
-详细信息请参阅 [法律声明](LEGAL.md)
+* **版本更新**：manifest.yaml 和 pyproject.toml 版本升级到0.7.0
 
-## 🙏 致谢
+* **完全向后兼容**：所有基于0.6.0版本的工作流可直接使用，无需修改
 
-### AKShare 项目团队
-本插件基于优秀的 [AKShare](https://github.com/akfamily/akshare) 库构建，我们向以下项目表示诚挚感谢：
-- **AKShare 开发团队**: 创建和维护这个综合性的金融数据接口库
-- **开源社区贡献者**: 为项目发展做出的宝贵贡献
-
-### Dify 平台
-感谢 [Dify](https://dify.ai/) 团队提供了优秀的AI应用开发平台，让金融数据的AI应用变得更加便捷。
-
-## 📄 许可证
-
-本项目采用 **MIT 许可证** - 详情请参阅 [LICENSE](LICENSE) 文件。
-
-**注意**: 本插件是 AKShare 库的封装工具。底层数据访问功能请参考 AKShare 的 MIT 许可证条款。
-
-## 🤝 贡献指南
-
-我们欢迎社区贡献！请按以下步骤参与：
-
-1. Fork 本仓库
-2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 创建 Pull Request
-
-## 📞 技术支持
-
-如果您遇到问题或有建议：
-1. 查看 [Issues](https://github.com/shaoxing-xie/akshare-stockdata-plugin/issues) 页面
-2. 创建包含详细信息的新 issue
-3. 参考 AKShare 官方文档
-
-## 🔄 版本升级
-
-### 从0.6.0升级到0.7.0
-- ✅ **工具拆分优化**：从12个大工具拆分为78个细粒度工具，更便于精确调用
-- ✅ **功能域分类**：按功能域分类展示，更便于查找和使用
-- ✅ **完全向后兼容**：所有基于0.6.0版本的工作流可直接使用，无需修改
-- ✅ **功能增强**：获得更多数据接口和功能
-
-👉 **[详细升级指南](UPGRADE_GUIDE.md)** - 完整的版本升级说明
-
-## 📚 详细功能文档
-
-插件提供78个专业工具共190+个数据接口的完整功能。为了保持README的简洁性，详细的接口文档已独立为专门的技术文档：
-
-### 📖 **完整技术文档**
-👉 **[AKShare 股票数据插件详细功能文档.md](https://github.com/shaoxing-xie/akshare-stockdata-plugin/blob/main/AKShare%20股票数据插件详细功能文档.md)** - 您的接口宝典！
-
-该文档包含：
-- ✅ **190+个接口的完整说明** - 每个接口的功能、参数、AKShare引用信息
-- ✅ **78个工具的详细分类** - 按功能域分类的完整工具列表  
-- ✅ **参数使用指南** - 详细的参数输入说明和格式要求
-- ✅ **技术参考信息** - 完整的AKShare接口引用和目标地址
-
-### 🎯 **快速导航（按功能域分类）**
-- [一、市场总貌类工具 (20个工具)](AKShare%20股票数据插件详细功能文档.md#一市场总貌类工具)
-- [二、个股信息类工具 (6个工具)](AKShare%20股票数据插件详细功能文档.md#二个股信息类工具)
-- [三、行情数据类工具 (8个工具)](AKShare%20股票数据插件详细功能文档.md#三行情数据类工具)
-- [四、财务数据类工具 (6个工具)](AKShare%20股票数据插件详细功能文档.md#四财务数据类工具)
-- [五、资金流向类工具 (6个工具)](AKShare%20股票数据插件详细功能文档.md#五资金流向类工具)
-- [六、技术分析类工具 (7个工具)](AKShare%20股票数据插件详细功能文档.md#六技术分析类工具)
-- [七、技术指标类工具 (5个工具)](AKShare%20股票数据插件详细功能文档.md#七技术指标类工具) ⭐ **扩展指标工具**
-- [八、沪深港通类工具 (4个工具)](AKShare%20股票数据插件详细功能文档.md#八沪深港通类工具)
-- [九、指数数据类工具 (3个工具)](AKShare%20股票数据插件详细功能文档.md#九指数数据类工具) ⭐ **指数分析工具**
-- [十、港股数据类工具 (8个工具)](AKShare%20股票数据插件详细功能文档.md#十港股数据类工具) ⭐ **独立工具**
-- [十一、美股数据类工具 (5个工具)](AKShare%20股票数据插件详细功能文档.md#十一美股数据类工具) ⭐ **独立工具**
-
----
-
-## 🔧 故障排除
-
-### ❌ **常见问题解决**
-
-#### 1. **插件安装失败 - 依赖问题**
-**症状**: 插件安装时出现依赖相关错误
-
-**解决方案**:
-```bash
-# 方法1: 重新安装插件
-# 在Dify中重新安装插件，系统会自动处理依赖
-
-# 方法2: 检查网络连接
-# 确保网络连接正常，能够访问PyPI
-```
-
-#### 2. **工具调用返回空数据**
-**症状**: 工具调用成功但返回 `{"data": []}`
-
-**可能原因**:
-- 网络连接问题
-- 数据源暂时不可用
-- 参数配置错误
-
-**解决方案**:
-- 检查网络连接
-- 增加重试次数和超时时间
-- 验证参数格式（日期格式：YYYYMMDD）
-
-#### 3. **Dify 0.3.0+ 兼容性问题**
-**症状**: 在新版本Dify中插件无法正常工作
-
-**解决方案**:
-- 确保使用最新版本插件包
-- 检查 `.env` 文件配置：
-  ```env
-  FORCE_VERIFYING_SIGNATURE=false
-  PLUGIN_PYTHON_ENV_INIT_TIMEOUT=600
-  ```
-
-#### 4. **插件安装后Dify工具中没有显示插件**
-**症状**: 插件安装后，在Dify的工具列表中看不到插件
-
-**可能原因和解决方案**:
-
-**情况一：预编译尚未完成**
-- ⏰ **检查预编译状态**: 查看Dify后台插件运行日志，确认预编译是否还在进行中
-- 📊 **监控进度**: 预编译过程通常需要5-15分钟，请耐心等待
-- 🔍 **查看日志**: 在Dify管理后台查看插件运行日志，确认编译进度
-
-**情况二：预编译已完成但工具未显示**
-- 🔄 **重新安装**: 预编译完成后，如果Dify工具中还没有显示插件，请再次安装一次插件包，插件就会正常显示
-- ✅ **正常现象**: 这是Dify插件系统的已知问题，重新安装即可解决
-
-**技术说明**:
-- 预编译超时设置：30分钟（足够完成编译）
-- 已优化`.difyignore`文件，排除测试文件以加快编译速度
-- 这是Dify插件系统的通用问题，所有插件都可能遇到
-
-### 🔍 **兼容性检查**
-
-运行内置的兼容性检查脚本：
-```bash
-python compatibility_check.py
-```
-
-### 📞 **获取帮助**
-
-如果问题仍然存在，请：
-1. 查看 [GitHub Issues](https://github.com/shaoxing-xie/akshare-stockdata-plugin/issues)
-2. 发送邮件至: sxxiefg@163.com
-3. 提供详细的错误日志和Dify版本信息
-
-## 🔗 相关文档
-
-- 📋 **[主要功能介绍](README.md)** - 插件概述和快速入门
-- 📚 **[详细功能文档](AKShare%20股票数据插件详细功能文档.md)** - 完整的接口技术文档
-- 🔒 **[隐私政策](PRIVACY.md)** - 数据隐私保护说明
-- ⚖️ **[法律声明](LEGAL.md)** - 合规性和法律条款
-- 📄 **[许可证](LICENSE)** - MIT开源许可证
-
----
-
-### 💡 **使用提示**
-
-1. **选择合适的工具**: 根据分析需求选择对应的专业工具
-2. **查看详细文档**: 点击上方链接查看完整的接口文档和参数说明
-3. **参数配置**: 按照工具界面提示正确配置参数
-4. **数据分析**: 利用返回的Markdown表格和JSON数据进行分析
+👉 **详细变更日志** - [完整的版本更新说明](https://github.com/shaoxing-xie/akshare-stockdata-plugin/blob/main/CHANGELOG.md)
 
 ## 🎯 演示和示例
 
@@ -530,9 +272,10 @@ python compatibility_check.py
 我们提供了两个完整的 Dify 工作流演示文件，展示了如何使用 AKShare 股票数据插件的各种功能：
 
 #### 🔧 **演示文件一：插件功能演示**
+
 **文件**: `应用示例/AKShare 股票数据插件 CHATFLOW-DEMO.yml`
 
-**功能说明**: 演示插件所有工具及其接口的使用，展示8个专业工具的完整功能
+**功能说明**: 演示插件所有工具及其接口的使用，展示78个专业工具的完整功能
 
 **演示内容**:
 - **股票市场总貌** - 展示市场概况数据获取
@@ -547,10 +290,11 @@ python compatibility_check.py
 **演示特色**:
 - **智能条件分支** - 根据用户输入自动选择合适的数据接口
 - **数据格式转换** - 自动将 Markdown 表格转换为 Excel 文件
-- **多维度展示** - 涵盖所有8个专业工具的使用场景
+- **多维度展示** - 涵盖所有78个专业工具的使用场景
 - **完整工作流** - 从数据获取到结果展示的完整流程
 
 #### 🤖 **演示文件二：个股深度分析应用**
+
 **文件**: `应用示例/个股行情分析-ChatFlow.yml`
 
 **功能说明**: 基于AKShare股票数据插件的个股深度分析ChatFlow应用，提供多维度股票分析
@@ -569,23 +313,31 @@ python compatibility_check.py
 - **多数据源整合** - 整合历史行情、财务数据、资金流向、研报等多维度数据
 - **专业分析报告** - 生成包含技术面、基本面、资金面的综合分析报告
 
-#### 🔧 **如何使用演示**
-1. 在 Dify 平台中导入相应的演示文件
-2. 确保已安装 AKShare 股票数据插件
-3. 运行工作流，体验各种股票数据功能
-4. 根据需要修改和定制工作流
+#### 🎨 **应用示例展示**
 
-### 📞 **技术支持**
+##### 📊 个股诊断报告示例
 
-如需详细的接口使用说明，请参考：
-- 📖 **[详细功能文档](AKShare%20股票数据插件详细功能文档.md)** - 完整技术文档
-- 🎯 **[工作流演示](应用示例/AKShare%20股票数据插件%20CHATFLOW-DEMO.yml)** - 完整演示示例
-- 🔧 **插件配置文件** - tools目录下的各工具YAML配置
-- 📚 **AKShare官方文档** - https://github.com/akfamily/akshare
+我们基于插件构建了一个完整的个股诊断工作流，可以自动生成专业的个股诊断报告：
+
+<img src="_assets/result.png" alt="个股诊断报告示例" width="800"/>
+
+##### 🔄 工作流配置
+
+以下是个股诊断助手的工作流配置，展示了如何组合使用多个工具来实现复杂的股票分析：
+
+<img src="_assets/workflow.png" alt="个股诊断助手工作流" width="800"/>
 
 ---
 
-**最后更新**: 2025-11-06  
-**版本**: 0.7.0  
-**作者**: AKShare 股票数据插件团队  
-**许可证**: MIT License
+**兼容性**：Dify 0.3.0+  
+**依赖**：AKShare 最新版  
+**许可证**：MIT License
+
+## 📞 技术支持
+
+* **问题反馈**： [GitHub Issues](https://github.com/shaoxing-xie/akshare-stockdata-plugin/issues)
+* **邮箱**： sxxiefg@163.com
+* **参考**： [AKShare 官方文档](https://github.com/akfamily/akshare)
+
+感谢您的支持！此版本是工具拆分优化版，欢迎反馈以进一步完善。🚀
+
