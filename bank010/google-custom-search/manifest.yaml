@@ -1,0 +1,44 @@
+version: 0.0.6
+type: plugin
+author: bank010
+name: google_custom_search
+label:
+  en_US: Google Custom Search
+  ja_JP: google_custom_search
+  zh_Hans: 谷歌自定义搜索
+  pt_BR: google_custom_search
+description:
+  en_US: A powerful search tool powered by Google Custom Search API
+  ja_JP: 这是一个本地测试的插件
+  zh_Hans: 由谷歌自定义搜索API提供支持的强大搜索工具
+  pt_BR: 这是一个本地测试的插件
+icon: icon.svg
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+    model:
+      enabled: false
+      llm: false
+      text_embedding: false
+      rerank: false
+      tts: false
+      speech2text: false
+      moderation: false
+plugins:
+  tools:
+    - provider/google.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: null
+created_at: 2025-06-16T11:56:21.8247556+08:00
+privacy: PRIVACY.md
+verified: false
