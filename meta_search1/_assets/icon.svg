@@ -1,0 +1,26 @@
+<!--
+  ~ Dify Marketplace Template Icon
+  ~ Dify 市场模板图标
+  ~ Dify マーケットプレイステンプレートアイコン
+  ~
+  ~ WARNING / 警告 / 警告:
+  ~ 
+  ~ English: This is a TEMPLATE icon from Dify Marketplace only. You MUST NOT use this default icon in any way.
+  ~ Please replace it with your own custom icon before submit this plugin.
+  ~ 
+  ~ 中文: 这只是来自 Dify 市场的模板图标。您绝对不能以任何方式使用此默认图标。
+  ~ 请在提交此插件之前将其替换为您自己的自定义图标。
+  ~ 
+  ~ 日本語: これは Dify マーケットプレイスのテンプレートアイコンです。このデフォルトアイコンをいかなる方法でも使用してはいけません。
+  ~ このプラグインを提出する前に、独自のカスタムアイコンに置き換えてください。
+  ~ 
+  ~ DIFY_MARKETPLACE_TEMPLATE_ICON_DO_NOT_USE
+  -->
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="40" height="40" fill="#4F46E5"/>
+  <circle cx="20" cy="20" r="16" fill="#818CF8"/>
+  <circle cx="20" cy="20" r="12" fill="#C7D2FE"/>
+  <circle cx="20" cy="20" r="8" fill="#E0E7FF"/>
+  <path d="M15 15L25 25M25 15L15 25" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/>
+  <rect x="8" y="8" width="24" height="24" rx="4" stroke="#4F46E5" stroke-width="2" fill="none"/>
+</svg>

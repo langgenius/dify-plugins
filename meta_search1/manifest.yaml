@@ -1,0 +1,35 @@
+version: 0.0.1
+type: plugin
+author: yzc
+name: meta_search
+label:
+  en_US: meta_search
+  ja_JP: meta_search
+  zh_Hans: meta_search
+  pt_BR: meta_search
+description:
+  en_US: 输入关键词可以搜索文章的插件
+  ja_JP: 输入关键词可以搜索文章的插件
+  zh_Hans: 输入关键词可以搜索文章的插件
+  pt_BR: 输入关键词可以搜索文章的插件
+icon: icon.svg
+icon_dark: icon-dark.svg
+resource:
+  memory: 268435456
+  permission: {}
+plugins:
+  tools:
+    - provider/meta_search.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: null
+created_at: 2025-11-22T09:10:19.9963891+08:00
+privacy: PRIVACY.md
+verified: false

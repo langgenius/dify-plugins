@@ -1,0 +1,39 @@
+Looking at the YAML file, I can see a few issues that need to be fixed:
+
+#1. The `label` field under `parameters` is missing translations for some languages (pt_BR and ja_JP)
+#2. The structure appears to be mostly correct, but let me ensure all required fields are properly formatted
+
+identity:
+  name: "meta_search"
+  author: "yzc"
+  label:
+    en_US: "meta_search"
+    zh_Hans: "meta_search"
+    pt_BR: "meta_search"
+    ja_JP: "meta_search"
+description:
+  human:
+    en_US: "输入关键词可以搜索文章的插件"
+    zh_Hans: "输入关键词可以搜索文章的插件"
+    pt_BR: "输入关键词可以搜索文章的插件"
+    ja_JP: "输入关键词可以搜索文章的插件"
+  llm: "输入关键词可以搜索文章的插件"
+parameters:
+  - name: keyWord
+    type: string
+    required: true
+    label:
+      en_US: Query string
+      zh_Hans: 关键词
+      pt_BR: Query string
+      ja_JP: クエリ文字列
+    human_description:
+      en_US: "请输入一个关键词"
+      zh_Hans: "请输入一个关键词"
+      pt_BR: "Por favor, insira uma palavra-chave"
+      ja_JP: "キーワードを入力してください"
+    llm_description: "输入关键词可以搜索文章的插件"
+    form: llm
+extra:
+  python:
+    source: tools/meta_search.py
