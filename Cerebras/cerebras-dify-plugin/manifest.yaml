@@ -1,0 +1,26 @@
+version: 0.0.1
+type: plugin
+author: Cerebras
+name: cerebras
+description:
+  en_US: Cerebras Inference - Ultra-fast AI inference powered by the world's largest AI processor
+  zh_Hans: Cerebras Inference - 由世界上最大的 AI 处理器提供支持的超快速 AI 推理
+icon: icon.svg
+label:
+  en_US: Cerebras
+  zh_Hans: Cerebras
+created_at: 2024-11-24
+resource:
+  memory: 256
+  permission:
+    model:
+      enabled: true
+      llm: true
+plugins:
+  models:
+    - providers
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
