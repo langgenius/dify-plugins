@@ -1,0 +1,48 @@
+openapi: 3.0.0
+info:
+  title: JSON to TOON Converter
+  description: Convert JSON content to TOON format to reduce token usage
+  version: 1.0.0
+servers:
+  - url: http://localhost:5001
+paths:
+  /convert:
+    post:
+      summary: Convert JSON to TOON format
+      description: Converts JSON content to TOON (Token-Oriented Object Notation) format to reduce token consumption
+      operationId: convert_json_to_toon
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                json_content:
+                  type: string
+                  description: The JSON content to convert to TOON format
+                  example: '{"users": [{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]}'
+              required:
+                - json_content
+      responses:
+        '200':
+          description: Successfully converted JSON to TOON format
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: |
+                  users[2]{id,name}:
+                  1,Alice
+                  2,Bob
+        '400':
+          description: Invalid JSON input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid JSON format"
+
