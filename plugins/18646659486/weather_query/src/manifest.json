@@ -1,0 +1,27 @@
+{
+  "name": "weather_query",
+  "version": "1.0.0",
+  "description": "查询城市天气的插件",
+  "author": "编程小萌新",
+
+  "type": "python",
+  "entry": "main.py",
+  "requirements": "requirements.txt",
+
+  "tools": [
+    {
+      "name": "get_weather",
+      "description": "根据城市名称查询当前天气情况",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string",
+            "description": "城市名称，例如：北京、上海、成都"
+          }
+        },
+        "required": ["city"]
+      }
+    }
+  ]
+}
