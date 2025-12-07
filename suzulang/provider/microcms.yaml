@@ -1,0 +1,62 @@
+identity:
+  author: "suzulang"
+  name: "microcms"
+  label:
+    en_US: "microCMS"
+    zh_Hans: "microCMS"
+    pt_BR: "microCMS"
+    ja_JP: "microCMS"
+  description:
+    en_US: "Connect to microCMS headless CMS to retrieve and manage content"
+    zh_Hans: "连接到 microCMS 无头 CMS 以检索和管理内容"
+    pt_BR: "Conecte-se ao microCMS headless CMS para recuperar e gerenciar conteúdo"
+    ja_JP: "microCMS ヘッドレス CMS に接続してコンテンツを取得・管理"
+  icon: "icon.svg"
+
+tools:
+  - tools/get_content_list.yaml
+  - tools/get_content_detail.yaml
+  - tools/get_full_contents.yaml
+
+credentials_for_provider:
+  service_domain:
+    type: text-input
+    required: true
+    label:
+      en_US: "Service Domain"
+      zh_Hans: "服务域名"
+      pt_BR: "Domínio do Serviço"
+      ja_JP: "サービスドメイン"
+    placeholder:
+      en_US: "your-service-domain"
+      zh_Hans: "your-service-domain"
+      pt_BR: "seu-dominio-de-servico"
+      ja_JP: "your-service-domain"
+    help:
+      en_US: "Your microCMS service domain (e.g., 'your-service-domain' from 'your-service-domain.microcms.io')"
+      zh_Hans: "您的 microCMS 服务域名（例如 'your-service-domain.microcms.io' 中的 'your-service-domain'）"
+      pt_BR: "Seu domínio de serviço microCMS (ex: 'seu-dominio' de 'seu-dominio.microcms.io')"
+      ja_JP: "あなたの microCMS サービスドメイン（例：'your-service-domain.microcms.io' の 'your-service-domain'）"
+
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: "API Key"
+      zh_Hans: "API 密钥"
+      pt_BR: "Chave API"
+      ja_JP: "APIキー"
+    placeholder:
+      en_US: "Enter your microCMS API key"
+      zh_Hans: "输入您的 microCMS API 密钥"
+      pt_BR: "Digite sua chave API microCMS"
+      ja_JP: "microCMS APIキーを入力してください"
+    help:
+      en_US: "Your microCMS API key from the service settings"
+      zh_Hans: "您从服务设置中获取的 microCMS API 密钥"
+      pt_BR: "Sua chave API microCMS das configurações do serviço"
+      ja_JP: "サービス設定から取得した microCMS API キー"
+
+extra:
+  python:
+    source: provider/microcms.py

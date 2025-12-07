@@ -1,0 +1,74 @@
+identity:
+  name: get_content_list
+  author: suzulang
+  label:
+    en_US: Get Content List
+    zh_Hans: 获取内容列表
+    pt_BR: Obter Lista de Conteúdo
+    ja_JP: コンテンツリスト取得
+description:
+  human:
+    en_US: Retrieve a list of content from microCMS with support for filtering, searching, sorting, and pagination
+    zh_Hans: 从 microCMS 检索内容列表，支持筛选、搜索、排序和分页
+    pt_BR: Recupere uma lista de conteúdo do microCMS com suporte para filtragem, busca, ordenação e paginação
+    ja_JP: microCMS からコンテンツリストを取得します。フィルタリング、検索、ソート、ページネーションをサポート
+  llm: This tool retrieves a list of content from microCMS endpoints. It supports pagination, sorting, searching, and filtering parameters.
+
+parameters:
+  - name: endpoint
+    type: string
+    required: true
+    label:
+      en_US: Endpoint
+      zh_Hans: 端点
+      pt_BR: Endpoint
+      ja_JP: エンドポイント
+    human_description:
+      en_US: The microCMS API endpoint name
+      zh_Hans: microCMS API 端点名称
+      pt_BR: O nome do endpoint da API microCMS
+      ja_JP: microCMS API エンドポイント名
+    llm_description: The microCMS API endpoint to retrieve content from
+    form: form
+
+  - name: limit
+    type: number
+    required: false
+    label:
+      en_US: Limit
+      zh_Hans: 限制数量
+      pt_BR: Limite
+      ja_JP: 件数
+    human_description:
+      en_US: Number of items to retrieve
+      zh_Hans: 检索的项目数量
+      pt_BR: Número de itens para recuperar
+      ja_JP: 取得する項目数
+    llm_description: Number of content items to retrieve
+    form: form
+    default: 10
+    min: 1
+    max: 100
+
+  - name: orders
+    type: string
+    required: false
+    label:
+      en_US: Sort Order
+      zh_Hans: 排序
+      pt_BR: Ordem
+      ja_JP: 並び順
+    human_description:
+      en_US: Sort order using field names
+      zh_Hans: 使用字段名的排序方式
+      pt_BR: Ordem de classificação usando nomes de campo
+      ja_JP: フィールド名を使用した並び順
+    llm_description: Sort order using field names, prefix with - for descending order
+    form: form
+    placeholder:
+      en_US: e.g., -publishedAt
+      zh_Hans: 例如：-publishedAt
+
+extra:
+  python:
+    source: tools/get_content_list.py

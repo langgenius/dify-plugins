@@ -1,0 +1,37 @@
+version: 0.0.1
+type: plugin
+author: suzulang
+name: microcms
+label:
+  en_US: microCMS
+  ja_JP: microCMS
+  zh_Hans: microCMS
+  pt_BR: microCMS
+description:
+  en_US: Connect to microCMS headless CMS to retrieve and manage content
+  ja_JP: microCMS ヘッドレス CMS に接続してコンテンツを取得・管理
+  zh_Hans: 连接到 microCMS 无头 CMS 以检索和管理内容
+  pt_BR: Conecte-se ao microCMS headless CMS para recuperar e gerenciar conteúdo
+icon: icon.svg
+icon_dark: icon-dark.svg
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+plugins:
+  tools:
+    - provider/microcms.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: null
+created_at: 2025-12-07T23:21:46.475404+09:00
+privacy: PRIVACY.md
+verified: false

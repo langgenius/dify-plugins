@@ -1,0 +1,74 @@
+identity:
+  name: get_full_contents
+  author: suzulang
+  label:
+    en_US: Get Full Contents
+    zh_Hans: 获取完整内容
+    pt_BR: Obter Conteúdo Completo
+    ja_JP: 完全なコンテンツ取得
+description:
+  human:
+    en_US: Retrieve complete content details by first getting the content list, then fetching full details for each item
+    zh_Hans: 先获取内容列表，然后为每个项目获取完整详情
+    pt_BR: Recupere detalhes completos do conteúdo primeiro obtendo a lista, depois buscando detalhes de cada item
+    ja_JP: まずコンテンツリストを取得し、各項目の詳細情報を取得して完全なコンテンツを取得
+  llm: This tool retrieves complete content details by performing a two-step process
+
+parameters:
+  - name: endpoint
+    type: string
+    required: true
+    label:
+      en_US: Endpoint
+      zh_Hans: 端点
+      pt_BR: Endpoint
+      ja_JP: エンドポイント
+    human_description:
+      en_US: The microCMS API endpoint name
+      zh_Hans: microCMS API 端点名称
+      pt_BR: O nome do endpoint da API microCMS
+      ja_JP: microCMS API エンドポイント名
+    llm_description: The microCMS API endpoint to retrieve content from
+    form: form
+
+  - name: limit
+    type: number
+    required: false
+    label:
+      en_US: Limit
+      zh_Hans: 限制数量
+      pt_BR: Limite
+      ja_JP: 件数
+    human_description:
+      en_US: Number of items to retrieve
+      zh_Hans: 检索的项目数量
+      pt_BR: Número de itens para recuperar
+      ja_JP: 取得する項目数
+    llm_description: Number of content items to retrieve
+    form: form
+    default: 10
+    min: 1
+    max: 100
+
+  - name: max_concurrent
+    type: number
+    required: false
+    label:
+      en_US: Max Concurrent Requests
+      zh_Hans: 最大并发请求数
+      pt_BR: Máximo de Requisições Simultâneas
+      ja_JP: 最大同時リクエスト数
+    human_description:
+      en_US: Maximum number of concurrent API requests
+      zh_Hans: 最大并发 API 请求数
+      pt_BR: Número máximo de requisições simultâneas
+      ja_JP: 最大同時APIリクエスト数
+    llm_description: Control the number of concurrent API requests to avoid rate limiting
+    form: form
+    default: 5
+    min: 1
+    max: 10
+
+extra:
+  python:
+    source: tools/get_full_contents.py
