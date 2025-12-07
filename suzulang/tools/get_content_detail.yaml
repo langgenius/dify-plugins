@@ -1,0 +1,71 @@
+identity:
+  name: get_content_detail
+  author: suzulang
+  label:
+    en_US: Get Content Detail
+    zh_Hans: 获取内容详情
+    pt_BR: Obter Detalhes do Conteúdo
+    ja_JP: コンテンツ詳細取得
+description:
+  human:
+    en_US: Retrieve detailed content information by ID from microCMS
+    zh_Hans: 从 microCMS 按 ID 获取详细的内容信息
+    pt_BR: Recupere informações detalhadas do conteúdo por ID do microCMS
+    ja_JP: microCMS から ID を指定してコンテンツ詳細情報を取得
+  llm: This tool retrieves detailed content information from a specific microCMS endpoint using the content ID.
+
+parameters:
+  - name: endpoint
+    type: string
+    required: true
+    label:
+      en_US: Endpoint
+      zh_Hans: 端点
+      pt_BR: Endpoint
+      ja_JP: エンドポイント
+    human_description:
+      en_US: The microCMS API endpoint name
+      zh_Hans: microCMS API 端点名称
+      pt_BR: O nome do endpoint da API microCMS
+      ja_JP: microCMS API エンドポイント名
+    llm_description: The microCMS API endpoint to retrieve content from
+    form: form
+
+  - name: content_id
+    type: string
+    required: true
+    label:
+      en_US: Content ID
+      zh_Hans: 内容ID
+      pt_BR: ID do Conteúdo
+      ja_JP: コンテンツID
+    human_description:
+      en_US: The unique identifier of the content item
+      zh_Hans: 内容项的唯一标识符
+      pt_BR: O identificador único do item de conteúdo
+      ja_JP: コンテンツ項目の一意の識別子
+    llm_description: The unique ID of the content item to retrieve
+    form: form
+
+  - name: fields
+    type: string
+    required: false
+    label:
+      en_US: Fields
+      zh_Hans: 字段
+      pt_BR: Campos
+      ja_JP: フィールド
+    human_description:
+      en_US: Specific fields to return
+      zh_Hans: 返回的特定字段
+      pt_BR: Campos específicos para retornar
+      ja_JP: 返信する特定のフィールド
+    llm_description: Comma-separated list of field names to include in response
+    form: form
+    placeholder:
+      en_US: e.g., id,title,content
+      zh_Hans: 例如：id,title,content
+
+extra:
+  python:
+    source: tools/get_content_detail.py
