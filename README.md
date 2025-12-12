@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://cloud.dify.ai">Dify Cloud</a> ·
-  <a href="https://docs.dify.ai/getting-started/install-self-hosted">Self-hosting</a> ·
+  <a href="https://docs.dify.ai/self-host/quick-start/docker-compose">Self-hosting</a> ·
   <a href="https://docs.dify.ai">Documentation</a> ·
   <a href="https://udify.app/chat/22L1zSxg6yW1cWQg">Enterprise inquiry</a>
 </p>
@@ -46,38 +46,38 @@
 
 ##### Models
 
-These plugins integrate various AI models (including mainstream LLM providers and custom model) to handle configuration and requests for LLM APIs. For more on creating a model plugin, take refer to [Quick Start: Model Plugin](https://docs.dify.ai/en/plugins/quick-start/develop-plugins/model-plugin/README).
+These plugins integrate various AI models (including mainstream LLM providers and custom model) to handle configuration and requests for LLM APIs. For more on creating a model plugin, take refer to [Quick Start: Model Plugin](https://docs.dify.ai/en/develop-plugin/dev-guides-and-walkthroughs/creating-new-model-provider).
 
 ##### Tools
 
-Tools refer to third-party services that can be invoked by Chatflow, Workflow, or Agent-type applications. They provide a complete API implementation to enhance the capabilities of Dify applications. For example, developing a Google Search plugin, please refer to [Quick Start: Tool Plugin](https://docs.dify.ai/en/plugins/quick-start/develop-plugins/tool-plugin).
+Tools refer to third-party services that can be invoked by Chatflow, Workflow, or Agent-type applications. They provide a complete API implementation to enhance the capabilities of Dify applications. For example, developing a Google Search plugin, please refer to [Quick Start: Tool Plugin](https://docs.dify.ai/en/develop-plugin/dev-guides-and-walkthroughs/tool-plugin).
 
 ##### Agent Strategies
 
 The Agent Strategy plugin defines the reasoning and decision-making logic within an Agent node, including tool selection, invocation, and result processing.
 
-Agent strategy plugins define the internal reasoning and decision-making logic within agent nodes. They encompass the logic for tool selection, invocation, and handling of returned results by the LLM. For further development guidance, please refer to the [Quick Start: Agent Strategy Plugin](https://docs.dify.ai/en/plugins/quick-start/develop-plugins/agent-strategy-plugin).
+Agent strategy plugins define the internal reasoning and decision-making logic within agent nodes. They encompass the logic for tool selection, invocation, and handling of returned results by the LLM. For further development guidance, please refer to the [Quick Start: Agent Strategy Plugin](https://docs.dify.ai/en/develop-plugin/dev-guides-and-walkthroughs/agent-strategy-plugin).
 
 ##### Extensions
 
-Lightweight plugins that only provide endpoint capabilities for simpler scenarios, enabling fast expansions via HTTP services. This approach is ideal for straightforward integrations requiring basic API invoking. For more details, refer to [Quick Start: Extension Plugin](https://docs.dify.ai/plugins/quick-start/develop-plugins/extension-plugin).
+Lightweight plugins that only provide endpoint capabilities for simpler scenarios, enabling fast expansions via HTTP services. This approach is ideal for straightforward integrations requiring basic API invoking. For more details, refer to [Quick Start: Extension Plugin](https://docs.dify.ai/en/develop-plugin/dev-guides-and-walkthroughs/endpoint).
 
 ##### Bundles
 
-A "plugin bundle" is a collection of multiple plugins. Bundles allow you to install a curated set of plugins all at once—no more adding them one by one. For more information on creating plugin bundles, see [Plugin Development: Bundle Plugin](https://docs.dify.ai/plugins/quick-start/develop-plugins/bundle).
+A "plugin bundle" is a collection of multiple plugins. Bundles allow you to install a curated set of plugins all at once—no more adding them one by one. For more information on creating plugin bundles, see [Plugin Development: Bundle Plugin](https://docs.dify.ai/en/develop-plugin/features-and-specs/advanced-development/bundle).
 
 #### Plugin Docs
 
-Check the [Plugins documentation](https://docs.dify.ai/en/plugins/introduction) to learn how to develop and publish plugins.
+Check the [Plugins documentation](https://docs.dify.ai/en/develop-plugin/getting-started/getting-started-dify-plugin) to learn how to develop and publish plugins.
 
 ### Publishing to Dify Marketplace
 
 To publish your plugin on the Dify Marketplace, follow these steps:
 
 #### Development
-1. Develop and test your plugin according to the [Plugin Developer Guidelines](https://docs.dify.ai/plugins/publish-plugins/publish-to-dify-marketplace/plugin-developer-guidelines).
+1. Develop and test your plugin according to the [Plugin Developer Guidelines](https://docs.dify.ai/en/develop-plugin/publishing/standards/contributor-covenant-code-of-conduct).
 
-2. Write a [Plugin Privacy Policy](https://docs.dify.ai/plugins/publish-plugins/publish-to-dify-marketplace/plugin-privacy-protection-guidelines) for your plugin in line with Dify’s privacy policy requirements. In your plugin’s [Manifest](https://docs.dify.ai/plugins/schema-definition/manifest) file, include the file path or URL for this privacy policy.
+2. Write a [Plugin Privacy Policy](https://docs.dify.ai/en/develop-plugin/publishing/standards/privacy-protection-guidelines) for your plugin in line with Dify’s privacy policy requirements. In your plugin’s [Manifest](https://docs.dify.ai/en/develop-plugin/features-and-specs/plugin-types/plugin-info-by-manifest) file, include the file path or URL for this privacy policy.
 
 3. Leave your contact infomation and repository URL in `README.md`.
 
@@ -101,7 +101,7 @@ To publish your plugin on the Dify Marketplace, follow these steps:
 
 3. If your update includes breaking changes, document them clearly in your plugin's README.md to prevent user issues.
 
-4. For faster plugin updates, you can set up automated PR workflows using the [GitHub Actions workflow template](https://docs.dify.ai/plugins/publish-plugins/plugin-auto-publish-pr). This will automate the PR creation process when you release new versions.
+4. For faster plugin updates, you can set up automated PR workflows using the [GitHub Actions workflow template](https://docs.dify.ai/en/develop-plugin/publishing/marketplace-listing/plugin-auto-publish-pr). This will automate the PR creation process when you release new versions.
 
 ### Security disclosure
 
