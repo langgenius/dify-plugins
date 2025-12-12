@@ -1,0 +1,58 @@
+
+identity:
+    name: "ontology_search1111"
+    author: "leo"
+    label:
+      en_US: "Ontology Search"
+      zh_Hans: "本体搜索"
+description:
+    human:
+      en_US: "Search ontology by various criteria"
+      zh_Hans: "通过不同条件搜索本体"
+    llm: "Search ontology by various criteria"
+parameters:
+    - name: "api_key"
+      type: "string"
+      required: true
+      label:
+        en_US: "API Key"
+        zh_Hans: "API密钥"
+      human_description:
+        en_US: "API Key required for authentication"
+        zh_Hans: "身份验证所需的API密钥"
+      llm_description: "API Key for authentication"
+      form: "llm"
+    - name: "keyword"
+      type: "string"
+      required: true
+      label:
+        en_US: "Keyword"
+        zh_Hans: "关键字"
+      human_description:
+        en_US: "Keyword for searching ontology"
+        zh_Hans: "搜索本体的关键字"
+      llm_description: "Search keyword for ontology"
+      form: "llm"
+    - name: "status"
+      type: "number"
+      required: true
+      label:
+        en_US: "Status"
+        zh_Hans: "状态"
+      human_description:
+        en_US: "Filter by status (0=disabled, 1=enabled)"
+        zh_Hans: "按状态筛选（0=禁用，1=启用）"
+      llm_description: "Status filter: 0=disabled, 1=enabled"
+      form: "llm"
+      options:
+        - value: "0"
+          label:
+            en_US: "Disabled"
+            zh_Hans: "禁用"
+        - value: "1"
+          label:
+            en_US: "Enabled"
+            zh_Hans: "启用"
+extra:
+    python:
+      source: "tools/getOntologyList.py"
