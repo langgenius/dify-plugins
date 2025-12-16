@@ -217,73 +217,6 @@ jobs:
           else
             echo "No requirements.txt found, skipping dependency installation"
           fi
-      
-      - name: Output Plugin Files Content
-        run: |
-          # Create temporary directory for comments
-          mkdir -p /tmp/plugin_comments
-          
-          # Create a single combined file for all plugin content
-          COMBINED_FILE="/tmp/plugin_comments/combined.md"
-          echo "# Plugin Content" > $COMBINED_FILE
-          echo "" >> $COMBINED_FILE
-          
-          # Process manifest.yaml
-          echo "::group::manifest.yaml"
-          if [ -f "$PLUGIN_PATH/manifest.yaml" ]; then
-            cat "$PLUGIN_PATH/manifest.yaml"
-            # Add to combined content file
-            echo "## Plugin Manifest (manifest.yaml)" >> $COMBINED_FILE
-            echo '```yaml' >> $COMBINED_FILE
-            cat "$PLUGIN_PATH/manifest.yaml" >> $COMBINED_FILE
-            echo '```' >> $COMBINED_FILE
-            echo "" >> $COMBINED_FILE
-          else
-            echo "manifest.yaml not found"
-            echo "⚠️ **Warning:** manifest.yaml file not found in plugin package" >> $COMBINED_FILE
-            echo "" >> $COMBINED_FILE
-          fi
-          echo "::endgroup::"
-          
-          # Process README.md
-          echo "::group::README.md"
-          if [ -f "$PLUGIN_PATH/README.md" ]; then
-            cat "$PLUGIN_PATH/README.md"
-            # Add to combined content file
-            echo "## Plugin Documentation (README.md)" >> $COMBINED_FILE
-            echo '```markdown' >> $COMBINED_FILE
-            cat "$PLUGIN_PATH/README.md" >> $COMBINED_FILE
-            echo '```' >> $COMBINED_FILE
-            echo "" >> $COMBINED_FILE
-          else
-            echo "README.md not found"
-            echo "⚠️ **Warning:** README.md file not found in plugin package" >> $COMBINED_FILE
-            echo "" >> $COMBINED_FILE
-          fi
-          echo "::endgroup::"
-          
-          # Process requirements.txt
-          echo "::group::requirements.txt"
-          if [ -f "$PLUGIN_PATH/requirements.txt" ]; then
-            cat "$PLUGIN_PATH/requirements.txt"
-            # Add to combined content file
-            echo "## Plugin Dependencies (requirements.txt)" >> $COMBINED_FILE
-            echo '```' >> $COMBINED_FILE
-            cat "$PLUGIN_PATH/requirements.txt" >> $COMBINED_FILE
-            echo '```' >> $COMBINED_FILE
-            echo "" >> $COMBINED_FILE
-          else
-            echo "requirements.txt not found"
-            echo "ℹ️ **Note:** No requirements.txt file found in plugin package" >> $COMBINED_FILE
-            echo "" >> $COMBINED_FILE
-          fi
-          echo "::endgroup::"
-          
-          # Post a single combined comment to the PR
-          echo "Posting plugin content to PR..."
-          if ! gh pr comment ${{ github.event.pull_request.number }} -F $COMBINED_FILE -R ${{ env.REPO_NAME }}; then
-            echo "Warning: Failed to post plugin content comment. This is non-fatal, continuing..."
-          fi
 
       - name: Check Plugin Install
         run: |
@@ -382,96 +315,142 @@ jobs:
           
           echo "Packaging check completed successfully"
         
-      - name: Comment CI Status on PR
+      - name: Output Detailed Report (Step Summary)
         if: always()
         run: |
-          # Create a status report markdown file
-          echo "# Plugin Pre-Check Results" > /tmp/ci_status.md
-          echo "" >> /tmp/ci_status.md
+          SUMMARY_FILE="${GITHUB_STEP_SUMMARY:-/tmp/github_step_summary.md}"
+          JOB_STATUS="${{ job.status }}"
           
-          # Extract plugin info (if available)
-          if [ -f "$PLUGIN_PATH/manifest.yaml" ]; then
-            # Use || to prevent script failure if any field is missing
-            PLUGIN_NAME=$(yq '.name' "$PLUGIN_PATH/manifest.yaml" 2>/dev/null || echo "Unknown")
-            PLUGIN_VERSION=$(yq '.version' "$PLUGIN_PATH/manifest.yaml" 2>/dev/null || echo "Unknown")
-            PLUGIN_AUTHOR=$(yq '.author' "$PLUGIN_PATH/manifest.yaml" 2>/dev/null || echo "Unknown")
-            PLUGIN_DESCRIPTION=$(yq '.description' "$PLUGIN_PATH/manifest.yaml" 2>/dev/null || echo "No description provided")
+          echo "# Plugin Pre-Check Report" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+          
+          echo "## Plugin Information" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+          if [ -n "${PLUGIN_PATH:-}" ] && [ -f "$PLUGIN_PATH/manifest.yaml" ]; then
+            PLUGIN_NAME=$(yq '.name // "Unknown"' "$PLUGIN_PATH/manifest.yaml" 2>/dev/null || echo "Unknown")
+            PLUGIN_VERSION=$(yq '.version // "Unknown"' "$PLUGIN_PATH/manifest.yaml" 2>/dev/null || echo "Unknown")
+            PLUGIN_AUTHOR=$(yq '.author // "Unknown"' "$PLUGIN_PATH/manifest.yaml" 2>/dev/null || echo "Unknown")
+            PLUGIN_DESCRIPTION=$(yq '.description // "No description provided"' "$PLUGIN_PATH/manifest.yaml" 2>/dev/null || echo "No description provided")
             
-            echo "## Plugin Information" >> /tmp/ci_status.md
-            echo "" >> /tmp/ci_status.md
-            echo "**Name:** $PLUGIN_NAME" >> /tmp/ci_status.md
-            echo "**Version:** $PLUGIN_VERSION" >> /tmp/ci_status.md
-            echo "**Author:** $PLUGIN_AUTHOR" >> /tmp/ci_status.md
-            echo "**Description:** $PLUGIN_DESCRIPTION" >> /tmp/ci_status.md
-            echo "" >> /tmp/ci_status.md
-          fi
-          
-          echo "## CI Steps Status" >> /tmp/ci_status.md
-          echo "" >> /tmp/ci_status.md
-          echo "| Check | Status | Details |" >> /tmp/ci_status.md
-          echo "| ----- | ------ | ------- |" >> /tmp/ci_status.md
-          
-          # Get job status from GitHub context
-          if [ "${{ job.status }}" == "success" ]; then
-            echo "| **Overall Status** | ✅ **Passed** | All checks completed successfully |" >> /tmp/ci_status.md
+            echo "- **Name:** $PLUGIN_NAME" >> "$SUMMARY_FILE"
+            echo "- **Version:** $PLUGIN_VERSION" >> "$SUMMARY_FILE"
+            echo "- **Author:** $PLUGIN_AUTHOR" >> "$SUMMARY_FILE"
+            echo "- **Description:** $PLUGIN_DESCRIPTION" >> "$SUMMARY_FILE"
           else
-            echo "| **Overall Status** | ❌ **Failed** | One or more checks failed |" >> /tmp/ci_status.md
+            if [ -z "${PLUGIN_PATH:-}" ]; then
+              echo "- ⚠️ \`PLUGIN_PATH\` is not set (plugin package may not have been detected/unpacked)." >> "$SUMMARY_FILE"
+            else
+              echo "- ⚠️ \`manifest.yaml\` not found under \`$PLUGIN_PATH\`." >> "$SUMMARY_FILE"
+            fi
           fi
           
-          # Check for manifest errors
+          echo "" >> "$SUMMARY_FILE"
+          echo "## CI Steps Status" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+          echo "| Check | Status |" >> "$SUMMARY_FILE"
+          echo "| ----- | ------ |" >> "$SUMMARY_FILE"
+          
+          case "$JOB_STATUS" in
+            success) echo "| **Overall Status** | ✅ **Passed** |" >> "$SUMMARY_FILE" ;;
+            cancelled) echo "| **Overall Status** | ⚠️ **Cancelled** |" >> "$SUMMARY_FILE" ;;
+            *) echo "| **Overall Status** | ❌ **Failed** |" >> "$SUMMARY_FILE" ;;
+          esac
+          
           if [ -f "/tmp/manifest_errors.txt" ] && [ -s "/tmp/manifest_errors.txt" ]; then
-            ERROR_CONTENT=$(cat /tmp/manifest_errors.txt | sed -e 's/^/- /')
-            echo "| Manifest Validation | ❌ Failed | $ERROR_CONTENT |" >> /tmp/ci_status.md
+            echo "| **Manifest Validation** | ❌ Failed |" >> "$SUMMARY_FILE"
           else
-            echo "| Manifest Validation | ✅ Passed | - |" >> /tmp/ci_status.md
+            echo "| **Manifest Validation** | ✅ Passed |" >> "$SUMMARY_FILE"
           fi
           
-          # Check for icon errors
           if [ -f "/tmp/icon_errors.txt" ] && [ -s "/tmp/icon_errors.txt" ]; then
-            ERROR_CONTENT=$(cat /tmp/icon_errors.txt | sed -e 's/^/- /')
-            echo "| Icon Validation | ❌ Failed | $ERROR_CONTENT |" >> /tmp/ci_status.md
+            echo "| **Icon Validation** | ❌ Failed |" >> "$SUMMARY_FILE"
           else
-            echo "| Icon Validation | ✅ Passed | - |" >> /tmp/ci_status.md
+            echo "| **Icon Validation** | ✅ Passed |" >> "$SUMMARY_FILE"
           fi
           
-          # Check for version errors
           if [ -f "/tmp/version_errors.txt" ] && [ -s "/tmp/version_errors.txt" ]; then
-            ERROR_CONTENT=$(cat /tmp/version_errors.txt | sed -e 's/^/- /')
-            echo "| Version Check | ❌ Failed | $ERROR_CONTENT |" >> /tmp/ci_status.md
+            echo "| **Version Check** | ❌ Failed |" >> "$SUMMARY_FILE"
           else
-            echo "| Version Check | ✅ Passed | - |" >> /tmp/ci_status.md
+            echo "| **Version Check** | ✅ Passed |" >> "$SUMMARY_FILE"
           fi
           
-          # Check for install errors
           if [ -f "/tmp/install_errors.txt" ] && [ -s "/tmp/install_errors.txt" ]; then
-            ERROR_CONTENT=$(cat /tmp/install_errors.txt | sed -e 's/^/- /')
-            echo "| Installation | ❌ Failed | $ERROR_CONTENT |" >> /tmp/ci_status.md
-          elif [ -f "$PLUGIN_PATH/requirements.txt" ]; then
-            echo "| Installation | ✅ Passed | Requirements installed successfully |" >> /tmp/ci_status.md
+            echo "| **Installation** | ❌ Failed |" >> "$SUMMARY_FILE"
+          elif [ -n "${PLUGIN_PATH:-}" ] && [ -f "$PLUGIN_PATH/requirements.txt" ]; then
+            echo "| **Installation** | ✅ Passed |" >> "$SUMMARY_FILE"
           else
-            echo "| Installation | ⚠️ Skipped | No requirements.txt found |" >> /tmp/ci_status.md
+            echo "| **Installation** | ⚠️ Skipped |" >> "$SUMMARY_FILE"
           fi
           
-          # Check for packaging errors
           if [ -f "/tmp/packaging_errors.txt" ] && [ -s "/tmp/packaging_errors.txt" ]; then
-            ERROR_CONTENT=$(cat /tmp/packaging_errors.txt | sed -e 's/^/- /')
-            echo "| Packaging | ❌ Failed | $ERROR_CONTENT |" >> /tmp/ci_status.md
+            echo "| **Packaging** | ❌ Failed |" >> "$SUMMARY_FILE"
           else
-            echo "| Packaging | ✅ Passed | Package valid for marketplace |" >> /tmp/ci_status.md
+            echo "| **Packaging** | ✅ Passed |" >> "$SUMMARY_FILE"
           fi
           
-          # Add workflow run link
-          echo "" >> /tmp/ci_status.md
-          echo "## Workflow Details" >> /tmp/ci_status.md
-          echo "" >> /tmp/ci_status.md
-          echo "**Run ID:** ${{ github.run_id }}" >> /tmp/ci_status.md
-          echo "**Repository:** ${{ github.repository }}" >> /tmp/ci_status.md
-          echo "**Ref:** ${{ github.ref }}" >> /tmp/ci_status.md
-          echo "" >> /tmp/ci_status.md
-          echo "[View workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> /tmp/ci_status.md
+          append_error_details() {
+            local title="$1"
+            local file="$2"
+            if [ -f "$file" ] && [ -s "$file" ]; then
+              echo "" >> "$SUMMARY_FILE"
+              echo "<details>" >> "$SUMMARY_FILE"
+              echo "<summary>${title} (details)</summary>" >> "$SUMMARY_FILE"
+              echo "" >> "$SUMMARY_FILE"
+              echo '~~~text' >> "$SUMMARY_FILE"
+              cat "$file" >> "$SUMMARY_FILE"
+              echo '~~~' >> "$SUMMARY_FILE"
+              echo "" >> "$SUMMARY_FILE"
+              echo "</details>" >> "$SUMMARY_FILE"
+            fi
+          }
           
-          # Post status comment to PR with better error handling
-          echo "Posting CI status comment to PR..."
-          if ! gh pr comment ${{ github.event.pull_request.number }} -F /tmp/ci_status.md -R ${{ env.REPO_NAME }}; then
-            echo "Warning: Failed to post comment to PR. This is non-fatal, continuing..."
+          append_error_details "Manifest Validation" "/tmp/manifest_errors.txt"
+          append_error_details "Icon Validation" "/tmp/icon_errors.txt"
+          append_error_details "Version Check" "/tmp/version_errors.txt"
+          append_error_details "Installation" "/tmp/install_errors.txt"
+          append_error_details "Packaging" "/tmp/packaging_errors.txt"
+          
+          echo "" >> "$SUMMARY_FILE"
+          echo "## Plugin Files" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+          
+          append_file_content() {
+            local title="$1"
+            local file="$2"
+            local language="$3"
+            
+            echo "<details>" >> "$SUMMARY_FILE"
+            echo "<summary>${title}</summary>" >> "$SUMMARY_FILE"
+            echo "" >> "$SUMMARY_FILE"
+            
+            if [ -n "$file" ] && [ -f "$file" ]; then
+              echo "~~~$language" >> "$SUMMARY_FILE"
+              cat "$file" >> "$SUMMARY_FILE"
+              echo "~~~" >> "$SUMMARY_FILE"
+            else
+              echo "_Not found: \`$file\`_" >> "$SUMMARY_FILE"
+            fi
+            
+            echo "" >> "$SUMMARY_FILE"
+            echo "</details>" >> "$SUMMARY_FILE"
+            echo "" >> "$SUMMARY_FILE"
+          }
+          
+          if [ -n "${PLUGIN_PATH:-}" ]; then
+            append_file_content "manifest.yaml" "$PLUGIN_PATH/manifest.yaml" "yaml"
+            append_file_content "README.md" "$PLUGIN_PATH/README.md" "markdown"
+            append_file_content "PRIVACY.md" "$PLUGIN_PATH/PRIVACY.md" "markdown"
+            append_file_content "requirements.txt" "$PLUGIN_PATH/requirements.txt" "text"
+            append_file_content "pyproject.toml" "$PLUGIN_PATH/pyproject.toml" "toml"
+          else
+            echo "_Plugin directory is unavailable (missing \`PLUGIN_PATH\`)._" >> "$SUMMARY_FILE"
           fi
+          
+          echo "" >> "$SUMMARY_FILE"
+          echo "## Workflow Details" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+          echo "- **Run ID:** ${{ github.run_id }}" >> "$SUMMARY_FILE"
+          echo "- **Repository:** ${{ github.repository }}" >> "$SUMMARY_FILE"
+          echo "- **Ref:** ${{ github.ref }}" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+          echo "[View workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> "$SUMMARY_FILE"
