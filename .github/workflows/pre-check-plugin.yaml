@@ -414,19 +414,23 @@ jobs:
           echo "## Plugin Files" >> "$SUMMARY_FILE"
           echo "" >> "$SUMMARY_FILE"
           
+          escape_html() {
+            sed -e 's/&/&amp;/g' -e 's/</&lt;/g' -e 's/>/&gt;/g'
+          }
+          
           append_file_content() {
             local title="$1"
             local file="$2"
-            local language="$3"
+            local language="${3:-text}"
             
             echo "<details>" >> "$SUMMARY_FILE"
             echo "<summary>${title}</summary>" >> "$SUMMARY_FILE"
             echo "" >> "$SUMMARY_FILE"
             
             if [ -n "$file" ] && [ -f "$file" ]; then
-              echo "~~~$language" >> "$SUMMARY_FILE"
-              cat "$file" >> "$SUMMARY_FILE"
-              echo "~~~" >> "$SUMMARY_FILE"
+              echo "<pre><code class=\"language-${language}\">" >> "$SUMMARY_FILE"
+              escape_html < "$file" >> "$SUMMARY_FILE"
+              echo "</code></pre>" >> "$SUMMARY_FILE"
             else
               echo "_Not found: \`$file\`_" >> "$SUMMARY_FILE"
             fi
