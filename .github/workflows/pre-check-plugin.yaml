@@ -388,6 +388,10 @@ jobs:
             echo "| **Packaging** | ✅ Passed |" >> "$SUMMARY_FILE"
           fi
           
+          escape_html() {
+            sed -e 's/&/&amp;/g' -e 's/</&lt;/g' -e 's/>/&gt;/g'
+          }
+          
           append_error_details() {
             local title="$1"
             local file="$2"
@@ -396,9 +400,9 @@ jobs:
               echo "<details>" >> "$SUMMARY_FILE"
               echo "<summary>${title} (details)</summary>" >> "$SUMMARY_FILE"
               echo "" >> "$SUMMARY_FILE"
-              echo '~~~text' >> "$SUMMARY_FILE"
-              cat "$file" >> "$SUMMARY_FILE"
-              echo '~~~' >> "$SUMMARY_FILE"
+              echo "<pre><code class=\"language-text\">" >> "$SUMMARY_FILE"
+              escape_html < "$file" >> "$SUMMARY_FILE"
+              echo "</code></pre>" >> "$SUMMARY_FILE"
               echo "" >> "$SUMMARY_FILE"
               echo "</details>" >> "$SUMMARY_FILE"
             fi
@@ -417,16 +421,16 @@ jobs:
           append_file_content() {
             local title="$1"
             local file="$2"
-            local language="$3"
+            local language="${3:-text}"
             
             echo "<details>" >> "$SUMMARY_FILE"
             echo "<summary>${title}</summary>" >> "$SUMMARY_FILE"
             echo "" >> "$SUMMARY_FILE"
             
             if [ -n "$file" ] && [ -f "$file" ]; then
-              echo "~~~$language" >> "$SUMMARY_FILE"
-              cat "$file" >> "$SUMMARY_FILE"
-              echo "~~~" >> "$SUMMARY_FILE"
+              echo "<pre><code class=\"language-${language}\">" >> "$SUMMARY_FILE"
+              escape_html < "$file" >> "$SUMMARY_FILE"
+              echo "</code></pre>" >> "$SUMMARY_FILE"
             else
               echo "_Not found: \`$file\`_" >> "$SUMMARY_FILE"
             fi
