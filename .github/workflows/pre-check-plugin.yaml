@@ -42,60 +42,110 @@ jobs:
         with:
           python-version: 3.12.7
       
-      - name: Install Python Dependencies
+      - name: Install Dependencies
         run: |
+          echo "Installing Python dependencies..."
           python -m pip install --upgrade pip
           pip install requests
+          
+          echo "Ensuring required build tools system dependencies are available..."
+          sudo apt-get update -q
+          sudo apt-get install -y \
+            ffmpeg \
+            build-essential git \
+            cmake pkg-config \
+            libcairo2-dev libjpeg-dev libgif-dev
+          
+          echo "Ensuring required system dependencies are available..."
+          if ! command -v jq &> /dev/null; then
+            echo "Installing jq..."
+            sudo apt-get install -y jq
+          fi
 
       - name: yq - portable yaml processor
         uses: mikefarah/yq@v4.44.5
+        with:
+          cmd: yq --version
 
       - name: Get PR Path
         run: |
-          export PR_FILES=$(gh pr view -R ${{ env.REPO_NAME }} ${{ github.event.pull_request.number }} --json files --jq .files)
-
+          echo "Retrieving PR files information..."
+          if ! PR_FILES=$(gh pr view -R ${{ env.REPO_NAME }} ${{ github.event.pull_request.number }} --json files --jq .files); then
+            echo "Failed to retrieve PR files. Make sure PR number and repository are correct."
+            exit 1
+          fi
+          
+          export PR_FILES
+          
+          echo "Checking for plugin package file changes..."
           if PLUGIN_PATH=$(python3 .scripts/validator/check-pkg-paths.py); then
-              echo $PLUGIN_PATH
+              echo "Found plugin path: $PLUGIN_PATH"
               echo "PLUGIN_PATH=$PLUGIN_PATH" >> $GITHUB_ENV
           else
-            echo "Only one .difypkg file change is allowed in a single PR."
+            echo "ERROR: Only one .difypkg file change is allowed in a single PR."
             exit 1
           fi
 
       - name: Unpack File
         run: |
-          mv ${{ env.PLUGIN_PATH }} ${{ env.PLUGIN_PATH }}.zip
+          # Store the plugin path in a variable
+          PLUGIN_PATH_VALUE="${PLUGIN_PATH}"
+          
+          echo "Moving plugin file to add .zip extension"
+          mv "$PLUGIN_PATH_VALUE" "$PLUGIN_PATH_VALUE.zip"
+          
+          echo "Creating unpacked_plugin directory"
           mkdir -p unpacked_plugin
-          unzip ${{ env.PLUGIN_PATH }}.zip -d unpacked_plugin
+          
+          echo "Unzipping plugin file to unpacked_plugin directory"
+          unzip "$PLUGIN_PATH_VALUE.zip" -d unpacked_plugin
+          
+          # Update the PLUGIN_PATH for future steps
           echo "PLUGIN_PATH=unpacked_plugin" >> $GITHUB_ENV
 
       - name: Check Plugin Manifest
         run: |
+          # Create error tracking file
+          ERROR_FILE="/tmp/manifest_errors.txt"
+          touch $ERROR_FILE
+          
           # manifest.yaml author must not be langgenius or dify
-          if yq '.author' ${{ env.PLUGIN_PATH }}/manifest.yaml | grep -q "langgenius"; then
-            echo "!!! Plugin manifest.yaml author must not be 'langgenius'"
+          if yq '.author' "$PLUGIN_PATH/manifest.yaml" | grep -q "langgenius"; then
+            ERROR_MSG="!!! Plugin manifest.yaml author must not be 'langgenius'"
+            echo "$ERROR_MSG"
+            echo "$ERROR_MSG" >> $ERROR_FILE
             exit 1
           fi
-          if yq '.author' ${{ env.PLUGIN_PATH }}/manifest.yaml | grep -q "dify"; then
-            echo "!!! Plugin manifest.yaml author must not be 'dify'"
+          if yq '.author' "$PLUGIN_PATH/manifest.yaml" | grep -q "dify"; then
+            ERROR_MSG="!!! Plugin manifest.yaml author must not be 'dify'"
+            echo "$ERROR_MSG"
+            echo "$ERROR_MSG" >> $ERROR_FILE
             exit 1
           fi
 
       - name: Check Plugin Icon
         run: |
+          # Create error tracking file
+          ERROR_FILE="/tmp/icon_errors.txt"
+          touch $ERROR_FILE
+          
           # Get icon filename from manifest.yaml
-          PLUGIN_ICON_FILENAME=$(yq '.icon' ${{ env.PLUGIN_PATH }}/manifest.yaml)
+          PLUGIN_ICON_FILENAME=$(yq '.icon' "$PLUGIN_PATH/manifest.yaml")
           echo "PLUGIN_ICON_FILENAME=$PLUGIN_ICON_FILENAME" >> $GITHUB_ENV
           
           # Check if icon file exists
-          if [ ! -f "${{ env.PLUGIN_PATH }}/_assets/$PLUGIN_ICON_FILENAME" ]; then
-            echo "!!! Plugin icon file not found: _assets/$PLUGIN_ICON_FILENAME"
+          if [ ! -f "$PLUGIN_PATH/_assets/$PLUGIN_ICON_FILENAME" ]; then
+            ERROR_MSG="!!! Plugin icon file not found: _assets/$PLUGIN_ICON_FILENAME"
+            echo "$ERROR_MSG"
+            echo "$ERROR_MSG" >> $ERROR_FILE
             exit 1
           fi
           
           # Check if icon contains template placeholder text
-          if grep -q "DIFY_MARKETPLACE_TEMPLATE_ICON_DO_NOT_USE" "${{ env.PLUGIN_PATH }}/_assets/$PLUGIN_ICON_FILENAME"; then
-            echo "!!! Plugin icon contains template placeholder text 'DIFY_MARKETPLACE_TEMPLATE_ICON_DO_NOT_USE', change default icon before submitting to marketplace."
+          if grep -q "DIFY_MARKETPLACE_TEMPLATE_ICON_DO_NOT_USE" "$PLUGIN_PATH/_assets/$PLUGIN_ICON_FILENAME"; then
+            ERROR_MSG="!!! Plugin icon contains template placeholder text 'DIFY_MARKETPLACE_TEMPLATE_ICON_DO_NOT_USE', change default icon before submitting to marketplace."
+            echo "$ERROR_MSG"
+            echo "$ERROR_MSG" >> $ERROR_FILE
             exit 1
           fi
           
@@ -108,64 +158,303 @@ jobs:
           </svg>'
           
           # Check if icon content matches default icon (normalize whitespace)
-          ICON_CONTENT=$(cat "${{ env.PLUGIN_PATH }}/_assets/$PLUGIN_ICON_FILENAME" | tr -d '\n\r\t ' | tr -s ' ')
+          ICON_CONTENT=$(cat "$PLUGIN_PATH/_assets/$PLUGIN_ICON_FILENAME" | tr -d '\n\r\t ' | tr -s ' ')
           DEFAULT_ICON_NORMALIZED=$(echo "$DEFAULT_ICON" | tr -d '\n\r\t ' | tr -s ' ')
           
           if [ "$ICON_CONTENT" = "$DEFAULT_ICON_NORMALIZED" ]; then
-            echo "!!! Plugin icon is using the default template icon and must be customized"
+            ERROR_MSG="!!! Plugin icon is using the default template icon and must be customized"
+            echo "$ERROR_MSG"
+            echo "$ERROR_MSG" >> $ERROR_FILE
             exit 1
           fi
   
 
       - name: Check If Version Exists
         run: |
-          # get version, author, name
-          VERSION=$(yq '.version' ${{ env.PLUGIN_PATH }}/manifest.yaml)
-          AUTHOR=$(yq '.author' ${{ env.PLUGIN_PATH }}/manifest.yaml)
-          NAME=$(yq '.name' ${{ env.PLUGIN_PATH }}/manifest.yaml)
-          echo "Checking plugin version: $VERSION"
-
-          # Check if the version already exists
-          RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" "${{ env.MARKETPLACE_BASE_URL }}/api/v1/plugins/$AUTHOR/$NAME/$VERSION")
+          # Create error tracking file
+          ERROR_FILE="/tmp/version_errors.txt"
+          touch $ERROR_FILE
+          
+          # Extract plugin metadata
+          VERSION=$(yq '.version' "$PLUGIN_PATH/manifest.yaml")
+          AUTHOR=$(yq '.author' "$PLUGIN_PATH/manifest.yaml")
+          NAME=$(yq '.name' "$PLUGIN_PATH/manifest.yaml")
+          
+          echo "Plugin information:"
+          echo "- Name: $NAME"
+          echo "- Author: $AUTHOR"
+          echo "- Version: $VERSION"
+          
+          # Check if the version already exists in marketplace
+          echo "Checking if plugin version already exists in marketplace..."
+          API_URL="${MARKETPLACE_BASE_URL}/api/v1/plugins/${AUTHOR}/${NAME}/${VERSION}"
+          echo "API URL: $API_URL"
+          
+          # Add a timeout to curl to prevent hanging
+          RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$API_URL" --connect-timeout 10 --max-time 30)
+          echo "API Response Code: $RESPONSE_CODE"
           
           if [ "$RESPONSE_CODE" = "200" ]; then
-            RESPONSE=$(curl -s "${{ env.MARKETPLACE_BASE_URL }}/api/v1/plugins/$AUTHOR/$NAME/$VERSION")
+            RESPONSE=$(curl -s "$API_URL" --connect-timeout 10 --max-time 30)
             if [ "$(echo "$RESPONSE" | jq -r '.code')" = "0" ]; then
-              echo "!!! Plugin version $VERSION already exists, please update the version number in manifest.yaml"
+              ERROR_MSG="!!! Plugin version $VERSION by $AUTHOR already exists in the marketplace. Please update the version number in manifest.yaml before submitting."
+              echo "$ERROR_MSG"
+              echo "$ERROR_MSG" >> $ERROR_FILE
               exit 1
             fi
+          else
+            echo "Version check passed: $VERSION is available for use."
           fi
 
       - name: Check Plugin Deps
         run: |
-          if [ -f ${{ env.PLUGIN_PATH }}/requirements.txt ]; then
+          if [ -f "$PLUGIN_PATH/requirements.txt" ]; then
             echo "Trying to install plugin dependencies..."
             python3 -m venv .venv
             source .venv/bin/activate
-            python3 -m pip install -r ${{ env.PLUGIN_PATH }}/requirements.txt
+            python3 -m pip install -r "$PLUGIN_PATH/requirements.txt"
             deactivate
+          else
+            echo "No requirements.txt found, skipping dependency installation"
           fi
 
       - name: Check Plugin Install
         run: |
-          if [ -f ${{ env.PLUGIN_PATH }}/requirements.txt ]; then
-              source .venv/bin/activate
-              pip install packaging
-              dify_version=$(pip list | grep 'dify_plugin' | awk '{print $2}')
-              target_version="0.0.1b64"
-              result=$(python -c "from packaging.version import Version; print(0 if Version('$dify_version') > Version('$target_version') else 1)")
-              if [ $result == 0 ]; then
-                  export INSTALL_METHOD=serverless
-                  export SERVERLESS_PORT=8080
-                  export SERVERLESS_HOST=0.0.0.0
+          # Create error tracking file
+          ERROR_FILE="/tmp/install_errors.txt"
+          touch $ERROR_FILE
+          
+          if [ -f "$PLUGIN_PATH/requirements.txt" ]; then
+              source .venv/bin/activate || {
+                echo "Failed to activate virtual environment" >> $ERROR_FILE
+                echo "Failed to activate virtual environment"
+                exit 1
+              }
+              
+              # Install packaging for version comparison
+              echo "Installing packaging module..."
+              pip install packaging || {
+                echo "Failed to install packaging module" >> $ERROR_FILE
+                echo "Failed to install packaging module"
+                exit 1
+              }
+              
+              # Determine installation method based on dify_plugin version
+              echo "Detecting dify_plugin version..."
+              dify_version=$(pip list | grep -o 'dify_plugin\s\+[0-9.]\+' | awk '{print $2}' || echo "not_found")
+              
+              if [ "$dify_version" = "not_found" ]; then
+                echo "dify_plugin not found in installed packages, using default configuration"
+                export INSTALL_METHOD=aws_lambda
+                export AWS_LAMBDA_PORT=8080
+                export AWS_LAMBDA_HOST=0.0.0.0
               else
-                  export INSTALL_METHOD=aws_lambda
-                  export AWS_LAMBDA_PORT=8080
-                  export AWS_LAMBDA_HOST=0.0.0.0
+                target_version="0.0.1b64"
+                echo "Found dify_plugin version: $dify_version"
+                echo "Comparing with target version: $target_version"
+                
+                # Set environment variables based on version comparison
+                if python -c "from packaging.version import Version; exit(0 if Version('$dify_version') > Version('$target_version') else 1)"; then
+                    echo "Using serverless installation method"
+                    export INSTALL_METHOD=serverless
+                    export SERVERLESS_PORT=8080
+                    export SERVERLESS_HOST=0.0.0.0
+                else
+                    echo "Using aws_lambda installation method"
+                    export INSTALL_METHOD=aws_lambda
+                    export AWS_LAMBDA_PORT=8080
+                    export AWS_LAMBDA_HOST=0.0.0.0
+                fi
               fi
-              python3 .scripts/validator/test-plugin-install.py -d ${{ env.PLUGIN_PATH }}
+              
+              # Run the plugin installation test with timeout
+              echo "Running plugin installation test..."
+              timeout 300 python3 .scripts/validator/test-plugin-install.py -d "$PLUGIN_PATH" || {
+                echo "Plugin installation test failed or timed out" >> $ERROR_FILE
+                echo "Plugin installation test failed or timed out"
+                exit 1
+              }
+              
+              echo "Plugin installation test completed successfully"
+          else
+              echo "No requirements.txt found, skipping installation test"
           fi
 
       - name: Check Packaging
         run: |
-          python3 .scripts/uploader/upload-package.py -d ${{ env.PLUGIN_PATH }} -t ${{ env.MARKETPLACE_TOKEN }} --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u ${{ env.MARKETPLACE_BASE_URL }} -f --test
+          # Create error tracking file
+          ERROR_FILE="/tmp/packaging_errors.txt"
+          touch $ERROR_FILE
+          
+          echo "Running packaging check..."
+          
+          # Check if plugin daemon exists and is executable
+          if [ ! -f ".scripts/dify-plugin-linux-amd64" ]; then
+            ERROR_MSG="Plugin daemon file not found"
+            echo "$ERROR_MSG" >> $ERROR_FILE
+            echo "$ERROR_MSG"
+            exit 1
+          fi
+          
+          if [ ! -x ".scripts/dify-plugin-linux-amd64" ]; then
+            chmod +x .scripts/dify-plugin-linux-amd64 || {
+              ERROR_MSG="Failed to make plugin daemon executable"
+              echo "$ERROR_MSG" >> $ERROR_FILE
+              echo "$ERROR_MSG"
+              exit 1
+            }
+          fi
+          
+          # Run the packaging check with a timeout
+          timeout 300 python3 .scripts/uploader/upload-package.py -d "$PLUGIN_PATH" -t "$MARKETPLACE_TOKEN" --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u "$MARKETPLACE_BASE_URL" -f --test || {
+            ERROR_MSG="Packaging check failed or timed out"
+            echo "$ERROR_MSG" >> $ERROR_FILE
+            echo "$ERROR_MSG"
+            exit 1
+          }
+          
+          echo "Packaging check completed successfully"
+        
+      - name: Output Detailed Report (Step Summary)
+        if: always()
+        run: |
+          SUMMARY_FILE="${GITHUB_STEP_SUMMARY:-/tmp/github_step_summary.md}"
+          JOB_STATUS="${{ job.status }}"
+          
+          echo "# Plugin Pre-Check Report" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+          
+          echo "## Plugin Information" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+          if [ -n "${PLUGIN_PATH:-}" ] && [ -f "$PLUGIN_PATH/manifest.yaml" ]; then
+            PLUGIN_NAME=$(yq '.name // "Unknown"' "$PLUGIN_PATH/manifest.yaml" 2>/dev/null || echo "Unknown")
+            PLUGIN_VERSION=$(yq '.version // "Unknown"' "$PLUGIN_PATH/manifest.yaml" 2>/dev/null || echo "Unknown")
+            PLUGIN_AUTHOR=$(yq '.author // "Unknown"' "$PLUGIN_PATH/manifest.yaml" 2>/dev/null || echo "Unknown")
+            PLUGIN_DESCRIPTION=$(yq '.description // "No description provided"' "$PLUGIN_PATH/manifest.yaml" 2>/dev/null || echo "No description provided")
+            
+            echo "- **Name:** $PLUGIN_NAME" >> "$SUMMARY_FILE"
+            echo "- **Version:** $PLUGIN_VERSION" >> "$SUMMARY_FILE"
+            echo "- **Author:** $PLUGIN_AUTHOR" >> "$SUMMARY_FILE"
+            echo "- **Description:** $PLUGIN_DESCRIPTION" >> "$SUMMARY_FILE"
+          else
+            if [ -z "${PLUGIN_PATH:-}" ]; then
+              echo "- ⚠️ \`PLUGIN_PATH\` is not set (plugin package may not have been detected/unpacked)." >> "$SUMMARY_FILE"
+            else
+              echo "- ⚠️ \`manifest.yaml\` not found under \`$PLUGIN_PATH\`." >> "$SUMMARY_FILE"
+            fi
+          fi
+          
+          echo "" >> "$SUMMARY_FILE"
+          echo "## CI Steps Status" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+          echo "| Check | Status |" >> "$SUMMARY_FILE"
+          echo "| ----- | ------ |" >> "$SUMMARY_FILE"
+          
+          case "$JOB_STATUS" in
+            success) echo "| **Overall Status** | ✅ **Passed** |" >> "$SUMMARY_FILE" ;;
+            cancelled) echo "| **Overall Status** | ⚠️ **Cancelled** |" >> "$SUMMARY_FILE" ;;
+            *) echo "| **Overall Status** | ❌ **Failed** |" >> "$SUMMARY_FILE" ;;
+          esac
+          
+          if [ -f "/tmp/manifest_errors.txt" ] && [ -s "/tmp/manifest_errors.txt" ]; then
+            echo "| **Manifest Validation** | ❌ Failed |" >> "$SUMMARY_FILE"
+          else
+            echo "| **Manifest Validation** | ✅ Passed |" >> "$SUMMARY_FILE"
+          fi
+          
+          if [ -f "/tmp/icon_errors.txt" ] && [ -s "/tmp/icon_errors.txt" ]; then
+            echo "| **Icon Validation** | ❌ Failed |" >> "$SUMMARY_FILE"
+          else
+            echo "| **Icon Validation** | ✅ Passed |" >> "$SUMMARY_FILE"
+          fi
+          
+          if [ -f "/tmp/version_errors.txt" ] && [ -s "/tmp/version_errors.txt" ]; then
+            echo "| **Version Check** | ❌ Failed |" >> "$SUMMARY_FILE"
+          else
+            echo "| **Version Check** | ✅ Passed |" >> "$SUMMARY_FILE"
+          fi
+          
+          if [ -f "/tmp/install_errors.txt" ] && [ -s "/tmp/install_errors.txt" ]; then
+            echo "| **Installation** | ❌ Failed |" >> "$SUMMARY_FILE"
+          elif [ -n "${PLUGIN_PATH:-}" ] && [ -f "$PLUGIN_PATH/requirements.txt" ]; then
+            echo "| **Installation** | ✅ Passed |" >> "$SUMMARY_FILE"
+          else
+            echo "| **Installation** | ⚠️ Skipped |" >> "$SUMMARY_FILE"
+          fi
+          
+          if [ -f "/tmp/packaging_errors.txt" ] && [ -s "/tmp/packaging_errors.txt" ]; then
+            echo "| **Packaging** | ❌ Failed |" >> "$SUMMARY_FILE"
+          else
+            echo "| **Packaging** | ✅ Passed |" >> "$SUMMARY_FILE"
+          fi
+          
+          escape_html() {
+            sed -e 's/&/&amp;/g' -e 's/</&lt;/g' -e 's/>/&gt;/g'
+          }
+          
+          append_error_details() {
+            local title="$1"
+            local file="$2"
+            if [ -f "$file" ] && [ -s "$file" ]; then
+              echo "" >> "$SUMMARY_FILE"
+              echo "<details>" >> "$SUMMARY_FILE"
+              echo "<summary>${title} (details)</summary>" >> "$SUMMARY_FILE"
+              echo "" >> "$SUMMARY_FILE"
+              echo "<pre><code class=\"language-text\">" >> "$SUMMARY_FILE"
+              escape_html < "$file" >> "$SUMMARY_FILE"
+              echo "</code></pre>" >> "$SUMMARY_FILE"
+              echo "" >> "$SUMMARY_FILE"
+              echo "</details>" >> "$SUMMARY_FILE"
+            fi
+          }
+          
+          append_error_details "Manifest Validation" "/tmp/manifest_errors.txt"
+          append_error_details "Icon Validation" "/tmp/icon_errors.txt"
+          append_error_details "Version Check" "/tmp/version_errors.txt"
+          append_error_details "Installation" "/tmp/install_errors.txt"
+          append_error_details "Packaging" "/tmp/packaging_errors.txt"
+          
+          echo "" >> "$SUMMARY_FILE"
+          echo "## Plugin Files" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+          
+          append_file_content() {
+            local title="$1"
+            local file="$2"
+            local language="${3:-text}"
+            
+            echo "<details>" >> "$SUMMARY_FILE"
+            echo "<summary>${title}</summary>" >> "$SUMMARY_FILE"
+            echo "" >> "$SUMMARY_FILE"
+            
+            if [ -n "$file" ] && [ -f "$file" ]; then
+              echo "<pre><code class=\"language-${language}\">" >> "$SUMMARY_FILE"
+              escape_html < "$file" >> "$SUMMARY_FILE"
+              echo "</code></pre>" >> "$SUMMARY_FILE"
+            else
+              echo "_Not found: \`$file\`_" >> "$SUMMARY_FILE"
+            fi
+            
+            echo "" >> "$SUMMARY_FILE"
+            echo "</details>" >> "$SUMMARY_FILE"
+            echo "" >> "$SUMMARY_FILE"
+          }
+          
+          if [ -n "${PLUGIN_PATH:-}" ]; then
+            append_file_content "manifest.yaml" "$PLUGIN_PATH/manifest.yaml" "yaml"
+            append_file_content "README.md" "$PLUGIN_PATH/README.md" "markdown"
+            append_file_content "PRIVACY.md" "$PLUGIN_PATH/PRIVACY.md" "markdown"
+            append_file_content "requirements.txt" "$PLUGIN_PATH/requirements.txt" "text"
+            append_file_content "pyproject.toml" "$PLUGIN_PATH/pyproject.toml" "toml"
+          else
+            echo "_Plugin directory is unavailable (missing \`PLUGIN_PATH\`)._" >> "$SUMMARY_FILE"
+          fi
+          
+          echo "" >> "$SUMMARY_FILE"
+          echo "## Workflow Details" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+          echo "- **Run ID:** ${{ github.run_id }}" >> "$SUMMARY_FILE"
+          echo "- **Repository:** ${{ github.repository }}" >> "$SUMMARY_FILE"
+          echo "- **Ref:** ${{ github.ref }}" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+          echo "[View workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> "$SUMMARY_FILE"
