@@ -7,7 +7,7 @@ name:
 description:
   en_US: "Comprehensive Huoban API toolkit for Dify AI platform. Enables AI agents to autonomously explore data structures, perform CRUD operations, and manage workspace members in Huoban."
   zh_Hans: "Dify AI平台的伙伴云全能工具箱。使AI智能体能够自主探索数据结构、执行增删改查操作、并管理伙伴云工作区成员。"
-icon: "🕵️"
+icon: "icon.png"
 icon_background: "#FEF7C3"
 author: "purexiao"
 author_url: "https://github.com/purexiao"
