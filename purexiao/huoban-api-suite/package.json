@@ -1,0 +1,34 @@
+{
+  "name": "huoban-plugin-dify",
+  "version": "1.2.0",
+  "description": "Comprehensive Huoban API plugin for Dify AI platform",
+  "main": "manifest.yaml",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo \"Building plugin package...\"",
+    "package": "zip -r huoban-plugin-dify.zip . -x '*.git*' 'node_modules/*'"
+  },
+  "keywords": [
+    "dify",
+    "plugin",
+    "huoban",
+    "api",
+    "crm",
+    "automation"
+  ],
+  "author": "purexiao",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/purexiao/huoban-plugin-dify.git"
+  },
+  "bugs": {
+    "url": "https://github.com/purexiao/huoban-plugin-dify/issues"
+  },
+  "homepage": "https://github.com/purexiao/huoban-plugin-dify#readme",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
