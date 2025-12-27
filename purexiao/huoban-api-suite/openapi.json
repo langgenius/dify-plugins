@@ -1,0 +1,575 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Huoban API (Full Suite)",
+    "description": "伙伴云全能工具箱。包含自主探索数据结构、增删改查数据、以及获取成员列表的能力。",
+    "version": "v1.2.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.huoban.com"
+    }
+  ],
+  "security": [
+    {
+      "HuobanAuth": []
+    }
+  ],
+  "paths": {
+    "/openapi/v1/space/list": {
+      "get": {
+        "operationId": "get_workspace_list",
+        "summary": "Step 1: 获取工作区列表",
+        "description": "获取当前用户可访问的所有工作区(Space)。当不知道 table 属于哪个空间时调用此接口作为第一步。",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "spaces": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "space_id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/openapi/v1/table/list": {
+      "post": {
+        "operationId": "get_table_list",
+        "summary": "Step 2: 获取表格列表",
+        "description": "根据工作区ID (space_id) 获取该工作区下所有的表格信息。用于查找目标表格的 table_id。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "space_id": {
+                    "type": "integer",
+                    "description": "工作区ID",
+                    "example": 4000000000000001
+                  }
+                },
+                "required": [
+                  "space_id"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "tables": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "table_id": {
+                            "type": "integer"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/openapi/v1/table/{table_id}": {
+      "get": {
+        "operationId": "get_table_config",
+        "summary": "Step 3: 获取表格详细配置",
+        "description": "⚠️核心接口：根据表格ID直接获取字段配置。在「写入数据」、「修改数据」或「查询筛选」前，必须先调用此接口以获取准确的 field_id 映射关系。",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "description": "表格ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "table": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "fields": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "field_id": {
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "field_type": {
+                                    "type": "string"
+                                  },
+                                  "required": {
+                                    "type": "boolean"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/openapi/v1/item": {
+      "post": {
+        "operationId": "create_record",
+        "summary": "Step 4: 创建数据(写入)",
+        "description": "向指定的表格中录入一条新数据。必须在获取表格配置后调用。fields 中的 Key 必须是 field_id。",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "table_id",
+                  "fields"
+                ],
+                "properties": {
+                  "table_id": {
+                    "type": "string",
+                    "description": "目标表格的 ID"
+                  },
+                  "fields": {
+                    "type": "object",
+                    "description": "业务数据对象。Key 必须是 field_id。示例：{'2001': '张三', '2002': ['101']}。注意：选项/关联字段必须传 ID 数组。"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功创建",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "item_id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/openapi/v1/item/list": {
+      "post": {
+        "operationId": "query_table_data",
+        "summary": "Step 5: 查询数据列表 (含筛选)",
+        "description": "根据复杂条件筛选表格数据。⚠️ 调用前必须先调用 `get_table_config` 获取字段ID。支持 `and`/`or` 逻辑嵌套。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "table_id"
+                ],
+                "properties": {
+                  "table_id": {
+                    "type": "string",
+                    "description": "目标表格ID"
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "default": 20,
+                    "maximum": 100
+                  },
+                  "offset": {
+                    "type": "integer",
+                    "default": 0
+                  },
+                  "filter": {
+                    "type": "object",
+                    "description": "筛选对象。示例：{'and': [{'field': 'field_id', 'query': {'eq': 'value'}}]}",
+                    "properties": {
+                      "and": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/FilterCondition"
+                        }
+                      },
+                      "or": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/FilterCondition"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "查询成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer"
+                        },
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "description": "数据行"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/openapi/v1/item/{item_id}": {
+      "post": {
+        "operationId": "get_item_detail",
+        "summary": "Step 6: 获取单条数据详情",
+        "description": "根据 item_id 获取某一条数据的完整详情。通常用于确认数据内容。",
+        "parameters": [
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "description": "数据行ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "item": {
+                          "type": "object",
+                          "description": "数据详情对象",
+                          "properties": {
+                            "title": {
+                              "type": "string"
+                            },
+                            "fields": {
+                              "type": "object",
+                              "description": "所有字段的值，Key为 field_id"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "update_record",
+        "summary": "Step 7: 修改/更新数据",
+        "description": "修改表格中已存在的一条数据。⚠️ 必须提供 item_id。Fields 中的 Key 必须是 field_id（通过 Step 3 获取）。",
+        "parameters": [
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "description": "需要修改的数据行ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "fields"
+                ],
+                "properties": {
+                  "fields": {
+                    "type": "object",
+                    "description": "需要更新的字段键值对。Key 是 field_id。示例：{'2001': '新状态'}。注意：关联/选项字段通常需要传 ID 数组。",
+                    "example": {
+                      "2200000137788628": "新的文本内容",
+                      "2200000137788650": [
+                        "1"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "更新成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "delete_record",
+        "summary": "Step 8: 删除数据",
+        "description": "删除指定的一条数据。⚠️ 这是一个危险操作。",
+        "parameters": [
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "description": "要删除的数据行ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "删除成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/openapi/v1/space/member/list": {
+      "post": {
+        "operationId": "get_space_members",
+        "summary": "Step 9: 获取工作区成员列表",
+        "description": "获取工作区内的成员信息（User ID）。⚠️ 当需要填写“人员”类型的字段时，必须先调用此接口，用名字搜索并获取对应的 user_id。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "space_id"
+                ],
+                "properties": {
+                  "space_id": {
+                    "type": "string",
+                    "description": "工作区ID (Space ID)"
+                  },
+                  "username": {
+                    "type": "string",
+                    "description": "搜索关键词（人名）"
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "default": 20
+                  },
+                  "offset": {
+                    "type": "integer",
+                    "default": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "users": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "user_id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "avatar": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "HuobanAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Open-Authorization",
+        "description": "请输入: Bearer {API_KEY}"
+      }
+    },
+    "schemas": {
+      "FilterCondition": {
+        "type": "object",
+        "required": [
+          "field",
+          "query"
+        ],
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "字段ID (field_id)"
+          },
+          "query": {
+            "type": "object",
+            "description": "操作符对象",
+            "properties": {
+              "eq": {
+                "type": "string",
+                "description": "等于"
+              },
+              "gt": {
+                "type": "number",
+                "description": "大于"
+              },
+              "lt": {
+                "type": "number",
+                "description": "小于"
+              },
+              "inc": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                },
+                "description": "包含ID (选项/关联)"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
