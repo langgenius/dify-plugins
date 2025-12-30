@@ -1,0 +1,56 @@
+schema_version: "1.0"
+type: tool
+namespace: huoban
+name:
+  en_US: "Huoban API Suite"
+  zh_Hans: "伙伴云全能工具箱"
+description:
+  en_US: "Comprehensive Huoban API toolkit for Dify AI platform. Enables AI agents to autonomously explore data structures, perform CRUD operations, and manage workspace members in Huoban."
+  zh_Hans: "Dify AI平台的伙伴云全能工具箱。使AI智能体能够自主探索数据结构、执行增删改查操作、并管理伙伴云工作区成员。"
+icon: "🕵️"
+icon_background: "#FEF7C3"
+author: "purexiao"
+author_url: "https://github.com/purexiao"
+version: "1.2.0"
+tags:
+  - crm
+  - api
+  - huoban
+  - data-management
+  - automation
+  - ai
+  - business-intelligence
+categories:
+  - productivity
+  - business
+  - data
+  - ai-agents
+homepage: "https://www.huoban.com"
+repository: "https://github.com/purexiao/huoban-plugin-dify"
+license: "MIT"
+apis:
+  openapi: "./openapi.json"
+authentication:
+  type: api_key
+  placement: header
+  name: "Open-Authorization"
+  description:
+    en_US: "Enter: Bearer {API_KEY} (Get API key from Huoban platform)"
+    zh_Hans: "请输入: Bearer {API_KEY} (从伙伴云平台获取API密钥)"
+privacy_policy: "https://www.huoban.com/privacy"
+support: "https://support.huoban.com"
+release_notes:
+  "1.2.0": "Added comprehensive API suite with workspace management, table operations, and data CRUD capabilities"
+  "1.1.0": "Basic CRUD operations and API key authentication"
+  "1.0.0": "Initial release with workspace and table discovery"
+data_collection:
+  description:
+    en_US: "This plugin transmits API keys and query parameters to Huoban API to perform requested operations. No data is permanently stored by the plugin itself."
+    zh_Hans: "此插件将API密钥和查询参数传输到伙伴云API以执行请求的操作。插件本身不永久存储任何数据。"
+  data_types:
+    - api_credentials
+    - query_parameters
+    - business_data
+  storage_duration: "transient"
+  data_sharing:
+    - huoban_api_only
