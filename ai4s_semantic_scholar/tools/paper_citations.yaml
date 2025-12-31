@@ -1,0 +1,38 @@
+identity:
+  name: paper_citations
+  author: ai4scholar
+  label:
+    en_US: Paper Citations
+    zh_Hans: 论文引用
+description:
+  human:
+    en_US: Get papers that cite a specific paper
+    zh_Hans: 获取引用特定论文的论文列表
+  llm: Get a list of papers that cite the given paper. Useful for understanding the impact and follow-up research.
+parameters:
+  - name: paper_id
+    type: string
+    required: true
+    label:
+      en_US: Paper ID
+      zh_Hans: 论文 ID
+    human_description:
+      en_US: Paper ID to get citations for (Semantic Scholar ID, DOI, or arXiv ID)
+      zh_Hans: 获取引用的论文 ID（Semantic Scholar ID、DOI 或 arXiv ID）
+    llm_description: The paper ID to get citations for. Can be Semantic Scholar ID, DOI (prefix with "DOI:"), or arXiv ID (prefix with "arXiv:")
+    form: llm
+  - name: limit
+    type: number
+    required: false
+    default: 20
+    label:
+      en_US: Result Limit
+      zh_Hans: 结果数量
+    human_description:
+      en_US: Maximum number of citations to return (1-100, default 20)
+      zh_Hans: 返回的最大引用数量（1-100，默认20）
+    llm_description: Maximum number of citing papers to return
+    form: form
+extra:
+  python:
+    source: tools/paper_citations.py
