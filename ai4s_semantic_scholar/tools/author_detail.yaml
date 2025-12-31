@@ -1,0 +1,26 @@
+identity:
+  name: author_detail
+  author: ai4scholar
+  label:
+    en_US: Author Detail
+    zh_Hans: 作者详情
+description:
+  human:
+    en_US: Get detailed information about a specific author by their ID
+    zh_Hans: 通过作者 ID 获取特定作者的详细信息
+  llm: Get detailed information about an academic author using their Semantic Scholar Author ID, including h-index, citation count, and affiliations.
+parameters:
+  - name: author_id
+    type: string
+    required: true
+    label:
+      en_US: Author ID
+      zh_Hans: 作者 ID
+    human_description:
+      en_US: Semantic Scholar Author ID
+      zh_Hans: Semantic Scholar 作者 ID
+    llm_description: The Semantic Scholar Author ID to look up
+    form: llm
+extra:
+  python:
+    source: tools/author_detail.py

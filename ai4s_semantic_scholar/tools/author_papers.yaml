@@ -1,0 +1,38 @@
+identity:
+  name: author_papers
+  author: ai4scholar
+  label:
+    en_US: Author Papers
+    zh_Hans: 作者论文
+description:
+  human:
+    en_US: Get all papers published by a specific author
+    zh_Hans: 获取特定作者发表的所有论文
+  llm: Get a list of papers published by an author using their Semantic Scholar Author ID.
+parameters:
+  - name: author_id
+    type: string
+    required: true
+    label:
+      en_US: Author ID
+      zh_Hans: 作者 ID
+    human_description:
+      en_US: Semantic Scholar Author ID
+      zh_Hans: Semantic Scholar 作者 ID
+    llm_description: The Semantic Scholar Author ID to look up papers for
+    form: llm
+  - name: limit
+    type: number
+    required: false
+    default: 20
+    label:
+      en_US: Result Limit
+      zh_Hans: 结果数量
+    human_description:
+      en_US: Maximum number of papers to return (1-100, default 20)
+      zh_Hans: 返回的最大论文数量（1-100，默认20）
+    llm_description: Maximum number of papers to return
+    form: form
+extra:
+  python:
+    source: tools/author_papers.py
