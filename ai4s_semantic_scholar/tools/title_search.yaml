@@ -1,0 +1,38 @@
+identity:
+  name: title_search
+  author: ai4scholar
+  label:
+    en_US: Title Search
+    zh_Hans: 标题搜索
+description:
+  human:
+    en_US: Search for a specific paper by its exact or partial title
+    zh_Hans: 通过精确或部分标题搜索特定论文
+  llm: Search for a specific academic paper by its title. Use this when you know the paper's title and want to find it directly.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label:
+      en_US: Paper Title
+      zh_Hans: 论文标题
+    human_description:
+      en_US: The title of the paper to search for
+      zh_Hans: 要搜索的论文标题
+    llm_description: The title of the paper to search for
+    form: llm
+  - name: year
+    type: number
+    required: false
+    label:
+      en_US: Publication Year
+      zh_Hans: 发表年份
+    human_description:
+      en_US: Filter by specific publication year
+      zh_Hans: 按特定发表年份筛选
+    llm_description: Filter results by publication year
+    form: form
+
+extra:
+  python:
+    source: tools/title_search.py
