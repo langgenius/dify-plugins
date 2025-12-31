@@ -1,0 +1,27 @@
+identity:
+  name: multiple_papers_detail
+  author: ai4scholar
+  label:
+    en_US: Multiple Papers Detail
+    zh_Hans: 多篇论文详情
+description:
+  human:
+    en_US: Get details for multiple papers at once by their IDs
+    zh_Hans: 通过 ID 一次获取多篇论文的详情
+  llm: Get detailed information about multiple papers in a single request. Provide paper IDs separated by commas or newlines.
+parameters:
+  - name: paper_ids
+    type: string
+    required: true
+    label:
+      en_US: Paper IDs
+      zh_Hans: 论文 ID 列表
+    human_description:
+      en_US: Paper IDs separated by commas or newlines (Semantic Scholar IDs, DOIs, or arXiv IDs)
+      zh_Hans: 论文 ID，用逗号或换行符分隔（Semantic Scholar ID、DOI 或 arXiv ID）
+    llm_description: Multiple paper identifiers separated by commas or newlines. Can be Semantic Scholar IDs, DOIs (prefix with "DOI:"), or arXiv IDs (prefix with "arXiv:")
+    form: llm
+
+extra:
+  python:
+    source: tools/multiple_papers_detail.py

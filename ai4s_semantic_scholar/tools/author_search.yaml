@@ -1,0 +1,39 @@
+identity:
+  name: author_search
+  author: ai4scholar
+  label:
+    en_US: Author Search
+    zh_Hans: 作者搜索
+description:
+  human:
+    en_US: Search for authors and get their publication information
+    zh_Hans: 搜索作者并获取其发表信息
+  llm: Search for academic authors by name and get information about their publications, citations, and h-index.
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Author Name
+      zh_Hans: 作者姓名
+    human_description:
+      en_US: Name of the author to search for
+      zh_Hans: 要搜索的作者姓名
+    llm_description: The name of the author to search for
+    form: llm
+  - name: limit
+    type: number
+    required: false
+    default: 5
+    label:
+      en_US: Result Limit
+      zh_Hans: 结果数量
+    human_description:
+      en_US: Maximum number of authors to return (1-20, default 5)
+      zh_Hans: 返回的最大作者数量（1-20，默认5）
+    llm_description: Maximum number of authors to return
+    form: form
+
+extra:
+  python:
+    source: tools/author_search.py

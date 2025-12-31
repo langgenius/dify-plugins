@@ -1,0 +1,73 @@
+identity:
+  name: semantic_search
+  author: ai4scholar
+  label:
+    en_US: Semantic Search
+    zh_Hans: 语义搜索
+description:
+  human:
+    en_US: Search academic papers by relevance using natural language queries
+    zh_Hans: 使用自然语言查询按相关性搜索学术论文
+  llm: Search for academic papers on Semantic Scholar using natural language queries. Returns papers ranked by relevance to the query.
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Search Query
+      zh_Hans: 搜索查询
+    human_description:
+      en_US: Natural language search query for finding relevant papers
+      zh_Hans: 用于查找相关论文的自然语言搜索查询
+    llm_description: The search query in natural language to find relevant academic papers
+    form: llm
+  - name: limit
+    type: number
+    required: false
+    default: 10
+    label:
+      en_US: Result Limit
+      zh_Hans: 结果数量
+    human_description:
+      en_US: Maximum number of papers to return (1-100, default 10)
+      zh_Hans: 返回的最大论文数量（1-100，默认10）
+    llm_description: Maximum number of papers to return, between 1 and 100
+    form: form
+  - name: year
+    type: string
+    required: false
+    label:
+      en_US: Year Filter
+      zh_Hans: 年份筛选
+    human_description:
+      en_US: Filter by publication year (e.g., "2020", "2020-2024", "2020-")
+      zh_Hans: 按发表年份筛选（如 "2020"、"2020-2024"、"2020-"）
+    llm_description: Filter papers by publication year. Can be a single year, range (2020-2024), or open-ended (2020-)
+    form: form
+  - name: fields_of_study
+    type: string
+    required: false
+    label:
+      en_US: Fields of Study
+      zh_Hans: 研究领域
+    human_description:
+      en_US: Filter by field (e.g., "Computer Science", "Medicine")
+      zh_Hans: 按领域筛选（如 "Computer Science"、"Medicine"）
+    llm_description: Filter papers by field of study, comma-separated for multiple fields
+    form: form
+  - name: open_access_only
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: Open Access Only
+      zh_Hans: 仅开放获取
+    human_description:
+      en_US: Only return papers with free PDF available
+      zh_Hans: 仅返回有免费PDF的论文
+    llm_description: If true, only return papers that have open access PDFs available
+    form: form
+
+extra:
+  python:
+    source: tools/semantic_search.py

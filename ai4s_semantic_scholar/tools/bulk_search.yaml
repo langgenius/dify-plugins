@@ -1,0 +1,39 @@
+identity:
+  name: bulk_search
+  author: ai4scholar
+  label:
+    en_US: Bulk Search
+    zh_Hans: 批量搜索
+description:
+  human:
+    en_US: Execute multiple search queries at once and get combined results
+    zh_Hans: 一次执行多个搜索查询并获取合并结果
+  llm: Execute multiple search queries in a single request. Useful when you need to search for papers on multiple different topics.
+parameters:
+  - name: queries
+    type: string
+    required: true
+    label:
+      en_US: Search Queries
+      zh_Hans: 搜索查询
+    human_description:
+      en_US: Multiple queries separated by newlines or semicolons
+      zh_Hans: 多个查询，用换行符或分号分隔
+    llm_description: Multiple search queries, separated by newlines or semicolons. Each query will be searched separately.
+    form: llm
+  - name: limit_per_query
+    type: number
+    required: false
+    default: 5
+    label:
+      en_US: Results per Query
+      zh_Hans: 每个查询的结果数
+    human_description:
+      en_US: Maximum papers per query (1-20, default 5)
+      zh_Hans: 每个查询的最大论文数（1-20，默认5）
+    llm_description: Maximum number of papers to return per query
+    form: form
+
+extra:
+  python:
+    source: tools/bulk_search.py
