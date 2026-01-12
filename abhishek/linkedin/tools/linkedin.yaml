@@ -1,0 +1,138 @@
+identity:
+  name: "share_update"
+  author: "abhishek"
+  label:
+    en_US: "Share Update"
+    zh_Hans: "发布动态"
+    pt_BR: "Compartilhar Atualização"
+    ja_JP: "更新を共有"
+description:
+  human:
+    en_US: "Share a text update to LinkedIn Profile."
+    zh_Hans: "分享一条文本动态到 LinkedIn 个人资料。"
+    pt_BR: "Compartilhe uma atualização de texto no perfil do LinkedIn."
+    ja_JP: "LinkedIn プロフィールにテキスト更新を共有します。"
+  llm: "Share an update to LinkedIn. Supports text, images (via URL), and articles (via URL). For images, set media_category to IMAGE and provide media_url. For articles/links, set media_category to ARTICLE and provide media_url."
+parameters:
+  - name: content
+    type: string
+    required: true
+    label:
+      en_US: Content
+      zh_Hans: 内容
+      pt_BR: Conteúdo
+      ja_JP: コンテンツ
+    human_description:
+      en_US: "The text content to share on LinkedIn."
+      zh_Hans: "要在 LinkedIn 上分享的文本内容。"
+      pt_BR: "O conteúdo do texto para compartilhar no LinkedIn."
+      ja_JP: "LinkedIn で共有するテキストコンテンツ。"
+    llm_description: "The text content to share on LinkedIn. Max 3000 chars."
+    form: llm
+  - name: author_type
+    type: select
+    required: true
+    default: "PERSON"
+    options:
+      - value: "PERSON"
+        label:
+          en_US: "Person (Me)"
+          zh_Hans: "个人"
+      - value: "ORGANIZATION"
+        label:
+          en_US: "Organization"
+          zh_Hans: "组织"
+    label:
+      en_US: Author Type
+      zh_Hans: 发布身份
+    human_description:
+      en_US: "Post as yourself or an organization you manage."
+      zh_Hans: "以个人或管理的组织身份发布。"
+    form: form
+  - name: organization_id
+    type: string
+    required: false
+    label:
+      en_US: Organization ID (URN)
+      zh_Hans: 组织 ID (URN)
+    human_description:
+      en_US: "Required if Author Type is Organization. The numeric ID of the company page."
+      zh_Hans: "如果发布身份为组织，则必填。公司页面的数字 ID。"
+    form: form
+  - name: media_category
+    type: select
+    required: false
+    default: "NONE"
+    options:
+      - value: "NONE"
+        label:
+          en_US: "Text Only"
+          zh_Hans: "仅文本"
+      - value: "ARTICLE"
+        label:
+          en_US: "Article / Link"
+          zh_Hans: "文章 / 链接"
+      - value: "IMAGE"
+        label:
+          en_US: "Image URL"
+          zh_Hans: "图片链接"
+    label:
+      en_US: Media Type
+      zh_Hans: 媒体类型
+    human_description:
+      en_US: "Type of media to attach to the post."
+      zh_Hans: "要附加到帖子的媒体类型。"
+    form: form
+  - name: media_url
+    type: string
+    required: false
+    label:
+      en_US: Media/Article URL
+      zh_Hans: 媒体/文章链接
+    human_description:
+      en_US: "The URL of the article or image to share."
+      zh_Hans: "要在分享的文章或图片的链接。"
+    form: form
+  - name: media_title
+    type: string
+    required: false
+    label:
+      en_US: Title (for Article)
+      zh_Hans: 标题 (用于文章)
+    human_description:
+      en_US: "Title of the article being shared."
+      zh_Hans: "分享文章的标题。"
+    form: form
+  - name: media_description
+    type: string
+    required: false
+    label:
+      en_US: Description (for Article)
+      zh_Hans: 描述 (用于文章)
+    human_description:
+      en_US: "Description of the article being shared."
+      zh_Hans: "分享文章的描述。"
+    form: form
+  - name: visibility
+    type: select
+    required: false
+    default: "PUBLIC"
+    options:
+      - value: "PUBLIC"
+        label:
+          en_US: "Public"
+          zh_Hans: "公开"
+      - value: "CONNECTIONS"
+        label:
+          en_US: "Connections only"
+          zh_Hans: "仅联系人"
+    label:
+      en_US: Visibility
+      zh_Hans: 可见性
+    human_description:
+      en_US: "Who can see this post."
+      zh_Hans: "谁可以看到此帖子。"
+    form: form
+extra:
+  python:
+    source: tools/linkedin.py
