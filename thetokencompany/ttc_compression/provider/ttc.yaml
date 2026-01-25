@@ -1,0 +1,32 @@
+identity:
+  author: thetokencompany
+  name: ttc
+  label:
+    en_US: The Token Company
+    zh_Hans: TTC 压缩
+  description:
+    en_US: LLM input compression middleware by The Token Company. Compresses text to increase context windows and reduce token usage before sending to any LLM.
+    zh_Hans: The Token Company 的 LLM 输入压缩中间件。在发送到任何 LLM 之前压缩文本以减少令牌使用。
+  icon: icon.svg
+  tags:
+    - utilities
+    - productivity
+credentials_for_provider:
+  ttc_api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: TTC API Key
+      zh_Hans: TTC API 密钥
+    placeholder:
+      en_US: Enter your Token Company API key
+      zh_Hans: 输入您的 Token Company API 密钥
+    help:
+      en_US: Get your API key from https://thetokencompany.com/dashboard
+      zh_Hans: 从 https://thetokencompany.com/dashboard 获取您的 API 密钥
+    url: https://thetokencompany.com/dashboard
+tools:
+  - tools/compress.yaml
+extra:
+  python:
+    source: provider/ttc.py

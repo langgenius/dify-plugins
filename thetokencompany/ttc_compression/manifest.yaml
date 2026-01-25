@@ -1,0 +1,40 @@
+version: 0.0.1
+type: plugin
+author: "thetokencompany"
+name: "ttc_compression"
+label:
+  en_US: "The Token Company"
+  zh_Hans: "TTC 压缩"
+description:
+  en_US: "LLM input compression middleware. Compresses text to increase context windows and reduce token usage before sending to any LLM."
+  zh_Hans: "LLM 输入压缩中间件。在发送到任何 LLM 之前压缩文本以减少令牌使用。"
+icon: icon.svg
+created_at: "2025-01-24T00:00:00.000Z"
+tags:
+  - "utilities"
+  - "productivity"
+resource:
+  memory: 67108864
+  permission:
+    tool:
+      enabled: true
+    model:
+      enabled: false
+    storage:
+      enabled: false
+      size: 1048576
+    endpoint:
+      enabled: false
+plugins:
+  tools:
+    - "provider/ttc.yaml"
+meta:
+  version: 0.0.1
+  arch:
+    - "amd64"
+    - "arm64"
+  runner:
+    language: "python"
+    version: "3.12"
+    entrypoint: "main"
+privacy_policy: "https://thetokencompany.com/privacy"
