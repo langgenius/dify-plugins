@@ -1,0 +1,74 @@
+identity:
+  name: compress_input
+  author: thetokencompany
+  label:
+    en_US: Semantic Compression
+    zh_Hans: 压缩输入
+description:
+  human:
+    en_US: Compresses input text using The Token Company API to increase context windows and reduce token usage. Use this before sending prompts to LLMs to save costs.
+    zh_Hans: 使用 The Token Company API 压缩输入文本以增加上下文窗口并减少令牌使用。在将提示发送到 LLM 之前使用此功能以节省成本。
+  llm: Compresses text to increase context windows and reduce token usage. Returns compressed text that can be used as input for any LLM.
+parameters:
+  - name: text
+    type: string
+    required: true
+    label:
+      en_US: Text to Compress
+      zh_Hans: 要压缩的文本
+    human_description:
+      en_US: The input text that will be compressed to increase context windows and reduce token usage.
+      zh_Hans: 将被压缩以增加上下文窗口并减少令牌使用的输入文本。
+    llm_description: The text content to compress. Can be a prompt, document, or any text that is compressed to increase context windows and reduce token usage before sending to an LLM.
+    form: form
+  - name: aggressiveness
+    type: number
+    required: false
+    default: 0.6
+    min: 0.1
+    max: 0.9
+    label:
+      en_US: Aggressiveness
+      zh_Hans: 压缩强度
+    human_description:
+      en_US: "How aggressively to compress (0.1-0.9). Light: 0.1-0.3, Moderate: 0.4-0.6, Aggressive: 0.7-0.9"
+      zh_Hans: "压缩的激进程度 (0.1-0.9)。轻度: 0.1-0.3，中度: 0.4-0.6，高度: 0.7-0.9"
+    llm_description: Compression aggressiveness from 0.1 to 0.9. Use 0.1-0.3 for light, 0.4-0.6 for moderate, 0.7-0.9 for aggressive compression.
+    form: form
+  - name: max_output_tokens
+    type: number
+    required: false
+    label:
+      en_US: Max Output Tokens
+      zh_Hans: 最大输出令牌数
+    human_description:
+      en_US: Maximum number of tokens in the compressed output. Leave empty for no limit.
+      zh_Hans: 压缩输出的最大令牌数。留空表示无限制。
+    llm_description: Maximum tokens in compressed output. Set to limit output size.
+    form: form
+  - name: min_output_tokens
+    type: number
+    required: false
+    label:
+      en_US: Min Output Tokens
+      zh_Hans: 最小输出令牌数
+    human_description:
+      en_US: Minimum number of tokens in the compressed output. Leave empty for no minimum.
+      zh_Hans: 压缩输出的最小令牌数。留空表示无最小值。
+    llm_description: Minimum tokens in compressed output. Set to ensure output is not too short.
+    form: form
+  - name: protect_json
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: Protect JSON
+      zh_Hans: 保护 JSON
+    human_description:
+      en_US: When enabled, JSON structures in the text will not be compressed.
+      zh_Hans: 启用后，文本中的 JSON 结构将不会被压缩。
+    llm_description: Set to true to preserve JSON objects in the text without compression.
+    form: form
+extra:
+  python:
+    source: tools/compress.py
