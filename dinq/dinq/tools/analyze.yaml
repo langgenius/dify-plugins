@@ -1,0 +1,47 @@
+identity:
+  name: analyze
+  author: dinq
+  label:
+    en_US: Profile Analyze
+    zh_Hans: 档案分析
+description:
+  human:
+    en_US: Analyze a person's professional profile from GitHub, LinkedIn, or Google Scholar. Returns detailed information including basic profile, skills, experience, publications, and AI-generated summary.
+    zh_Hans: 分析个人的 GitHub、LinkedIn 或 Google Scholar 档案。返回详细信息，包括基本资料、技能、经验、发表论文和 AI 生成的总结。
+  llm: Analyze a person's professional profile from GitHub, LinkedIn, or Google Scholar and return comprehensive insights.
+parameters:
+  - name: type
+    type: select
+    required: true
+    label:
+      en_US: Platform
+      zh_Hans: 平台
+    human_description:
+      en_US: Select the platform to analyze
+      zh_Hans: 选择要分析的平台
+    llm_description: The platform type to analyze (github, linkedin, or scholar)
+    form: form
+    options:
+      - value: github
+        label:
+          en_US: GitHub
+      - value: linkedin
+        label:
+          en_US: LinkedIn
+      - value: scholar
+        label:
+          en_US: Google Scholar
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Query
+      zh_Hans: 查询
+    human_description:
+      en_US: "GitHub: username (e.g. torvalds). LinkedIn: profile URL or name (e.g. https://linkedin.com/in/satyanadella). Scholar: profile URL, ID, or name (e.g. Geoffrey Hinton)."
+      zh_Hans: "GitHub：用户名（如 torvalds）。LinkedIn：主页 URL 或姓名（如 https://linkedin.com/in/satyanadella）。Scholar：主页 URL、ID 或姓名（如 Geoffrey Hinton）。"
+    llm_description: The query to search for. For GitHub use username, for LinkedIn use profile URL or full name, for Scholar use profile URL, Scholar ID, or researcher name.
+    form: llm
+extra:
+  python:
+    source: tools/analyze.py
