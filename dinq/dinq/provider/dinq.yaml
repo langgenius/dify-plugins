@@ -1,0 +1,12 @@
+identity:
+  author: dinq
+  name: dinq
+  label:
+    en_US: Dinq
+    zh_Hans: Dinq
+  description:
+    en_US: Analyze GitHub, LinkedIn, and Google Scholar profiles to get comprehensive insights about developers, professionals, and researchers.
+    zh_Hans: 分析 GitHub、LinkedIn 和 Google Scholar 档案，获取开发者、职场人士和研究人员的全面洞察。
+  icon: icon.svg
+tools:
+  - tools/analyze.yaml
