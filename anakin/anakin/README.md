@@ -183,7 +183,7 @@ Proxy routing supports 207 countries. Common codes:
 
 ## Support
 
-- **Source Code:** [GitHub Repository](https://github.com/Viraal-Bambori/dify-plugins/tree/main/Viraal-Bambori/anakin)
+- **Source Code:** [GitHub Repository](https://github.com/Viraal-Bambori/dify-plugins/tree/main/anakin/anakin)
 - **Website:** [anakin.io](https://anakin.io)
 - **Documentation:** [anakin.io/llms-full.txt](https://anakin.io/llms-full.txt)
 - **Dashboard:** [anakin.io/dashboard](https://anakin.io/dashboard)
