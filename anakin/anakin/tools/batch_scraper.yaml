@@ -1,0 +1,82 @@
+identity:
+  name: "batch_scraper"
+  author: "anakin"
+  label:
+    en_US: "Batch URL Scraper"
+    zh_Hans: "批量URL抓取器"
+    pt_BR: "Raspador de URLs em Lote"
+    ja_JP: "バッチURLスクレイパー"
+description:
+  human:
+    en_US: "Scrape content from multiple URLs (1-10) in parallel. Returns HTML, cleaned HTML, markdown for each URL."
+    zh_Hans: "并行抓取多个URL（1-10个）的内容。为每个URL返回HTML、清理后的HTML和markdown。"
+    pt_BR: "Raspa conteúdo de múltiplas URLs (1-10) em paralelo. Retorna HTML, HTML limpo, markdown para cada URL."
+    ja_JP: "複数のURL（1〜10）からコンテンツを並行してスクレイピングします。各URLのHTML、クリーンなHTML、markdownを返します。"
+  llm: "Scrape multiple webpages (up to 10) in parallel. Use this when you need content from several URLs at once."
+parameters:
+  - name: urls
+    type: string
+    required: true
+    label:
+      en_US: "URLs"
+      zh_Hans: "URLs"
+      pt_BR: "URLs"
+      ja_JP: "URLs"
+    human_description:
+      en_US: "Comma-separated list of URLs to scrape (1-10 URLs)"
+      zh_Hans: "要抓取的URL列表，用逗号分隔（1-10个URL）"
+      pt_BR: "Lista de URLs separadas por vírgula para raspar (1-10 URLs)"
+      ja_JP: "スクレイピングするURLのカンマ区切りリスト（1〜10個のURL）"
+    llm_description: "Comma-separated list of URLs to scrape. Maximum 10 URLs per request."
+    form: llm
+  - name: country
+    type: string
+    required: false
+    default: "us"
+    label:
+      en_US: "Country"
+      zh_Hans: "国家"
+      pt_BR: "País"
+      ja_JP: "国"
+    human_description:
+      en_US: "Country code for proxy routing (default: us)"
+      zh_Hans: "代理路由的国家代码（默认：us）"
+      pt_BR: "Código do país para roteamento de proxy (padrão: us)"
+      ja_JP: "プロキシルーティングの国コード（デフォルト：us）"
+    llm_description: "Two-letter country code for proxy routing."
+    form: form
+  - name: use_browser
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: "Use Browser"
+      zh_Hans: "使用浏览器"
+      pt_BR: "Usar Navegador"
+      ja_JP: "ブラウザを使用"
+    human_description:
+      en_US: "Enable headless Chrome for JavaScript-heavy sites"
+      zh_Hans: "为JavaScript密集型网站启用无头Chrome"
+      pt_BR: "Ativar Chrome headless para sites com muito JavaScript"
+      ja_JP: "JavaScript重視のサイト用にヘッドレスChromeを有効にする"
+    llm_description: "Set to true for JavaScript-rendered pages."
+    form: form
+  - name: generate_json
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: "Generate JSON"
+      zh_Hans: "生成JSON"
+      pt_BR: "Gerar JSON"
+      ja_JP: "JSONを生成"
+    human_description:
+      en_US: "Use AI to extract structured data from each page"
+      zh_Hans: "使用AI从每个页面提取结构化数据"
+      pt_BR: "Usar IA para extrair dados estruturados de cada página"
+      ja_JP: "AIを使用して各ページから構造化データを抽出する"
+    llm_description: "Enable AI-powered structured data extraction from the scraped content."
+    form: form
+extra:
+  python:
+    source: tools/batch_scraper.py

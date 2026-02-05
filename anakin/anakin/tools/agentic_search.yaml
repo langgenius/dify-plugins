@@ -1,0 +1,34 @@
+identity:
+  name: "agentic_search"
+  author: "anakin"
+  label:
+    en_US: "Deep Research"
+    zh_Hans: "深度研究"
+    pt_BR: "Pesquisa Profunda"
+    ja_JP: "深層リサーチ"
+description:
+  human:
+    en_US: "Launch a 4-stage AI research pipeline that provides comprehensive answers with citations, summaries, and structured data."
+    zh_Hans: "启动4阶段AI研究管道，提供带有引用、摘要和结构化数据的综合答案。"
+    pt_BR: "Inicia um pipeline de pesquisa de IA em 4 estágios que fornece respostas abrangentes com citações, resumos e dados estruturados."
+    ja_JP: "引用、要約、構造化データを含む包括的な回答を提供する4段階のAIリサーチパイプラインを起動します。"
+  llm: "Perform deep research on a topic using a multi-stage AI pipeline. Returns comprehensive analysis with citations. Use for complex research questions."
+parameters:
+  - name: prompt
+    type: string
+    required: true
+    label:
+      en_US: "Research Question"
+      zh_Hans: "研究问题"
+      pt_BR: "Pergunta de Pesquisa"
+      ja_JP: "研究質問"
+    human_description:
+      en_US: "The research question or topic to investigate"
+      zh_Hans: "要调查的研究问题或主题"
+      pt_BR: "A pergunta de pesquisa ou tópico a investigar"
+      ja_JP: "調査する研究質問またはトピック"
+    llm_description: "The research question or topic to deeply investigate. This triggers a comprehensive multi-stage research process."
+    form: llm
+extra:
+  python:
+    source: tools/agentic_search.py

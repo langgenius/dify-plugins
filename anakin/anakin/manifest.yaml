@@ -1,0 +1,37 @@
+version: 0.0.1
+type: plugin
+author: anakin
+name: anakin
+label:
+  en_US: Anakin
+  ja_JP: Anakin
+  zh_Hans: Anakin
+  pt_BR: Anakin
+description:
+  en_US: Web scraping and AI-powered search API for extracting data from any website
+  ja_JP: あらゆるウェブサイトからデータを抽出するためのウェブスクレイピングとAI検索API
+  zh_Hans: 用于从任何网站提取数据的网页抓取和AI搜索API
+  pt_BR: API de web scraping e busca com IA para extrair dados de qualquer site
+icon: anakintech_logo.png
+icon_dark: anakintech_logo.png
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+plugins:
+  tools:
+    - provider/anakin.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: null
+created_at: 2026-02-04T19:26:19.399136+05:30
+privacy: PRIVACY.md
+verified: false

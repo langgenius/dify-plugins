@@ -1,0 +1,64 @@
+identity:
+  name: "web_scraper"
+  author: "anakin"
+  label:
+    en_US: "Custom Web Scraper"
+    zh_Hans: "自定义网页抓取器"
+    pt_BR: "Raspador Web Personalizado"
+    ja_JP: "カスタムウェブスクレイパー"
+description:
+  human:
+    en_US: "Execute a pre-configured custom scraper to extract structured data from specific websites."
+    zh_Hans: "执行预配置的自定义抓取器，从特定网站提取结构化数据。"
+    pt_BR: "Execute um raspador personalizado pré-configurado para extrair dados estruturados de sites específicos."
+    ja_JP: "事前設定されたカスタムスクレイパーを実行して、特定のウェブサイトから構造化データを抽出します。"
+  llm: "Run a custom scraper configuration to extract structured data from a URL. Use when you have a specific scraper code for a website."
+parameters:
+  - name: url
+    type: string
+    required: true
+    label:
+      en_US: "URL"
+      zh_Hans: "URL"
+      pt_BR: "URL"
+      ja_JP: "URL"
+    human_description:
+      en_US: "The target URL to scrape"
+      zh_Hans: "要抓取的目标URL"
+      pt_BR: "A URL alvo para raspar"
+      ja_JP: "スクレイピングするターゲットURL"
+    llm_description: "The target URL to scrape with the custom scraper."
+    form: llm
+  - name: scraper_code
+    type: string
+    required: true
+    label:
+      en_US: "Scraper Code"
+      zh_Hans: "抓取器代码"
+      pt_BR: "Código do Raspador"
+      ja_JP: "スクレイパーコード"
+    human_description:
+      en_US: "The scraper configuration identifier"
+      zh_Hans: "抓取器配置标识符"
+      pt_BR: "O identificador de configuração do raspador"
+      ja_JP: "スクレイパー設定識別子"
+    llm_description: "The unique identifier for the scraper configuration to use."
+    form: llm
+  - name: scraper_params
+    type: string
+    required: false
+    label:
+      en_US: "Scraper Parameters"
+      zh_Hans: "抓取器参数"
+      pt_BR: "Parâmetros do Raspador"
+      ja_JP: "スクレイパーパラメータ"
+    human_description:
+      en_US: "JSON string of key-value parameters for the scraper"
+      zh_Hans: "抓取器的键值参数JSON字符串"
+      pt_BR: "String JSON de parâmetros chave-valor para o raspador"
+      ja_JP: "スクレイパー用のキー値パラメータのJSON文字列"
+    llm_description: "Optional JSON string containing scraper-specific parameters."
+    form: form
+extra:
+  python:
+    source: tools/web_scraper.py

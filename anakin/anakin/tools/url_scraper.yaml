@@ -1,0 +1,97 @@
+identity:
+  name: "url_scraper"
+  author: "anakin"
+  label:
+    en_US: "URL Scraper"
+    zh_Hans: "URL抓取器"
+    pt_BR: "Raspador de URL"
+    ja_JP: "URLスクレイパー"
+description:
+  human:
+    en_US: "Scrape content from a single URL. Returns HTML, cleaned HTML, markdown, and optionally AI-extracted JSON data."
+    zh_Hans: "从单个URL抓取内容。返回HTML、清理后的HTML、markdown，以及可选的AI提取的JSON数据。"
+    pt_BR: "Raspa conteúdo de uma única URL. Retorna HTML, HTML limpo, markdown e opcionalmente dados JSON extraídos por IA."
+    ja_JP: "単一のURLからコンテンツをスクレイピングします。HTML、クリーンなHTML、markdown、およびオプションでAI抽出されたJSONデータを返します。"
+  llm: "Scrape a webpage URL to extract its content as HTML, markdown, or structured JSON. Use this when you need to get content from a specific webpage."
+parameters:
+  - name: url
+    type: string
+    required: true
+    label:
+      en_US: "URL"
+      zh_Hans: "URL"
+      pt_BR: "URL"
+      ja_JP: "URL"
+    human_description:
+      en_US: "The webpage URL to scrape (must be http or https)"
+      zh_Hans: "要抓取的网页URL（必须是http或https）"
+      pt_BR: "A URL da página web para raspar (deve ser http ou https)"
+      ja_JP: "スクレイピングするウェブページのURL（httpまたはhttpsである必要があります）"
+    llm_description: "The target URL to scrape content from. Must be a valid http or https URL."
+    form: llm
+  - name: country
+    type: string
+    required: false
+    default: "us"
+    label:
+      en_US: "Country"
+      zh_Hans: "国家"
+      pt_BR: "País"
+      ja_JP: "国"
+    human_description:
+      en_US: "Country code for proxy routing (default: us)"
+      zh_Hans: "代理路由的国家代码（默认：us）"
+      pt_BR: "Código do país para roteamento de proxy (padrão: us)"
+      ja_JP: "プロキシルーティングの国コード（デフォルト：us）"
+    llm_description: "Two-letter country code for proxy routing. Use this to access geo-restricted content."
+    form: form
+  - name: use_browser
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: "Use Browser"
+      zh_Hans: "使用浏览器"
+      pt_BR: "Usar Navegador"
+      ja_JP: "ブラウザを使用"
+    human_description:
+      en_US: "Enable headless Chrome for JavaScript-heavy sites"
+      zh_Hans: "为JavaScript密集型网站启用无头Chrome"
+      pt_BR: "Ativar Chrome headless para sites com muito JavaScript"
+      ja_JP: "JavaScript重視のサイト用にヘッドレスChromeを有効にする"
+    llm_description: "Set to true for JavaScript-rendered pages that need a real browser to load content."
+    form: form
+  - name: generate_json
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: "Generate JSON"
+      zh_Hans: "生成JSON"
+      pt_BR: "Gerar JSON"
+      ja_JP: "JSONを生成"
+    human_description:
+      en_US: "Use AI to extract structured data from the page"
+      zh_Hans: "使用AI从页面提取结构化数据"
+      pt_BR: "Usar IA para extrair dados estruturados da página"
+      ja_JP: "AIを使用してページから構造化データを抽出する"
+    llm_description: "Enable AI-powered structured data extraction from the scraped content."
+    form: form
+  - name: session_id
+    type: string
+    required: false
+    label:
+      en_US: "Session ID"
+      zh_Hans: "会话ID"
+      pt_BR: "ID da Sessão"
+      ja_JP: "セッションID"
+    human_description:
+      en_US: "Browser session ID for scraping authenticated pages"
+      zh_Hans: "用于抓取需要身份验证页面的浏览器会话ID"
+      pt_BR: "ID de sessão do navegador para raspar páginas autenticadas"
+      ja_JP: "認証が必要なページをスクレイピングするためのブラウザセッションID"
+    llm_description: "Browser session ID for accessing authenticated or logged-in pages. Get this from your Anakin dashboard."
+    form: form
+extra:
+  python:
+    source: tools/url_scraper.py

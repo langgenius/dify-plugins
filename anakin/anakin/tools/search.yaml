@@ -1,0 +1,50 @@
+identity:
+  name: "search"
+  author: "anakin"
+  label:
+    en_US: "AI Search"
+    zh_Hans: "AI搜索"
+    pt_BR: "Busca com IA"
+    ja_JP: "AI検索"
+description:
+  human:
+    en_US: "AI-powered web search that returns relevant results with URLs, titles, and snippets."
+    zh_Hans: "AI驱动的网络搜索，返回包含URL、标题和摘要的相关结果。"
+    pt_BR: "Busca web com IA que retorna resultados relevantes com URLs, títulos e trechos."
+    ja_JP: "URL、タイトル、スニペットを含む関連結果を返すAI搭載のウェブ検索。"
+  llm: "Search the web using AI to find relevant information. Returns URLs, titles, and snippets. Use this for general web searches."
+parameters:
+  - name: prompt
+    type: string
+    required: true
+    label:
+      en_US: "Search Query"
+      zh_Hans: "搜索查询"
+      pt_BR: "Consulta de Busca"
+      ja_JP: "検索クエリ"
+    human_description:
+      en_US: "The search query or question"
+      zh_Hans: "搜索查询或问题"
+      pt_BR: "A consulta de busca ou pergunta"
+      ja_JP: "検索クエリまたは質問"
+    llm_description: "The search query or question to find information about."
+    form: llm
+  - name: limit
+    type: number
+    required: false
+    default: 5
+    label:
+      en_US: "Result Limit"
+      zh_Hans: "结果限制"
+      pt_BR: "Limite de Resultados"
+      ja_JP: "結果制限"
+    human_description:
+      en_US: "Maximum number of results to return (default: 5)"
+      zh_Hans: "返回的最大结果数（默认：5）"
+      pt_BR: "Número máximo de resultados a retornar (padrão: 5)"
+      ja_JP: "返す結果の最大数（デフォルト：5）"
+    llm_description: "Maximum number of search results to return."
+    form: form
+extra:
+  python:
+    source: tools/search.py

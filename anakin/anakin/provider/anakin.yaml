@@ -1,0 +1,44 @@
+identity:
+  author: "anakin"
+  name: "anakin"
+  label:
+    en_US: "Anakin"
+    zh_Hans: "Anakin"
+    pt_BR: "Anakin"
+    ja_JP: "Anakin"
+  description:
+    en_US: "Web scraping and AI-powered search API for extracting data from any website"
+    zh_Hans: "用于从任何网站提取数据的网页抓取和AI搜索API"
+    pt_BR: "API de web scraping e busca com IA para extrair dados de qualquer site"
+    ja_JP: "あらゆるウェブサイトからデータを抽出するためのウェブスクレイピングとAI検索API"
+  icon: "anakintech_logo.png"
+
+credentials_for_provider:
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: "API Key"
+      zh_Hans: "API密钥"
+      pt_BR: "Chave de API"
+      ja_JP: "APIキー"
+    placeholder:
+      en_US: "Enter your Anakin API Key"
+      zh_Hans: "输入您的Anakin API密钥"
+      pt_BR: "Insira sua chave de API Anakin"
+      ja_JP: "Anakin APIキーを入力してください"
+    help:
+      en_US: "Get your API key from https://anakin.io/dashboard"
+      zh_Hans: "从 https://anakin.io/dashboard 获取您的API密钥"
+      pt_BR: "Obtenha sua chave de API em https://anakin.io/dashboard"
+      ja_JP: "https://anakin.io/dashboard からAPIキーを取得してください"
+
+tools:
+  - tools/url_scraper.yaml
+  - tools/batch_scraper.yaml
+  - tools/search.yaml
+  - tools/agentic_search.yaml
+  - tools/web_scraper.yaml
+extra:
+  python:
+    source: provider/anakin.py
