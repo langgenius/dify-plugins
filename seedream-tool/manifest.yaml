@@ -1,0 +1,30 @@
+author: drpr
+created_at: '2026-02-14T00:00:00Z'
+description:
+  en_US: BytePlus Seedream image generation tools.
+  zh_Hans: BytePlus Seedream 图像生成工具。
+icon: icon.svg
+label:
+  en_US: BytePlus Seedream
+  zh_Hans: BytePlus Seedream
+meta:
+  version: 0.0.1
+  arch:
+  - amd64
+  - arm64
+  runner:
+    entrypoint: main
+    language: python
+    version: '3.12'
+name: byteplus_seedream
+privacy: ./privacy_policy.md
+plugins:
+  tools:
+  - provider/byteplus_seedream.yaml
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+type: plugin
+version: 0.0.1

@@ -1,0 +1,26 @@
+identity:
+  name: seedance_get_task
+  author: drpr
+  label:
+    en_US: Seedance Get Task
+    zh_Hans: Seedance 查询任务
+description:
+  human:
+    en_US: Query Seedance video generation task status and result.
+    zh_Hans: 查询 Seedance 视频生成任务状态和结果。
+  llm: Query Seedance video generation task status and result.
+parameters:
+  - name: task_id
+    type: string
+    required: true
+    label:
+      en_US: Task ID
+      zh_Hans: 任务 ID
+    human_description:
+      en_US: Task ID returned by Seedance create task API.
+      zh_Hans: Seedance 创建任务接口返回的任务 ID。
+    llm_description: Task ID.
+    form: form
+extra:
+  python:
+    source: tools/seedance_get_task.py

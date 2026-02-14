@@ -1,0 +1,61 @@
+identity:
+  author: drpr
+  name: byteplus_seedream
+  label:
+    en_US: BytePlus Seedream
+    zh_Hans: BytePlus Seedream
+  description:
+    en_US: BytePlus Seedream image generation tools.
+    zh_Hans: BytePlus Seedream 图像生成工具。
+  icon: icon.svg
+  tags:
+    - image
+credentials_for_provider:
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: API Key
+      zh_Hans: API Key
+    placeholder:
+      en_US: Enter your API Key
+      zh_Hans: 输入 API Key
+  endpoint_url:
+    type: text-input
+    required: true
+    label:
+      en_US: API Endpoint Host
+      zh_Hans: API Endpoint Host
+    placeholder:
+      en_US: https://ark.ap-southeast.bytepluses.com/api/v3
+      zh_Hans: https://ark.ap-southeast.bytepluses.com/api/v3
+  ssl_verify:
+    type: select
+    required: false
+    default: "true"
+    label:
+      en_US: SSL Verify
+      zh_Hans: SSL 校验
+    options:
+      - value: "true"
+        label:
+          en_US: Verify
+          zh_Hans: 启用
+      - value: "false"
+        label:
+          en_US: Disable
+          zh_Hans: 关闭
+  ca_bundle_path:
+    type: text-input
+    required: false
+    label:
+      en_US: CA Bundle Path
+      zh_Hans: CA 证书路径
+    placeholder:
+      en_US: /path/to/ca-bundle.pem
+      zh_Hans: /path/to/ca-bundle.pem
+tools:
+  - tools/seedream_generate.yaml
+extra:
+  python:
+    source: provider/byteplus_seedream.py

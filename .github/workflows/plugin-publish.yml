@@ -1,0 +1,79 @@
+name: Auto Create PR on Main Push
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  TARGET_REPO: drpr/dify-byteplus-plugins
+  UPSTREAM_REPO: langgenius/dify-plugins
+  PLUGIN_DIR: model-plugin
+
+jobs:
+  create_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download CLI tool
+        run: |
+          mkdir -p $RUNNER_TEMP/bin
+          cd $RUNNER_TEMP/bin
+          wget https://github.com/langgenius/dify-plugin-daemon/releases/download/0.0.6/dify-plugin-linux-amd64
+          chmod +x dify-plugin-linux-amd64
+
+      - name: Get basic info from manifest
+        id: get_basic_info
+        run: |
+          PLUGIN_NAME=$(grep "^name:" $GITHUB_WORKSPACE/${{ env.PLUGIN_DIR }}/manifest.yaml | cut -d' ' -f2)
+          echo "plugin_name=$PLUGIN_NAME" >> $GITHUB_OUTPUT
+          VERSION=$(grep "^version:" $GITHUB_WORKSPACE/${{ env.PLUGIN_DIR }}/manifest.yaml | cut -d' ' -f2)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          AUTHOR=$(grep "^author:" $GITHUB_WORKSPACE/${{ env.PLUGIN_DIR }}/manifest.yaml | cut -d' ' -f2)
+          echo "author=$AUTHOR" >> $GITHUB_OUTPUT
+
+      - name: Package Plugin
+        id: package
+        run: |
+          cd $GITHUB_WORKSPACE/${{ env.PLUGIN_DIR }}
+          PACKAGE_NAME="${{ steps.get_basic_info.outputs.plugin_name }}-${{ steps.get_basic_info.outputs.version }}.difypkg"
+          $RUNNER_TEMP/bin/dify-plugin-linux-amd64 plugin package . -o "$PACKAGE_NAME"
+          echo "package_name=$PACKAGE_NAME" >> $GITHUB_OUTPUT
+
+      - name: Checkout target repo
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ env.TARGET_REPO }}
+          path: dify-plugins
+          token: ${{ secrets.PLUGIN_ACTION }}
+          fetch-depth: 1
+          persist-credentials: true
+
+      - name: Prepare and push branch
+        run: |
+          PACKAGE_NAME="${{ steps.get_basic_info.outputs.plugin_name }}-${{ steps.get_basic_info.outputs.version }}.difypkg"
+          mkdir -p dify-plugins/${{ steps.get_basic_info.outputs.author }}/${{ steps.get_basic_info.outputs.plugin_name }}
+          mv $GITHUB_WORKSPACE/${{ env.PLUGIN_DIR }}/"$PACKAGE_NAME" dify-plugins/${{ steps.get_basic_info.outputs.author }}/${{ steps.get_basic_info.outputs.plugin_name }}/
+          cd dify-plugins
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git fetch origin main
+          git checkout main
+          git pull origin main
+          BRANCH_NAME="bump-${{ steps.get_basic_info.outputs.plugin_name }}-plugin-${{ steps.get_basic_info.outputs.version }}"
+          git checkout -b "$BRANCH_NAME"
+          git add .
+          git commit -m "bump ${{ steps.get_basic_info.outputs.plugin_name }} plugin to version ${{ steps.get_basic_info.outputs.version }}"
+          git push -u origin "$BRANCH_NAME" --force
+
+      - name: Create PR via GitHub API
+        env:
+          GH_TOKEN: ${{ secrets.PLUGIN_ACTION }}
+        run: |
+          gh pr create \
+            --repo "${{ env.UPSTREAM_REPO }}" \
+            --head "${{ steps.get_basic_info.outputs.author }}:bump-${{ steps.get_basic_info.outputs.plugin_name }}-plugin-${{ steps.get_basic_info.outputs.version }}" \
+            --base main \
+            --title "bump ${{ steps.get_basic_info.outputs.plugin_name }} plugin to version ${{ steps.get_basic_info.outputs.version }}" \
+            --body "bump ${{ steps.get_basic_info.outputs.plugin_name }} plugin package to version ${{ steps.get_basic_info.outputs.version }}\n\nChanges:\n- Updated plugin package file" || echo "PR already exists or creation skipped."

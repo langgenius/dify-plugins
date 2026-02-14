@@ -1,0 +1,90 @@
+identity:
+  name: seedream_generate
+  author: drpr
+  label:
+    en_US: Seedream Generate
+    zh_Hans: Seedream 生成
+description:
+  human:
+    en_US: Generate images with BytePlus Seedream.
+    zh_Hans: 使用 BytePlus Seedream 生成图像。
+  llm: Generate images with BytePlus Seedream.
+parameters:
+  - name: model
+    type: string
+    required: true
+    label:
+      en_US: Model ID
+      zh_Hans: 模型 ID
+    human_description:
+      en_US: Seedream model ID such as seedream-4-5-251128.
+      zh_Hans: Seedream 模型 ID，例如 seedream-4-5-251128。
+    llm_description: Seedream model ID.
+    form: form
+  - name: prompt
+    type: string
+    required: true
+    label:
+      en_US: Prompt
+      zh_Hans: 提示词
+    human_description:
+      en_US: Text prompt for image generation.
+      zh_Hans: 用于图像生成的文本提示词。
+    llm_description: Text prompt for image generation.
+    form: llm
+  - name: image
+    type: string
+    required: false
+    label:
+      en_US: Image URL or Base64
+      zh_Hans: 图片 URL 或 Base64
+    human_description:
+      en_US: Optional image URL or base64 data for image-to-image.
+      zh_Hans: 可选的图片 URL 或 base64，用于图生图。
+    llm_description: Optional image URL or base64 data for image-to-image.
+    form: form
+  - name: size
+    type: string
+    required: false
+    label:
+      en_US: Size
+      zh_Hans: 尺寸
+    human_description:
+      en_US: Output size like 2K or 1024x1024.
+      zh_Hans: 输出尺寸，例如 2K 或 1024x1024。
+    llm_description: Output size.
+    form: form
+  - name: response_format
+    type: select
+    required: false
+    label:
+      en_US: Response Format
+      zh_Hans: 返回格式
+    options:
+      - value: url
+        label:
+          en_US: URL
+          zh_Hans: URL
+      - value: b64_json
+        label:
+          en_US: Base64 JSON
+          zh_Hans: Base64 JSON
+    human_description:
+      en_US: Return URL or base64 JSON.
+      zh_Hans: 返回 URL 或 Base64 JSON。
+    llm_description: Response format.
+    form: form
+  - name: watermark
+    type: boolean
+    required: false
+    label:
+      en_US: Watermark
+      zh_Hans: 水印
+    human_description:
+      en_US: Whether to include watermark.
+      zh_Hans: 是否包含水印。
+    llm_description: Whether to include watermark.
+    form: form
+extra:
+  python:
+    source: tools/seedream_generate.py

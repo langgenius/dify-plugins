@@ -1,0 +1,147 @@
+identity:
+  name: seedance_create_task
+  author: drpr
+  label:
+    en_US: Seedance Create Task
+    zh_Hans: Seedance 创建任务
+description:
+  human:
+    en_US: Create a Seedance video generation task.
+    zh_Hans: 创建 Seedance 视频生成任务。
+  llm: Create a Seedance video generation task.
+parameters:
+  - name: model
+    type: string
+    required: true
+    label:
+      en_US: Model ID
+      zh_Hans: 模型 ID
+    human_description:
+      en_US: Seedance model ID such as seedance-1-5-pro-251215.
+      zh_Hans: Seedance 模型 ID，例如 seedance-1-5-pro-251215。
+    llm_description: Seedance model ID.
+    form: form
+  - name: prompt
+    type: string
+    required: true
+    label:
+      en_US: Prompt
+      zh_Hans: 提示词
+    human_description:
+      en_US: Text prompt for video generation.
+      zh_Hans: 用于视频生成的文本提示词。
+    llm_description: Text prompt for video generation.
+    form: llm
+  - name: first_frame_url
+    type: string
+    required: false
+    label:
+      en_US: First Frame URL
+      zh_Hans: 首帧图片 URL
+    human_description:
+      en_US: Optional URL of the first frame image.
+      zh_Hans: 可选首帧图片 URL。
+    llm_description: Optional URL of the first frame image.
+    form: form
+  - name: last_frame_url
+    type: string
+    required: false
+    label:
+      en_US: Last Frame URL
+      zh_Hans: 尾帧图片 URL
+    human_description:
+      en_US: Optional URL of the last frame image.
+      zh_Hans: 可选尾帧图片 URL。
+    llm_description: Optional URL of the last frame image.
+    form: form
+  - name: reference_images
+    type: string
+    required: false
+    label:
+      en_US: Reference Images
+      zh_Hans: 参考图片
+    human_description:
+      en_US: Comma-separated image URLs for reference images.
+      zh_Hans: 参考图片 URL，使用逗号分隔。
+    llm_description: Comma-separated image URLs for reference images.
+    form: form
+  - name: ratio
+    type: string
+    required: false
+    label:
+      en_US: Ratio
+      zh_Hans: 画面比例
+    human_description:
+      en_US: Aspect ratio such as 16:9 or adaptive.
+      zh_Hans: 画面比例，例如 16:9 或 adaptive。
+    llm_description: Aspect ratio.
+    form: form
+  - name: duration
+    type: number
+    required: false
+    label:
+      en_US: Duration
+      zh_Hans: 时长
+    human_description:
+      en_US: Duration in seconds.
+      zh_Hans: 时长（秒）。
+    llm_description: Duration in seconds.
+    form: form
+  - name: resolution
+    type: string
+    required: false
+    label:
+      en_US: Resolution
+      zh_Hans: 分辨率
+    human_description:
+      en_US: Resolution such as 720p or 1080p.
+      zh_Hans: 分辨率，例如 720p 或 1080p。
+    llm_description: Resolution.
+    form: form
+  - name: seed
+    type: number
+    required: false
+    label:
+      en_US: Seed
+      zh_Hans: 随机种子
+    human_description:
+      en_US: Random seed.
+      zh_Hans: 随机种子。
+    llm_description: Random seed.
+    form: form
+  - name: camera_fixed
+    type: boolean
+    required: false
+    label:
+      en_US: Camera Fixed
+      zh_Hans: 固定镜头
+    human_description:
+      en_US: Whether to fix the camera.
+      zh_Hans: 是否固定镜头。
+    llm_description: Whether to fix the camera.
+    form: form
+  - name: generate_audio
+    type: boolean
+    required: false
+    label:
+      en_US: Generate Audio
+      zh_Hans: 生成音频
+    human_description:
+      en_US: Whether to generate audio.
+      zh_Hans: 是否生成音频。
+    llm_description: Whether to generate audio.
+    form: form
+  - name: watermark
+    type: boolean
+    required: false
+    label:
+      en_US: Watermark
+      zh_Hans: 水印
+    human_description:
+      en_US: Whether to include watermark.
+      zh_Hans: 是否包含水印。
+    llm_description: Whether to include watermark.
+    form: form
+extra:
+  python:
+    source: tools/seedance_create_task.py

@@ -1,0 +1,267 @@
+provider: byteplus_modelark
+label:
+  en_US: BytePlus ModelArk
+  zh_Hans: BytePlus ModelArk
+description:
+  en_US: BytePlus ModelArk models (OpenAI-compatible API).
+  zh_Hans: BytePlus ModelArk 模型服务（OpenAI 兼容 API）。
+icon_small:
+  en_US: icon_s_en.png
+icon_large:
+  en_US: icon_s_en.png
+background: "#0B1B2B"
+help:
+  title:
+    en_US: Get your BytePlus ModelArk API Key
+    zh_Hans: 获取 BytePlus ModelArk API Key
+  url:
+    en_US: https://docs.byteplus.com/en/docs/ModelArk/1302007
+supported_model_types:
+  - llm
+configurate_methods:
+  - customizable-model
+model_credential_schema:
+  model:
+    label:
+      en_US: Model display name
+      zh_Hans: 模型显示名称
+    placeholder:
+      en_US: Display name only
+      zh_Hans: 仅用于显示
+  credential_form_schemas:
+    - variable: api_key
+      label:
+        en_US: API Key
+        zh_Hans: API Key
+      type: secret-input
+      required: true
+      placeholder:
+        en_US: Enter your API Key
+        zh_Hans: 输入 API Key
+    - variable: endpoint_url
+      label:
+        en_US: API Endpoint Host
+        zh_Hans: API Endpoint Host
+      type: text-input
+      required: true
+      placeholder:
+        en_US: https://ark.ap-southeast.bytepluses.com/api/v3
+        zh_Hans: https://ark.ap-southeast.bytepluses.com/api/v3
+    - variable: ssl_verify
+      label:
+        en_US: SSL Verify
+        zh_Hans: SSL 校验
+      type: select
+      required: false
+      default: "true"
+      options:
+        - value: "true"
+          label:
+            en_US: Verify
+            zh_Hans: 启用
+        - value: "false"
+          label:
+            en_US: Disable
+            zh_Hans: 关闭
+    - variable: ca_bundle_path
+      label:
+        en_US: CA Bundle Path
+        zh_Hans: CA 证书路径
+      type: text-input
+      required: false
+      placeholder:
+        en_US: /path/to/ca-bundle.pem
+        zh_Hans: /path/to/ca-bundle.pem
+    - variable: endpoint_model_name
+      label:
+        en_US: Endpoint ID
+        zh_Hans: Endpoint ID
+      type: text-input
+      required: true
+      placeholder:
+        en_US: Enter Endpoint ID
+        zh_Hans: 输入 Endpoint ID
+    - variable: mode
+      show_on:
+        - variable: __model_type
+          value: llm
+      label:
+        en_US: Completion mode
+        zh_Hans: 对话模式
+      type: select
+      required: false
+      default: chat
+      options:
+        - value: completion
+          label:
+            en_US: Completion
+            zh_Hans: 补全
+        - value: chat
+          label:
+            en_US: Chat
+            zh_Hans: 对话
+    - variable: context_size
+      label:
+        en_US: Model context size
+        zh_Hans: 模型上下文长度
+      required: true
+      type: text-input
+      default: "8192"
+      placeholder:
+        en_US: Enter model context size
+        zh_Hans: 输入模型上下文长度
+    - variable: vision_support
+      show_on:
+        - variable: __model_type
+          value: llm
+      label:
+        en_US: Vision Support
+        zh_Hans: 视觉支持
+      type: select
+      required: false
+      default: no_support
+      options:
+        - value: support
+          label:
+            en_US: Support
+            zh_Hans: 支持
+        - value: no_support
+          label:
+            en_US: Not Support
+            zh_Hans: 不支持
+    - variable: agent_thought_support
+      show_on:
+        - variable: __model_type
+          value: llm
+      label:
+        en_US: Thinking mode support
+        zh_Hans: 思考模式支持
+      type: select
+      required: false
+      default: not_supported
+      options:
+        - value: supported
+          label:
+            en_US: Both modes
+            zh_Hans: 两种模式
+        - value: only_thinking_supported
+          label:
+            en_US: Thinking only
+            zh_Hans: 仅思考模式
+        - value: not_supported
+          label:
+            en_US: Not supported
+            zh_Hans: 不支持
+    - variable: compatibility_mode
+      show_on:
+        - variable: __model_type
+          value: llm
+      label:
+        en_US: Compatibility mode
+        zh_Hans: 兼容模式
+      type: select
+      required: false
+      default: strict
+      options:
+        - value: strict
+          label:
+            en_US: OpenAI compatible
+            zh_Hans: OpenAI 兼容
+        - value: extended
+          label:
+            en_US: Enable extra settings
+            zh_Hans: 启用扩展参数
+    - variable: function_calling_type
+      show_on:
+        - variable: __model_type
+          value: llm
+      label:
+        en_US: Function call type
+        zh_Hans: 函数调用类型
+      type: select
+      required: false
+      default: no_call
+      options:
+        - value: function_call
+          label:
+            en_US: Function Call
+            zh_Hans: 函数调用
+        - value: tool_call
+          label:
+            en_US: Tool Call
+            zh_Hans: 工具调用
+        - value: no_call
+          label:
+            en_US: Not Support
+            zh_Hans: 不支持
+    - variable: stream_function_calling
+      show_on:
+        - variable: __model_type
+          value: llm
+      label:
+        en_US: Stream function calling
+        zh_Hans: 流式函数调用
+      type: select
+      required: false
+      default: not_supported
+      options:
+        - value: supported
+          label:
+            en_US: Support
+            zh_Hans: 支持
+        - value: not_supported
+          label:
+            en_US: Not Support
+            zh_Hans: 不支持
+    - variable: structured_output_support
+      show_on:
+        - variable: __model_type
+          value: llm
+      label:
+        en_US: Structured output
+        zh_Hans: 结构化输出
+      type: select
+      required: false
+      default: not_supported
+      options:
+        - value: supported
+          label:
+            en_US: Support
+            zh_Hans: 支持
+        - value: not_supported
+          label:
+            en_US: Not Support
+            zh_Hans: 不支持
+    - variable: stream_mode_auth
+      show_on:
+        - variable: __model_type
+          value: llm
+      label:
+        en_US: Stream mode auth
+        zh_Hans: 流式鉴权
+      type: select
+      required: false
+      default: not_use
+      options:
+        - value: use
+          label:
+            en_US: Use
+            zh_Hans: 使用
+        - value: not_use
+          label:
+            en_US: Not Use
+            zh_Hans: 不使用
+    - variable: stream_mode_delimiter
+      label:
+        en_US: Stream delimiter
+        zh_Hans: 流式分隔符
+      show_on:
+        - variable: __model_type
+          value: llm
+      default: "\n\n"
+      type: text-input
+extra:
+  python:
+    provider_source: provider/byteplus_modelark.py
+    model_sources:
+      - "models/llm/llm.py"
