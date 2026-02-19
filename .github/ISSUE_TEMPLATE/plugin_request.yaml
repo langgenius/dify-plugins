@@ -25,4 +25,4 @@ body:
       label: Official Website URL
       description: Please provide the official website or API documentation link if known. This greatly helps us quickly identify the service and evaluate feasibility.
     validations:
-      required: false 
+      required: false
