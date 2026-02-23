@@ -1,0 +1,28 @@
+model: nova-pro
+label:
+  en_US: Amazon Nova Pro
+  zh_Hans: Amazon Nova Pro
+model_type: llm
+features:
+  - agent-thought
+  - vision
+model_properties:
+  mode: chat
+  context_size: 300000
+parameter_rules:
+  - name: temperature
+    use_template: temperature
+  - name: top_p
+    use_template: top_p
+  - name: max_tokens
+    use_template: max_tokens
+    default: 4096
+    min: 1
+    max: 5120
+  - name: response_format
+    use_template: response_format
+pricing:
+  input: "0.80"
+  output: "3.20"
+  unit: "0.000001"
+  currency: USD

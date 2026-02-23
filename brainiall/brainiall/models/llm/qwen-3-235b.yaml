@@ -1,0 +1,29 @@
+model: qwen-3-235b
+label:
+  en_US: Qwen 3 235B
+  zh_Hans: Qwen 3 235B
+model_type: llm
+features:
+  - agent-thought
+model_properties:
+  mode: chat
+  context_size: 128000
+parameter_rules:
+  - name: temperature
+    use_template: temperature
+    default: 0.6
+  - name: top_p
+    use_template: top_p
+    default: 0.95
+  - name: max_tokens
+    use_template: max_tokens
+    default: 4096
+    min: 1
+    max: 8192
+  - name: response_format
+    use_template: response_format
+pricing:
+  input: "0.80"
+  output: "2.40"
+  unit: "0.000001"
+  currency: USD

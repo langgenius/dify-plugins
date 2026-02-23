@@ -1,0 +1,51 @@
+version: 0.0.1
+type: plugin
+author: brainiall
+name: brainiall
+label:
+  en_US: Brainiall
+  ja_JP: Brainiall
+  zh_Hans: Brainiall
+  pt_BR: Brainiall
+description:
+  en_US: Brainiall LLM Gateway provides access to 113+ AI models from 17 providers including Claude, DeepSeek, Llama, Qwen, Nova, and Mistral through a single OpenAI-compatible API endpoint powered by AWS Bedrock.
+  ja_JP: Brainiall LLMゲートウェイは、AWS Bedrockを基盤とした単一のOpenAI互換APIエンドポイントを通じて、Claude、DeepSeek、Llama、Qwen、Nova、Mistralなど17プロバイダーの113以上のAIモデルにアクセスできます。
+  zh_Hans: Brainiall LLM 网关通过由 AWS Bedrock 支持的单一 OpenAI 兼容 API 端点，提供对 Claude、DeepSeek、Llama、Qwen、Nova 和 Mistral 等 17 个供应商的 113+ AI 模型的访问。
+  pt_BR: Brainiall LLM Gateway fornece acesso a mais de 113 modelos de IA de 17 provedores incluindo Claude, DeepSeek, Llama, Qwen, Nova e Mistral através de um endpoint de API compatível com OpenAI, alimentado pelo AWS Bedrock.
+icon: icon.svg
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: false
+    model:
+      enabled: true
+      llm: true
+      text_embedding: false
+      rerank: false
+      tts: false
+      speech2text: false
+      moderation: false
+    node:
+      enabled: false
+    endpoint:
+      enabled: false
+    app:
+      enabled: false
+    storage:
+      enabled: false
+plugins:
+  models:
+    - provider/brainiall.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+created_at: 2026-02-23T18:00:00.000000+00:00
+privacy: PRIVACY.md
+verified: false

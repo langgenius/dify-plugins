@@ -1,0 +1,28 @@
+model: llama-4-scout-17b
+label:
+  en_US: Llama 4 Scout 17B
+  zh_Hans: Llama 4 Scout 17B
+model_type: llm
+features:
+  - agent-thought
+  - vision
+model_properties:
+  mode: chat
+  context_size: 512000
+parameter_rules:
+  - name: temperature
+    use_template: temperature
+  - name: top_p
+    use_template: top_p
+  - name: max_tokens
+    use_template: max_tokens
+    default: 4096
+    min: 1
+    max: 8192
+  - name: response_format
+    use_template: response_format
+pricing:
+  input: "0.17"
+  output: "0.17"
+  unit: "0.000001"
+  currency: USD
