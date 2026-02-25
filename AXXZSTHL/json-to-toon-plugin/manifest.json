@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1",
+  "name_for_model": "json_to_toon",
+  "name_for_human": "JSON to TOON Converter",
+  "description_for_model": "Convert JSON content to TOON (Token-Oriented Object Notation) format to significantly reduce token usage. TOON format removes redundant symbols like braces, brackets, and quotes while maintaining data structure clarity, reducing token consumption by 30-60%.",
+  "description_for_human": "将 JSON 内容转换为 TOON 格式，大幅降低 token 使用量。TOON 格式通过移除冗余符号（如大括号、中括号和引号）来减少 30-60% 的 token 消耗。",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "openapi.yaml",
+    "is_user_authenticated": false
+  },
+  "contact_email": "528360026@qq.com",
+  "legal_info_url": "https://github.com/AXXZSTHL/json-to-toon-plugin/blob/main/PRIVACY_POLICY.md"
+}
+
