@@ -16,6 +16,6 @@ High-performance text embedding provider using NVIDIA NIM inference service.
 **Description:** This plugin enables Dify to use NVIDIA NIM as an embedding provider for knowledge bases, document indexing, and semantic search. It supports configurable query and passage embedding types per credential, allowing different embedding strategies for queries vs. documents.
 
 **Author:** Wouter van Elten (@woutervanelten)  
-**GitHub:** https://github.com/woutervanelten
-
+**GitHub profile:**  https://github.com/woutervanelten  
+**Source repository:**  https://github.com/woutervanelten/dify-plugins/tree/main/plugins/woutervanelten
 For plugin documentation and setup, extract and review the `README.md` inside the package.
