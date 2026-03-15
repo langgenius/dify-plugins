@@ -1,0 +1,29 @@
+identity:
+  name: pii_scan
+  author: prompt-shield
+  label:
+    en_US: PII Scan
+description:
+  human:
+    en_US: >-
+      Scans input text to detect personally identifiable information (PII)
+      such as email addresses, phone numbers, SSNs, credit card numbers,
+      IP addresses, and other sensitive data. Returns the types and counts
+      of PII entities found without modifying the text.
+  llm: >-
+    Detect personally identifiable information (PII) in text. Use this tool
+    when you need to check whether text contains sensitive data like email
+    addresses, phone numbers, SSNs, credit card numbers, or other PII
+    before processing or storing it. Returns entity types and counts found.
+parameters:
+  - name: input_text
+    type: string
+    required: true
+    label:
+      en_US: Input Text
+    human_description:
+      en_US: The text to scan for PII entities.
+    llm_description: The text content to scan for personally identifiable information.
+    form: llm
+output:
+  type: object

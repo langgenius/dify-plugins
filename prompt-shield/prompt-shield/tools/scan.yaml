@@ -1,0 +1,30 @@
+identity:
+  name: scan
+  author: prompt-shield
+  label:
+    en_US: Prompt Injection Scan
+description:
+  human:
+    en_US: >-
+      Scans input text for prompt injection attacks using multiple detection
+      strategies including pattern matching, encoding detection, role hijacking,
+      and semantic analysis. Returns a risk score, recommended action, and
+      details about any detected threats.
+  llm: >-
+    Scan text for prompt injection attacks. Use this tool when you need to
+    check whether user input contains prompt injection attempts, jailbreak
+    attempts, or other adversarial inputs before processing them. Returns
+    a risk score (0.0-1.0), recommended action (pass/log/flag/block), and
+    details about detected threats.
+parameters:
+  - name: input_text
+    type: string
+    required: true
+    label:
+      en_US: Input Text
+    human_description:
+      en_US: The text to scan for prompt injection attacks.
+    llm_description: The text content to scan for prompt injection attacks.
+    form: llm
+output:
+  type: object

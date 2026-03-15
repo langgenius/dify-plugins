@@ -1,0 +1,18 @@
+identity:
+  author: prompt-shield
+  name: prompt_shield
+  label:
+    en_US: Prompt Shield
+  description:
+    en_US: >-
+      Local prompt injection detection and PII redaction. Scans text for
+      injection attacks, detects PII entities, and redacts sensitive data.
+      All processing is performed locally.
+  icon: ../_assets/icon.svg
+  tags:
+    - utilities
+credentials_for_provider:
+tools:
+  - tools/scan.yaml
+  - tools/pii_scan.yaml
+  - tools/pii_redact.yaml
