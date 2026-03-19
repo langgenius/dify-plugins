@@ -1,0 +1,2 @@
+prompt-shield-ai>=0.3.0
+dify_plugin
