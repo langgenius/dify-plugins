@@ -1,0 +1,23 @@
+identity:
+  name: get_agent
+  author: hashgraph-online
+  label:
+    en_US: Get Agent Details
+    zh_Hans: 获取代理详情
+description:
+  human:
+    en_US: Get detailed information about a specific AI agent by its Universal Agent ID (UAID).
+    zh_Hans: 通过通用代理 ID (UAID) 获取特定 AI 代理的详细信息。
+  llm: Get detailed agent information including capabilities, protocols, and endpoints.
+parameters:
+  - name: uaid
+    type: string
+    required: true
+    label:
+      en_US: Agent UAID
+      zh_Hans: 代理 UAID
+    human_description:
+      en_US: Universal Agent ID, e.g., "uaid:aid:xxx" or "aid:xxx"
+      zh_Hans: 通用代理 ID，例如 "uaid:aid:xxx" 或 "aid:xxx"
+    llm_description: The Universal Agent ID of the agent to retrieve
+    form: llm
