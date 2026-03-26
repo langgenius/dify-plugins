@@ -1,0 +1,37 @@
+identity:
+  name: answer
+  author: olostep
+  label:
+    en_US: AI Answer
+description:
+  human:
+    en_US: Search the web and return an AI-synthesized answer grounded in live data with source citations. Returns NOT_FOUND for unverifiable fields.
+  llm: Search the web and provide an AI-synthesized answer grounded in live data. Useful for research tasks that require current information and proper source citations.
+parameters:
+  - name: task
+    type: string
+    required: true
+    label:
+      en_US: Task
+    human_description:
+      en_US: The question or research task
+    llm_description: The question or research task you want answered.
+    form: llm
+  - name: json_schema
+    type: string
+    required: false
+    label:
+      en_US: JSON Schema
+    human_description:
+      en_US: >-
+        JSON string schema for structured output
+        e.g. {"ceo": "", "founded": "", "valuation": ""}
+    llm_description: >-
+      Optional JSON schema string for structured output.
+      Example: {"ceo": "", "founded": "", "valuation": ""}
+    form: form
+output:
+  type: string
+extra:
+  python:
+    source: tools/answer.py

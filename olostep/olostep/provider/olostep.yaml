@@ -1,0 +1,34 @@
+identity:
+  author: olostep
+  name: olostep
+  label:
+    en_US: Olostep
+  description:
+    en_US: >-
+      Olostep is the Web Data API for AI agents. Scrape any URL, crawl
+      entire websites, discover URLs, search the web, and get AI-powered
+      answers grounded in live data.
+  icon: olostep_logo.png
+  tags:
+    - search
+    - productivity
+credentials_for_provider:
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: API Key
+    placeholder:
+      en_US: Enter your Olostep API key
+    help:
+      en_US: Get your API key from https://www.olostep.com/dashboard/api-keys
+    url: https://www.olostep.com/dashboard/api-keys
+tools:
+  - tools/scrape.yaml
+  - tools/crawl.yaml
+  - tools/map.yaml
+  - tools/search.yaml
+  - tools/answer.yaml
+extra:
+  python:
+    source: provider/olostep.py

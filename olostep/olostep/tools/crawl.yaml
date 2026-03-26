@@ -1,0 +1,61 @@
+identity:
+  name: crawl
+  author: olostep
+  label:
+    en_US: Crawl Website
+description:
+  human:
+    en_US: Crawl an entire website and return content from all pages. Each crawled page is returned as separate content.
+  llm: Crawl an entire website starting from a URL and extract content from all discovered pages. Use this to gather comprehensive data from multiple pages on a website.
+parameters:
+  - name: url
+    type: string
+    required: true
+    label:
+      en_US: URL
+    human_description:
+      en_US: Starting URL for the crawl
+    llm_description: The starting URL for crawling. Must include the full URL with https://
+    form: llm
+  - name: max_pages
+    type: number
+    required: false
+    default: 20
+    label:
+      en_US: Max Pages
+    human_description:
+      en_US: Max pages to crawl (up to 1000)
+    llm_description: Maximum number of pages to crawl. Default is 20, maximum is 1000.
+    form: form
+  - name: include_urls
+    type: string
+    required: false
+    label:
+      en_US: Include URLs
+    human_description:
+      en_US: Comma-separated glob patterns e.g. /blog/**, /docs/**
+    llm_description: Comma-separated glob patterns to include in the crawl. Example patterns - /blog/**, /docs/**
+    form: llm
+  - name: exclude_urls
+    type: string
+    required: false
+    label:
+      en_US: Exclude URLs
+    human_description:
+      en_US: Comma-separated glob patterns e.g. /admin/**
+    llm_description: Comma-separated glob patterns to exclude from the crawl. Example patterns - /admin/**, /private/**
+    form: llm
+  - name: search_query
+    type: string
+    required: false
+    label:
+      en_US: Search Query
+    human_description:
+      en_US: Filter crawled pages by relevance to this query
+    llm_description: Optional search query to filter crawled pages by relevance.
+    form: llm
+output:
+  type: string
+extra:
+  python:
+    source: tools/crawl.py

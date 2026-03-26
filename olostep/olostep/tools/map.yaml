@@ -1,0 +1,52 @@
+identity:
+  name: map
+  author: olostep
+  label:
+    en_US: Map Website
+description:
+  human:
+    en_US: Discover all URLs on a website from sitemaps and discovered links.
+  llm: Discover and map all URLs available on a website by analyzing sitemaps and discovered links. Use this to get a comprehensive list of all pages on a website.
+parameters:
+  - name: url
+    type: string
+    required: true
+    label:
+      en_US: URL
+    human_description:
+      en_US: Website URL to map
+    llm_description: The website URL to map. Must include the full URL with https://
+    form: llm
+  - name: include_urls
+    type: string
+    required: false
+    label:
+      en_US: Include URLs
+    human_description:
+      en_US: Glob patterns to include
+    llm_description: Comma-separated glob patterns to include in the mapping.
+    form: llm
+  - name: exclude_urls
+    type: string
+    required: false
+    label:
+      en_US: Exclude URLs
+    human_description:
+      en_US: Glob patterns to exclude
+    llm_description: Comma-separated glob patterns to exclude from the mapping.
+    form: llm
+  - name: top_n
+    type: number
+    required: false
+    default: 100
+    label:
+      en_US: Top N
+    human_description:
+      en_US: Maximum URLs to return
+    llm_description: Maximum number of URLs to return. Default is 100.
+    form: form
+output:
+  type: string
+extra:
+  python:
+    source: tools/map.py

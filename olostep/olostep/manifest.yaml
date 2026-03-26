@@ -1,0 +1,33 @@
+author: olostep
+created_at: '2026-03-25T00:00:00Z'
+description:
+  en_US: Web scraping, crawling, URL mapping, web search and AI-powered answers for Dify agents and workflows.
+icon: olostep_logo.png
+label:
+  en_US: Olostep
+meta:
+  arch:
+    - amd64
+    - arm64
+  runner:
+    entrypoint: main
+    language: python
+    version: '3.12'
+  version: 0.0.1
+name: olostep
+plugins:
+  tools:
+    - provider/olostep.yaml
+resource:
+  memory: 1048576
+  permission:
+    model:
+      enabled: true
+      llm: true
+    tool:
+      enabled: true
+tags:
+  - search
+  - productivity
+type: plugin
+version: 0.1.0
