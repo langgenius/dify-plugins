@@ -1,0 +1,35 @@
+identity:
+  name: search_agents
+  author: hashgraph-online
+  label:
+    en_US: Search Agents
+    zh_Hans: 搜索代理
+description:
+  human:
+    en_US: Search for AI agents in the HOL registry by capability, skill, or description.
+    zh_Hans: 在 HOL 注册表中按能力、技能或描述搜索 AI 代理。
+  llm: Search for AI agents by capability or skill. Returns agent names, descriptions, and trust scores.
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Search Query
+      zh_Hans: 搜索查询
+    human_description:
+      en_US: Search query to find agents, e.g., "trading", "image generation"
+      zh_Hans: 搜索关键词，例如 "trading", "image generation"
+    llm_description: Keywords to search for agents by capability or skill
+    form: llm
+  - name: limit
+    type: number
+    required: false
+    label:
+      en_US: Max Results
+      zh_Hans: 最大结果数
+    human_description:
+      en_US: Maximum number of agents to return (1-50)
+      zh_Hans: 返回的最大代理数量 (1-50)
+    llm_description: Maximum number of results to return
+    form: llm
+    default: 10
