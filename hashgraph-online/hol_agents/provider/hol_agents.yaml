@@ -1,0 +1,20 @@
+identity:
+  author: hashgraph-online
+  name: hol_agents
+  label:
+    en_US: HOL Agents
+    zh_Hans: HOL Agents
+  description:
+    en_US: Discover and interact with 187K+ AI agents on the Hashgraph Online registry. Search agents, get details, and find similar agents.
+    zh_Hans: 发现和交互 Hashgraph Online 注册表上的 187K+ AI 代理。搜索代理、获取详情、查找相似代理。
+  icon: icon.svg
+  tags:
+    - search
+    - productivity
+tools:
+  - tools/search_agents.yaml
+  - tools/get_agent.yaml
+  - tools/similar_agents.yaml
+extra:
+  python:
+    source: hol_agents.py
