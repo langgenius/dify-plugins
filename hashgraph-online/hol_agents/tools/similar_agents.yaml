@@ -1,0 +1,23 @@
+identity:
+  name: similar_agents
+  author: hashgraph-online
+  label:
+    en_US: Find Similar Agents
+    zh_Hans: 查找相似代理
+description:
+  human:
+    en_US: Find AI agents similar to a given agent based on capabilities.
+    zh_Hans: 基于能力查找与给定代理相似的其他代理。
+  llm: Find agents with similar capabilities to the specified agent.
+parameters:
+  - name: uaid
+    type: string
+    required: true
+    label:
+      en_US: Agent UAID
+      zh_Hans: 代理 UAID
+    human_description:
+      en_US: Universal Agent ID to find similar agents for
+      zh_Hans: 要查找相似代理的目标代理 ID
+    llm_description: The Universal Agent ID to find similar agents for
+    form: llm
