@@ -1,0 +1,2 @@
+olostep>=1.0.0
+dify_plugin

@@ -1,0 +1,16 @@
+[project]
+name = "dify-olostep-plugin"
+version = "0.0.1"
+description = "Olostep Web Data API plugin for Dify"
+readme = "README.md"
+requires-python = ">=3.12"
+
+# Dependencies for the plugin
+dependencies = [
+    "dify_plugin",
+    "olostep>=1.0.0",
+]
+
+# Development dependencies
+[dependency-groups]
+dev = []

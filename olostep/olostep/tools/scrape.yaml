@@ -1,0 +1,71 @@
+identity:
+  name: scrape
+  author: olostep
+  label:
+    en_US: Scrape URL
+description:
+  human:
+    en_US: Scrape a single URL and extract its content as markdown, HTML, text, or structured JSON. Handles JavaScript-rendered sites.
+  llm: Scrape a URL and return its content. Use this to extract text or structured data from any webpage. Supports JS-rendered sites, parsers for structured JSON, and geo-location via country code.
+parameters:
+  - name: url
+    type: string
+    required: true
+    label:
+      en_US: URL
+    human_description:
+      en_US: The full URL to scrape (must include https://)
+    llm_description: The URL to scrape. Must include the full URL with https://
+    form: llm
+  - name: formats
+    type: string
+    required: false
+    default: markdown
+    label:
+      en_US: Format
+    human_description:
+      en_US: Output format — markdown, html, text, or json
+    llm_description: >-
+      Output format. Options: markdown (default, LLM-friendly), html
+      (cleaned HTML), text (plain text), json (structured, requires parser_id)
+    form: llm
+  - name: country
+    type: string
+    required: false
+    label:
+      en_US: Country
+    human_description:
+      en_US: Two-letter country code for geo-location (e.g. us, gb)
+    llm_description: Two-letter ISO country code for geo-location simulation e.g. us, gb, de
+    form: llm
+  - name: parser_id
+    type: string
+    required: false
+    label:
+      en_US: Parser ID
+    human_description:
+      en_US: >-
+        Pre-built parser for structured JSON extraction.
+        Options: @olostep/google-search, @olostep/amazon-it-product,
+        @olostep/extract-emails, @olostep/extract-socials
+    llm_description: >-
+      Optional parser ID for structured JSON extraction.
+      Use @olostep/google-search for Google SERPs,
+      @olostep/amazon-it-product for Amazon products,
+      @olostep/extract-emails to find emails on any page.
+    form: llm
+  - name: wait_before_scraping
+    type: number
+    required: false
+    default: 0
+    label:
+      en_US: Wait (ms)
+    human_description:
+      en_US: Milliseconds to wait after page load (useful for JS-heavy sites)
+    llm_description: Milliseconds to wait after page load before extracting content. Use 2000-5000 for JS-heavy sites.
+    form: form
+output:
+  type: string
+extra:
+  python:
+    source: tools/scrape.py

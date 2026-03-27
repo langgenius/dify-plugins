@@ -1,0 +1,24 @@
+identity:
+  name: search
+  author: olostep
+  label:
+    en_US: Search Web
+description:
+  human:
+    en_US: Search the web with a natural language query and return ranked results with titles, URLs and descriptions.
+  llm: Search the web and return ranked results. Use this to find relevant websites and information on any topic.
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Query
+    human_description:
+      en_US: Natural language search query
+    llm_description: The search query in natural language.
+    form: llm
+output:
+  type: string
+extra:
+  python:
+    source: tools/search.py
