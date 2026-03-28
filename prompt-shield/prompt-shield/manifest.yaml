@@ -1,0 +1,36 @@
+version: 0.1.0
+type: plugin
+author: prompt-shield
+name: prompt-shield
+label:
+  en_US: Prompt Shield
+description:
+  en_US: >-
+    Local prompt injection detection and PII redaction powered by prompt-shield.
+    Scans text for prompt injection attacks, detects PII entities, and redacts
+    sensitive information. All processing runs locally with no external API calls.
+icon: _assets/icon.svg
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+    endpoint:
+      enabled: false
+    model:
+      enabled: false
+    node:
+      enabled: false
+    storage:
+      enabled: false
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+created_at: 2026-03-15T00:00:00Z
+privacy: privacy.md

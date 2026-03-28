@@ -1,0 +1,30 @@
+identity:
+  name: pii_redact
+  author: prompt-shield
+  label:
+    en_US: PII Redact
+description:
+  human:
+    en_US: >-
+      Detects and redacts personally identifiable information (PII) from input
+      text, replacing sensitive data with entity-type-aware placeholders (e.g.,
+      "[EMAIL_REDACTED]", "[PHONE_REDACTED]"). Returns the redacted text along
+      with counts of redacted entities.
+  llm: >-
+    Redact personally identifiable information (PII) from text. Use this tool
+    when you need to remove or mask sensitive data like email addresses, phone
+    numbers, SSNs, or credit card numbers from text before sharing, logging,
+    or further processing. Returns the redacted text with placeholders and
+    counts of what was redacted.
+parameters:
+  - name: input_text
+    type: string
+    required: true
+    label:
+      en_US: Input Text
+    human_description:
+      en_US: The text from which to redact PII entities.
+    llm_description: The text content from which to detect and redact personally identifiable information.
+    form: llm
+output:
+  type: object
