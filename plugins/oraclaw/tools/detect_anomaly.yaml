@@ -1,0 +1,43 @@
+identity:
+  name: "detect_anomaly"
+  author: "Whatsonyourmind"
+  label:
+    en_US: "Anomaly Detection"
+  description:
+    en_US: "Z-score or IQR outlier detection. Sub-millisecond. Find unusual values in any numeric dataset."
+  icon: "icon.svg"
+parameters:
+  - name: data
+    type: string
+    required: true
+    label:
+      en_US: "Data (JSON array)"
+    human_description:
+      en_US: "JSON array of numbers. E.g. [1, 2, 3, 100, 2, 3, 1]"
+    form: llm
+  - name: method
+    type: select
+    required: false
+    label:
+      en_US: "Method"
+    default: "zscore"
+    options:
+      - value: "zscore"
+        label:
+          en_US: "Z-Score"
+      - value: "iqr"
+        label:
+          en_US: "IQR"
+    form: form
+  - name: threshold
+    type: number
+    required: false
+    label:
+      en_US: "Threshold"
+    human_description:
+      en_US: "Detection threshold (default: 3.0 for Z-score)"
+    default: 3.0
+    form: form
+extra:
+  python:
+    source: tools/detect_anomaly.py

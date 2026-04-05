@@ -1,0 +1,39 @@
+identity:
+  author: "Whatsonyourmind"
+  name: "oraclaw"
+  label:
+    en_US: "OraClaw"
+  description:
+    en_US: "Decision intelligence for AI agents — bandits, LP solver, graph analytics, anomaly detection, forecasting. 12 algorithms, all under 25ms."
+  icon: "icon.svg"
+  tags:
+    - PRODUCTIVITY
+    - UTILITIES
+    - BUSINESS
+credentials_for_provider:
+  - variable: api_key
+    label:
+      en_US: "OraClaw API Key"
+    type: secret-input
+    required: true
+    placeholder:
+      en_US: "ok_live_... or ok_beta_..."
+    help:
+      en_US: "Get a free API key at https://oraclaw-api.onrender.com/api/v1/auth/signup"
+  - variable: api_endpoint
+    label:
+      en_US: "API Endpoint"
+    type: text-input
+    required: false
+    default: "https://oraclaw-api.onrender.com"
+    placeholder:
+      en_US: "https://oraclaw-api.onrender.com"
+tools:
+  - tools/optimize_bandit.yaml
+  - tools/solve_constraints.yaml
+  - tools/analyze_graph.yaml
+  - tools/detect_anomaly.yaml
+  - tools/predict_forecast.yaml
+extra:
+  python:
+    source: providers/oraclaw.py

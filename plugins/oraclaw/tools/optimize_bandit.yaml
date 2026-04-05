@@ -1,0 +1,39 @@
+identity:
+  name: "optimize_bandit"
+  author: "Whatsonyourmind"
+  label:
+    en_US: "Multi-Armed Bandit"
+  description:
+    en_US: "Select the best option from a set using UCB1, Thompson Sampling, or epsilon-Greedy. Optimal explore/exploit tradeoff. <1ms."
+  icon: "icon.svg"
+parameters:
+  - name: arms
+    type: string
+    required: true
+    label:
+      en_US: "Arms (JSON)"
+    human_description:
+      en_US: "JSON array of options, e.g. [{\"id\":\"a\",\"pulls\":10,\"totalReward\":7},{\"id\":\"b\",\"pulls\":5,\"totalReward\":3}]"
+    form: llm
+  - name: algorithm
+    type: select
+    required: false
+    label:
+      en_US: "Algorithm"
+    human_description:
+      en_US: "Selection algorithm"
+    default: "ucb1"
+    options:
+      - value: "ucb1"
+        label:
+          en_US: "UCB1"
+      - value: "thompson"
+        label:
+          en_US: "Thompson Sampling"
+      - value: "epsilon-greedy"
+        label:
+          en_US: "Epsilon-Greedy"
+    form: form
+extra:
+  python:
+    source: tools/optimize_bandit.py

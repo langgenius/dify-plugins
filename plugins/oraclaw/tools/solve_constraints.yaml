@@ -1,0 +1,20 @@
+identity:
+  name: "solve_constraints"
+  author: "Whatsonyourmind"
+  label:
+    en_US: "LP/MIP Solver"
+  description:
+    en_US: "Linear/mixed-integer optimization (HiGHS). Budget allocation, scheduling, resource planning. Provably optimal solutions."
+  icon: "icon.svg"
+parameters:
+  - name: problem
+    type: string
+    required: true
+    label:
+      en_US: "Problem (JSON)"
+    human_description:
+      en_US: "JSON with direction, objective, variables, constraints. E.g. {\"direction\":\"maximize\",\"objective\":{\"x\":5,\"y\":4},\"variables\":[{\"name\":\"x\",\"lower\":0,\"upper\":10}],\"constraints\":[{\"name\":\"budget\",\"coefficients\":{\"x\":2,\"y\":3},\"upper\":24}]}"
+    form: llm
+extra:
+  python:
+    source: tools/solve_constraints.py
