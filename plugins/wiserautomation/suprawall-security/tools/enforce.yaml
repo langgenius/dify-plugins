@@ -1,0 +1,45 @@
+identity:
+  name: suprawall_enforce
+  author: suprawall
+  label:
+    en_US: SupraWall Enforce
+description:
+  human:
+    en_US: >
+      Deterministic security enforcement. Terminate the workflow process if
+      any policy violations, prompt injection, or compliance issues are found.
+  llm: >
+    Use this tool to enforce a strict security policy. Unlike 'scan', 'enforce'
+    will automatically terminate the current agent reasoning or workflow step
+    if security conditions aren't met, preventing bypass.
+parameters:
+  - name: content
+    type: string
+    required: true
+    label:
+      en_US: Content to Enforce
+    human_description:
+      en_US: The agent output or tool call to be analyzed and enforced
+    form: llm
+
+  - name: raise_on_deny
+    type: boolean
+    required: false
+    default: true
+    label:
+      en_US: Hard Deny
+    human_description:
+      en_US: If true, terminates the entire workflow on a DENY decision.
+    form: form
+
+output_schema:
+  type: object
+  properties:
+    passed:
+      type: boolean
+    decision:
+      type: string
+    reason:
+      type: string
+    resolved_content:
+      type: string

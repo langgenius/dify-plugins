@@ -1,0 +1,78 @@
+identity:
+  name: suprawall_scan
+  author: suprawall
+  label:
+    en_US: SupraWall Scan
+description:
+  human:
+    en_US: >
+      Scans agent output or code for policy violations, prompt injection,
+      and compliance issues before it reaches users or downstream systems.
+  llm: >
+    Use this tool to check if an AI agent's output or action is safe and
+    compliant with configured policies. Returns a pass/fail result with
+    detailed violation report.
+parameters:
+  - name: content
+    type: string
+    required: true
+    label:
+      en_US: Content to Scan
+    human_description:
+      en_US: The agent output, tool call, or code to be scanned
+    llm_description: The content you want to check for policy violations
+    form: llm
+
+  - name: tool_name
+    type: string
+    required: false
+    default: "agent_output"
+    label:
+      en_US: Context Name
+    human_description:
+      en_US: Optional context name (defaults to 'agent_output')
+    llm_description: Optional context or tool name to simulate for more accurate policy matching
+    form: form
+
+  - name: policy_id
+    type: string
+    required: false
+    label:
+      en_US: Policy ID
+    human_description:
+      en_US: The SupraWall policy to enforce (uses your default policy if omitted)
+    form: form
+
+  - name: fail_on
+    type: select
+    required: false
+    default: high
+    label:
+      en_US: Fail Threshold
+    options:
+      - value: critical
+        label:
+          en_US: Critical Only
+      - value: high
+        label:
+          en_US: High and Above
+      - value: medium
+        label:
+          en_US: Medium and Above
+    form: form
+
+output_schema:
+  type: object
+  properties:
+    passed:
+      type: boolean
+    decision:
+      type: string
+    reason:
+      type: string
+    violations_count:
+      type: integer
+    risk_score:
+      type: number
+    report_url:
+      type: string

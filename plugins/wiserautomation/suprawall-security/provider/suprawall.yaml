@@ -1,0 +1,22 @@
+identity:
+  author: suprawall
+  name: suprawall
+  label:
+    en_US: SupraWall Security
+  description:
+    en_US: Deterministic policy enforcement for AI agents. Detects prompt injection, enforces output policies, and blocks non-compliant agent actions.
+  icon: icon.svg
+tools:
+  - tools/scan.yaml
+  - tools/enforce.yaml
+credentials_for_provider:
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: SupraWall API Key
+    placeholder:
+      en_US: Enter your SupraWall API key (sw_...)
+    help:
+      en_US: Get your API key from https://supra-wall.com/dashboard
+    url: https://supra-wall.com/dashboard
