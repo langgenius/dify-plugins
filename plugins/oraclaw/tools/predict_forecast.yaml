@@ -1,0 +1,43 @@
+identity:
+  name: "predict_forecast"
+  author: "Whatsonyourmind"
+  label:
+    en_US: "Time Series Forecast"
+  description:
+    en_US: "ARIMA or Holt-Winters time series forecasting. Predict future values with confidence intervals."
+  icon: "icon.svg"
+parameters:
+  - name: data
+    type: string
+    required: true
+    label:
+      en_US: "Historical Data (JSON array)"
+    human_description:
+      en_US: "JSON array of historical numeric values. E.g. [10, 20, 30, 40, 50]"
+    form: llm
+  - name: steps
+    type: number
+    required: true
+    label:
+      en_US: "Forecast Steps"
+    human_description:
+      en_US: "Number of future periods to forecast"
+    default: 3
+    form: llm
+  - name: method
+    type: select
+    required: false
+    label:
+      en_US: "Method"
+    default: "arima"
+    options:
+      - value: "arima"
+        label:
+          en_US: "ARIMA"
+      - value: "holt-winters"
+        label:
+          en_US: "Holt-Winters"
+    form: form
+extra:
+  python:
+    source: tools/predict_forecast.py

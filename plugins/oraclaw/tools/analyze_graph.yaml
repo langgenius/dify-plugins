@@ -1,0 +1,20 @@
+identity:
+  name: "analyze_graph"
+  author: "Whatsonyourmind"
+  label:
+    en_US: "Graph Analytics"
+  description:
+    en_US: "PageRank, Louvain community detection, shortest path, bottleneck detection on any graph."
+  icon: "icon.svg"
+parameters:
+  - name: graph
+    type: string
+    required: true
+    label:
+      en_US: "Graph (JSON)"
+    human_description:
+      en_US: "JSON with nodes and edges. E.g. {\"nodes\":[{\"id\":\"A\"},{\"id\":\"B\"}],\"edges\":[{\"source\":\"A\",\"target\":\"B\",\"weight\":1}]}"
+    form: llm
+extra:
+  python:
+    source: tools/analyze_graph.py
