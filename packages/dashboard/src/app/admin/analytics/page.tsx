@@ -8,7 +8,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { 
     Activity, Globe, Server, Clock, Zap, AlertCircle, 
     ArrowUpRight, ArrowDownRight, Database, Users, Eye, MousePointer,
-    Heart, Download, Terminal, Share2, Package
+    Heart, Download, Terminal, Share2, Package, GitMerge, CheckCircle, ExternalLink
 } from "lucide-react";
 import {
     AreaChart, Area, BarChart, Bar, Cell, XAxis, YAxis, 
@@ -181,14 +181,49 @@ export default function AdminAnalyticsPage() {
                                     <YAxis dataKey="source" type="category" stroke="#888" fontSize={9} width={80} tickLine={false} axisLine={false} />
                                     <Tooltip cursor={{ fill: '#ffffff05' }} contentStyle={{ backgroundColor: '#000', border: 'none' }} />
                                     <Bar dataKey="count" radius={[0, 4, 4, 0]}>
-                                        {ecosystem?.pluginUsage?.map((entry: any, index: number) => (
-                                            <Cell key={`cell-${index}`} fill={entry.source === 'mcp-claude' ? '#2563eb' : entry.source === 'smolagents' ? '#db2777' : '#10b981'} />
-                                        ))}
+                                        {ecosystem?.pluginUsage?.map((entry: any, index: number) => {
+                                            const colors: any = {
+                                                'mcp-claude': '#2563eb',
+                                                'smolagents': '#db2777',
+                                                'llama-index': '#00ffa3',
+                                                'autogen': '#ff9a00',
+                                                'crewai': '#6366f1',
+                                                'dify': '#10b981',
+                                                'vercel-ai': '#ffffff'
+                                            };
+                                            return <Cell key={`cell-${index}`} fill={colors[entry.source] || '#444'} />;
+                                        })}
                                     </Bar>
                                 </BarChart>
                             </ResponsiveContainer>
                         </CardContent>
                     </Card>
+                </div>
+
+                {/* 🚀 GLOBAL REGISTRY STATUS */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 py-8">
+                    {ecosystem?.registryPRs?.map((pr: any) => (
+                        <div key={pr.repo} className="bg-black/40 border border-white/5 p-4 rounded-xl flex items-center justify-between group hover:border-emerald-500/30 transition-all">
+                            <div className="flex flex-col">
+                                <span className="text-[8px] font-black text-neutral-500 uppercase tracking-widest">{pr.repo.split('/')[1]}</span>
+                                <span className="text-xs font-bold text-white mt-0.5">{pr.label}</span>
+                                <div className="flex items-center gap-2 mt-2">
+                                    {pr.status === 'merged' ? (
+                                        <div className="flex items-center gap-1 text-[9px] font-black text-purple-400 uppercase italic">
+                                            <GitMerge className="w-2 h-2" /> Live / Merged
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center gap-1 text-[9px] font-black text-amber-500 uppercase italic">
+                                            <Activity className="w-2 h-2 animate-pulse" /> Pending Review
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                            <a href={pr.url} target="_blank" className="p-2 bg-white/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                                <ExternalLink className="w-3 h-3 text-neutral-400" />
+                            </a>
+                        </div>
+                    ))}
                 </div>
 
                 {/* Adoption Trend Chart */}
@@ -206,6 +241,9 @@ export default function AdminAnalyticsPage() {
                                 <Area type="monotone" dataKey="direct-sdk" stackId="1" stroke="#10b981" fill="#10b981" fillOpacity={0.2} name="Generic SDK" />
                                 <Area type="monotone" dataKey="smolagents" stackId="1" stroke="#db2777" fill="#db2777" fillOpacity={0.2} name="smolagents" />
                                 <Area type="monotone" dataKey="mcp-claude" stackId="1" stroke="#2563eb" fill="#2563eb" fillOpacity={0.2} name="Claude MCP" />
+                                <Area type="monotone" dataKey="llama-index" stackId="1" stroke="#00ffa3" fill="#00ffa3" fillOpacity={0.2} name="LlamaIndex" />
+                                <Area type="monotone" dataKey="autogen" stackId="1" stroke="#ff9a00" fill="#ff9a00" fillOpacity={0.2} name="AutoGen" />
+                                <Area type="monotone" dataKey="crewai" stackId="1" stroke="#6366f1" fill="#6366f1" fillOpacity={0.2} name="CrewAI" />
                                 <Legend />
                             </AreaChart>
                         </ResponsiveContainer>

@@ -1,0 +1,41 @@
+{
+  "name": "suprawall-vault",
+  "version": "1.0.0",
+  "description": "Secure credential vault for your AI company. Every agent gets only the keys it's authorized to use — never raw env vars.",
+  "author": "SupraWall",
+  "category": "security",
+  "icon": "shield",
+  "tags": ["security", "vault", "credentials", "compliance"],
+  "onInstall": {
+    "url": "https://api.supra-wall.com/v1/paperclip/onboard",
+    "method": "POST",
+    "fields": ["companyId", "paperclipVersion", "agentCount", "apiUrl"]
+  },
+  "webhooks": {
+    "url": "https://api.supra-wall.com/v1/paperclip/webhooks",
+    "events": ["agent.hired", "agent.fired", "run.completed"],
+    "signatureHeader": "X-Paperclip-Signature"
+  },
+  "invoke": {
+    "url": "https://api.supra-wall.com/v1/agent/invoke",
+    "method": "POST",
+    "fields": ["agentId", "companyId", "role", "runId"]
+  },
+  "config": {
+    "suprawallApiKey": {
+      "type": "string",
+      "required": false,
+      "description": "Your SupraWall API key. Auto-generated on install if not provided.",
+      "env": "SUPRAWALL_API_KEY"
+    },
+    "suprawallApiUrl": {
+      "type": "string",
+      "required": false,
+      "default": "https://api.supra-wall.com",
+      "description": "SupraWall API URL (override for self-hosted deployments).",
+      "env": "SUPRAWALL_API_URL"
+    }
+  },
+  "docs": "https://docs.supra-wall.com/paperclip",
+  "pricing": "https://supra-wall.com/pricing"
+}

@@ -54,20 +54,10 @@ export function rateLimit(opts: RateLimitOptions) {
         const key = keyGenerator(req);
         
         try {
-            // Ensure table exists (optimistic approach: setup script usually handles this, 
-            // but we do it gracefully here or assume it's created, we will create it if not exists)
-            await pool.query(`
-                CREATE TABLE IF NOT EXISTS api_rate_limits (
-                    key TEXT PRIMARY KEY,
-                    count INTEGER NOT NULL,
-                    reset_at BIGINT NOT NULL
-                );
-            `);
-
             const now = Date.now();
             const resetAt = now + windowMs;
 
-            // Delete expired first to handle cleanup
+            // Delete expired entries to keep the table compact
             await pool.query(`DELETE FROM api_rate_limits WHERE reset_at < $1`, [now]);
 
             // Upsert the limit key — on conflict, ONLY increment count.

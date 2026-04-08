@@ -5,6 +5,7 @@ import { Request, Response, NextFunction } from "express";
 import { pool } from "./db";
 import { TIER_LIMITS, Tier, TierLimits, currentMonth } from "./tier-config";
 import { logger } from "./logger";
+import { sendDiscordUsageAlert } from "./discord";
 
 export interface TieredRequest extends Request {
     tier?: Tier;
@@ -79,14 +80,16 @@ export async function checkEvaluationLimit(tenantId: string, limits: TierLimits)
         );
         const current = result.rows[0]?.evaluation_count || 0;
 
-        // Block if over limit AND overage is not allowed (null = hard stop, 0 = free overage is allowed)
+        // Block if over limit AND overage is not allowed (null = hard stop)
         if (current >= limits.maxEvaluationsPerMonth && limits.overageRatePerEval == null) {
             return { allowed: false, current };
         }
         return { allowed: true, current };
     } catch (err) {
-        logger.error("[TierGuard] Error checking evaluation limit:", err);
-        return { allowed: true, current: 0 }; // Fail-open for safety
+        // SECURITY: Fail-closed. A DB error must not allow unlimited free usage.
+        // A brief circuit-breaker window is acceptable; silent overage is not.
+        logger.error("[TierGuard] Error checking evaluation limit — denying request:", err);
+        return { allowed: false, current: -1 };
     }
 }
 
@@ -97,19 +100,62 @@ export async function checkEvaluationLimit(tenantId: string, limits: TierLimits)
 export async function recordEvaluation(tenantId: string, limits: TierLimits): Promise<void> {
     const month = currentMonth();
     try {
-        await pool.query(
+        const result = await pool.query(
             `INSERT INTO tenant_usage (tenant_id, month, evaluation_count)
              VALUES ($1, $2, 1)
              ON CONFLICT (tenant_id, month)
-             DO UPDATE SET 
+             DO UPDATE SET
                 evaluation_count = tenant_usage.evaluation_count + 1,
-                overage_units = CASE 
+                overage_units = CASE
                     WHEN (tenant_usage.evaluation_count + 1) > $3 THEN (tenant_usage.evaluation_count + 1) - $3
                     ELSE 0
                 END,
-                last_updated = NOW()`,
+                last_updated = NOW()
+             RETURNING evaluation_count`,
             [tenantId, month, limits.maxEvaluationsPerMonth]
         );
+
+        // Discord usage alerts at 50%, 75%, 90%, 100% thresholds
+        const discordUrl = process.env.DISCORD_WEBHOOK_URL;
+        if (discordUrl && result.rows.length > 0) {
+            const current = result.rows[0].evaluation_count;
+            const max = limits.maxEvaluationsPerMonth;
+            const pct = current / max;
+
+            const alertThresholds = [0.5, 0.75, 0.9, 1.0];
+            const prevPct = (current - 1) / max;
+
+            const crossed = alertThresholds.find(t => prevPct < t && pct >= t);
+            if (crossed) {
+                // Fire-and-forget: don't block the request
+                setImmediate(async () => {
+                    try {
+                        // Look up company info for better alert context
+                        const companyResult = await pool.query(
+                            `SELECT pc.paperclip_company_id, t.tier
+                             FROM paperclip_companies pc
+                             JOIN tenants t ON t.id = pc.tenant_id
+                             WHERE pc.tenant_id = $1
+                             LIMIT 1`,
+                            [tenantId]
+                        );
+                        const companyId = companyResult.rows[0]?.paperclip_company_id || tenantId;
+                        const tier = companyResult.rows[0]?.tier || "developer";
+
+                        await sendDiscordUsageAlert(discordUrl, {
+                            companyId,
+                            tenantId,
+                            currentUsage: current,
+                            maxUsage: max,
+                            currentTier: tier,
+                            upgradeUrl: `https://supra-wall.com/pricing?source=discord_alert&tenant=${tenantId}`,
+                        });
+                    } catch (e) {
+                        logger.warn("[TierGuard] Discord alert failed:", e);
+                    }
+                });
+            }
+        }
     } catch (err) {
         logger.error("[TierGuard] Failed to record evaluation:", { tenantId, error: err });
     }
@@ -132,10 +178,26 @@ export async function enforceSSO(req: TieredRequest, res: Response, next: NextFu
 /**
  * Returns a standard tier-limit upgrade error response (402 Payment Required).
  */
-export function tierLimitError(feature: string, current: number | string, limit: number | string) {
+export function tierLimitError(
+    feature: string,
+    current: number | string,
+    limit: number | string,
+    currentTier?: string
+) {
+    const upgradeMap: Record<string, { nextTier: string; price: string }> = {
+        open_source: { nextTier: "developer", price: "Free" },
+        developer:   { nextTier: "team",      price: "$149/mo" },
+        team:        { nextTier: "business",   price: "$499/mo" },
+        business:    { nextTier: "enterprise", price: "Custom" },
+    };
+    const upgrade = upgradeMap[currentTier || "developer"] ?? upgradeMap.developer;
+
     return {
-        error: `${feature} limit reached (${current}/${limit}). Upgrade your plan to continue without interruption.`,
-        upgradeUrl: "https://www.supra-wall.com/pricing",
+        error: `${feature} limit reached (${current}/${limit}). Upgrade to ${upgrade.nextTier} to continue without interruption.`,
+        currentTier: currentTier || "developer",
+        message: `Your ${currentTier || "current"} plan allows ${limit} ${feature.toLowerCase()}(s). You currently have ${current}.`,
+        upgradeUrl: `https://www.supra-wall.com/pricing?plan=${upgrade.nextTier}&source=${feature.toLowerCase().replace(/\s+/g, "_")}_limit`,
+        upgradePrice: upgrade.price,
         code: "TIER_LIMIT_EXCEEDED",
     };
 }

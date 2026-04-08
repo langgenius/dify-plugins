@@ -35,6 +35,10 @@ export async function POST(req: Request) {
             const session = event.data.object as any;
             const userId = session.client_reference_id;
             const subscriptionId = session.subscription;
+            const companyId = session.metadata?.companyId;
+            const tenantId = session.metadata?.tenantId;
+            const plan = session.metadata?.plan || 'open_source';
+            const source = session.metadata?.source;
 
             // Fetch subscription to get the Item ID (needed for reporting usage)
             const subscription = await stripe.subscriptions.retrieve(subscriptionId);
@@ -45,20 +49,62 @@ export async function POST(req: Request) {
                 ?? (subscription.items.data[0] as any)?.current_period_end
                 ?? Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60;
 
-            await db.collection('organizations').doc(userId).set({
-                stripeCustomerId: session.customer,
-                stripeSubscriptionId: subscriptionId,
-                stripeSubscriptionItemId: subscriptionItemId,
-                plan: session.metadata?.plan || 'open_source',
-                status: 'active',
-                hasPaymentMethod: true,
-                currentPeriodEnd: admin.firestore.Timestamp.fromMillis(periodEnd * 1000),
-            }, { merge: true });
+            // --- Paperclip-sourced checkout: upgrade tenant tier in PostgreSQL ---
+            if (source === 'paperclip_activate' && tenantId && companyId) {
+                try {
+                    const { pool: pgPool } = await import('@/lib/db_sql');
 
-            // Also sync to users collection for evaluate route
-            await db.collection('users').doc(userId).set({
-                plan: session.metadata?.plan || 'open_source',
-            }, { merge: true });
+                    // Upgrade tenant tier
+                    await pgPool.query(
+                        `UPDATE tenants
+                         SET tier = $1,
+                             stripe_customer_id = $2,
+                             stripe_subscription_id = $3,
+                             billing_cycle_start = NOW()
+                         WHERE id = $4`,
+                        [plan, session.customer, subscriptionId, tenantId]
+                    );
+
+                    // Convert sw_temp_* tokens to permanent (extend TTL by 1 year)
+                    await pgPool.query(
+                        `UPDATE paperclip_tokens
+                         SET tier = $1, expires_at = NOW() + INTERVAL '365 days', activated = TRUE
+                         WHERE tenant_id = $2 AND activated = FALSE`,
+                        [plan, tenantId]
+                    );
+
+                    // Update company status
+                    await pgPool.query(
+                        `UPDATE paperclip_companies
+                         SET status = 'active'
+                         WHERE paperclip_company_id = $1`,
+                        [companyId]
+                    );
+
+                    console.log(`[Stripe Webhook] Paperclip company ${companyId} upgraded to ${plan} (tenant: ${tenantId})`);
+                } catch (pgErr) {
+                    console.error('[Stripe Webhook] Failed to upgrade Paperclip tenant:', pgErr);
+                    // Don't return 500 — let Stripe see 200 so it doesn't retry indefinitely.
+                    // The tier can be manually corrected; the subscription is the source of truth.
+                }
+            }
+
+            // --- Standard Firebase-authenticated checkout ---
+            if (userId) {
+                await db.collection('organizations').doc(userId).set({
+                    stripeCustomerId: session.customer,
+                    stripeSubscriptionId: subscriptionId,
+                    stripeSubscriptionItemId: subscriptionItemId,
+                    plan,
+                    status: 'active',
+                    hasPaymentMethod: true,
+                    currentPeriodEnd: admin.firestore.Timestamp.fromMillis(periodEnd * 1000),
+                }, { merge: true });
+
+                await db.collection('users').doc(userId).set({
+                    plan,
+                }, { merge: true });
+            }
             break;
         }
 

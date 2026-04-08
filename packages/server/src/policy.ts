@@ -485,6 +485,7 @@ export const evaluatePolicy = async (req: Request, res: Response) => {
             cost_usd: decision === "ALLOW" ? estimatedCost : 0,
             metadata: {
                 subjectId: req.body.subjectId || "entire_tenant",
+                framework: requestedFramework,
                 matchedRule,
                 agentName: agent?.name,
                 vaultInjected: hasVaultTokens,

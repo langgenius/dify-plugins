@@ -278,6 +278,53 @@ export const initDb = async () => {
                 is_qualified INTEGER DEFAULT 0,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             )`,
+            // Paperclip Integration Tables
+            `CREATE TABLE IF NOT EXISTS paperclip_companies (
+                id TEXT PRIMARY KEY,
+                tenant_id TEXT NOT NULL REFERENCES tenants(id),
+                paperclip_company_id TEXT NOT NULL UNIQUE,
+                paperclip_api_key_encrypted BLOB,
+                agent_count INTEGER DEFAULT 0,
+                paperclip_version TEXT,
+                api_url TEXT DEFAULT 'https://api.paperclipai.com',
+                status TEXT DEFAULT 'pending',
+                onboarded_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )`,
+            `CREATE INDEX IF NOT EXISTS idx_paperclip_companies_tenant ON paperclip_companies(tenant_id)`,
+            `CREATE INDEX IF NOT EXISTS idx_paperclip_companies_company ON paperclip_companies(paperclip_company_id)`,
+            `CREATE TABLE IF NOT EXISTS paperclip_tokens (
+                id TEXT PRIMARY KEY,
+                token TEXT NOT NULL UNIQUE,
+                tenant_id TEXT NOT NULL REFERENCES tenants(id),
+                paperclip_company_id TEXT NOT NULL,
+                tier TEXT DEFAULT 'developer',
+                expires_at DATETIME NOT NULL,
+                activated INTEGER DEFAULT 0,
+                activation_email TEXT,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )`,
+            `CREATE INDEX IF NOT EXISTS idx_paperclip_tokens_token ON paperclip_tokens(token)`,
+            `CREATE TABLE IF NOT EXISTS paperclip_run_tokens (
+                id TEXT PRIMARY KEY,
+                tenant_id TEXT NOT NULL,
+                agent_id TEXT NOT NULL,
+                run_id TEXT NOT NULL,
+                scoped_credentials TEXT NOT NULL DEFAULT '{}',
+                ttl_seconds INTEGER DEFAULT 3600,
+                issued_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                expires_at DATETIME NOT NULL,
+                revoked INTEGER DEFAULT 0,
+                revoked_at DATETIME,
+                UNIQUE(tenant_id, agent_id, run_id)
+            )`,
+            `CREATE INDEX IF NOT EXISTS idx_paperclip_run_tokens_run ON paperclip_run_tokens(run_id)`,
+            `CREATE INDEX IF NOT EXISTS idx_paperclip_run_tokens_agent ON paperclip_run_tokens(agent_id)`,
+            // Rate limiting table — created at startup, not per-request
+            `CREATE TABLE IF NOT EXISTS api_rate_limits (
+                key TEXT PRIMARY KEY,
+                count INTEGER NOT NULL,
+                reset_at BIGINT NOT NULL
+            )`,
             // Insert seed data so the dashboard is not empty
             `INSERT OR IGNORE INTO tenants (id, name, tier) VALUES ('default', 'SupraWall Org', 'business')`,
             `INSERT OR IGNORE INTO agents (id, tenantid, name, status) VALUES ('agent_1', 'default', 'LinkedIn Manager', 'active')`,
@@ -408,6 +455,12 @@ export const initDb = async () => {
         CREATE INDEX IF NOT EXISTS idx_agents_apikeyhash ON agents(apikeyhash);
         CREATE INDEX IF NOT EXISTS idx_tenants_master_key ON tenants(master_api_key);
         CREATE INDEX IF NOT EXISTS idx_approval_requests_tenant_status ON approval_requests(tenantid, status);
+
+        -- Unique constraint on policies(tenantid, agentid, toolname) for webhook idempotency.
+        -- Prevents duplicate policy rows when agent.hired webhooks are retried.
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_policies_unique_credential
+            ON policies(tenantid, agentid, toolname)
+            WHERE agentid IS NOT NULL;
 
         -- Vault: encrypted secret storage
         CREATE TABLE IF NOT EXISTS vault_secrets (
@@ -567,12 +620,72 @@ export const initDb = async () => {
             is_qualified BOOLEAN DEFAULT FALSE,
             created_at TIMESTAMP DEFAULT NOW()
         );
+
+        -- Paperclip Integration: company registry
+        CREATE TABLE IF NOT EXISTS paperclip_companies (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            tenant_id VARCHAR(255) NOT NULL REFERENCES tenants(id),
+            paperclip_company_id VARCHAR(255) NOT NULL UNIQUE,
+            paperclip_api_key_encrypted BYTEA,
+            agent_count INTEGER DEFAULT 0,
+            paperclip_version VARCHAR(50),
+            api_url VARCHAR(500) DEFAULT 'https://api.paperclipai.com',
+            status VARCHAR(50) DEFAULT 'pending',
+            onboarded_at TIMESTAMP DEFAULT NOW()
+        );
+        -- Ensure api_url column exists on existing deployments
+        DO $$ BEGIN
+            IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='paperclip_companies' AND column_name='api_url') THEN
+                ALTER TABLE paperclip_companies ADD COLUMN api_url VARCHAR(500) DEFAULT 'https://api.paperclipai.com';
+            END IF;
+        END $$;
+        CREATE INDEX IF NOT EXISTS idx_paperclip_companies_tenant ON paperclip_companies(tenant_id);
+        CREATE INDEX IF NOT EXISTS idx_paperclip_companies_company ON paperclip_companies(paperclip_company_id);
+
+        -- Paperclip Integration: temporary API keys for frictionless install
+        CREATE TABLE IF NOT EXISTS paperclip_tokens (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            token VARCHAR(255) NOT NULL UNIQUE,
+            tenant_id VARCHAR(255) NOT NULL REFERENCES tenants(id),
+            paperclip_company_id VARCHAR(255) NOT NULL,
+            tier VARCHAR(20) DEFAULT 'developer',
+            expires_at TIMESTAMP NOT NULL,
+            activated BOOLEAN DEFAULT FALSE,
+            activation_email VARCHAR(255),
+            created_at TIMESTAMP DEFAULT NOW()
+        );
+        CREATE INDEX IF NOT EXISTS idx_paperclip_tokens_token ON paperclip_tokens(token);
+
+        -- Paperclip Integration: per-invocation scoped run tokens
+        CREATE TABLE IF NOT EXISTS paperclip_run_tokens (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            tenant_id VARCHAR(255) NOT NULL,
+            agent_id VARCHAR(255) NOT NULL,
+            run_id VARCHAR(255) NOT NULL,
+            scoped_credentials JSONB NOT NULL DEFAULT '{}',
+            ttl_seconds INTEGER DEFAULT 3600,
+            issued_at TIMESTAMP DEFAULT NOW(),
+            expires_at TIMESTAMP NOT NULL,
+            revoked BOOLEAN DEFAULT FALSE,
+            revoked_at TIMESTAMP,
+            UNIQUE(tenant_id, agent_id, run_id)
+        );
+        CREATE INDEX IF NOT EXISTS idx_paperclip_run_tokens_run ON paperclip_run_tokens(run_id);
+        CREATE INDEX IF NOT EXISTS idx_paperclip_run_tokens_agent ON paperclip_run_tokens(agent_id);
+
+        -- Rate limiting — created at startup, not per-request
+        CREATE TABLE IF NOT EXISTS api_rate_limits (
+            key TEXT PRIMARY KEY,
+            count INTEGER NOT NULL,
+            reset_at BIGINT NOT NULL
+        );
     `;
     await pool.query(query);
 };
 
 /**
  * Daily Background Task: Purges logs older than tenant-specific retention limits.
+ * Also cleans up expired paperclip tokens and run tokens to prevent unbounded growth.
  */
 export async function purgeOldLogs(): Promise<void> {
     logger.info("[Purge] Starting daily audit log cleanup...");
@@ -592,6 +705,28 @@ export async function purgeOldLogs(): Promise<void> {
                 logger.info(`[Purge] Cleared ${result.rowCount} logs for ${tier.id} tier.`);
             }
         }
+
+        // Purge expired paperclip temp tokens (> 7 days past expiry gives activation grace period)
+        const expiredTokens = await pool.query(
+            `DELETE FROM paperclip_tokens WHERE expires_at < NOW() - INTERVAL '7 days' RETURNING id`
+        );
+        if (expiredTokens.rowCount && expiredTokens.rowCount > 0) {
+            logger.info(`[Purge] Cleared ${expiredTokens.rowCount} expired paperclip_tokens.`);
+        }
+
+        // Purge revoked and expired run tokens (> 24h post-expiry)
+        const expiredRunTokens = await pool.query(
+            `DELETE FROM paperclip_run_tokens
+             WHERE (revoked = TRUE OR expires_at < NOW() - INTERVAL '24 hours')
+             RETURNING id`
+        );
+        if (expiredRunTokens.rowCount && expiredRunTokens.rowCount > 0) {
+            logger.info(`[Purge] Cleared ${expiredRunTokens.rowCount} expired paperclip_run_tokens.`);
+        }
+
+        // Purge expired rate limit entries
+        await pool.query(`DELETE FROM api_rate_limits WHERE reset_at < $1`, [Date.now()]);
+
         logger.info("[Purge] Audit log cleanup complete.");
     } catch (err) {
         logger.error("[Purge] Failed to cleanup logs:", err);

@@ -8,15 +8,30 @@
     "migrate:aws": "psql $DATABASE_URL -f scripts/migrate_aws_marketplace.sql",
     "start": "node dist/index.js",
     "type-check": "tsc --noEmit",
-    "test": "jest --testPathPattern=tests/",
-    "test:vault": "jest --testPathPattern=tests/vault/"
+    "test": "jest",
+    "test:vault": "jest --testPathPattern=tests/vault/",
+    "test:paperclip": "jest --testPathPattern=tests/paperclip"
   },
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
     "testTimeout": 30000,
-    "setupFilesAfterEnv": [
-      "<rootDir>/tests/setup.ts"
+    "projects": [
+      {
+        "displayName": "unit",
+        "preset": "ts-jest",
+        "testEnvironment": "node",
+        "testTimeout": 30000,
+        "testPathPattern": "tests/(agents|tier|vault)",
+        "setupFilesAfterEnv": ["<rootDir>/tests/setup.ts"]
+      },
+      {
+        "displayName": "integration",
+        "preset": "ts-jest",
+        "testEnvironment": "node",
+        "testTimeout": 30000,
+        "testPathPattern": "tests/paperclip"
+      }
     ]
   },
   "author": "SupraWall",

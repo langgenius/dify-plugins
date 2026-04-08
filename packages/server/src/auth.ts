@@ -132,6 +132,28 @@ export async function gatekeeperAuth(req: Request, res: Response, next: NextFunc
         }
     }
 
+    // sw_temp_* keys: issued during Paperclip onboard for frictionless start
+    if (apiKey && typeof apiKey === "string" && apiKey.startsWith("sw_temp_")) {
+        try {
+            const tokenResult = await pool.query(
+                `SELECT tenant_id, tier, expires_at, activated
+                 FROM paperclip_tokens WHERE token = $1 LIMIT 1`,
+                [apiKey]
+            );
+            if (tokenResult.rows.length > 0) {
+                const tokenRow = tokenResult.rows[0];
+                if (new Date(tokenRow.expires_at) > new Date()) {
+                    (req as AuthenticatedRequest).tenantId = tokenRow.tenant_id;
+                    return next();
+                }
+                return res.status(401).json({ decision: "DENY", reason: "Temporary API key has expired. Visit your activation URL to get a new one." });
+            }
+        } catch (tempKeyErr) {
+            logger.error("[Gatekeeper] Temp key lookup error:", { error: tempKeyErr });
+        }
+        return res.status(401).json({ decision: "DENY", reason: "Unauthorized: Invalid temporary key." });
+    }
+
     if (!apiKey) {
         return res.status(401).json({
             decision: "DENY",

@@ -1,0 +1,48 @@
+{
+  "name": "suprawall-vault",
+  "version": "1.0.0",
+  "description": "SupraWall credential vault and security layer for Paperclip AI companies. Every agent gets only the credentials it's authorized to use, for only as long as it needs them.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src/skill.json",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "paperclip",
+    "paperclip-plugin",
+    "suprawall",
+    "ai-security",
+    "vault",
+    "credentials",
+    "agent-security",
+    "ai-agents",
+    "secret-management"
+  ],
+  "dependencies": {
+    "axios": "^1.7.9"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.2",
+    "@types/node": "^20.10.3"
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "paperclip"
+  },
+  "license": "Apache-2.0",
+  "author": "SupraWall <support@wiserautomation.agency>",
+  "homepage": "https://docs.supra-wall.com/paperclip",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wiserautomation/Supra-Wall-Private"
+  },
+  "bugs": {
+    "url": "https://github.com/wiserautomation/Supra-Wall-Private/issues"
+  }
+}

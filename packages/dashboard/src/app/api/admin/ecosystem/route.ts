@@ -57,13 +57,57 @@ export async function GET(req: NextRequest) {
             trendMap[d][row.source] = parseInt(row.count);
         });
 
+        // --- 4. Fetch Ecosystem PR Statuses (Live from GitHub) ---
+        const prsToTrack = [
+            { repo: "crewAIInc/awesome-crewai", number: 49, label: "CrewAI Awesome" },
+            { repo: "e2b-dev/awesome-ai-agents", number: 696, label: "e2b AI Agents" },
+            { repo: "e2b-dev/awesome-ai-sdks", number: 133, label: "e2b AI SDKs" },
+            { repo: "corca-ai/awesome-llm-security", number: 137, label: "LLM Security" },
+            { repo: "Giskard-AI/awesome-ai-safety", number: 21, label: "Giskard Safety" },
+            { repo: "Joe-B-Security/awesome-prompt-injection", number: 37, label: "Prompt Injection" },
+            { repo: "chenryn/aiops-handbook", number: 8, label: "AIOps Handbook" },
+            { repo: "modelcontextprotocol/servers", number: 4295, label: "MCP Registry" },
+            { repo: "langgenius/dify-plugins", number: 2252, label: "Dify Marketplace" },
+            { repo: "run-llama/llama_index", number: 21311, label: "LlamaIndex Hub" },
+            { repo: "microsoft/autogen", number: 7541, label: "AutoGen Framework" }
+        ];
+
+        const ghToken = process.env.GITHUB_TOKEN || "ghu_zrNtK68eXzU7Aq4AoohmmTI0Ag4inr1UTVQW";
+        const prStatuses = await Promise.all(prsToTrack.map(async (pr) => {
+            try {
+                const ghRes = await fetch(`https://api.github.com/repos/${pr.repo}/pulls/${pr.number}`, {
+                    headers: {
+                        "Authorization": `token ${ghToken}`,
+                        "Accept": "application/vnd.github.v3+json",
+                        "User-Agent": "SupraWall-Ecosystem-Tracker"
+                    },
+                    next: { revalidate: 300 } // Cache for 5 minutes
+                });
+                if (ghRes.ok) {
+                    const data = await ghRes.json();
+                    return {
+                        id: pr.number,
+                        label: pr.label,
+                        repo: pr.repo,
+                        status: data.merged ? "merged" : data.state,
+                        url: data.html_url,
+                        updated_at: data.updated_at
+                    };
+                }
+                return { id: pr.number, label: pr.label, repo: pr.repo, status: "unknown", url: `https://github.com/pulls/${pr.number}` };
+            } catch (err) {
+                return { id: pr.number, label: pr.label, repo: pr.repo, status: "error", url: "" };
+            }
+        }));
+
         return NextResponse.json({
             huggingface: hfStats,
             pluginUsage: usageRes.rows.map(r => ({
                 source: r.source,
                 count: parseInt(r.count)
             })),
-            adoptionTrend: Object.values(trendMap)
+            adoptionTrend: Object.values(trendMap),
+            registryPRs: prStatuses
         });
 
     } catch (error: any) {

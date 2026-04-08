@@ -26,7 +26,7 @@ import { gatekeeperAuth } from "./auth";
 import { rateLimit } from "./rate-limit";
 import gdprRouter from "./routes/gdpr";
 import awsMarketplaceRouter from "./routes/aws-marketplace";
-
+import paperclipRouter from "./routes/paperclip";
 
 // NOTE: stripe-app routes are part of SupraWall Cloud (proprietary).
 // See: https://github.com/suprawall/suprawall-cloud
@@ -39,7 +39,15 @@ const port = process.env.PORT || 3000;
 // Security headers (HSTS, XSS protection, no-sniff, etc.)
 app.use(helmet());
 
-// Global Middleware
+// ---------------------------------------------------------------------------
+// Paperclip webhook MUST be registered before express.json() so the handler
+// receives the raw Buffer needed for HMAC signature verification.
+// All other Paperclip routes (onboard, invoke, status, run-token) use the
+// global express.json() parser that is applied below.
+// ---------------------------------------------------------------------------
+app.use("/v1/paperclip", paperclipRouter);
+
+// Global JSON body parser — applied to all remaining routes
 const allowedOrigins = [
     'https://www.supra-wall.com',
     'https://supra-wall.com',
@@ -125,6 +133,17 @@ app.use("/v1/members", membersRouter);
 // AWS Marketplace Integration Routes (Registration URL + SNS webhook + Entitlement check)
 app.use("/v1/aws", awsMarketplaceRouter);
 
+// Paperclip: Agent Invoke — top-level alias so Paperclip agents call /v1/agent/invoke
+// Rate-limited at the outer level; auth + tier enforcement are inside the router.
+app.post(
+    "/v1/agent/invoke",
+    rateLimit({ max: 120, windowMs: 60_000, message: "Agent invoke rate limit exceeded." }),
+    (req, res, next) => {
+        req.url = "/invoke";
+        paperclipRouter(req, res, next);
+    }
+);
+
 // Export the app for Vercel
 export default app;
 
@@ -153,10 +172,7 @@ if (process.env.NODE_ENV !== 'test' && (process.env.NODE_ENV !== "production" ||
     if (require.main === module) {
         start();
     }
-}
- else {
+} else {
     // On Vercel, we still need to ensure DB is initialized
-    // We can do this at the top level or per-request. 
-    // Top-level await is supported in modern Node on Vercel.
     initDb().catch(err => logger.error("Database initialization failed", { error: err }));
 }

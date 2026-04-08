@@ -13,6 +13,7 @@ class SupraWallEnforceTool(Tool):
             "apiKey": api_key,
             "toolName": "agent_output",
             "arguments": {"content": content},
+            "framework": "dify",
             "source": "dify-plugin",
         }
 
