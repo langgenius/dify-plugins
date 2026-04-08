@@ -25,9 +25,7 @@ import {
     DollarSign,
     Filter
 } from "lucide-react";
-
-// Add official admin emails here
-const ADMIN_EMAILS = ["peghin@gmail.com"];
+import { getAdminEmails } from "@/lib/auth-config";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const [user, loading] = useAuthState(auth);
@@ -38,7 +36,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         if (!loading) {
             if (!user) {
                 router.push("/login");
-            } else if (user.email && !ADMIN_EMAILS.includes(user.email)) {
+            } else if (user.email && !getAdminEmails().includes(user.email)) {
                 // Not an admin, redirect to normal dashboard
                 router.push("/dashboard");
             } else {

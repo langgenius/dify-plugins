@@ -12,13 +12,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Shield, ArrowRight, Lock, Mail, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-
-const ADMIN_EMAILS = ["peghin@gmail.com"];
+import { getAuthMode, getAdminEmails } from "@/lib/auth-config";
 
 export default function LoginPage() {
+    const authMode = getAuthMode();
+    const adminEmails = getAdminEmails();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const isRegistering = false; // Registration disabled
+    const [isRegistering, setIsRegistering] = useState(false);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
@@ -29,8 +30,7 @@ export default function LoginPage() {
         setIsLoading(true);
         try {
             if (isRegistering) {
-                // For stealth launch: DISABLE registration for non-admins
-                if (!ADMIN_EMAILS.includes(email)) {
+                if (authMode === "stealth" && !adminEmails.includes(email)) {
                     setError("Public registration is currently closed. Please join our beta waitlist.");
                     setIsLoading(false);
                     setTimeout(() => router.push("/beta"), 2000);
@@ -41,15 +41,14 @@ export default function LoginPage() {
             } else {
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
-                
-                if (user.email && !ADMIN_EMAILS.includes(user.email)) {
-                    // Log out if not an admin during stealth launch
+
+                if (authMode === "stealth" && user.email && !adminEmails.includes(user.email)) {
                     await auth.signOut();
                     setError("Authorized personnel only. Redirecting to beta...");
                     setTimeout(() => router.push("/beta"), 2000);
                     return;
                 }
-                
+
                 sendGAEvent('event', 'login', { method: 'email' });
             }
             router.push("/dashboard");
@@ -103,10 +102,12 @@ export default function LoginPage() {
                     <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />
 
                     <h2 className="text-2xl font-black text-white italic uppercase tracking-tight mb-2">
-                        {isRegistering ? "Create Operator Account" : "Operator Login"}
+                        {isRegistering ? "Create Account" : (authMode === "stealth" ? "Operator Login" : "Sign In")}
                     </h2>
                     <p className="text-[9px] font-black uppercase tracking-[0.2em] text-emerald-500/60 mb-8 italic">
-                        Stealth Launch Active • Authorized Admins Only
+                        {authMode === "stealth"
+                            ? "Stealth Launch Active \u2022 Authorized Admins Only"
+                            : isRegistering ? "Self-Hosted Instance \u2022 Create Your Account" : "Self-Hosted Instance \u2022 Sign In to Continue"}
                     </p>
 
                     <form onSubmit={handleAuth} className="space-y-6">
@@ -172,9 +173,19 @@ export default function LoginPage() {
                     </form>
 
                     <div className="mt-10 text-center">
-                        <p className="text-[10px] font-black uppercase tracking-[0.1em] text-neutral-600 italic">
-                            Authorized Access Only • System Locked
-                        </p>
+                        {authMode === "open" ? (
+                            <button
+                                type="button"
+                                onClick={() => { setIsRegistering(!isRegistering); setError(""); }}
+                                className="text-[10px] font-black uppercase tracking-[0.1em] text-emerald-500/60 italic hover:text-emerald-400 transition-colors"
+                            >
+                                {isRegistering ? "Already have an account? Sign in" : "Don\u2019t have an account? Create one"}
+                            </button>
+                        ) : (
+                            <p className="text-[10px] font-black uppercase tracking-[0.1em] text-neutral-600 italic">
+                                Authorized Access Only &bull; System Locked
+                            </p>
+                        )}
                     </div>
                 </div>
 

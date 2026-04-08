@@ -9,7 +9,8 @@ import { sendGAEvent } from "@next/third-parties/google";
 import { 
     Shield, ArrowRight, ChevronDown, KeyRound, DollarSign, 
     ShieldCheck, EyeOff, FileText, Bug, Book, Workflow, 
-    Users, Globe, ShieldAlert, Zap, Layers, Code2, Lock, Github
+    Users, Globe, ShieldAlert, Zap, Layers, Code2, Lock, Github,
+    ListCheck
 } from "lucide-react";
 import Link from "next/link";
 import { Locale } from "../i18n/config";
@@ -31,6 +32,7 @@ export function Navbar({ lang = 'en', dictionary }: { lang?: Locale, dictionary?
         { href: prefix("/features/pii-shield"), icon: <EyeOff className="w-4 h-4 text-purple-400" />, label: "PII Shield", desc: "Outbound data scrubbing" },
         { href: prefix("/features/audit-trail"), icon: <FileText className="w-4 h-4 text-cyan-400" />, label: "Audit Trail", desc: "Regulator evidence reports" },
         { href: prefix("/features/prompt-shield"), icon: <Bug className="w-4 h-4 text-rose-400" />, label: "Injection Shield", desc: "SDK binary protection" },
+        { href: prefix("/compliance-templates"), icon: <ListCheck className="w-4 h-4 text-emerald-400" />, label: "Annex III Templates", desc: "Sector-specific configs" },
     ];
 
     const resources = [
@@ -51,6 +53,7 @@ export function Navbar({ lang = 'en', dictionary }: { lang?: Locale, dictionary?
         { href: prefix("/for-compliance-officers"), icon: <ShieldCheck className="w-4 h-4 text-blue-400" />, label: "For Compliance", desc: "Regulator evidence" },
         { href: prefix("/for-enterprise"), icon: <Globe className="w-4 h-4 text-purple-400" />, label: "For Enterprise", desc: "Fleet-wide control" },
         { href: prefix("/gdpr"), icon: <Lock className="w-4 h-4 text-rose-400" />, label: "GDPR & Privacy", desc: "PII protection" },
+        { href: prefix("/compliance-templates"), icon: <Shield className="w-4 h-4 text-blue-400" />, label: "Sector Templates", desc: "High-risk AI Act ready" },
     ];
 
     const integrations = [
@@ -130,8 +133,8 @@ export function Navbar({ lang = 'en', dictionary }: { lang?: Locale, dictionary?
                     </Link>
 
                     <div className="flex items-center gap-3">
-                        <Link 
-                            href={prefix("/login")} 
+                        <Link
+                            href="/login"
                             onClick={() => sendGAEvent('event', 'nav_cta_click', { type: 'deploy_cloud' })}
                             className="px-5 py-2.5 bg-white text-black font-black rounded-xl hover:bg-neutral-200 transition-all shadow-[0_4px_20px_rgba(255,255,255,0.15)] active:scale-95 flex items-center gap-2"
                         >
