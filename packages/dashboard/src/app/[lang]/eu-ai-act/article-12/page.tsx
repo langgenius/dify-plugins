@@ -1,8 +1,6 @@
 // Copyright 2026 SupraWall Contributors
 // SPDX-License-Identifier: Apache-2.0
 
-"use client";
-
 import { Navbar } from "@/components/Navbar";
 import { Shield, FileText, ArrowRight, Zap, ListCheck, Activity } from "lucide-react";
 import Link from "next/link";

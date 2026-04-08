@@ -51,7 +51,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         }
     }, [user, loading, router]);
 
-    if (loading || !user || (user.email && !ADMIN_EMAILS.includes(user.email))) {
+    if (loading || !user || (user.email && !getAdminEmails().includes(user.email))) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-black text-white">
                 <div className="flex flex-col items-center gap-4">

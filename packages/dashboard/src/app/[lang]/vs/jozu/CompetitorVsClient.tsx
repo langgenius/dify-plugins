@@ -10,7 +10,7 @@ import {
     X, Check, Info, MousePointer2, Layers, Cpu
 } from "lucide-react";
 import Link from "next/link";
-import { TagBadge } from "../../../HomeClient";
+import { TagBadge } from "@/app/HomeClient";
 
 interface CompetitorProps {
     competitor: string;

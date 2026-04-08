@@ -19,7 +19,8 @@
     "company": "Empresa",
     "pricing": "Precios",
     "frameworks": "Frameworks",
-    "platforms": "Platforms & Models"
+    "platforms": "Platforms & Models",
+    "awsMarketplace": "AWS Marketplace"
   },
   "home": {
     "hero": {
@@ -109,36 +110,78 @@
       "cta": "Implement AI Act Shield"
     }
   },
-
-  "euAiActPillar": {
-    "hero": {
-      "badge": "Hoja de ruta de cumplimiento de la Ley de IA de la UE para agosto de 2026",
-      "title": "La Ley de IA de la UE y",
-      "emphasis": "Agentes de IA.",
-      "description": "La aplicación de la ley comienza el 2 de agosto de 2026. Los agentes de IA autónomos se clasifican explícitamente como sistemas de IA de alto riesgo. Las multas alcanzan los 30 millones de euros. Aquí tienes tu hoja de ruta completa de cumplimiento."
-    },
-    "countdown": {
-      "days": "Días",
-      "hours": "Horas",
-      "minutes": "Minutos",
-      "seconds": "Segundos",
-      "label": "Hasta la aplicación del 2 de agosto de 2026"
-    },
-    "articles": {
-      "title": "Los 4 Artículos Críticos",
-      "subtitle": "Los artículos 9, 12 y 14 son los pilares técnicos para los agentes de IA autónomos.",
-      "a9": { "title": "Gestión de Riesgos", "desc": "El artículo 9 exige un sistema de gestión de riesgos continuo durante todo el ciclo de vida." },
-      "a12": { "title": "Mantenimiento de Registros", "desc": "El artículo 12 exige el registro automático de eventos para los sistemas de IA de alto riesgo." },
-      "a14": { "title": "Vigilancia Humana", "desc": "El artículo 14 exige que la IA de alto riesgo permita una vigilancia eficaz." }
-    }
-  },
   "compliance": {
     "hero": {
       "badge": "Enterprise Ready",
+      "title": "One SDK.",
+      "emphasis": "Universal Compliance.",
+      "description": "SupraWall maps every autonomous agent tool call to specific regulatory requirements. Automate your compliance reporting and de-risk your AI transformation.",
       "titlePrefix": "EU AI Act",
       "titleEmphasis": "Compliance.",
-      "titleSuffix": "Solved.",
-      "description": "SupraWall maps every autonomous agent tool call to specific regulatory requirements. Automate your compliance reporting and de-risk your AI transformation."
+      "titleSuffix": "Solved."
+    },
+    "regulations": {
+      "title": "The Full Regulatory Stack",
+      "subtitle": "Direct features mapping to every enforcement deadline.",
+      "headers": {
+        "reg": "Regulation",
+        "deadline": "Enforcement",
+        "fine": "Max Fine",
+        "feature": "SupraWall Feature"
+      },
+      "rows": {
+        "euAiAct": {
+          "name": "EU AI Act",
+          "deadline": "Aug 2, 2026",
+          "fine": "€35M / 7%",
+          "feature": "Policy Engine, Audit Trail, HITL"
+        },
+        "gdpr": {
+          "name": "GDPR",
+          "deadline": "Active NOW",
+          "fine": "€20M / 4%",
+          "feature": "PII Shield, Audit Trail"
+        },
+        "nis2": {
+          "name": "NIS2",
+          "deadline": "Oct 2026",
+          "fine": "€10M / 2%",
+          "feature": "Incident logging, controls"
+        },
+        "dora": {
+          "name": "DORA",
+          "deadline": "Active NOW",
+          "fine": "1% daily income",
+          "feature": "Risk mgmt, audit trail"
+        },
+        "iso": {
+          "name": "ISO 42001",
+          "deadline": "Procurement",
+          "fine": "ROI / Sales",
+          "feature": "AIMS lifecycle docs"
+        }
+      }
+    },
+    "matrix": {
+      "title": "The Compliance Matrix",
+      "subtitle": "Every article. Every requirement. Every piece of evidence.",
+      "headers": {
+        "article": "Article",
+        "requirement": "Requirement",
+        "feature": "SupraWall Feature",
+        "evidence": "Evidence Generated"
+      }
+    },
+    "cta": {
+      "title": "The AI Compliance Evidence Kit",
+      "description": "Integrate SupraWall with any LLM framework and automate your Articles 12 & 14 requirements today.",
+      "cta": "Get Evidence Kit",
+      "checker": "Start Compliance Checker",
+      "titlePrefix": "Make Your Agents",
+      "titleEmphasis": "Legal-Proof",
+      "titleSuffix": "in One Line.",
+      "bookAudit": "Book Compliance Audit",
+      "viewDocs": "View Documentation"
     },
     "articles": {
       "art12": {
@@ -190,14 +233,37 @@
           }
         }
       }
+    }
+  },
+  "euAiActPillar": {
+    "hero": {
+      "badge": "Hoja de ruta de cumplimiento de la Ley de IA de la UE para agosto de 2026",
+      "title": "La Ley de IA de la UE y",
+      "emphasis": "Agentes de IA.",
+      "description": "La aplicación de la ley comienza el 2 de agosto de 2026. Los agentes de IA autónomos se clasifican explícitamente como sistemas de IA de alto riesgo. Las multas alcanzan los 30 millones de euros. Aquí tienes tu hoja de ruta completa de cumplimiento."
     },
-    "cta": {
-      "titlePrefix": "Make Your Agents",
-      "titleEmphasis": "Legal-Proof",
-      "titleSuffix": "in One Line.",
-      "description": "Integrate SupraWall with any LLM framework and automate your Articles 12 & 14 requirements today.",
-      "bookAudit": "Book Compliance Audit",
-      "viewDocs": "View Documentation"
+    "countdown": {
+      "days": "Días",
+      "hours": "Horas",
+      "minutes": "Minutos",
+      "seconds": "Segundos",
+      "label": "Hasta la aplicación del 2 de agosto de 2026"
+    },
+    "articles": {
+      "title": "Los 4 Artículos Críticos",
+      "subtitle": "Los artículos 9, 12 y 14 son los pilares técnicos para los agentes de IA autónomos.",
+      "a9": {
+        "title": "Gestión de Riesgos",
+        "desc": "El artículo 9 exige un sistema de gestión de riesgos continuo durante todo el ciclo de vida."
+      },
+      "a12": {
+        "title": "Mantenimiento de Registros",
+        "desc": "El artículo 12 exige el registro automático de eventos para los sistemas de IA de alto riesgo."
+      },
+      "a14": {
+        "title": "Vigilancia Humana",
+        "desc": "El artículo 14 exige que la IA de alto riesgo permita una vigilancia eficaz."
+      }
     }
   },
   "features": {
@@ -937,6 +1003,18 @@
       "description": "Don't leak user data to external API providers. Activate the PII shield and operate your agents with confidence.",
       "cta": "Implementar SDK ahora",
       "guide": "Leer la guía para desarrolladores de GDPR"
+    },
+    "deep": {
+      "titles": {
+        "art5": "Art. 5(1)(c): Data Minimization",
+        "art22": "Art. 22: Automated Decisions",
+        "art30": "Art. 30: ROPA Records"
+      },
+      "desc": {
+        "art5": "The PII Shield automatically redacts Names, SSNs, and Emails from tool call parameters before they leave your network, ensuring compliance with data minimization mandates.",
+        "art22": "SupraWall's Human-in-the-Loop (HITL) protocol ensures that high-impact agentic actions are reviewed by a human operator, satisfying Article 22's oversight requirements.",
+        "art30": "The immutable, RSA-signed audit trail serves as the primary record for all agentic data processing activities, directly feeding your ROPA reports."
+      }
     }
   },
   "qa": {

@@ -11,7 +11,7 @@ import {
     ShieldAlert, Globe, Server, FileText
 } from "lucide-react";
 import Link from "next/link";
-import { TagBadge } from "../HomeClient";
+import { TagBadge } from "@/app/HomeClient";
 
 export default function SecurityTrustClient() {
     return (

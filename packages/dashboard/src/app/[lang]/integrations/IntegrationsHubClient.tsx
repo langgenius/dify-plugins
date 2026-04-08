@@ -9,7 +9,7 @@ import {
     Share2, Workflow, Box, ShieldCheck, Database
 } from "lucide-react";
 import Link from "next/link";
-import { TagBadge } from "../HomeClient";
+import { TagBadge } from "@/app/HomeClient";
 
 const INTEGRATION_CARDS = [
     {

@@ -27,6 +27,7 @@ import { rateLimit } from "./rate-limit";
 import gdprRouter from "./routes/gdpr";
 import awsMarketplaceRouter from "./routes/aws-marketplace";
 import paperclipRouter from "./routes/paperclip";
+import templatesRouter from "./routes/templates";
 
 // NOTE: stripe-app routes are part of SupraWall Cloud (proprietary).
 // See: https://github.com/suprawall/suprawall-cloud
@@ -90,6 +91,9 @@ app.post("/v1/scrub", gatekeeperAuth, scrubToolResponse);
 
 // Compliance Routes
 app.use("/v1/compliance", complianceRouter);
+
+// Templates Routes
+app.use("/v1/templates", templatesRouter);
 
 // Scan Routes (CI/CD)
 app.use("/v1/scan", scanRouter);

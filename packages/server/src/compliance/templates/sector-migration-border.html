@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>EU AI Act Annex III - Migration & Border Compliance Report</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #ffffff;
+            background-color: #09090b;
+            margin: 0;
+            padding: 40px;
+            line-height: 1.6;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1.5px solid rgba(255,255,255,0.1);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            font-style: italic;
+            text-transform: uppercase;
+        }
+        .logo span {
+            color: #10b981;
+        }
+        .report-info {
+            text-align: right;
+            font-size: 12px;
+            color: #71717a;
+        }
+        h1 {
+            font-weight: 900;
+            font-size: 32px;
+            margin: 0;
+            text-transform: uppercase;
+            font-style: italic;
+            letter-spacing: -1px;
+            color: #ffffff;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: #10b981;
+            margin-bottom: 10px;
+        }
+        .card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th {
+            text-align: left;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #71717a;
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        td {
+            font-size: 13px;
+            padding: 12px 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #10b981;
+        }
+        .stat-label {
+            font-size: 10px;
+            color: #71717a;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 5px;
+        }
+        .footer {
+            margin-top: 50px;
+            font-size: 10px;
+            color: #3f3f46;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 20px;
+        }
+        .decision-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .decision-ALLOW {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+        .decision-DENY {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">SUPRA<span>WALL</span></div>
+        <div class="report-info">
+            Issued: {{issueDate}}<br>
+            Tenant ID: {{tenantId}}<br>
+            Report ID: {{reportId}}
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Regulatory Framework</div>
+        <h1>EU AI Act Annex III Sector: Migration & Border Compliance</h1>
+        <p style="color: #a1a1aa; font-size: 14px;">Migration & Border — specific controls mapped to Annex III category. Operational performance and forensic evidence of mitigation controls.</p>
+    </div>
+
+    <div class="section">
+        <div class="stat-grid">
+            <div class="stat-card">
+                <div class="stat-value">{{totalEvaluations}}</div>
+                <div class="stat-label">Total Actions Evaluated</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{threatsBlocked}}</div>
+                <div class="stat-label">Threats Mitigated</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{complianceScore}}%</div>
+                <div class="stat-label">Risk Scoring Index</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Operational History</div>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Agent</th>
+                        <th>Tool Name</th>
+                        <th>Risk Score</th>
+                        <th>Decision</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each events}}
+                    <tr>
+                        <td style="color: #71717a;">{{timestamp}}</td>
+                        <td style="font-weight: 600;">{{agentName}}</td>
+                        <td style="font-family: monospace;">{{toolName}}</td>
+                        <td>{{riskScore}}/100</td>
+                        <td><span class="decision-badge decision-{{decision}}">{{decision}}</span></td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="footer">
+        Confidential Compliance Documentation | RSA Hash: {{signature}} | Generated via SupraWall Runtime Enforcement
+    </div>
+</body>
+</html>

@@ -11,7 +11,8 @@ import {
   ArrowRight,
   Database,
   Terminal,
-  FileCheck2
+  FileCheck2,
+  History
 } from "lucide-react";
 import Link from "next/link";
 

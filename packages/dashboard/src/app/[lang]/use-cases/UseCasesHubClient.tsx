@@ -9,7 +9,7 @@ import {
     Layers, Globe, Briefcase, Heart, Scale
 } from "lucide-react";
 import Link from "next/link";
-import { TagBadge } from "../HomeClient";
+import { TagBadge } from "@/app/HomeClient";
 
 const USE_CASE_CARDS = [
     {

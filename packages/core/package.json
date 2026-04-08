@@ -19,6 +19,16 @@
   },
   "author": "SupraWall",
   "license": "Apache-2.0",
+  "browser": "./dist/browser.js",
+  "exports": {
+    ".": {
+      "browser": "./dist/browser.js",
+      "default": "./dist/index.js"
+    },
+    "./templates": "./dist/src/templates/sector-templates.js",
+    "./types": "./dist/src/templates/types.js",
+    "./baseline": "./dist/src/templates/baseline-controls.js"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.101.1",
     "mongodb": "^7.1.1",

@@ -119,10 +119,14 @@ export default function GdprClient({ dictionary, lang }: { dictionary: any, lang
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
                         <div className="space-y-8">
                             <TagBadge>GDPR Art. 5(1)(c)</TagBadge>
-                            <h2 className="text-5xl md:text-6xl font-black uppercase italic tracking-tighter leading-none">{t.deep.minimization.title}</h2>
-                            <p className="text-xl text-neutral-400 font-medium italic">{t.deep.minimization.description}</p>
+                            <h2 className="text-5xl md:text-6xl font-black uppercase italic tracking-tighter leading-none">{t.deep.titles.art5}</h2>
+                            <p className="text-xl text-neutral-400 font-medium italic">{t.deep.desc.art5}</p>
                             <ul className="space-y-6">
-                                {t.deep.minimization.list.map((item: string, i: number) => (
+                                {[
+                                    "Automated identification of PII in tool call payloads.",
+                                    "Deterministic redaction before data leaves server.",
+                                    "Custom exclusion patterns for sensitive sectors."
+                                ].map((item: string, i: number) => (
                                     <li key={i} className="flex gap-4 items-start">
                                         <div className="mt-1 p-1 bg-purple-500/20 rounded-full"><CheckCircle2 className="w-4 h-4 text-purple-500" /></div>
                                         <span className="text-neutral-300 font-bold uppercase text-xs tracking-tight">{item}</span>
@@ -168,10 +172,14 @@ export default function GdprClient({ dictionary, lang }: { dictionary: any, lang
                         </div>
                         <div className="space-y-8">
                             <TagBadge>GDPR Art. 22</TagBadge>
-                            <h2 className="text-5xl md:text-6xl font-black uppercase italic tracking-tighter leading-none">{t.deep.decision.title}</h2>
-                            <p className="text-xl text-neutral-400 font-medium italic">{t.deep.decision.description}</p>
+                            <h2 className="text-5xl md:text-6xl font-black uppercase italic tracking-tighter leading-none">{t.deep.titles.art22}</h2>
+                            <p className="text-xl text-neutral-400 font-medium italic">{t.deep.desc.art22}</p>
                             <ul className="space-y-6">
-                                {t.deep.decision.list.map((item: string, i: number) => (
+                                {[
+                                    "Mandatory human review for automated high-impact actions.",
+                                    "Zero-trust tool execution boundaries.",
+                                    "Real-time policy interception and denial."
+                                ].map((item: string, i: number) => (
                                     <li key={i} className="flex gap-4 items-start">
                                         <div className="mt-1 p-1 bg-emerald-500/20 rounded-full"><CheckCircle2 className="w-4 h-4 text-emerald-500" /></div>
                                         <span className="text-neutral-300 font-bold uppercase text-xs tracking-tight">{item}</span>
@@ -185,10 +193,14 @@ export default function GdprClient({ dictionary, lang }: { dictionary: any, lang
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
                         <div className="space-y-8">
                             <TagBadge>GDPR Art. 30</TagBadge>
-                            <h2 className="text-5xl md:text-6xl font-black uppercase italic tracking-tighter leading-none">{t.deep.records.title}</h2>
-                            <p className="text-xl text-neutral-400 font-medium italic">{t.deep.records.description}</p>
+                            <h2 className="text-5xl md:text-6xl font-black uppercase italic tracking-tighter leading-none">{t.deep.titles.art30}</h2>
+                            <p className="text-xl text-neutral-400 font-medium italic">{t.deep.desc.art30}</p>
                             <ul className="space-y-6">
-                                {t.deep.records.list.map((item: string, i: number) => (
+                                {[
+                                    "RSA-signed audit logs for all agent behavior.",
+                                    "Tamper-proof record of data processing activities.",
+                                    "One-click ROPA reporting for audit readiness."
+                                ].map((item: string, i: number) => (
                                     <li key={i} className="flex gap-4 items-start">
                                         <div className="mt-1 p-1 bg-blue-500/20 rounded-full"><CheckCircle2 className="w-4 h-4 text-blue-500" /></div>
                                         <span className="text-neutral-300 font-bold uppercase text-xs tracking-tight">{item}</span>

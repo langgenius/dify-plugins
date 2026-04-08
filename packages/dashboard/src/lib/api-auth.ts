@@ -1,6 +1,4 @@
-// Copyright 2026 SupraWall Contributors
-// SPDX-License-Identifier: Apache-2.0
-
+import "server-only";
 import { NextRequest, NextResponse } from 'next/server';
 import { getAdminAuth } from './firebase-admin';
 

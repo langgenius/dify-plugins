@@ -176,3 +176,34 @@ CREATE TABLE IF NOT EXISTS tenant_data_keys (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(tenant_id, subject_id)
 );
+
+-- ══════════════════════════════════════════════════════════════
+-- Compliance Templates
+-- ══════════════════════════════════════════════════════════════
+
+-- Track which template(s) are applied to each agent (Point-in-Time Snapshots)
+CREATE TABLE IF NOT EXISTS agent_templates (
+  id SERIAL PRIMARY KEY,
+  agent_id TEXT NOT NULL,
+  template_id VARCHAR(50) NOT NULL,
+  version VARCHAR(20) NOT NULL DEFAULT '1.0.0',
+  priority_order INT DEFAULT 0,
+  applied_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  applied_by VARCHAR(255),
+  custom_overrides JSONB DEFAULT '{}',
+  is_active BOOLEAN DEFAULT TRUE,
+  UNIQUE(agent_id, template_id, version)
+);
+
+-- Template compliance status per agent
+CREATE TABLE IF NOT EXISTS template_compliance_status (
+  id SERIAL PRIMARY KEY,
+  agent_id TEXT NOT NULL,
+  template_id VARCHAR(50) NOT NULL,
+  control_id VARCHAR(50) NOT NULL,
+  status VARCHAR(20) DEFAULT 'pending', -- pending, compliant, non_compliant, partial
+  last_checked TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  evidence JSONB DEFAULT '{}',
+  UNIQUE(agent_id, template_id, control_id)
+);
+

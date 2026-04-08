@@ -20,7 +20,10 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@suprawall/core": ["../core/index.ts"]
+      "@suprawall/core": ["../core/index.ts"],
+      "@suprawall/core/templates": ["../core/src/templates/sector-templates.ts"],
+      "@suprawall/core/types": ["../core/types.ts"],
+      "@suprawall/core/baseline": ["../core/src/templates/baseline-controls.ts"]
     }
   },
   "include": [

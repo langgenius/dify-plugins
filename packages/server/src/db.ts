@@ -325,6 +325,29 @@ export const initDb = async () => {
                 count INTEGER NOT NULL,
                 reset_at BIGINT NOT NULL
             )`,
+            // Compliance Templates (Snapshot versioning)
+            `CREATE TABLE IF NOT EXISTS agent_templates (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                agent_id TEXT NOT NULL,
+                template_id TEXT NOT NULL,
+                version TEXT NOT NULL DEFAULT '1.0.0',
+                priority_order INTEGER DEFAULT 0,
+                applied_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                applied_by TEXT,
+                custom_overrides TEXT DEFAULT '{}',
+                is_active INTEGER DEFAULT 1,
+                UNIQUE(agent_id, template_id, version)
+            )`,
+            `CREATE TABLE IF NOT EXISTS template_compliance_status (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                agent_id TEXT NOT NULL,
+                template_id TEXT NOT NULL,
+                control_id TEXT NOT NULL,
+                status TEXT DEFAULT 'pending',
+                last_checked DATETIME DEFAULT CURRENT_TIMESTAMP,
+                evidence TEXT DEFAULT '{}',
+                UNIQUE(agent_id, template_id, control_id)
+            )`,
             // Insert seed data so the dashboard is not empty
             `INSERT OR IGNORE INTO tenants (id, name, tier) VALUES ('default', 'SupraWall Org', 'business')`,
             `INSERT OR IGNORE INTO agents (id, tenantid, name, status) VALUES ('agent_1', 'default', 'LinkedIn Manager', 'active')`,
@@ -673,11 +696,35 @@ export const initDb = async () => {
         CREATE INDEX IF NOT EXISTS idx_paperclip_run_tokens_run ON paperclip_run_tokens(run_id);
         CREATE INDEX IF NOT EXISTS idx_paperclip_run_tokens_agent ON paperclip_run_tokens(agent_id);
 
-        -- Rate limiting — created at startup, not per-request
         CREATE TABLE IF NOT EXISTS api_rate_limits (
             key TEXT PRIMARY KEY,
             count INTEGER NOT NULL,
             reset_at BIGINT NOT NULL
+        );
+
+        -- Compliance Templates
+        CREATE TABLE IF NOT EXISTS agent_templates (
+            id SERIAL PRIMARY KEY,
+            agent_id VARCHAR(255) NOT NULL,
+            template_id VARCHAR(50) NOT NULL,
+            version VARCHAR(20) NOT NULL DEFAULT '1.0.0',
+            priority_order INTEGER DEFAULT 0,
+            applied_at TIMESTAMP DEFAULT NOW(),
+            applied_by VARCHAR(255),
+            custom_overrides JSONB DEFAULT '{}',
+            is_active BOOLEAN DEFAULT TRUE,
+            UNIQUE(agent_id, template_id, version)
+        );
+
+        CREATE TABLE IF NOT EXISTS template_compliance_status (
+            id SERIAL PRIMARY KEY,
+            agent_id VARCHAR(255) NOT NULL,
+            template_id VARCHAR(50) NOT NULL,
+            control_id VARCHAR(50) NOT NULL,
+            status VARCHAR(50) DEFAULT 'pending',
+            last_checked TIMESTAMP DEFAULT NOW(),
+            evidence JSONB DEFAULT '{}',
+            UNIQUE(agent_id, template_id, control_id)
         );
     `;
     await pool.query(query);

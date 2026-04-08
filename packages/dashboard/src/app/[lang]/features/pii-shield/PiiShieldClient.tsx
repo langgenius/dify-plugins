@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { TagBadge } from "../../../HomeClient";
+import { TagBadge } from "@/app/HomeClient";
 
 // ── Comparison Table Data ──
 

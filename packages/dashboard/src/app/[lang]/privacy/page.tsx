@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { Shield, Lock, Eye, FileText, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
+import { Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
     title: "Privacy Policy | SupraWall",

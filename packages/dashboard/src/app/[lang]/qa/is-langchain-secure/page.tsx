@@ -46,7 +46,7 @@ export default async function IsLangChainSecurePage({
 
                     {/* 📋 KEY VULNERABILITIES */}
                     <section className="space-y-8 pt-12">
-                        <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-neutral-600">{dictionary.common.security}</h2>
+                        <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-neutral-600">{dictionary.common.title}</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {[
                                 { title: dictionary.qa.isLangChainSecure.risk1Title, desc: dictionary.qa.isLangChainSecure.risk1Desc, icon: <Terminal className="w-4 h-4" /> },

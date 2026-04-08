@@ -68,7 +68,7 @@ export default async function Page({
         <div className="min-h-screen bg-black">
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
             <Navbar lang={lang} dictionary={dictionary} />
-            <ComplianceClient dictionary={dictionary} />
+            <ComplianceClient dictionary={dictionary} lang={lang} />
         </div>
     );
 }

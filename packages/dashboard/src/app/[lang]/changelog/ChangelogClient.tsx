@@ -10,7 +10,7 @@ import {
     Plus, Search, Box, Share2, Globe
 } from "lucide-react";
 import Link from "next/link";
-import { TagBadge } from "../HomeClient";
+import { TagBadge } from "@/app/HomeClient";
 
 const CHANGELOG_ITEMS = [
     {

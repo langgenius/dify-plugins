@@ -1,7 +1,4 @@
-// Copyright 2026 SupraWall Contributors
-// SPDX-License-Identifier: Apache-2.0
-
-
+import "server-only";
 import { db } from './firebase-admin';
 import * as crypto from 'crypto';
 

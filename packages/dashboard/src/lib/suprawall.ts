@@ -1,24 +1,24 @@
 // Copyright 2026 SupraWall Contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { suprawall as suprawall } from "@suprawall/core";
-import { db } from "./firebase";
+/**
+ * CLIENT-SAFE MOCK
+ * This file replaces the real suprawall initialization during client-side bundling.
+ * It prevents the bundler from following imports into the @suprawall/core package
+ * which may transitively pull in Node.js-only modules like 'pg' or 'firebase-admin'.
+ */
 
-// Configure SupraWall Core to use the Firebase abstraction
-// We tell it to use "firebase" adapter, but also pass the existing initialized `db` explicitly 
-// so it shares the same connection as the rest of the application.
-suprawall.config({
-    adapter: "firebase"
-});
-
-// Since we are already initializing firebase in lib/firebase.ts for Auth and other parts,
-// we just pass the db object down into the adapter to reuse it!
-if (typeof window !== "undefined") {
-    if (!(db as any)._isMock) {
-        suprawall.__interop_setAdapterDb(db);
-    } else {
-        console.error("SupraWall: Cannot set adapter DB because Firebase is not initialized correctly.");
+export const suprawall: any = {
+    config: () => { console.warn("SupraWall: config() called on client-side mock. Initialization skipped."); },
+    registerAdapter: () => {},
+    agents: {
+        create: async () => { throw new Error("SupraWall: agents.create() is not available on the client-side."); },
+        get: async () => { throw new Error("SupraWall: agents.get() is not available on the client-side."); },
+        update: async () => { throw new Error("SupraWall: agents.update() is not available on the client-side."); },
+        delete: async () => { throw new Error("SupraWall: agents.delete() is not available on the client-side."); },
+        list: async () => { throw new Error("SupraWall: agents.list() is not available on the client-side."); },
     }
-}
+};
 
-export { suprawall };
+export class SupabaseAdapter {}
+export class FirebaseAdapter {}

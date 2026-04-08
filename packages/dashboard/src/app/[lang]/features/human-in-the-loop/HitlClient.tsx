@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { TagBadge } from "../../../HomeClient";
+import { TagBadge } from "@/app/HomeClient";
 
 const COMPARISON_DATA = [
     { feature: "Primary Defense", prompt: "Agent 'decides' if it needs help (Hallucination risk)", supra: "SDK-level Interception (Binary Mandatory)" },

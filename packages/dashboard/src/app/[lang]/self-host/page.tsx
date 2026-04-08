@@ -12,7 +12,7 @@ import {
     ArrowRight, Globe, Lock, Code2, Server, Github 
 } from "lucide-react";
 import Link from "next/link";
-import { TagBadge } from "../HomeClient";
+import { TagBadge } from "@/app/HomeClient";
 
 export default function SelfHostPage() {
     const router = useRouter();

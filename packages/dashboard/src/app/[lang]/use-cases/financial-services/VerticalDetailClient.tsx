@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { TagBadge } from "../../HomeClient";
+import { TagBadge } from "@/app/HomeClient";
 
 export default function VerticalDetailClient() {
     const [activeTab, setActiveTab] = useState("insecure");

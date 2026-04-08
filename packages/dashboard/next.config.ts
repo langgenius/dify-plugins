@@ -7,6 +7,24 @@ import path from "path";
 import { SLUG_MAP } from "./src/i18n/slug-map";
 
 const nextConfig: NextConfig = {
+  // Tell Next.js/Turbopack to NEVER bundle these packages — load them via
+  // Node.js native require() at runtime on the server instead. This is the
+  // correct fix for grpc/firebase-admin transitive dependency leakage.
+  serverExternalPackages: [
+    'firebase-admin',
+    '@google-cloud/firestore',
+    '@google-cloud/storage',
+    '@grpc/grpc-js',
+    '@grpc/proto-loader',
+    'google-gax',
+    'google-auth-library',
+    '@google/genai',
+    '@google-analytics/data',
+    'protobufjs',
+    'pg',
+    'pg-native',
+    'sqlite3',
+  ],
   async rewrites() {
     const routes: any[] = [];
     for (const [internalSlug, mapping] of Object.entries(SLUG_MAP)) {
@@ -41,27 +59,39 @@ const nextConfig: NextConfig = {
     ];
   },
   transpilePackages: [
-    "@suprawall/core",
     "react-remove-scroll",
     "use-sync-external-store",
     "web-streams-polyfill"
   ],
-  webpack: (config) => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      "@suprawall/core": path.resolve(__dirname, "../core/index.ts"),
-      "firebase/app": require.resolve("firebase/app"),
-      "firebase/firestore": require.resolve("firebase/firestore"),
-      "firebase/auth": require.resolve("firebase/auth"),
-    };
+  webpack: (config, { isServer }) => {
+    // For client bundles: stub out any Node.js-only modules that may be
+    // transitively referenced but never actually executed on the client.
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        pg: false,
+        sqlite3: false,
+        "firebase-admin": false,
+        "@grpc/grpc-js": false,
+        "grpc": false,
+        net: false,
+        tls: false,
+        fs: false,
+        dns: false,
+        crypto: false,
+        path: false,
+        os: false,
+        stream: false,
+        constants: false,
+        http2: false,
+        zlib: false,
+        child_process: false,
+      };
+    }
     return config;
   },
   turbopack: {
     resolveAlias: {
-      "@suprawall/core": "../core/index.ts",
-      "firebase/app": "firebase/app",
-      "firebase/firestore": "firebase/firestore",
-      "firebase/auth": "firebase/auth",
       // Force recharts to use its CJS lib bundle (avoids ESM d3-shape → d3-path issue)
       recharts: "recharts/lib/index.js",
       "web-streams-polyfill/dist/ponyfill.es2018.js": "web-streams-polyfill/dist/ponyfill.js",

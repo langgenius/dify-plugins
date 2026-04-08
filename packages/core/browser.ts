@@ -12,22 +12,17 @@ export class SupraWall {
     private adapter: Adapter | null = null;
     private _connectionPromise: Promise<void> | null = null;
 
-    private configOptions: SupraWallConfig | null = null;
-    private adapters = new Map<string, any>();
-
-    registerAdapter(name: string, AdapterClass: any) {
-        this.adapters.set(name, AdapterClass);
-    }
-
     async config(config: SupraWallConfig) {
-        this.configOptions = config;
-
-        const AdapterClass = this.adapters.get(config.adapter);
-        if (!AdapterClass) {
-            throw new Error(`Adapter "${config.adapter}" is not registered.`);
+        switch (config.adapter) {
+            case "supabase":
+                this.adapter = new SupabaseAdapter();
+                break;
+            case "firebase":
+                this.adapter = new FirebaseAdapter();
+                break;
+            default:
+                throw new Error(`Adapter ${config.adapter} is not supported in the browser. Use a server-side entry point for SQL/Mongo adapters.`);
         }
-
-        this.adapter = new AdapterClass();
 
         if (config.connectionString && this.adapter) {
              this._connectionPromise = this.adapter.connect(config.connectionString);
@@ -58,7 +53,6 @@ export class SupraWall {
 }
 
 export const suprawall = new SupraWall();
-export { SupabaseAdapter, FirebaseAdapter };
 
 export * from "./types";
 export * from "./semantic";
