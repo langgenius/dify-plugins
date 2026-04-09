@@ -38,6 +38,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 router.push("/login");
             } else if (user.email && !getAdminEmails().includes(user.email)) {
                 // Not an admin, redirect to normal dashboard
+                console.log("[SupraWall Admin] Access denied for:", user.email, "Admin whitelist:", getAdminEmails());
                 router.push("/dashboard");
             } else {
                 // Register admin in Firestore so they appear in standard tables

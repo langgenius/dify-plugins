@@ -44,6 +44,7 @@ export default function LoginPage() {
 
                 if (authMode === "stealth" && user.email && !adminEmails.includes(user.email)) {
                     await auth.signOut();
+                    console.log("[SupraWall Login] Non-admin login attempt blocked in stealth mode:", user.email, "Allowed:", adminEmails);
                     setError("Authorized personnel only. Redirecting to beta...");
                     setTimeout(() => router.push("/beta"), 2000);
                     return;
