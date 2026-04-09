@@ -111,7 +111,7 @@ export const SECTOR_TEMPLATES: SectorTemplate[] = [
       { toolname: "benefit_denial", ruletype: "DENY", description: "Cannot autonomously deny health benefits" },
       { toolname: "*", ruletype: "REQUIRE_APPROVAL", condition: "(patient|ehr|medical.record|health.record).*(write|update|modify|create)", description: "Medical record modifications require clinician approval" },
       { toolname: "*", ruletype: "REQUIRE_APPROVAL", condition: "(dosage|prescription|medic[ai]tion|drug.order)", description: "Medication and prescription actions require physician sign-off" },
-      { toolname: "*", ruletype: "REQUIRE_APPROVAL", condition: "(diagnos[ei]|treatment.plan|clinical.decision)", description: "Clinical decisions must be reviewed by a qualified professional" },
+      { toolname: "*", ruletype: "REQUIRE_APPROVAL", condition: "(diagnos(is|e|es|ing)|treatment[._-]?plan|clinical[._-]?decision|clinical[._-]?recommendation)", description: "Clinical decisions must be reviewed by a qualified professional" },
       { toolname: "*", ruletype: "DENY", condition: "(send|share|transmit|export).*patient", description: "Block unauthorised sharing of patient data" }
     ]
   },
@@ -177,9 +177,9 @@ export const SECTOR_TEMPLATES: SectorTemplate[] = [
   },
   {
     id: "banking-finance",
-    annexCategory: 5,
+    annexCategory: null,  // DORA compliance (not EU AI Act Annex III)
     name: "Banking & Finance",
-    description: "AI systems for credit scoring and evaluation of creditworthiness.",
+    description: "AI systems for credit scoring and evaluation of creditworthiness. DORA-regulated sector (Digital Operational Resilience Act).",
     complianceDeadline: "2026-08-02",
     conformityAssessment: "self",
     riskLevel: "high",

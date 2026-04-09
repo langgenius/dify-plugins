@@ -53,6 +53,14 @@ export async function POST(req: NextRequest) {
             { status: 400 }
         );
     }
+
+    // Block free tier from checkout (no payment required)
+    if (plan === 'developer') {
+        return NextResponse.json(
+            { error: "Developer tier is free — no checkout required." },
+            { status: 400 }
+        );
+    }
     if (!companyId || typeof companyId !== "string") {
         return NextResponse.json({ error: "Missing companyId" }, { status: 400 });
     }

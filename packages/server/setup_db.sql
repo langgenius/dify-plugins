@@ -1,3 +1,6 @@
+-- Enum Types
+CREATE TYPE IF NOT EXISTS compliance_status AS ENUM ('pending', 'compliant', 'non_compliant', 'partial');
+
 -- Agents
 CREATE TABLE IF NOT EXISTS agents (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -184,7 +187,7 @@ CREATE TABLE IF NOT EXISTS tenant_data_keys (
 -- Track which template(s) are applied to each agent (Point-in-Time Snapshots)
 CREATE TABLE IF NOT EXISTS agent_templates (
   id SERIAL PRIMARY KEY,
-  agent_id TEXT NOT NULL,
+  agent_id TEXT NOT NULL REFERENCES agents(id) ON DELETE CASCADE,
   template_id VARCHAR(50) NOT NULL,
   version VARCHAR(20) NOT NULL DEFAULT '1.0.0',
   priority_order INT DEFAULT 0,
@@ -192,16 +195,17 @@ CREATE TABLE IF NOT EXISTS agent_templates (
   applied_by VARCHAR(255),
   custom_overrides JSONB DEFAULT '{}',
   is_active BOOLEAN DEFAULT TRUE,
-  UNIQUE(agent_id, template_id, version)
+  UNIQUE(agent_id, template_id, version),
+  CONSTRAINT valid_semver CHECK (version ~ '^\d+\.\d+\.\d+$')
 );
 
 -- Template compliance status per agent
 CREATE TABLE IF NOT EXISTS template_compliance_status (
   id SERIAL PRIMARY KEY,
-  agent_id TEXT NOT NULL,
+  agent_id TEXT NOT NULL REFERENCES agents(id) ON DELETE CASCADE,
   template_id VARCHAR(50) NOT NULL,
   control_id VARCHAR(50) NOT NULL,
-  status VARCHAR(20) DEFAULT 'pending', -- pending, compliant, non_compliant, partial
+  status compliance_status DEFAULT 'pending',
   last_checked TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   evidence JSONB DEFAULT '{}',
   UNIQUE(agent_id, template_id, control_id)

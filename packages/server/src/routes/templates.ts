@@ -43,15 +43,15 @@ router.get("/status", gatekeeperAuth, async (req, res) => {
 
     // Group by agent
     const grouped = status.rows.reduce((acc, row) => {
-      if (!acc[row.agentid || row.agentId]) {
-        acc[row.agentid || row.agentId] = {
-          agentId: row.agentid || row.agentId,
+      if (!acc[row.agentid]) {
+        acc[row.agentid] = {
+          agentId: row.agentid,
           agentName: row.agentname,
           templates: []
         };
       }
-      
-      const agent = acc[row.agentid || row.agentId];
+
+      const agent = acc[row.agentid];
       let template = agent.templates.find((t: any) => t.id === row.template_id);
       if (!template) {
         template = { id: row.template_id, version: row.version, controls: [] };
@@ -120,6 +120,15 @@ router.post("/apply", gatekeeperAuth, async (req, res) => {
     return res.status(401).json({ error: "Unauthorized: Missing tenant context" });
   }
 
+  // Verify agent ownership (prevent cross-tenant template application)
+  const ownerCheck = await pool.query(
+    "SELECT id FROM agents WHERE id = $1 AND tenantid = $2",
+    [agentId, tenantId]
+  );
+  if (!ownerCheck.rowCount || ownerCheck.rowCount === 0) {
+    return res.status(403).json({ error: "Agent not found or access denied" });
+  }
+
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
@@ -157,11 +166,12 @@ router.post("/apply", gatekeeperAuth, async (req, res) => {
       );
     }
 
-    // 4. Generate policy rules from template config
+    // 4. Generate policy rules from template config (with idempotency guard)
     for (const rule of template.policyRules) {
       await client.query(
         `INSERT INTO policies (tenantid, agentid, toolname, ruletype, condition, description)
-         VALUES ($1, $2, $3, $4, $5, $6)`,
+         VALUES ($1, $2, $3, $4, $5, $6)
+         ON CONFLICT (tenantid, agentid, toolname, ruletype, description) DO NOTHING`,
         [tenantId, agentId, rule.toolname, rule.ruletype, rule.condition || null, `[${template.name} v${version}] ${rule.description}`]
       );
     }

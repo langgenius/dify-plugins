@@ -60,8 +60,9 @@ router.post("/", adminAuth, resolveTier, validate(CreateAgentSchema), async (req
 
         const agentId = crypto.randomUUID();
         const apiKey = generateApiKey();
+        const apiKeyHash = crypto.createHash('sha256').update(apiKey).digest('hex');
         const finalScopes = scopes || ["*:*"];
-        
+
         // Guardrails mapping
         const max_cost_usd = guardrails?.budget?.limitUsd || 10;
         const budget_alert_usd = max_cost_usd * 0.8;
@@ -74,7 +75,7 @@ router.post("/", adminAuth, resolveTier, validate(CreateAgentSchema), async (req
             `INSERT INTO agents (id, tenantid, name, apikeyhash, scopes, max_cost_usd, budget_alert_usd, max_iterations)
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
              RETURNING id, name, createdat`,
-            [agentId, tenantId, name, apiKey, finalScopes, max_cost_usd, budget_alert_usd, max_iterations]
+            [agentId, tenantId, name, apiKeyHash, finalScopes, max_cost_usd, budget_alert_usd, max_iterations]
         );
 
         // 2. Save Blocked Tools as Policies
@@ -123,11 +124,11 @@ router.post("/", adminAuth, resolveTier, validate(CreateAgentSchema), async (req
             await db.collection("agents").doc(agentId).set({
                 name,
                 tenantId,
-                apiKey,
+                apiKeyHash,
                 scopes: finalScopes,
                 status: "active",
                 createdAt: new Date(),
-                userId: tenantId, 
+                userId: tenantId,
             });
         }
 
@@ -235,12 +236,13 @@ router.post("/:id/rotate-key", adminAuth, async (req: Request, res: Response) =>
         const tenantId = (req as AuthenticatedRequest).tenantId as string;
 
         const newApiKey = generateApiKey();
+        const newApiKeyHash = crypto.createHash('sha256').update(newApiKey).digest('hex');
 
         await client.query("BEGIN");
 
         const result = await client.query(
             "UPDATE agents SET apikeyhash = $1 WHERE id = $2 AND tenantid = $3 RETURNING id, name",
-            [newApiKey, id, tenantId]
+            [newApiKeyHash, id, tenantId]
         );
 
         if (result.rows.length === 0) {
@@ -248,10 +250,10 @@ router.post("/:id/rotate-key", adminAuth, async (req: Request, res: Response) =>
             return res.status(404).json({ error: "Agent not found" });
         }
 
-        // Sync new key to Firestore so gatekeeper runtime uses the new key immediately
+        // Sync new key to Firestore so gatekeeper runtime uses the new key hash immediately
         const db = getFirestore();
         if (db) {
-            await db.collection("agents").doc(id).update({ apiKey: newApiKey });
+            await db.collection("agents").doc(id).update({ apiKeyHash: newApiKeyHash });
         }
 
         await client.query("COMMIT");

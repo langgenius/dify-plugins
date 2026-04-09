@@ -26,25 +26,29 @@ router.get("/status", adminAuth, async (req: Request, res: Response) => {
 
         if (!tenantId) return res.status(400).json({ error: "Missing tenantId" });
 
-        const [approvalResult, auditResult, denyResult, oldestResult] = await Promise.all([
+        const [approvalResult, auditResult, denyResult, oldestResult, recentResult] = await Promise.all([
             pool.query("SELECT COUNT(*) FROM policies WHERE ruletype = 'REQUIRE_APPROVAL' AND tenantid = $1", [tenantId]),
             pool.query("SELECT COUNT(*) FROM audit_logs WHERE tenantid = $1", [tenantId]),
             pool.query("SELECT COUNT(*) FROM policies WHERE ruletype = 'DENY' AND tenantid = $1", [tenantId]),
             pool.query("SELECT MIN(timestamp) AS oldest FROM audit_logs WHERE tenantid = $1", [tenantId]),
+            pool.query("SELECT COUNT(*) FROM audit_logs WHERE tenantid = $1 AND timestamp >= NOW() - INTERVAL '24 hours'", [tenantId]),
         ]);
 
         const approvalPolicies = parseInt(approvalResult.rows[0].count, 10);
         const auditCount = parseInt(auditResult.rows[0].count, 10);
         const denyPolicies = parseInt(denyResult.rows[0].count, 10);
         const oldestDate: Date | null = oldestResult.rows[0].oldest;
+        const recentCount = parseInt(recentResult.rows[0].count, 10);
 
-        // Record keeping: need logs AND oldest log ≥ 30 days ago
+        // Record keeping: need (1) logs existing for 30+ days AND (2) recent logs in last 24h (confirming logs still being written)
         let recordStatus: "pass" | "partial" | "fail" = "fail";
         let recordDetail = "No audit logs found";
         if (auditCount > 0 && oldestDate) {
             const daysDiff = Math.floor((Date.now() - oldestDate.getTime()) / 86_400_000);
-            recordStatus = daysDiff >= 30 ? "pass" : "partial";
-            recordDetail = `Logs retained since ${oldestDate.toISOString().split("T")[0]}`;
+            const has30DayRetention = daysDiff >= 30;
+            const hasRecentLogs = recentCount > 0;
+            recordStatus = has30DayRetention && hasRecentLogs ? "pass" : "partial";
+            recordDetail = `Logs retained since ${oldestDate.toISOString().split("T")[0]}${!hasRecentLogs ? " (no recent logs in 24h)" : ""}`;
         }
 
         const checks = {
@@ -71,12 +75,20 @@ router.get("/status", adminAuth, async (req: Request, res: Response) => {
                 detail: recordDetail,
             },
             dataGovernance: {
-                status: "pass" as "pass",
-                detail: "Self-hosted deployment",
+                status: (denyPolicies > 0 && approvalPolicies > 0 && auditCount > 0 ? "pass" : (denyPolicies > 0 || approvalPolicies > 0 || auditCount > 0 ? "partial" : "fail")) as "pass" | "partial" | "fail",
+                detail: (denyPolicies > 0 && approvalPolicies > 0 && auditCount > 0)
+                    ? "Data governance controls enabled: policies + audit logging active"
+                    : (denyPolicies > 0 || approvalPolicies > 0 || auditCount > 0)
+                    ? `Partial: ${[denyPolicies > 0 ? "access controls" : "", approvalPolicies > 0 ? "approvals" : "", auditCount > 0 ? "logging" : ""].filter(Boolean).join(", ")}`
+                    : "No data governance controls configured",
             },
             incidentLogging: {
-                status: "partial" as "partial",
-                detail: "DENY events logged. Dedicated incident workflow coming soon.",
+                status: (denyPolicies > 0 ? "pass" : (auditCount > 0 ? "partial" : "fail")) as "pass" | "partial" | "fail",
+                detail: denyPolicies > 0
+                    ? `${denyPolicies} DENY ${denyPolicies === 1 ? "policy" : "policies"} configured (incidents detected)`
+                    : auditCount > 0
+                    ? `Audit logging active (${auditCount.toLocaleString()} events) but no incident policies defined`
+                    : "No incident response policies configured",
             },
         };
 
@@ -159,18 +171,35 @@ router.get("/report", adminAuth, resolveTier, async (req: Request, res: Response
         ]);
 
         const logs = auditResult.rows;
-        
+
+        // Calculate real compliance score from template_compliance_status
+        let complianceScore = 0;
+        try {
+            const scoreResult = await pool.query(
+                `SELECT COUNT(*) as total, SUM(CASE WHEN status = 'compliant' THEN 1 ELSE 0 END) as compliant FROM template_compliance_status WHERE agent_id = $1`,
+                [agentId || tenantId]
+            );
+            if (scoreResult.rows[0]?.total > 0) {
+                const total = parseInt(scoreResult.rows[0].total, 10);
+                const compliant = parseInt(scoreResult.rows[0].compliant || 0, 10);
+                complianceScore = Math.round((compliant / total) * 100);
+            }
+        } catch (e) {
+            logger.warn("[Compliance] Failed to calculate compliance score:", { error: e });
+            complianceScore = 0;
+        }
+
         // Prepare template data
         const reportId = randomUUID().substring(0, 8).toUpperCase();
         const dateStr = new Date().toISOString().split("T")[0];
-        
+
         const reportData: ComplianceReportData = {
             issueDate: new Date().toLocaleDateString(),
             tenantId: tenantId as string,
             reportId: `SW-COMP-${reportId}`,
             totalEvaluations: logs.length,
             threatsBlocked: logs.filter(l => l.decision === "DENY").length,
-            complianceScore: 100, // Placeholder calculation
+            complianceScore,
             signature: "", // Will be generated in pdf-generator
             events: logs.map(l => ({
                 timestamp: new Date(l.timestamp).toLocaleString(),
@@ -182,6 +211,24 @@ router.get("/report", adminAuth, resolveTier, async (req: Request, res: Response
         };
 
         const templateName = req.query.template as string || "eu-ai-act-article-9";
+
+        // Whitelist valid template names to prevent path traversal
+        const VALID_TEMPLATES = new Set([
+            'eu-ai-act-article-9',
+            'sector-hr-employment',
+            'sector-healthcare',
+            'sector-biometrics',
+            'sector-critical-infrastructure',
+            'sector-education',
+            'sector-law-enforcement',
+            'sector-migration-border',
+            'sector-justice-democracy'
+        ]);
+
+        if (!VALID_TEMPLATES.has(templateName)) {
+            return res.status(400).json({ error: "Invalid template name" });
+        }
+
         const pdf = await generateCompliancePDF(templateName, reportData);
 
         res.setHeader("Content-Type", "application/pdf");

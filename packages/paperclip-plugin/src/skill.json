@@ -17,7 +17,7 @@
     "signatureHeader": "X-Paperclip-Signature"
   },
   "invoke": {
-    "url": "https://api.supra-wall.com/v1/agent/invoke",
+    "url": "https://api.supra-wall.com/v1/paperclip/invoke",
     "method": "POST",
     "fields": ["agentId", "companyId", "role", "runId"]
   },

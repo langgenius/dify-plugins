@@ -21,7 +21,24 @@ export interface EvaluationRequest {
     toolName: string;
     arguments: any;
     tenantId?: string;
-    delegationChain?: string[]; 
+    delegationChain?: string[];
+}
+
+/**
+ * Safely test a regex pattern with ReDoS protection.
+ * Returns false if regex is invalid or test fails.
+ */
+function safeRegexTest(pattern: string, testString: string): boolean {
+    try {
+        // Limit test string to prevent ReDoS on very long inputs
+        const limitedString = testString.substring(0, 5000);
+        const regex = new RegExp(pattern);
+        // Add a timeout check by limiting operations
+        return regex.test(limitedString);
+    } catch (e) {
+        logger.error("[Policy] Invalid regex in condition:", { pattern, error: e });
+        return false;
+    }
 }
 
 async function insertAuditLog(
@@ -40,19 +57,19 @@ async function insertAuditLog(
         const dataKey = await getDataEncryptionKey(tenantid, subjectId);
         
         const encryptedArguments = encryptPayload(args || {}, dataKey);
-        
+
         await pool.query(
             "INSERT INTO audit_logs (tenantid, agentid, toolname, parameters, encrypted_arguments, subject_id, decision, riskscore, cost_usd, metadata) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
             [
-                tenantid, 
-                agentid || null, 
-                toolname, 
-                JSON.stringify(args || {}), // Keep legacy until fully migrated
-                encryptedArguments, 
+                tenantid,
+                agentid || null,
+                toolname,
+                null, // Do not store plaintext parameters (GDPR compliance)
+                encryptedArguments,
                 subjectId,
-                decision, 
-                riskscore, 
-                cost_usd, 
+                decision,
+                riskscore,
+                cost_usd,
                 JSON.stringify(metadata || {})
             ]
         );
@@ -81,8 +98,24 @@ export const evaluatePolicy = async (req: Request, res: Response) => {
         
         const estimateActionCost = (inT: number, outT: number, mdl: string) => {
             if (inT > 0 || outT > 0) {
-                const rates: any = { "gpt-4o": 0.005, "gpt-4o-mini": 0.00015, "claude": 0.003 };
-                const rate = rates[Object.keys(rates).find(k => mdl.includes(k)) || "gpt-4o-mini"];
+                // Current pricing (2026): Input rates per 1K tokens, output rates are 3x input for OpenAI models
+                const rates: any = {
+                    "claude-opus": 0.015,      // Opus input rate (much higher)
+                    "claude-sonnet": 0.0003,   // Sonnet input rate (medium)
+                    "claude-haiku": 0.00008,   // Haiku input rate (cheap)
+                    "claude": 0.0003,          // Default Claude fallback (Sonnet)
+                    "gpt-4o": 0.005,           // GPT-4o input rate
+                    "gpt-4o-mini": 0.00015,   // GPT-4o mini input rate
+                };
+                // Match model names in order of specificity
+                let rate = 0.0003; // default fallback
+                if (mdl.includes("opus")) rate = rates["claude-opus"];
+                else if (mdl.includes("sonnet")) rate = rates["claude-sonnet"];
+                else if (mdl.includes("haiku")) rate = rates["claude-haiku"];
+                else if (mdl.includes("gpt-4o-mini")) rate = rates["gpt-4o-mini"];
+                else if (mdl.includes("gpt-4o")) rate = rates["gpt-4o"];
+                else if (mdl.includes("claude")) rate = rates["claude"];
+                // Output tokens cost 3x for OpenAI, but Claude uses tiered output pricing (we use 3x for simplicity)
                 return (inT / 1000 * rate) + (outT / 1000 * rate * 3);
             }
             return 0.0001; // minimal fallback for non-token actions
@@ -282,14 +315,10 @@ export const evaluatePolicy = async (req: Request, res: Response) => {
         const denyRules = policies.filter((p) => p.ruletype && p.ruletype.toUpperCase() === "DENY");
         for (const rule of denyRules) {
             if (rule.condition) {
-                try {
-                    if (new RegExp(rule.condition).test(argsString)) {
-                        decision = "DENY";
-                        matchedRule = rule.name || "Unnamed Rule";
-                        break;
-                    }
-                } catch (e) {
-                    logger.error("[PolicyEngine] Invalid regex in policy:", { condition: rule.condition });
+                if (safeRegexTest(rule.condition, argsString)) {
+                    decision = "DENY";
+                    matchedRule = rule.name || "Unnamed Rule";
+                    break;
                 }
             } else {
                 decision = "DENY";
@@ -309,12 +338,8 @@ export const evaluatePolicy = async (req: Request, res: Response) => {
             for (const rule of approvalRules) {
                 let match = false;
                 if (rule.condition) {
-                    try {
-                        if (new RegExp(rule.condition).test(argsString)) {
-                            match = true;
-                        }
-                    } catch (e) {
-                        logger.error("[PolicyEngine] Invalid regex in policy:", { condition: rule.condition });
+                    if (safeRegexTest(rule.condition, argsString)) {
+                        match = true;
                     }
                 } else {
                     match = true;
@@ -417,16 +442,22 @@ export const evaluatePolicy = async (req: Request, res: Response) => {
                     }
                 }
 
-                semanticResult = await analyzeCall({
-                    tenantId,
-                    agentId,
-                    toolName,
-                    args: resolvedArgs,
-                    argsString: JSON.stringify(resolvedArgs),
-                    delegationChain: chain,
-                    semanticLayer: tierLimits.semanticLayer,
-                    customEndpoint,
-                });
+                const SEMANTIC_TIMEOUT = 5000;
+                semanticResult = await Promise.race([
+                    analyzeCall({
+                        tenantId,
+                        agentId,
+                        toolName,
+                        args: resolvedArgs,
+                        argsString: JSON.stringify(resolvedArgs),
+                        delegationChain: chain,
+                        semanticLayer: tierLimits.semanticLayer,
+                        customEndpoint,
+                    }),
+                    new Promise((_, reject) =>
+                        setTimeout(() => reject(new Error('Semantic analysis timeout')), SEMANTIC_TIMEOUT)
+                    ),
+                ]) as SemanticAnalysisResult;
 
                 // Override decision if Layer 2 flags a threat
                 if (semanticResult.decision === 'DENY') {

@@ -104,7 +104,13 @@ export async function processGDPRErasure(
 
     const wasKeyPresent = (delRes.rowCount || 0) > 0;
 
-    // 2. Log the erasure receipt
+    // 2. Null out plaintext parameters in audit_logs for this subject (GDPR Article 17)
+    await pool.query(
+        `UPDATE audit_logs SET parameters = NULL WHERE tenant_id = $1 AND subject_id = $2`,
+        [tenantId, subjectId]
+    );
+
+    // 3. Log the erasure receipt
     const receipt = {
         erasureId: uuid(),
         tenantId,

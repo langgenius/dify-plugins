@@ -122,26 +122,31 @@ router.post(
             ? apiUrl.slice(0, 500)
             : (process.env.PAPERCLIP_API_URL || "https://api.paperclipai.com");
 
-        // Check if company already onboarded
-        const existing = await pool.query(
-            "SELECT tenant_id FROM paperclip_companies WHERE paperclip_company_id = $1",
-            [sanitizedCompanyId]
-        );
-        if (existing.rows.length > 0) {
-            // Re-issue a fresh temp key instead of erroring out
-            const tempKey = generateTempKey();
-            const expiresAt = new Date(Date.now() + 72 * 60 * 60 * 1000);
-            await pool.query(
-                `INSERT INTO paperclip_tokens (id, token, tenant_id, paperclip_company_id, tier, expires_at)
-                 VALUES ($1, $2, $3, $4, $5, $6)`,
-                [crypto.randomUUID(), tempKey, existing.rows[0].tenant_id, sanitizedCompanyId, "developer", expiresAt]
+        try {
+            // Check if company already onboarded
+            const existing = await pool.query(
+                "SELECT tenant_id FROM paperclip_companies WHERE paperclip_company_id = $1",
+                [sanitizedCompanyId]
             );
-            return res.json({
-                status: "already_onboarded",
-                tempApiKey: tempKey,
-                activationUrl: `https://supra-wall.com/activate?token=${tempKey}`,
-                docsUrl: "https://docs.supra-wall.com/paperclip",
-            });
+            if (existing.rows.length > 0) {
+                // Re-issue a fresh temp key instead of erroring out
+                const tempKey = generateTempKey();
+                const expiresAt = new Date(Date.now() + 72 * 60 * 60 * 1000);
+                await pool.query(
+                    `INSERT INTO paperclip_tokens (id, token, tenant_id, paperclip_company_id, tier, expires_at)
+                     VALUES ($1, $2, $3, $4, $5, $6)`,
+                    [crypto.randomUUID(), tempKey, existing.rows[0].tenant_id, sanitizedCompanyId, "developer", expiresAt]
+                );
+                return res.json({
+                    status: "already_onboarded",
+                    tempApiKey: tempKey,
+                    activationUrl: `https://supra-wall.com/activate?token=${tempKey}`,
+                    docsUrl: "https://docs.supra-wall.com/paperclip",
+                });
+            }
+        } catch (e) {
+            logger.error("[Paperclip] Onboard re-onboard check error:", { error: e });
+            return res.status(500).json({ error: "Internal Server Error during onboarding" });
         }
 
         // Fetch agent list from Paperclip API if key provided; otherwise use agentCount
@@ -155,7 +160,18 @@ router.post(
                 });
                 if (resp.ok) {
                     const data = await resp.json() as any;
-                    agents = Array.isArray(data) ? data : (data.agents || []);
+                    const rawAgents = Array.isArray(data) ? data : (data.agents || []);
+                    
+                    // H-3: Validate and sanitize agent data from Paperclip API
+                    // Ensure IDs are valid UUIDs and roles/names are sanitized strings
+                    agents = rawAgents
+                        .filter((a: any) => a && typeof a === "object")
+                        .map((a: any) => {
+                            const id = (typeof a.id === "string" && a.id.match(/^[0-9a-f-]{36}$/i)) ? a.id : crypto.randomUUID();
+                            const role = (typeof a.role === "string" ? a.role.slice(0, 32).replace(/[^a-z0-9_-]/gi, "") : "agent").toLowerCase();
+                            const name = (typeof a.name === "string" ? a.name.slice(0, 100).trim() : `${role} Agent`);
+                            return { id, role, name };
+                        });
                 }
             } catch (e) {
                 logger.warn("[Paperclip] Failed to fetch agents from Paperclip API:", e);
@@ -472,7 +488,7 @@ router.post(
                 expiresAt: expiresAt.toISOString(),
                 allowedTools,
                 authorizedSecrets: secretNames,  // names only, no values
-                resolveUrl: `https://api.supra-wall.com/v1/vault/run-token/${runTokenId}`,
+                resolveUrl: `${process.env.SUPRAWALL_PUBLIC_URL || "https://api.supra-wall.com"}/v1/vault/run-token/${runTokenId}`,
             });
         } catch (e) {
             logger.error("[Paperclip] Invoke error:", { error: e });
@@ -507,7 +523,7 @@ router.get(
         try {
             // Look up the run token — must belong to this tenant, be valid, and not revoked
             const tokenResult = await pool.query(
-                `SELECT id, agent_id, run_id, scoped_credentials, expires_at, revoked
+                `SELECT id, agent_id, run_id, scoped_credentials, expires_at, revoked, consumed
                  FROM paperclip_run_tokens
                  WHERE id = $1 AND tenant_id = $2`,
                 [runTokenId, tenantId]
@@ -521,6 +537,10 @@ router.get(
 
             if (tokenRow.revoked) {
                 return res.status(410).json({ error: "Run token has been revoked" });
+            }
+
+            if (tokenRow.consumed) {
+                return res.status(410).json({ error: "Run token has already been used" });
             }
 
             if (new Date(tokenRow.expires_at) < new Date()) {
@@ -544,6 +564,15 @@ router.get(
 
             // Decrypt only the authorized secrets for this agent
             const isPostgres = !!process.env.DATABASE_URL && !process.env.DATABASE_URL.includes("sqlite");
+
+            // Refuse to serve secrets on unencrypted SQLite in production
+            if (!isPostgres && process.env.NODE_ENV === 'production') {
+                logger.error("[Paperclip] Refusing to serve vault secrets over unencrypted SQLite in production");
+                return res.status(503).json({
+                    error: "Vault requires PostgreSQL in production. SQLite is for local development only."
+                });
+            }
+
             const credentials: Record<string, string> = {};
 
             if (isPostgres) {
@@ -582,6 +611,14 @@ router.get(
                     "INJECTED",
                     JSON.stringify({ runTokenId, runId: tokenRow.run_id, secretCount: Object.keys(credentials).length })
                 ]
+            );
+
+            // Mark token as consumed (one-time use only)
+            await pool.query(
+                `UPDATE paperclip_run_tokens
+                 SET consumed = TRUE, consumed_at = NOW()
+                 WHERE id = $1 AND tenant_id = $2`,
+                [runTokenId, tenantId]
             );
 
             return res.json({
@@ -751,7 +788,15 @@ router.post(
                 })();
 
                 logger.info(`[Paperclip] Agent hired: ${agentId} (${agent.role}) → tenant: ${tenantId}`);
-                return res.json({ success: true, event, agentId, credentialsGranted: allowedCredentials });
+                
+                // H-1: Return the raw API key to Paperclip so it can be injected into the agent's environment
+                return res.json({ 
+                    success: true, 
+                    event, 
+                    agentId, 
+                    agentApiKey, // Raw key returned ONCE
+                    credentialsGranted: allowedCredentials 
+                });
             }
 
             // ----------------------------------------------------------------
@@ -888,8 +933,12 @@ router.post(
 // GET /v1/paperclip/status — Check integration status for a company
 // ---------------------------------------------------------------------------
 
-router.get("/status", adminAuth, async (req: Request, res: Response) => {
-    try {
+router.get(
+    "/status",
+    gatekeeperAuth,
+    rateLimit({ max: 5, windowMs: 60_000, message: "Too many status checks. Please wait." }),
+    async (req: Request, res: Response) => {
+        try {
         const tenantId = (req as AuthenticatedRequest).tenantId;
 
         const [companyResult, agentResult, tokenResult] = await Promise.all([

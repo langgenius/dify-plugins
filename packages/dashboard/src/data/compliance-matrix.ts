@@ -11,7 +11,7 @@ export interface ComplianceEntry {
   suprawallFeature: SupraWallFeature[]
   evidenceGenerated: string
   severity: 'critical' | 'high' | 'medium'
-  deadline: string         // "2026-08-02" | "active"
+  deadline: string | "active" | "procurement-driven"  // ISO date string like "2026-08-02", or special status
   sectors?: string[]       // ["finance", "healthcare"] — undefined = all sectors
 }
 

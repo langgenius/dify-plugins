@@ -6,14 +6,14 @@ export interface BaselineControl {
   article: string;
   name: string;
   description: string;
-  enforcement: string;
+  enforcement: "flag" | "logging" | "prompt" | "retention" | "disclosure" | "gate" | "alert" | "audit" | "display" | "check" | "dashboard" | "tracker" | "DENY" | "REQUIRE_APPROVAL";
 }
 
 export interface SectorOverride {
   id: string;
   name: string;
   description: string;
-  enforcement: string;
+  enforcement: "flag" | "logging" | "prompt" | "retention" | "disclosure" | "gate" | "alert" | "audit" | "display" | "check" | "dashboard" | "tracker" | "DENY" | "REQUIRE_APPROVAL";
 }
 
 export interface PolicyRule {
@@ -26,7 +26,7 @@ export interface PolicyRule {
 
 export interface SectorTemplate {
   id: string;                          // e.g., "hr-employment"
-  annexCategory: number;               // 1–8
+  annexCategory: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | null;  // 1–8 (EU AI Act), or null for non-Annex sectors
   name: string;
   description: string;
   complianceDeadline: string;          // ISO date

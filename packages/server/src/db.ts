@@ -315,6 +315,8 @@ export const initDb = async () => {
                 expires_at DATETIME NOT NULL,
                 revoked INTEGER DEFAULT 0,
                 revoked_at DATETIME,
+                consumed INTEGER DEFAULT 0,
+                consumed_at DATETIME,
                 UNIQUE(tenant_id, agent_id, run_id)
             )`,
             `CREATE INDEX IF NOT EXISTS idx_paperclip_run_tokens_run ON paperclip_run_tokens(run_id)`,
@@ -691,8 +693,20 @@ export const initDb = async () => {
             expires_at TIMESTAMP NOT NULL,
             revoked BOOLEAN DEFAULT FALSE,
             revoked_at TIMESTAMP,
+            consumed BOOLEAN DEFAULT FALSE,
+            consumed_at TIMESTAMP,
             UNIQUE(tenant_id, agent_id, run_id)
         );
+
+        -- Ensure modern consumed columns exist for existing deployments
+        DO $$ BEGIN
+            IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='paperclip_run_tokens' AND column_name='consumed') THEN
+                ALTER TABLE paperclip_run_tokens ADD COLUMN consumed BOOLEAN DEFAULT FALSE;
+            END IF;
+            IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='paperclip_run_tokens' AND column_name='consumed_at') THEN
+                ALTER TABLE paperclip_run_tokens ADD COLUMN consumed_at TIMESTAMP;
+            END IF;
+        END $$;
         CREATE INDEX IF NOT EXISTS idx_paperclip_run_tokens_run ON paperclip_run_tokens(run_id);
         CREATE INDEX IF NOT EXISTS idx_paperclip_run_tokens_agent ON paperclip_run_tokens(agent_id);
 

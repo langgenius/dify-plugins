@@ -36,7 +36,7 @@ export class SupraWallClient {
      */
     async invoke(request: InvokeRequest): Promise<InvokeResponse | UpgradeError> {
         try {
-            const response = await this.http.post<InvokeResponse>("/v1/agent/invoke", request);
+            const response = await this.http.post<InvokeResponse>("/v1/paperclip/invoke", request);
             return response.data;
         } catch (err) {
             const axiosErr = err as AxiosError<any>;

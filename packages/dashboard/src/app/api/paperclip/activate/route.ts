@@ -44,7 +44,6 @@ export async function GET(request: NextRequest) {
             agentCount: row.agent_count || 0,
             tier: row.tier,
             alreadyActivated: row.activated,
-            activationEmail: row.activation_email || null,
             expiresAt: row.expires_at,
         });
     } catch (err) {
@@ -94,6 +93,14 @@ export async function POST(request: NextRequest) {
 
         if (new Date(row.expires_at) < new Date()) {
             return NextResponse.json({ error: "Token expired" }, { status: 410 });
+        }
+
+        // Prevent re-activation (idempotency)
+        if (row.activated) {
+            return NextResponse.json(
+                { error: "This account has already been activated." },
+                { status: 409 }
+            );
         }
 
         // Mark token as activated and capture email

@@ -209,6 +209,21 @@ router.post("/secrets/bulk", adminAuth, resolveTier, async (req: Request, res: R
 
         const stats = { created: [] as any[], skipped: [] as any[], errors: [] as any[] };
 
+        // Check tier limit once before the loop (prevent race condition)
+        const countRes = await pool.query("SELECT COUNT(*) FROM vault_secrets WHERE tenant_id = $1", [tenantId]);
+        const currentCount = parseInt(countRes.rows[0].count, 10);
+        const remaining = tierLimits.maxVaultSecrets - currentCount;
+
+        if (remaining <= 0) {
+            return res.status(403).json({
+                error: "Tier secret limit reached",
+                maxSecrets: tierLimits.maxVaultSecrets,
+                currentCount: currentCount
+            });
+        }
+
+        let processedCount = 0;
+
         for (const item of secrets) {
             const { secretName, secretValue, description, expiresAt, assignedAgents } = item;
 
@@ -217,14 +232,13 @@ router.post("/secrets/bulk", adminAuth, resolveTier, async (req: Request, res: R
                 continue;
             }
 
-            try {
-                // Tier check inside loop (could be optimized)
-                const countRes = await pool.query("SELECT COUNT(*) FROM vault_secrets WHERE tenant_id = $1", [tenantId]);
-                if (parseInt(countRes.rows[0].count, 10) >= tierLimits.maxVaultSecrets) {
-                    stats.errors.push({ secretName, error: "Tier limit reached" });
-                    break; 
+            // Stop processing if we've hit tier limit
+            if (processedCount >= remaining) {
+                stats.errors.push({ secretName, error: "Tier limit reached" });
+                break; 
                 }
 
+            try {
                 const result = await pool.query(
                     `INSERT INTO vault_secrets (tenant_id, secret_name, encrypted_value, description, expires_at, assigned_agents)
                      VALUES ($1, $2, pgp_sym_encrypt($3, $4), $5, $6, $7)
@@ -247,6 +261,7 @@ router.post("/secrets/bulk", adminAuth, resolveTier, async (req: Request, res: R
                 }
 
                 stats.created.push(secret);
+                processedCount++;
             } catch (e: any) {
                 if (e.code === "23505") {
                     stats.skipped.push({ secretName });

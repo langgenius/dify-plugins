@@ -21,7 +21,18 @@ export const CreatePolicySchema = z.object({
     ruleType,
     toolName:    optionalStr(200),
     description: optionalStr(500),
-    condition:   optionalStr(1000),
+    condition:   optionalStr(1000).refine(
+        (val) => {
+            if (!val) return true;
+            try {
+                new RegExp(val);
+                return true;
+            } catch {
+                return false;
+            }
+        },
+        "Condition must be a valid regex pattern"
+    ),
     tenantId:    optionalStr(100),
 });
 
@@ -38,7 +49,7 @@ export const UpdateTenantSchema = z.object({
 }).refine(obj => Object.keys(obj).length > 0, { message: "At least one field required" });
 
 export const CreateVaultSecretSchema = z.object({
-    secretName:  nonEmptyStr(100).regex(/^[A-Z][A-Z0-9_]{2,63}$/, "Secret name must be uppercase alphanumeric with underscores"),
+    secretName:  nonEmptyStr(100).regex(/^[A-Za-z][A-Za-z0-9_]{2,63}$/, "Secret name must start with a letter and contain only alphanumeric characters and underscores"),
     secretValue: nonEmptyStr(10_000),
     tenantId:    optionalStr(100),
     expiresAt:   z.string().datetime({ offset: true }).optional(),
