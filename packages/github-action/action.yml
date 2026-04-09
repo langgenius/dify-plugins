@@ -1,5 +1,5 @@
 name: 'Suprawall Scan'
-description: 'Policy enforcement for AI agent code — runs Suprawall security checks before deployment'
+description: 'Secret detection and static analysis for AI agent code — enforces runtime security policies and prevents credential leaks in CI/CD pipelines.'
 author: 'Suprawall'
 
 branding:
