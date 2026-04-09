@@ -6,3 +6,4 @@ openai
 requests
 huggingface_hub
 python-dotenv
+duckduckgo-search

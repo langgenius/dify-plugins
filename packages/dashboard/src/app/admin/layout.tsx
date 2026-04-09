@@ -25,7 +25,7 @@ import {
     DollarSign,
     Filter
 } from "lucide-react";
-import { getAdminEmails } from "@/lib/auth-config";
+import { isAdminEmail } from "@/lib/auth-config";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const [user, loading] = useAuthState(auth);
@@ -36,9 +36,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         if (!loading) {
             if (!user) {
                 router.push("/login");
-            } else if (user.email && !getAdminEmails().includes(user.email)) {
+            } else if (!isAdminEmail(user.email)) {
                 // Not an admin, redirect to normal dashboard
-                console.log("[SupraWall Admin] Access denied for:", user.email, "Admin whitelist:", getAdminEmails());
                 router.push("/dashboard");
             } else {
                 // Register admin in Firestore so they appear in standard tables
@@ -52,7 +51,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         }
     }, [user, loading, router]);
 
-    if (loading || !user || (user.email && !getAdminEmails().includes(user.email))) {
+    if (loading || !user || !isAdminEmail(user.email)) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-black text-white">
                 <div className="flex flex-col items-center gap-4">

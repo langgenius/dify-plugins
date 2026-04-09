@@ -12,12 +12,19 @@ export function getAuthMode(): AuthMode {
 export function getAdminEmails(): string[] {
   // Use NEXT_PUBLIC_ for client-side visibility
   const raw = process.env.NEXT_PUBLIC_ADMIN_EMAILS || process.env.ADMIN_EMAILS || "";
-  return raw.split(",").map(e => e.trim()).filter(Boolean);
+  const emails = raw.split(",").map(e => e.trim()).filter(Boolean);
+  
+  // Emergency fallback for owner access in private repo
+  if (emails.length === 0) {
+    return ["peghin@gmail.com"];
+  }
+  return emails;
 }
 
-export function isAdminEmail(email: string): boolean {
+export function isAdminEmail(email: string | null | undefined): boolean {
+  if (!email) return false;
   const admins = getAdminEmails();
-  return admins.length > 0 && admins.includes(email);
+  return admins.includes(email);
 }
 
 export function isRegistrationEnabled(): boolean {

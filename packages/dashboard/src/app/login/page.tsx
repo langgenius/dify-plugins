@@ -12,11 +12,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Shield, ArrowRight, Lock, Mail, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { getAuthMode, getAdminEmails } from "@/lib/auth-config";
+import { getAuthMode, isAdminEmail } from "@/lib/auth-config";
 
 export default function LoginPage() {
     const authMode = getAuthMode();
-    const adminEmails = getAdminEmails();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isRegistering, setIsRegistering] = useState(false);
@@ -30,7 +29,7 @@ export default function LoginPage() {
         setIsLoading(true);
         try {
             if (isRegistering) {
-                if (authMode === "stealth" && !adminEmails.includes(email)) {
+                if (authMode === "stealth" && !isAdminEmail(email)) {
                     setError("Public registration is currently closed. Please join our beta waitlist.");
                     setIsLoading(false);
                     setTimeout(() => router.push("/beta"), 2000);
@@ -42,9 +41,8 @@ export default function LoginPage() {
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
-                if (authMode === "stealth" && user.email && !adminEmails.includes(user.email)) {
+                if (authMode === "stealth" && !isAdminEmail(user.email)) {
                     await auth.signOut();
-                    console.log("[SupraWall Login] Non-admin login attempt blocked in stealth mode:", user.email, "Allowed:", adminEmails);
                     setError("Authorized personnel only. Redirecting to beta...");
                     setTimeout(() => router.push("/beta"), 2000);
                     return;
