@@ -24,7 +24,17 @@ pool.on("error", (err) => {
     console.error(`[DB] Pool Error:`, err.message);
 });
 
-export const query = (text: string, params?: any[]) => pool.query(text, params);
+export const query = async (text: string, params?: any[]) => {
+    try {
+        return await pool.query(text, params);
+    } catch (err: any) {
+        console.error(`[DB Query Error]:`, err.message, { text });
+        if (!connectionString) {
+            console.error("[DB] CRITICAL: DATABASE_URL is not defined in the environment.");
+        }
+        throw err;
+    }
+};
 
 // Schema initialization — runs once on first call, not on every request.
 let schemaReady: Promise<void> | null = null;

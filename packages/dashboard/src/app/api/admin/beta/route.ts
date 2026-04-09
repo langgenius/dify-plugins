@@ -29,15 +29,16 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
-        const snapshot = await db.collection("waitlist").orderBy("appliedAt", "desc").get();
+        const snapshot = await db.collection("waitlist").get();
         const leads = snapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
             appliedAt: doc.data().appliedAt?.toDate() || new Date()
-        }));
+        })).sort((a, b) => b.appliedAt.getTime() - a.appliedAt.getTime());
 
         return NextResponse.json({ leads });
-    } catch {
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    } catch (err: any) {
+        console.error("[Admin Beta API] Error:", err);
+        return NextResponse.json({ error: "Internal Server Error", message: err.message }, { status: 500 });
     }
 }

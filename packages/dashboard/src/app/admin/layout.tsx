@@ -67,6 +67,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { name: "Revenue", href: "/admin/revenue", icon: DollarSign },
         { name: "Funnel", href: "/admin/funnel", icon: Filter },
         { name: "Traffic", href: "/admin/analytics", icon: Activity },
+        { name: "Ecosystem Hub", href: "/admin/ecosystem", icon: Share2 },
         { name: "Users", href: "/admin/users", icon: Users },
         { name: "Agents", href: "/admin/agents", icon: Server },
         { name: "Audit Logs", href: "/admin/audit", icon: Database },
