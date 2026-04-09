@@ -122,4 +122,4 @@ with gr.Blocks(theme=theme, title="SupraWall x smolagents Demo") as demo:
     )
 
 if __name__ == "__main__":
-    demo.launch()
+    demo.launch(server_name="0.0.0.0", show_error=True)

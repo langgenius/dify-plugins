@@ -160,6 +160,7 @@ class SupraWallOptions:
     approval_poll_interval: int = 2            # Seconds between polls
     # --- Vault (JIT Secret Injection) ---
     tenant_id: str = "default-tenant"          # Tenant ID for vault lookups
+    vault_scrub_url: Optional[str] = None      # Override URL for vault scrub endpoint
     # --- OpenRouter Attribution ---
     openrouter_attribution: Optional[dict] = None  # { "app_url": "...", "app_title": "...", "categories": "..." }
 
@@ -235,7 +236,7 @@ def _record_cost(options: SupraWallOptions, response: dict) -> None:
     """Accumulates the call cost returned by the server into the session tracker."""
     cost = response.get("estimated_cost_usd")
     if cost and options.max_cost_usd is not None:
-        session_id = options.session_id or "default"
+        session_id = options.session_id or options.api_key
         _session_costs[session_id] = float(_session_costs[session_id]) + float(cost)
         log.debug(
             f"[SupraWall] Cost recorded: +${cost:.6f} "
@@ -244,7 +245,7 @@ def _record_cost(options: SupraWallOptions, response: dict) -> None:
 
 
 def _derive_scrub_url(options: SupraWallOptions) -> str:
-    if options.vault_scrub_url:
+    if getattr(options, "vault_scrub_url", None):
         return options.vault_scrub_url
     return options.cloud_function_url.replace("/v1/evaluate", "/v1/scrub")
 
@@ -345,7 +346,7 @@ async def _poll_approval_async(request_id: str, options: SupraWallOptions) -> di
     return {"decision": "DENY", "reason": f"Approval timed out after {options.approval_timeout}s."}
 
 
-def _evaluate(tool_name: str, args: Any, options: SupraWallOptions) -> dict:
+def _evaluate(tool_name: str, args: Any, options: SupraWallOptions, source: str = "direct-sdk") -> dict:
     """Makes a synchronous policy check call to SupraWall."""
     # ── Safety Checks: Client-side fast-reject ──
     budget_block = _check_budget(options)
@@ -379,6 +380,7 @@ def _evaluate(tool_name: str, args: Any, options: SupraWallOptions) -> dict:
                     "tenantId": options.tenant_id,
                     "sessionId": session_id,
                     "agentRole": options.agent_role,
+                    "source": source,
                 },
                 headers=headers,
             )
@@ -412,7 +414,7 @@ def _evaluate(tool_name: str, args: Any, options: SupraWallOptions) -> dict:
     return data
 
 
-async def _evaluate_async(tool_name: str, args: Any, options: SupraWallOptions) -> dict:
+async def _evaluate_async(tool_name: str, args: Any, options: SupraWallOptions, source: str = "direct-sdk") -> dict:
     """Makes an async policy check call to SupraWall."""
     # ── Safety Checks: Client-side fast-reject ──
     budget_block = _check_budget(options)
@@ -446,6 +448,7 @@ async def _evaluate_async(tool_name: str, args: Any, options: SupraWallOptions) 
                     "tenantId": options.tenant_id,
                     "sessionId": session_id,
                     "agentRole": options.agent_role,
+                    "source": source,
                 },
                 headers=headers,
             )
@@ -533,7 +536,7 @@ def with_suprawall(agent: Any, options: SupraWallOptions) -> Any:
         ))
         result = secured.run("delete_file", {"path": "/etc/passwd"})
     """
-    if not options.api_key.startswith(("sw_", "swc_")):
+    if not options.api_key.startswith(("sw_", "swc_", "ag_")):
         raise ValueError(
             f"[SupraWall] Invalid API key: '{options.api_key}'.\n"
             "  Get your free key at https://supra-wall.com/\n"
@@ -674,15 +677,42 @@ def wrap_crewai(agent_or_crew: Any, options: SupraWallOptions) -> Any:
 
 def wrap_autogen(agent: Any, options: SupraWallOptions) -> Any:
     """Specialized wrapper for AutoGen framework."""
-    # AutoGen intercepts via registered functions or generate_reply
-    # We can wrap the register_for_execution method or simply the step handler
+    import inspect
     original_generate = agent.generate_reply
-    
-    async def secured_generate(*args, **kwargs):
-        # AutoGen specific auditing logic here
-        return await original_generate(*args, **kwargs)
-        
-    agent.generate_reply = secured_generate
+    is_coroutine = inspect.iscoroutinefunction(original_generate)
+
+    if is_coroutine:
+        @functools.wraps(original_generate)
+        async def secured_generate(*args, **kwargs):
+            # Extract tool name from AutoGen's message structure
+            tool_name = kwargs.get("function_call", {}).get("name", "autogen_reply")
+            try:
+                data = await _evaluate_async(tool_name, kwargs, options, source="autogen")
+                blocked = _handle_decision(data.get("decision"), data.get("reason"), tool_name)
+                if blocked is not None:
+                    return blocked
+            except httpx.RequestError as e:
+                log.error(f"[SupraWall] Network error during AutoGen evaluation: {e}")
+                if options.on_network_error == "fail-closed":
+                    return "ERROR: SupraWall unreachable. Action blocked (fail-closed)."
+            return await original_generate(*args, **kwargs)
+        agent.generate_reply = secured_generate
+    else:
+        @functools.wraps(original_generate)
+        def secured_generate_sync(*args, **kwargs):
+            tool_name = kwargs.get("function_call", {}).get("name", "autogen_reply")
+            try:
+                data = _evaluate(tool_name, kwargs, options, source="autogen")
+                blocked = _handle_decision(data.get("decision"), data.get("reason"), tool_name)
+                if blocked is not None:
+                    return blocked
+            except httpx.RequestError as e:
+                log.error(f"[SupraWall] Network error during AutoGen evaluation: {e}")
+                if options.on_network_error == "fail-closed":
+                    return "ERROR: SupraWall unreachable. Action blocked (fail-closed)."
+            return original_generate(*args, **kwargs)
+        agent.generate_reply = secured_generate_sync
+
     return agent
 
 
@@ -727,16 +757,7 @@ class SupraWallMiddleware:
             blocked = _handle_decision(data.get("decision"), data.get("reason"), tool_name, data.get("semanticScore"), data.get("semanticReasoning"))
             if blocked is not None:
                 return blocked
-            execution_args = data.get("resolvedArguments", args) if data.get("vaultInjected") else args
-            result = next_fn() if execution_args is args else next_fn.__call__() if not callable(next_fn) else next_fn()
-            # For vault injection, pass execution_args to next_fn if it accepts args
-            try:
-                import inspect
-                sig = inspect.signature(next_fn)
-                if len(sig.parameters) > 0 and data.get("vaultInjected"):
-                    result = next_fn(execution_args)
-            except (TypeError, ValueError):
-                pass
+            result = next_fn()
             if data.get("vaultInjected") and data.get("injectedSecrets"):
                 result = _scrub_response(result, data["injectedSecrets"], self.options)
             log.debug(f"[SupraWall] {self.budget.summary}")

@@ -10,6 +10,12 @@ pinned: false
 license: apache-2.0
 short_description: Zero-Trust firewall for smolagents.
 python_version: 3.12
+tags:
+  - agents
+  - security
+  - smolagents
+  - firewall
+  - zero-trust
 ---
 
 # 🧱 SupraWall: The Security Layer for AI Agents

@@ -455,6 +455,27 @@ function detectThreats(toolName: string, finalArgs: any): ThreatResult {
         }
     }
 
+    // Sensitive Data Access Patterns
+    const dataPatterns: Array<{ re: RegExp; label: string }> = [
+        { re: /password[s]?\.(txt|json|csv|yaml|yml)/i, label: "password file" },
+        { re: /id_rsa|id_ecdsa|id_ed25519/i,          label: "SSH private key" },
+        { re: /\.env(\.|$)/i,                        label: "environment file" },
+        { re: /credential[s]?\.(txt|json)/i,          label: "credentials file" },
+        { re: /access_token|api_key|secret_key/i,     label: "exposed secret" },
+    ];
+
+    for (const { re, label } of dataPatterns) {
+        if (re.test(rawPayload)) {
+            return {
+                blocked: true,
+                reason: "Threat detected: Unauthorized access to sensitive data blocked by SupraWall.",
+                threatType: "sensitive_data_access",
+                severity: "critical",
+                detail: label,
+            };
+        }
+    }
+
     // XSS Patterns
     const xssPatterns: Array<{ re: RegExp; label: string }> = [
         { re: /<script[\s>]/i,                    label: "<script> tag" },

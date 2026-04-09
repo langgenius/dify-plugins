@@ -4,3 +4,5 @@ httpx
 pydantic
 openai
 requests
+huggingface_hub
+python-dotenv

@@ -10,6 +10,7 @@ export function getAuthMode(): AuthMode {
 }
 
 export function getAdminEmails(): string[] {
+  // Use NEXT_PUBLIC_ for client-side visibility
   const raw = process.env.NEXT_PUBLIC_ADMIN_EMAILS || process.env.ADMIN_EMAILS || "";
   return raw.split(",").map(e => e.trim()).filter(Boolean);
 }

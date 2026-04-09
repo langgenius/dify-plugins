@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import functools
+import inspect
 import logging
 from typing import Any, Optional
 from .gate import _evaluate, _evaluate_async, _handle_decision, SupraWallOptions
@@ -26,58 +27,62 @@ def wrap_smolagents(agent: Any, options: SupraWallOptions) -> Any:
     # smolagents tools are stored in a dictionary: tool_name -> tool_object
     for tool_name, tool in agent.tools.items():
         original_forward = tool.forward
-        
-        @functools.wraps(original_forward)
-        def secured_forward(*args, **kwargs):
-            # 1. Evaluate with SupraWall
-            # Combine args and kwargs for evaluation
-            # smolagents tools usually take keyword arguments
-            eval_args = kwargs.copy()
-            if args:
-                eval_args["_args"] = args
-                
-            data = _evaluate(tool_name, eval_args, options)
-            blocked = _handle_decision(
-                data.get("decision"), 
-                data.get("reason"), 
-                tool_name, 
-                data.get("semanticScore"), 
-                data.get("semanticReasoning")
-            )
-            
-            if blocked is not None:
-                # If blocked, we return the error message to the agent
-                # smolagents handles strings as tool outputs
-                return blocked
-                
-            # 2. Proceed with original tool execution
-            return original_forward(*args, **kwargs)
 
-        # Handle async tools if necessary
-        import inspect
         if inspect.iscoroutinefunction(original_forward):
+            # Async tools — use default arg binding to capture current loop values
             @functools.wraps(original_forward)
-            async def secured_forward_async(*args, **kwargs):
+            async def secured_forward_async(
+                *args,
+                _sw_tool_name=tool_name,
+                _sw_original=original_forward,
+                **kwargs,
+            ):
                 eval_args = kwargs.copy()
                 if args:
                     eval_args["_args"] = args
 
-                data = await _evaluate_async(tool_name, eval_args, options)
+                data = await _evaluate_async(_sw_tool_name, eval_args, options, source="smolagents")
                 blocked = _handle_decision(
-                    data.get("decision"), 
-                    data.get("reason"), 
-                    tool_name, 
-                    data.get("semanticScore"), 
-                    data.get("semanticReasoning")
+                    data.get("decision"),
+                    data.get("reason"),
+                    _sw_tool_name,
+                    data.get("semanticScore"),
+                    data.get("semanticReasoning"),
                 )
-                
+
                 if blocked is not None:
                     return blocked
-                    
-                return await original_forward(*args, **kwargs)
-            
+
+                return await _sw_original(*args, **kwargs)
+
             tool.forward = secured_forward_async
         else:
+            # Sync tools — use default arg binding to capture current loop values
+            @functools.wraps(original_forward)
+            def secured_forward(
+                *args,
+                _sw_tool_name=tool_name,
+                _sw_original=original_forward,
+                **kwargs,
+            ):
+                eval_args = kwargs.copy()
+                if args:
+                    eval_args["_args"] = args
+
+                data = _evaluate(_sw_tool_name, eval_args, options, source="smolagents")
+                blocked = _handle_decision(
+                    data.get("decision"),
+                    data.get("reason"),
+                    _sw_tool_name,
+                    data.get("semanticScore"),
+                    data.get("semanticReasoning"),
+                )
+
+                if blocked is not None:
+                    return blocked
+
+                return _sw_original(*args, **kwargs)
+
             tool.forward = secured_forward
 
     log.info(f"[SupraWall] Secured {len(agent.tools)} tools for smolagents agent.")
