@@ -1,0 +1,33 @@
+identity:
+  author: kronvex
+  name: kronvex
+  label:
+    en_US: Kronvex
+  description:
+    en_US: Connect to Kronvex persistent memory API
+  icon: icon.png
+credentials_for_provider:
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: API Key
+    placeholder:
+      en_US: kv-xxxxxxxxxxxxxxxx
+    help:
+      en_US: Your Kronvex API key (starts with kv-)
+  base_url:
+    type: text-input
+    required: false
+    label:
+      en_US: Base URL
+    placeholder:
+      en_US: https://api.kronvex.io
+    default: https://api.kronvex.io
+tools:
+  - tools/remember.yaml
+  - tools/recall.yaml
+  - tools/inject_context.yaml
+extra:
+  python:
+    source: provider/kronvex.py

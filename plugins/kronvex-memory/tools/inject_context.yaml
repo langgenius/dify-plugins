@@ -1,0 +1,31 @@
+identity:
+  name: inject_context
+  author: kronvex
+  label:
+    en_US: Inject Context
+description:
+  human:
+    en_US: Get a ready-to-use context block for an LLM system prompt
+  llm: Retrieve a pre-formatted memory context block to inject into an LLM system prompt.
+parameters:
+  - name: agent_id
+    type: string
+    required: true
+    label:
+      en_US: Agent ID
+    human_description:
+      en_US: UUID of the agent (from your Kronvex dashboard)
+    llm_description: The agent's UUID
+    form: llm
+  - name: message
+    type: string
+    required: true
+    label:
+      en_US: User Message
+    human_description:
+      en_US: The current user message — used to find relevant memories
+    llm_description: The current user message to find relevant context for
+    form: llm
+extra:
+  python:
+    source: tools/inject_context.py

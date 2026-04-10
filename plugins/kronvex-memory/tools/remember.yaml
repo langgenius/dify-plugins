@@ -1,0 +1,48 @@
+identity:
+  name: remember
+  author: kronvex
+  label:
+    en_US: Remember
+description:
+  human:
+    en_US: Store a memory for an AI agent
+  llm: Store a new memory for an agent. Use this to persist information across sessions.
+parameters:
+  - name: agent_id
+    type: string
+    required: true
+    label:
+      en_US: Agent ID
+    human_description:
+      en_US: UUID of the agent
+    llm_description: The agent's UUID
+    form: llm
+  - name: content
+    type: string
+    required: true
+    label:
+      en_US: Memory Content
+    human_description:
+      en_US: Text content to store as memory
+    llm_description: The text to remember
+    form: llm
+  - name: memory_type
+    type: select
+    required: false
+    label:
+      en_US: Memory Type
+    options:
+      - value: episodic
+        label:
+          en_US: Episodic
+      - value: semantic
+        label:
+          en_US: Semantic
+      - value: procedural
+        label:
+          en_US: Procedural
+    default: episodic
+    form: form
+extra:
+  python:
+    source: tools/remember.py

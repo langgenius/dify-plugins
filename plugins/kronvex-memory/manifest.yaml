@@ -1,0 +1,17 @@
+version: 0.0.1
+type: plugin
+author: kronvex
+name: kronvex-memory
+label:
+  en_US: Kronvex Memory
+description:
+  en_US: Persistent memory for AI agents — store, recall, and inject context via Kronvex
+icon: icon.png
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+plugins:
+  tools:
+    - provider/kronvex.yaml
