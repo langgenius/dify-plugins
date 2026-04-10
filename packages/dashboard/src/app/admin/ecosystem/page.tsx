@@ -14,6 +14,7 @@ import {
     CartesianGrid, Tooltip, ResponsiveContainer, Legend
 } from "recharts";
 import Link from "next/link";
+import { adminFetch } from "@/lib/admin-fetch";
 
 export default function EcosystemHubPage() {
     const [loading, setLoading] = useState(true);
@@ -22,7 +23,7 @@ export default function EcosystemHubPage() {
     useEffect(() => {
         async function fetchEcosystem() {
             try {
-                const res = await fetch('/api/admin/ecosystem');
+                const res = await adminFetch('/api/admin/ecosystem');
                 if (res.ok) {
                     setEcosystem(await res.json());
                 }

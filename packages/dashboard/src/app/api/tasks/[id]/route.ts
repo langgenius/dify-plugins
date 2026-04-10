@@ -3,15 +3,31 @@
 
 export const dynamic = 'force-dynamic';
 
-import { NextResponse } from 'next/server';
-import { getAdminDb } from '@/lib/firebase-admin';
+import { NextResponse, NextRequest } from 'next/server';
+import { getAdminDb, getAdminAuth } from '@/lib/firebase-admin';
 import { admin } from '@/lib/firebase-admin';
+
+const ADMIN_EMAILS_RAW = (process.env.ADMIN_EMAILS || process.env.NEXT_PUBLIC_ADMIN_EMAILS || '').split(',').map(e => e.trim()).filter(Boolean);
+const ADMIN_EMAILS = ADMIN_EMAILS_RAW.length > 0 ? ADMIN_EMAILS_RAW : ['peghin@gmail.com'];
+
+async function checkAuth(req: Request) {
+    const authHeader = req.headers.get('authorization');
+    if (!authHeader?.startsWith('Bearer ')) return false;
+    const token = authHeader.slice(7);
+    try {
+        const decodedToken = await getAdminAuth().verifyIdToken(token);
+        return decodedToken.email && ADMIN_EMAILS.includes(decodedToken.email);
+    } catch {
+        return false;
+    }
+}
 
 // PATCH /api/tasks/[id] - Update task status and review notes
 export async function PATCH(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    if (!await checkAuth(request)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     try {
         const body = await request.json();
         const { id } = await params;
@@ -24,7 +40,7 @@ export async function PATCH(
 
         if (body.humanAction) updateData.humanAction = body.humanAction;
         if (body.humanNote) updateData.humanNote = body.humanNote;
-        if (body.reviewedAt === 'now') {
+        if (body.reviewedAt) {
             updateData.reviewedAt = admin.firestore.FieldValue.serverTimestamp();
         }
 

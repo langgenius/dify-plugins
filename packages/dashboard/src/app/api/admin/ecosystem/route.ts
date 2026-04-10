@@ -3,12 +3,31 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { pool as pgPool } from '@/lib/db_sql';
+import { getAdminAuth } from '@/lib/firebase-admin';
 import { subDays, format } from 'date-fns';
 
 export const dynamic = 'force-dynamic';
 
+const ADMIN_EMAILS_RAW = (process.env.ADMIN_EMAILS || process.env.NEXT_PUBLIC_ADMIN_EMAILS || '').split(',').map(e => e.trim()).filter(Boolean);
+const ADMIN_EMAILS = ADMIN_EMAILS_RAW.length > 0 ? ADMIN_EMAILS_RAW : ['peghin@gmail.com'];
+
 export async function GET(req: NextRequest) {
     try {
+        // --- 0. Admin Auth Check ---
+        const authHeader = req.headers.get('authorization');
+        if (!authHeader?.startsWith('Bearer ')) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+        const token = authHeader.slice(7);
+        let decodedToken: { email?: string };
+        try {
+            decodedToken = await getAdminAuth().verifyIdToken(token);
+        } catch {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+        if (!decodedToken.email || !ADMIN_EMAILS.includes(decodedToken.email)) {
+            return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+        }
         // --- 1. Fetch Hugging Face Stats ---
         // Space URL: https://huggingface.co/api/spaces/SupraWall/smolagents-demo
         let hfStats = { likes: 0, status: 'unknown' };

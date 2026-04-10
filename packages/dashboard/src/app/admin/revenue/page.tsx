@@ -14,6 +14,7 @@ import {
     Tooltip, ResponsiveContainer, AreaChart, Area, Cell, PieChart, Pie
 } from "recharts";
 import { format } from "date-fns";
+import { adminFetch } from "@/lib/admin-fetch";
 
 export default function AdminRevenuePage() {
     const [loading, setLoading] = useState(true);
@@ -25,7 +26,7 @@ export default function AdminRevenuePage() {
             setLoading(true);
             setError(null);
             try {
-                const res = await fetch('/api/admin/revenue');
+                const res = await adminFetch('/api/admin/revenue');
                 if (res.ok) {
                     const json = await res.json();
                     setData(json);

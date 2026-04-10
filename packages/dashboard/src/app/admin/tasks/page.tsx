@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, onSnapshot, query, orderBy, Timestamp } from 'firebase/firestore';
 import ReactMarkdown from 'react-markdown';
+import { adminFetch } from "@/lib/admin-fetch";
 
 interface Task {
     id: string;
@@ -62,7 +63,7 @@ export default function TaskReviewPage() {
     const handleAction = async (taskId: string, status: string, humanAction: string, note?: string) => {
         setLoading(true);
         try {
-            await fetch(`/api/tasks/${taskId}`, {
+            await adminFetch(`/api/tasks/${taskId}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

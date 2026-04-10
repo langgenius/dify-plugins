@@ -20,6 +20,7 @@ import {
     AlertCircle
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { adminFetch } from "@/lib/admin-fetch";
 
 export default function AdminBetaListPage() {
     const [leads, setLeads] = useState<any[]>([]);
@@ -30,7 +31,7 @@ export default function AdminBetaListPage() {
         async function fetchLeads() {
             setLoading(true);
             try {
-                const res = await fetch('/api/admin/beta');
+                const res = await adminFetch('/api/admin/beta');
                 if (res.ok) {
                     const data = await res.json();
                     setLeads(data.leads || []);

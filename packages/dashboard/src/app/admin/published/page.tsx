@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { ExternalLink, Search, Layout, AlertCircle } from "lucide-react";
 
 const SITE_DOMAIN = process.env.NEXT_PUBLIC_SITE_DOMAIN || 'https://www.supra-wall.com';
+import { adminFetch } from "@/lib/admin-fetch";
 
 export default function PublishedPages() {
     const [pages, setPages] = useState<any[]>([]);
@@ -23,7 +24,7 @@ export default function PublishedPages() {
         setLoading(true);
         setError(null);
         try {
-            const res = await fetch('/api/v1/content/published?tenantId=default-tenant');
+            const res = await adminFetch('/api/v1/content/published?tenantId=default-tenant');
             if (res.ok) {
                 const data = await res.json();
                 setPages(data);

@@ -15,6 +15,7 @@ import {
     CartesianGrid, Tooltip, ResponsiveContainer, Legend
 } from "recharts";
 import Link from "next/link";
+import { adminFetch } from "@/lib/admin-fetch";
 
 export default function AdminAnalyticsPage() {
     const [loading, setLoading] = useState(true);
@@ -27,10 +28,10 @@ export default function AdminAnalyticsPage() {
         async function fetchAnalytics() {
             try {
                 const [trafficRes, statsRes, gaRes, ecosystemRes] = await Promise.all([
-                    fetch('/api/admin/traffic'),
-                    fetch('/api/admin/users/stats'),
-                    fetch('/api/admin/ga-data'),
-                    fetch('/api/admin/ecosystem')
+                    adminFetch('/api/admin/traffic'),
+                    adminFetch('/api/admin/users/stats'),
+                    adminFetch('/api/admin/ga-data'),
+                    adminFetch('/api/admin/ecosystem')
                 ]);
                 if (trafficRes.ok) setTraffic(await trafficRes.json());
                 if (statsRes.ok) setStats(await statsRes.json());

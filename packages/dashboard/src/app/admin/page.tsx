@@ -14,6 +14,7 @@ import {
     XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
 } from "recharts";
 import Link from "next/link";
+import { adminFetch } from "@/lib/admin-fetch";
 
 const COLORS = ['#10b981', '#f43f5e', '#f59e0b']; // ALLOW, DENY, REQUIRE_APPROVAL
 
@@ -29,8 +30,8 @@ export default function AdminOverviewPage() {
             setError(null);
             try {
                 const [overviewRes, funnelRes] = await Promise.all([
-                    fetch('/api/admin/overview'),
-                    fetch('/api/admin/funnel')
+                    adminFetch('/api/admin/overview'),
+                    adminFetch('/api/admin/funnel')
                 ]);
 
                 if (!overviewRes.ok || !funnelRes.ok) {

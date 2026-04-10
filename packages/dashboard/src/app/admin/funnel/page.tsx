@@ -10,6 +10,7 @@ import {
     BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, 
     Tooltip, ResponsiveContainer, Cell, Legend
 } from "recharts";
+import { adminFetch } from "@/lib/admin-fetch";
 
 export default function AdminFunnelPage() {
     const [loading, setLoading] = useState(true);
@@ -21,7 +22,7 @@ export default function AdminFunnelPage() {
             setLoading(true);
             setError(null);
             try {
-                const res = await fetch('/api/admin/funnel');
+                const res = await adminFetch('/api/admin/funnel');
                 if (res.ok) {
                     const json = await res.json();
                     setData(json);

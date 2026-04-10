@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { db, auth } from '@/lib/firebase';
 import { collection, onSnapshot, query, orderBy, Timestamp } from 'firebase/firestore';
 import { Clock, CheckCircle, Loader2, AlertTriangle, Plus, Zap } from 'lucide-react';
+import { adminFetch } from '@/lib/admin-fetch';
 
 interface QueueItem {
     id: string;
@@ -43,10 +44,8 @@ export default function QueuePage() {
         setTriggerLoading(true);
         setTriggerResult(null);
         try {
-            const token = await auth.currentUser?.getIdToken();
-            const res = await fetch('/api/admin/queue', {
-                method: 'POST',
-                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+            const res = await adminFetch('/api/admin/queue', {
+                method: 'POST'
             });
             const data = await res.json();
             if (res.ok) {
