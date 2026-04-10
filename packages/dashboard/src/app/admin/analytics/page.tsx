@@ -133,7 +133,6 @@ export default function AdminAnalyticsPage() {
                 </Card>
             </div>
 
-            </div>
             <div className="space-y-4 pt-8 border-t border-white/5">
                 <div className="flex items-center gap-2">
                     <Server className="w-4 h-4 text-emerald-500" />
