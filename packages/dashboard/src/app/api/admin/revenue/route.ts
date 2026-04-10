@@ -111,7 +111,7 @@ export async function GET(req: NextRequest) {
         allInvoices.data.forEach(inv => {
             if (inv.status_transitions?.paid_at) {
                 const paidDate = new Date(inv.status_transitions.paid_at * 1000);
-                const customerId = (typeof inv.customer === 'string') ? inv.customer : (inv.customer as any)?.id || inv.customer_id || 'unknown';
+                const customerId = (typeof inv.customer === 'string') ? inv.customer : (inv.customer as any)?.id || 'unknown';
                 const amount = inv.amount_paid / 100;
 
                 if (!customerMrrMap.has(customerId)) {
