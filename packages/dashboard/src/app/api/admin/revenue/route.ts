@@ -78,7 +78,7 @@ export async function GET(req: NextRequest) {
         // --- 4. Payment History (Recent Invoices) ---
         const paymentHistory = allInvoices.data.slice(0, 50).map(inv => ({
             id: inv.id,
-            customerEmail: (inv.customer as any)?.email || inv.customer_email || 'Unknown',
+            customerEmail: (typeof inv.customer !== 'string' && inv.customer) ? (inv.customer as any).email : inv.customer_email || 'Unknown',
             amount: inv.amount_paid / 100,
             status: inv.status,
             date: new Date(inv.created * 1000).toISOString(),
@@ -111,7 +111,7 @@ export async function GET(req: NextRequest) {
         allInvoices.data.forEach(inv => {
             if (inv.status_transitions?.paid_at) {
                 const paidDate = new Date(inv.status_transitions.paid_at * 1000);
-                const customerId = (inv.customer as any)?.id || inv.customer_id || 'unknown';
+                const customerId = (typeof inv.customer === 'string') ? inv.customer : (inv.customer as any)?.id || inv.customer_id || 'unknown';
                 const amount = inv.amount_paid / 100;
 
                 if (!customerMrrMap.has(customerId)) {
