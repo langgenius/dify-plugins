@@ -18,7 +18,7 @@ class SupraWall {
 
     public static function evaluate(string $agentId, string $toolName, array $arguments = []): array {
         $apiKey = self::$apiKey ?? getenv('SUPRAWALL_API_KEY');
-        $apiUrl = self::$apiUrl ?? getenv('SUPRAWALL_API_URL') ?: 'https://api.suprawall.io/v1/evaluate';
+        $apiUrl = self::$apiUrl ?? getenv('SUPRAWALL_API_URL') ?: 'https://www.supra-wall.com/api/v1/evaluate';
 
         if (!$apiKey) {
             throw new Exception("SUPRAWALL_API_KEY is required");

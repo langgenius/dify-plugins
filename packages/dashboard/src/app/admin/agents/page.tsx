@@ -24,13 +24,13 @@ export default function AdminAgentsPage() {
 
             const enhancedAgents = rawAgents.map((a: any) => ({
                 ...a,
-                policyCount: Math.floor(Math.random() * 10), // Mocked for speed
-                logCount: Math.floor(Math.random() * 50), // Mocked
-                isActive: Math.random() > 0.3, // Mocked 
-                createdAt: a.createdAt || Date.now() - (Math.random() * 100000000), // Mocked if missing
+                policyCount: a.policyCount ?? 0,
+                logCount: a.logCount ?? 0,
+                isActive: a.lastEvaluatedAt ? Date.now() - new Date(a.lastEvaluatedAt).getTime() < 86400000 : false,
+                createdAt: a.createdAt || new Date().toISOString(),
             }));
 
-            setAgents(enhancedAgents.sort((a, b) => b.createdAt - a.createdAt));
+            setAgents(enhancedAgents.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
             setLoading(false);
         }, (error) => {
             console.error("Firebase onSnapshot error:", error);

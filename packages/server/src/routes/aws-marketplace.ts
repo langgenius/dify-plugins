@@ -294,8 +294,8 @@ router.post("/sns", express.raw({ type: "application/json" }), async (req: Reque
     try {
         const rawBody = req.body instanceof Buffer ? req.body.toString("utf8") : JSON.stringify(req.body);
         body = JSON.parse(rawBody);
-    } catch {
-        logger.warn("[AWS SNS] Failed to parse SNS notification body.");
+    } catch (err) {
+        logger.warn("[AWS SNS] Failed to parse SNS notification body:", err);
         return res.status(400).json({ error: "Invalid JSON body" });
     }
 
@@ -327,8 +327,8 @@ router.post("/sns", express.raw({ type: "application/json" }), async (req: Reque
     let notification: Record<string, any>;
     try {
         notification = JSON.parse(body.Message ?? "{}");
-    } catch {
-        logger.warn("[AWS SNS] Failed to parse SNS notification Message payload.");
+    } catch (err) {
+        logger.warn("[AWS SNS] Failed to parse SNS notification Message payload:", err);
         return res.status(400).json({ error: "Invalid Notification Message JSON" });
     }
 

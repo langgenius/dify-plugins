@@ -72,9 +72,13 @@ export async function GET(req: NextRequest) {
             { repo: "microsoft/autogen", number: 7541, label: "AutoGen Framework" }
         ];
 
-        const ghToken = process.env.GITHUB_TOKEN || "ghu_zrNtK68eXzU7Aq4AoohmmTI0Ag4inr1UTVQW";
+        const ghToken = process.env.GITHUB_TOKEN;
         const prStatuses = await Promise.all(prsToTrack.map(async (pr) => {
             try {
+                if (!ghToken) {
+                    return { id: pr.number, label: pr.label, repo: pr.repo, status: "unconfigured", url: "" };
+                }
+
                 const ghRes = await fetch(`https://api.github.com/repos/${pr.repo}/pulls/${pr.number}`, {
                     headers: {
                         "Authorization": `token ${ghToken}`,

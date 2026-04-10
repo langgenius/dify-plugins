@@ -14,6 +14,30 @@ function getDefaultTenantId(): string {
     return "unspecified";
 }
 
+/**
+ * Enhanced fetch with exponential backoff and jitter.
+ */
+async function fetchWithRetry(url: string, options: RequestInit, maxRetries = 3): Promise<Response> {
+    let retries = 0;
+    while (retries < maxRetries) {
+        try {
+            const response = await fetch(url, options);
+            // Retry on server errors or rate limits (5xx, 429)
+            if (response.status >= 500 || response.status === 429) {
+                throw new Error(`Server error: ${response.status}`);
+            }
+            return response;
+        } catch (err) {
+            retries++;
+            if (retries >= maxRetries) throw err;
+            // Exponential backoff: 200ms, 400ms, 800ms... with jitter
+            const backoff = Math.pow(2, retries) * 100 + Math.random() * 50;
+            await new Promise(res => setTimeout(res, backoff));
+        }
+    }
+    throw new Error("Max retries exceeded");
+}
+
 // ---------------------------------------------------------------------------
 // Cost estimation — model token costs (USD per 1k tokens)
 // ---------------------------------------------------------------------------
@@ -375,7 +399,7 @@ async function internalEvaluate(
             }
         }
 
-        const response = await fetch(cloudFunctionUrl, {
+        const response = await fetchWithRetry(cloudFunctionUrl, {
             method: "POST",
             headers,
             body: JSON.stringify(payload),
@@ -392,7 +416,12 @@ async function internalEvaluate(
         }
         _hasVerifiedConnection = true;
 
-        const data = (await response.json()) as SupraWallResponse & { approvalId?: string };
+        let data: SupraWallResponse & { approvalId?: string };
+        try {
+            data = await response.json();
+        } catch (err) {
+            throw new Error("Failed to parse SupraWall response: Malformed JSON");
+        }
 
         // Record cost tracking
         const current = _sessionCosts.get(sessionId) ?? 0;

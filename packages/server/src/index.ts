@@ -40,6 +40,13 @@ const port = process.env.PORT || 3000;
 // Security headers (HSTS, XSS protection, no-sniff, etc.)
 app.use(helmet());
 
+// Global Rate Limit Fallback: 300 req/min
+app.use(rateLimit({ 
+    max: 300, 
+    windowMs: 60_000, 
+    message: "Global rate limit exceeded. Please contact support for high-volume access." 
+}));
+
 // ---------------------------------------------------------------------------
 // Paperclip webhook MUST be registered before express.json() so the handler
 // receives the raw Buffer needed for HMAC signature verification.

@@ -3,16 +3,39 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { query } from '@/lib/db_sql';
+import { db, getAdminAuth } from '@/lib/firebase-admin';
 import { subHours, subDays, startOfDay, format, startOfHour } from 'date-fns';
 
 export const dynamic = 'force-dynamic';
 
+const ADMIN_EMAILS_RAW = (process.env.ADMIN_EMAILS || process.env.NEXT_PUBLIC_ADMIN_EMAILS || '').split(',').map(e => e.trim()).filter(Boolean);
+const ADMIN_EMAILS = ADMIN_EMAILS_RAW.length > 0 ? ADMIN_EMAILS_RAW : ['peghin@gmail.com'];
+
 export async function GET(req: NextRequest) {
     try {
+        const authHeader = req.headers.get('authorization');
+        if (!authHeader?.startsWith('Bearer ')) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+        const token = authHeader.slice(7);
+        let decodedToken: { email?: string };
+        try {
+            decodedToken = await getAdminAuth().verifyIdToken(token);
+        } catch {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+        if (!decodedToken.email || !ADMIN_EMAILS.includes(decodedToken.email)) {
+            return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+        }
+
         const { searchParams } = new URL(req.url);
         const period = searchParams.get('period') || '24h'; // or '7d', '30d'
 
-        // --- 1. Hourly Request Throughput (Last 24h) ---
+        // Calculate the start time based on period
+        const hours = period === '7d' ? 168 : period === '30d' ? 720 : 24;
+        const periodStart = subHours(new Date(), hours).toISOString();
+
+        // --- 1. Hourly Request Throughput (Based on period) ---
         const last24hStart = subHours(new Date(), 24).toISOString();
         const hourlyRes = await query(
             `SELECT date_trunc('hour', timestamp) as hour, decision, COUNT(*) as count 
@@ -85,7 +108,4 @@ export async function GET(req: NextRequest) {
         console.error('[Admin Traffic API] Error:', error);
         return NextResponse.json({ error: 'Failed to fetch traffic metrics' }, { status: 500 });
     }
-}
-async function request(url: string) {
-    throw new Error('Function not implemented.');
 }

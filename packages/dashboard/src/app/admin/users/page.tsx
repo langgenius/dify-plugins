@@ -11,21 +11,31 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Users, Server, Search, Calendar, Activity, Ban, PlayCircle, Clock, ShieldCheck } from "lucide-react";
+import { Users, Server, Search, Calendar, Activity, Ban, PlayCircle, Clock, ShieldCheck, AlertCircle } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
 
 export default function AdminUsersPage() {
     const [users, setUsers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedUser, setSelectedUser] = useState<any | null>(null);
 
     useEffect(() => {
-        const unsubscribe = onSnapshot(collection(db, "users"), (snap) => {
-            const raw = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            setUsers(raw.sort((a: any, b: any) => (b.lastLogin || 0) - (a.lastLogin || 0)));
-            setLoading(false);
-        });
+        const unsubscribe = onSnapshot(
+            collection(db, "users"),
+            (snap) => {
+                const raw = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                setUsers(raw.sort((a: any, b: any) => (b.lastLogin || 0) - (a.lastLogin || 0)));
+                setLoading(false);
+                setError(null);
+            },
+            (err) => {
+                console.error("Failed to load users:", err);
+                setError('Failed to load users. Please refresh the page.');
+                setLoading(false);
+            }
+        );
         return () => unsubscribe();
     }, []);
 
@@ -53,6 +63,13 @@ export default function AdminUsersPage() {
                     <p className="text-neutral-500 text-sm font-medium italic uppercase tracking-widest">Platform identities and account management.</p>
                 </div>
             </div>
+
+            {error && (
+                <div className="flex items-center gap-3 p-4 bg-rose-500/10 border border-rose-500/20 rounded-lg text-rose-400">
+                    <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                    <p className="text-sm font-medium">{error}</p>
+                </div>
+            )}
 
             <Card className="bg-[#080808] border-white/5 overflow-hidden">
                 <CardHeader className="py-6 border-b border-white/5 flex flex-col sm:flex-row justify-between sm:items-center gap-4 bg-white/[0.01]">

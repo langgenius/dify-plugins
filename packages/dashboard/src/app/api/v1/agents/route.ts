@@ -6,6 +6,7 @@ import { db as firestore } from '@/lib/firebase-admin';
 import { checkResourceLimit } from '@/lib/tier-enforcement';
 import { verifyAuth, unauthorizedResponse } from '@/lib/api-auth';
 import { pool, ensureSchema } from "@/lib/db_sql";
+import crypto from 'crypto';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -74,7 +75,7 @@ export async function POST(request: NextRequest) {
     const userDoc = await firestore.collection("users").doc(userId).get();
     const effectiveTenantId = userDoc.data()?.tenantId || userId;
 
-    const agentId = `agent_${Math.random().toString(36).substring(2, 11)}`;
+    const agentId = `agent_${crypto.randomBytes(8).toString('hex')}`;
     
     await pool.query(`
         INSERT INTO agents (id, tenantid, name, apikeyhash, scopes, status)

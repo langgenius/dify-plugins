@@ -9,11 +9,12 @@ import { db } from "@/lib/firebase";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Activity, Shield, ShieldCheck, ShieldAlert, Clock, Info } from "lucide-react";
+import { Activity, Shield, ShieldCheck, ShieldAlert, Clock, Info, AlertCircle } from "lucide-react";
 
 export default function AdminAuditPage() {
     const [logs, setLogs] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const q = query(
@@ -29,8 +30,10 @@ export default function AdminAuditPage() {
             }));
             setLogs(logsData);
             setLoading(false);
+            setError(null);
         }, (error) => {
             console.error("Firebase onSnapshot error:", error);
+            setError('Failed to load audit logs. Please refresh the page.');
             setLoading(false);
         });
 
@@ -61,6 +64,13 @@ export default function AdminAuditPage() {
                     <p className="text-neutral-400 text-sm">Real-time global feed of all agent tool executions and policy decisions.</p>
                 </div>
             </div>
+
+            {error && (
+                <div className="flex items-center gap-3 p-4 bg-rose-500/10 border border-rose-500/20 rounded-lg text-rose-400">
+                    <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                    <p className="text-sm font-medium">{error}</p>
+                </div>
+            )}
 
             <Card className="bg-[#0A0A0A] border-white/5">
                 <CardHeader className="py-5 border-b border-white/5">

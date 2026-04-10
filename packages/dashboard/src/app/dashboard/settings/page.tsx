@@ -131,7 +131,9 @@ export default function SettingsPage() {
     };
 
     const handleGenerateMasterKey = () => {
-        const key = 'ag_master_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        const array = new Uint32Array(2);
+        window.crypto.getRandomValues(array);
+        const key = 'ag_master_' + array[0].toString(36) + array[1].toString(36);
         setMasterKey(key);
     };
 
@@ -178,9 +180,11 @@ export default function SettingsPage() {
 
     const handleGenerateSecret = () => {
         const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        const array = new Uint32Array(24);
+        window.crypto.getRandomValues(array);
         let str = "whsec_";
         for (let i = 0; i < 24; i++) {
-            str += chars.charAt(Math.floor(Math.random() * chars.length));
+            str += chars.charAt(array[i] % chars.length);
         }
         setWebhookSecret(str);
         handleSaveGeneral("webhookSecret", str, () => { });

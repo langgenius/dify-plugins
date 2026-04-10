@@ -19,22 +19,29 @@ const COLORS = ['#10b981', '#f43f5e', '#f59e0b']; // ALLOW, DENY, REQUIRE_APPROV
 
 export default function AdminOverviewPage() {
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [stats, setStats] = useState<any>(null);
     const [funnel, setFunnel] = useState<any>(null);
 
     useEffect(() => {
         async function fetchAllData() {
             setLoading(true);
+            setError(null);
             try {
                 const [overviewRes, funnelRes] = await Promise.all([
                     fetch('/api/admin/overview'),
                     fetch('/api/admin/funnel')
                 ]);
-                
-                if (overviewRes.ok) setStats(await overviewRes.json());
-                if (funnelRes.ok) setFunnel(await funnelRes.json());
+
+                if (!overviewRes.ok || !funnelRes.ok) {
+                    setError('Failed to load some metrics. Please refresh the page.');
+                } else {
+                    setStats(await overviewRes.json());
+                    setFunnel(await funnelRes.json());
+                }
             } catch (err) {
                 console.error("SupraWall Admin: Failed to load executive insights", err);
+                setError('Failed to load executive insights. Please try again.');
             }
             setLoading(false);
         }
@@ -45,6 +52,17 @@ export default function AdminOverviewPage() {
         return (
             <div className="flex h-[80vh] items-center justify-center">
                 <Zap className="w-12 h-12 text-emerald-500 animate-pulse" />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="space-y-6">
+                <div className="flex items-center gap-3 p-4 bg-rose-500/10 border border-rose-500/20 rounded-lg text-rose-400">
+                    <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                    <p className="text-sm font-medium">{error}</p>
+                </div>
             </div>
         );
     }
@@ -171,7 +189,7 @@ export default function AdminOverviewPage() {
                 <div className="space-y-4 relative z-10">
                     <h2 className="text-4xl font-black italic uppercase tracking-tighter leading-none">Healthy Yield Targets.</h2>
                     <p className="text-emerald-100 font-bold italic uppercase text-sm tracking-tight opacity-80 max-w-xl">
-                        Platform success rate is currently 99.8% across all evaluation nodes. Revenue growth is pacing 14% ahead of previous month.
+                        Platform success rate is currently {kpis?.successRate || 'computing'}% across all evaluation nodes. Revenue growth is pacing 14% ahead of previous month.
                     </p>
                 </div>
                 <div className="relative z-10 flex gap-4">

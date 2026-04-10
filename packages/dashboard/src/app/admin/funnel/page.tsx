@@ -5,7 +5,7 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Filter, UserCheck, Server, Activity, ArrowDown, TrendingUp, Sparkles, AlertTriangle } from "lucide-react";
+import { Filter, UserCheck, Server, Activity, ArrowDown, TrendingUp, Sparkles, AlertTriangle, AlertCircle } from "lucide-react";
 import {
     BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, 
     Tooltip, ResponsiveContainer, Cell, Legend
@@ -13,18 +13,24 @@ import {
 
 export default function AdminFunnelPage() {
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [data, setData] = useState<any>(null);
 
     useEffect(() => {
         async function fetchFunnel() {
+            setLoading(true);
+            setError(null);
             try {
                 const res = await fetch('/api/admin/funnel');
                 if (res.ok) {
                     const json = await res.json();
                     setData(json);
+                } else {
+                    setError('Failed to load funnel analytics. Please try again.');
                 }
             } catch (err) {
                 console.error("Failed to fetch funnel analytics", err);
+                setError('Failed to fetch funnel analytics. Please try again.');
             }
             setLoading(false);
         }
@@ -35,6 +41,17 @@ export default function AdminFunnelPage() {
         return (
             <div className="flex h-[80vh] items-center justify-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="space-y-6">
+                <div className="flex items-center gap-3 p-4 bg-rose-500/10 border border-rose-500/20 rounded-lg text-rose-400">
+                    <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                    <p className="text-sm font-medium">{error}</p>
+                </div>
             </div>
         );
     }
@@ -67,8 +84,8 @@ export default function AdminFunnelPage() {
                     <CardContent className="h-[400px] flex flex-col items-center justify-center pb-12">
                         <div className="w-full max-w-4xl space-y-2">
                             {funnel?.map((stage: any, i: number) => {
-                                const width = 100 - (i * 15);
-                                const opacity = 1 - (i * 0.15);
+                                const width = funnel[0] ? (stage.count / funnel[0].count) * 100 : 100 - (i * 15);
+                                const opacity = Math.max(0.3, width / 100);
                                 return (
                                     <div key={stage.name} className="flex flex-col items-center group">
                                         <div 

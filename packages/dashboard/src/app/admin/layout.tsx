@@ -23,7 +23,8 @@ import {
     Layout,
     ListOrdered,
     DollarSign,
-    Filter
+    Filter,
+    Share2
 } from "lucide-react";
 import { isAdminEmail } from "@/lib/auth-config";
 

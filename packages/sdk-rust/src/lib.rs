@@ -75,3 +75,23 @@ impl SupraWallClient {
         Ok(resp_data)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_client_init_fails_without_env() {
+        env::remove_var("SUPRAWALL_API_KEY");
+        let client = SupraWallClient::new();
+        assert!(client.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_test_mode_bypass() {
+        env::set_var("SUPRAWALL_API_KEY", "sw_test_123");
+        let client = SupraWallClient::new().unwrap();
+        let res = client.evaluate("test", "tool", serde_json::json!({})).await.unwrap();
+        assert_eq!(res.decision, "ALLOW");
+    }
+}

@@ -349,6 +349,9 @@ async def _poll_approval_async(request_id: str, options: SupraWallOptions) -> di
 def _evaluate(tool_name: str, args: Any, options: SupraWallOptions, source: str = "direct-sdk") -> dict:
     """Makes a synchronous policy check call to SupraWall."""
     # ── Safety Checks: Client-side fast-reject ──
+    if options.api_key.startswith(("sw_test_", "ag_test_")):
+        return {"decision": "ALLOW", "reason": "Test mode bypass"}
+
     budget_block = _check_budget(options)
     if budget_block: return budget_block
 
@@ -368,26 +371,45 @@ def _evaluate(tool_name: str, args: Any, options: SupraWallOptions, source: str 
             headers["X-OpenRouter-Categories"] = attr["categories"]
 
     global _has_verified_connection
-    try:
-        with httpx.Client(timeout=options.timeout) as client:
-            resp = client.post(
-                options.cloud_function_url,
-                json={
-                    "apiKey": options.api_key,
-                    "toolName": tool_name,
-                    "arguments": args or {},
-                    "agentId": session_id,
-                    "tenantId": options.tenant_id,
-                    "sessionId": session_id,
-                    "agentRole": options.agent_role,
-                    "source": source,
-                },
-                headers=headers,
-            )
-    except httpx.RequestError as e:
-        if not _has_verified_connection:
-            raise SupraWallConnectionError(f"Cannot reach SupraWall server at {options.cloud_function_url}.")
-        raise e
+    
+    import time
+    import random
+
+    resp = None
+    last_err = None
+    
+    for i in range(3): # 3 retries
+        try:
+            with httpx.Client(timeout=options.timeout) as client:
+                resp = client.post(
+                    options.cloud_function_url,
+                    json={
+                        "apiKey": options.api_key,
+                        "toolName": tool_name,
+                        "arguments": args or {},
+                        "agentId": session_id,
+                        "tenantId": options.tenant_id,
+                        "sessionId": session_id,
+                        "agentRole": options.agent_role,
+                        "source": source,
+                    },
+                    headers=headers,
+                )
+                if resp.status_code < 500 and resp.status_code != 429:
+                    break
+        except httpx.RequestError as e:
+            last_err = e
+            if i == 2: # Last try
+                if not _has_verified_connection:
+                    raise SupraWallConnectionError(f"Cannot reach SupraWall server at {options.cloud_function_url}.")
+                raise e
+        
+        # Exponential backoff: 0.2s, 0.4s, 0.8s ... with jitter
+        sleep_time = (2 ** i) * 0.2 + (random.random() * 0.1)
+        time.sleep(sleep_time)
+
+    if resp is None:
+        raise last_err or Exception("Failed to contact SupraWall after retries")
 
     if resp.status_code == 401 and not _has_verified_connection:
         raise SupraWallConnectionError(f"Invalid API key. Check your SUPRAWALL_API_KEY.\n  API Key: {options.api_key[:8]}...")
@@ -404,7 +426,12 @@ def _evaluate(tool_name: str, args: Any, options: SupraWallOptions, source: str 
     resp.raise_for_status()
     
     _has_verified_connection = True
-    data = resp.json()
+    try:
+        data = resp.json()
+    except Exception:
+        log.error("[SupraWall] Invalid JSON response from server.")
+        return {"decision": "DENY", "reason": "Malformed server response (fail-closed)."}
+        
     _record_cost(options, data)
 
     # ── Handle Human-in-the-Loop Polling ──
@@ -417,6 +444,9 @@ def _evaluate(tool_name: str, args: Any, options: SupraWallOptions, source: str 
 async def _evaluate_async(tool_name: str, args: Any, options: SupraWallOptions, source: str = "direct-sdk") -> dict:
     """Makes an async policy check call to SupraWall."""
     # ── Safety Checks: Client-side fast-reject ──
+    if options.api_key.startswith(("sw_test_", "ag_test_")):
+        return {"decision": "ALLOW", "reason": "Test mode bypass"}
+
     budget_block = _check_budget(options)
     if budget_block: return budget_block
 
@@ -436,26 +466,43 @@ async def _evaluate_async(tool_name: str, args: Any, options: SupraWallOptions, 
             headers["X-OpenRouter-Categories"] = attr["categories"]
 
     global _has_verified_connection
-    try:
-        async with httpx.AsyncClient(timeout=options.timeout) as client:
-            resp = await client.post(
-                options.cloud_function_url,
-                json={
-                    "apiKey": options.api_key,
-                    "toolName": tool_name,
-                    "arguments": args or {},
-                    "agentId": session_id,
-                    "tenantId": options.tenant_id,
-                    "sessionId": session_id,
-                    "agentRole": options.agent_role,
-                    "source": source,
-                },
-                headers=headers,
-            )
-    except httpx.RequestError as e:
-        if not _has_verified_connection:
-            raise SupraWallConnectionError(f"Cannot reach SupraWall server at {options.cloud_function_url}.")
-        raise e
+    import asyncio
+    import random
+
+    resp = None
+    last_err = None
+
+    for i in range(3):
+        try:
+            async with httpx.AsyncClient(timeout=options.timeout) as client:
+                resp = await client.post(
+                    options.cloud_function_url,
+                    json={
+                        "apiKey": options.api_key,
+                        "toolName": tool_name,
+                        "arguments": args or {},
+                        "agentId": session_id,
+                        "tenantId": options.tenant_id,
+                        "sessionId": session_id,
+                        "agentRole": options.agent_role,
+                        "source": source,
+                    },
+                    headers=headers,
+                )
+                if resp.status_code < 500 and resp.status_code != 429:
+                    break
+        except httpx.RequestError as e:
+            last_err = e
+            if i == 2:
+                if not _has_verified_connection:
+                    raise SupraWallConnectionError(f"Cannot reach SupraWall server at {options.cloud_function_url}.")
+                raise e
+        
+        sleep_time = (2 ** i) * 0.2 + (random.random() * 0.1)
+        await asyncio.sleep(sleep_time)
+
+    if resp is None:
+        raise last_err or Exception("Failed to contact SupraWall after retries")
 
     if resp.status_code == 401 and not _has_verified_connection:
         raise SupraWallConnectionError(f"Invalid API key. Check your SUPRAWALL_API_KEY.\n  API Key: {options.api_key[:8]}...")
@@ -472,7 +519,12 @@ async def _evaluate_async(tool_name: str, args: Any, options: SupraWallOptions, 
     resp.raise_for_status()
     
     _has_verified_connection = True
-    data = resp.json()
+    try:
+        data = resp.json()
+    except Exception:
+        log.error("[SupraWall] Invalid JSON response from server.")
+        return {"decision": "DENY", "reason": "Malformed server response (fail-closed)."}
+
     _record_cost(options, data)
 
     # ── Handle Human-in-the-Loop Polling ──

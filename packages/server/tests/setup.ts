@@ -29,9 +29,8 @@ jest.mock("../src/db", () => {
 
     const mockClient = {
         query: jest.fn(async (text: string, params: any[]) => {
-            if (text.includes("INSERT INTO vault_secrets")) {
                 const s = { 
-                    id: Math.random().toString(36).substring(7), 
+                    id: crypto.randomUUID(), 
                     tenant_id: params[0], 
                     secret_name: params[1], 
                     encrypted_value: params[2], 
@@ -43,7 +42,7 @@ jest.mock("../src/db", () => {
                 return { rows: [s], rowCount: 1 };
             }
             if (text.includes("INSERT INTO vault_access_rules")) {
-              const r = { id: Math.random(), tenant_id: params[0], agent_id: params[1], secret_id: params[2], allowed_tools: params[3] };
+              const r = { id: crypto.randomUUID(), tenant_id: params[0], agent_id: params[1], secret_id: params[2], allowed_tools: params[3] };
               mockDb.vault_access_rules.push(r);
               return { rows: [r], rowCount: 1 };
             }
@@ -122,7 +121,7 @@ jest.mock("../src/db", () => {
                 // Handle INSERTs in pool as well (for routes using pool directly)
                 if (queryText.includes("INSERT INTO vault_secrets")) {
                     const s = { 
-                        id: Math.random().toString(36).substring(7), 
+                        id: crypto.randomUUID(), 
                         tenant_id: params[0], 
                         secret_name: params[1], 
                         encrypted_value: params[2], 
@@ -134,7 +133,7 @@ jest.mock("../src/db", () => {
                     return { rows: [s], rowCount: 1 };
                 }
                 if (queryText.includes("INSERT INTO vault_access_rules")) {
-                  const r = { id: Math.random(), tenant_id: params[0], agent_id: params[1], secret_id: params[2], allowed_tools: params[3], max_uses_per_hour: params[4] || 100 };
+                  const r = { id: crypto.randomUUID(), tenant_id: params[0], agent_id: params[1], secret_id: params[2], allowed_tools: params[3], max_uses_per_hour: params[4] || 100 };
                   mockDb.vault_access_rules.push(r);
                   return { rows: [r], rowCount: 1 };
                 }

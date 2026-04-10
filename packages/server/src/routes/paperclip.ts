@@ -682,7 +682,8 @@ router.post(
         let parsedBody: any;
         try {
             parsedBody = JSON.parse(rawBody.toString("utf-8"));
-        } catch {
+        } catch (err) {
+            logger.error("[Paperclip] Failed to parse verified webhook JSON:", err);
             return res.status(400).json({ error: "Invalid JSON body" });
         }
 

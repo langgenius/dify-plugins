@@ -204,7 +204,13 @@ async function callStandardLLM(envInfo: EnvInfo, logger: Logger, prompt: string)
         if (!res.ok) return { score: 0, reasoning: 'LLM error — defaulting safe', model };
 
         const data = await res.json() as { choices: Array<{ message: { content: string } }> };
-        const content = JSON.parse(data.choices[0].message.content) as { score?: number; reasoning?: string };
+        let content: { score?: number; reasoning?: string };
+        try {
+            content = JSON.parse(data.choices[0].message.content);
+        } catch (e) {
+            logger.error('[Semantic] Failed to parse LLM JSON response', { error: e, raw: data.choices[0].message.content });
+            return { score: 0, reasoning: 'LLM returned malformed response — defaulting safe', model };
+        }
         return { score: clamp(content.score ?? 0), reasoning: content.reasoning || '', model };
     } catch (err) {
         clearTimeout(timeout);

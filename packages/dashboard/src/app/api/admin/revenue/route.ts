@@ -3,13 +3,31 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
-import { db } from '@/lib/firebase-admin';
+import { db, getAdminAuth } from '@/lib/firebase-admin';
 import { subMonths, startOfMonth, endOfMonth, isWithinInterval, subDays } from 'date-fns';
 
 export const dynamic = 'force-dynamic';
 
+const ADMIN_EMAILS_RAW = (process.env.ADMIN_EMAILS || process.env.NEXT_PUBLIC_ADMIN_EMAILS || '').split(',').map(e => e.trim()).filter(Boolean);
+const ADMIN_EMAILS = ADMIN_EMAILS_RAW.length > 0 ? ADMIN_EMAILS_RAW : ['peghin@gmail.com'];
+
 export async function GET(req: NextRequest) {
     try {
+        const authHeader = req.headers.get('authorization');
+        if (!authHeader?.startsWith('Bearer ')) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+        const token = authHeader.slice(7);
+        let decodedToken: { email?: string };
+        try {
+            decodedToken = await getAdminAuth().verifyIdToken(token);
+        } catch {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+        if (!decodedToken.email || !ADMIN_EMAILS.includes(decodedToken.email)) {
+            return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+        }
+
         const [activeSubs, allInvoices, usersSnap] = await Promise.all([
             stripe.subscriptions.list({ status: 'active', limit: 100, expand: ['data.customer'] }),
             stripe.invoices.list({ limit: 100, expand: ['data.customer'] }),
@@ -76,9 +94,48 @@ export async function GET(req: NextRequest) {
         // New MRR: subs started this month
         // Churn MRR: subs canceled this month
         const thisMonthStart = startOfMonth(new Date()).getTime() / 1000;
+        const lastMonthStart = startOfMonth(subMonths(new Date(), 1)).getTime() / 1000;
+        const lastMonthEnd = endOfMonth(subMonths(new Date(), 1)).getTime() / 1000;
+
         const newSubsThisMonth = activeSubs.data.filter(s => s.start_date >= thisMonthStart);
         const newMrrThisMonth = newSubsThisMonth.reduce((acc, s) => acc + ((s.items.data[0]?.plan?.amount || 0) / 100), 0);
         const churnedMrrThisMonth = canceledSubs.data.reduce((acc, s) => acc + ((s.items.data[0]?.plan?.amount || 0) / 100), 0);
+
+        // Expansion/Contraction: Compare invoice amounts for customers in both months
+        let expansionMrr = 0;
+        let contractionMrr = 0;
+
+        const customerMrrMap = new Map<string, { current: number, previous: number }>();
+
+        // Get current month invoices
+        allInvoices.data.forEach(inv => {
+            if (inv.status_transitions?.paid_at) {
+                const paidDate = new Date(inv.status_transitions.paid_at * 1000);
+                const customerId = (inv.customer as any)?.id || inv.customer_id || 'unknown';
+                const amount = inv.amount_paid / 100;
+
+                if (!customerMrrMap.has(customerId)) {
+                    customerMrrMap.set(customerId, { current: 0, previous: 0 });
+                }
+
+                const entry = customerMrrMap.get(customerId)!;
+                if (isWithinInterval(paidDate, { start: new Date(thisMonthStart * 1000), end: new Date() })) {
+                    entry.current += amount;
+                } else if (isWithinInterval(paidDate, { start: new Date(lastMonthStart * 1000), end: new Date(lastMonthEnd * 1000) })) {
+                    entry.previous += amount;
+                }
+            }
+        });
+
+        // Calculate expansion vs contraction
+        customerMrrMap.forEach(({ current, previous }) => {
+            const diff = current - previous;
+            if (diff > 0) {
+                expansionMrr += diff;
+            } else if (diff < 0) {
+                contractionMrr += Math.abs(diff);
+            }
+        });
 
         return NextResponse.json({
             summary: {
@@ -95,8 +152,8 @@ export async function GET(req: NextRequest) {
                 waterfall: {
                     new: Math.round(newMrrThisMonth),
                     churn: Math.round(churnedMrrThisMonth * -1),
-                    expansion: 0, // Not easily computed without subscription versioning
-                    contraction: 0
+                    expansion: Math.round(expansionMrr),
+                    contraction: Math.round(contractionMrr * -1)
                 }
             },
             paymentHistory

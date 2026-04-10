@@ -17,18 +17,24 @@ import { format } from "date-fns";
 
 export default function AdminRevenuePage() {
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [data, setData] = useState<any>(null);
 
     useEffect(() => {
         async function fetchRevenue() {
+            setLoading(true);
+            setError(null);
             try {
                 const res = await fetch('/api/admin/revenue');
                 if (res.ok) {
                     const json = await res.json();
                     setData(json);
+                } else {
+                    setError('Failed to load revenue analytics. Please try again.');
                 }
             } catch (err) {
                 console.error("Failed to fetch revenue analytics", err);
+                setError('Failed to fetch revenue analytics. Please try again.');
             }
             setLoading(false);
         }
@@ -39,6 +45,17 @@ export default function AdminRevenuePage() {
         return (
             <div className="flex h-[80vh] items-center justify-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="space-y-6">
+                <div className="flex items-center gap-3 p-4 bg-rose-500/10 border border-rose-500/20 rounded-lg text-rose-400">
+                    <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                    <p className="text-sm font-medium">{error}</p>
+                </div>
             </div>
         );
     }

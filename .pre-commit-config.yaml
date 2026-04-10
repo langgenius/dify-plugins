@@ -1,0 +1,53 @@
+# Copyright 2026 SupraWall Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+# Pre-commit hook configuration for detecting and preventing secrets from being committed
+# Install with: pip install pre-commit && pre-commit install
+# Run manually: pre-commit run --all-files
+
+repos:
+  # Detect secrets and prevent accidental commits
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline', '--allow-multiple-files']
+        exclude: '(?:\.snap|\.lock|\.yarn|node_modules|\.env\.example)'
+
+  # Git secrets hook for additional patterns
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.0
+    hooks:
+      - id: gitleaks
+        language: golang
+        entry: gitleaks protect --source git --verbose --log-opts --staged
+        stages: [commit]
+
+  # Prevent large files from being committed
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: detect-private-key
+      - id: check-json
+      - id: check-yaml
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-ast
+      - id: debug-statements
+        language_version: python3
+      - id: destroyed-symlinks
+      - id: fix-byte-order-marker
+      - id: forbid-new-submodules
+
+  # TypeScript/JavaScript linting
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v9.0.0
+    hooks:
+      - id: eslint
+        types: [javascript, jsx, typescript, tsx]
+        args: ['--fix', '--max-warnings', '0']
+        exclude: 'node_modules|\.next|\.turbo'

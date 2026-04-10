@@ -151,13 +151,27 @@ export async function resolveVaultTokens(
         return { success: false, resolvedArgs: args, injectedSecrets: [], secretValues: [], errors };
     }
 
-    return {
-        success: true,
-        resolvedArgs: JSON.parse(resolvedArgsString),
-        injectedSecrets,
-        secretValues,
-        errors: []
-    };
+    try {
+        return {
+            success: true,
+            resolvedArgs: JSON.parse(resolvedArgsString),
+            injectedSecrets,
+            secretValues,
+            errors: []
+        };
+    } catch (e) {
+        return { 
+            success: false, 
+            resolvedArgs: args, 
+            injectedSecrets: [], 
+            secretValues: [], 
+            errors: [{ 
+                secretName: "ALL", 
+                reason: "NOT_FOUND", 
+                message: "Resolved arguments became malformed JSON during vault injection." 
+            }] 
+        };
+    }
 }
 
 async function checkRateLimit(

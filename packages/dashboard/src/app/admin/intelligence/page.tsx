@@ -44,11 +44,15 @@ export default function IntelligencePage() {
 
     const addToQueue = async (action: string) => {
         try {
+            const timestamp = Date.now();
+            const randomSuffix = Math.random().toString(36).substring(2, 8).toUpperCase();
+            const taskNumber = `AUTO-${timestamp.toString().slice(-6)}-${randomSuffix}`;
+
             await fetch('/api/tasks', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    taskNumber: `AUTO-${Math.floor(1000 + Math.random() * 9000)}`,
+                    taskNumber,
                     type: 'queue_addition',
                     status: 'pending_review',
                     url: 'TBD',

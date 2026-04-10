@@ -69,7 +69,7 @@ export default function TaskReviewPage() {
                     status,
                     humanAction,
                     humanNote: note || null,
-                    reviewedAt: 'now'
+                    reviewedAt: new Date().toISOString()
                 })
             });
             if (status !== 'revision') {
