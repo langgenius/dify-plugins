@@ -38,7 +38,7 @@ options = SupraWallOptions(
 
 # --- Agent Creation ---
 
-model = InferenceClientModel("meta-llama/Llama-3.2-3B-Instruct") # Use a small model for demo
+model = InferenceClientModel("Qwen/Qwen2.5-Coder-32B-Instruct") # Non-gated, high-performance model
 
 def create_agent(secured: bool):
     agent = CodeAgent(

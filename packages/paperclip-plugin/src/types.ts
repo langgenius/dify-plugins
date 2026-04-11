@@ -8,6 +8,17 @@ export interface SupraWallConfig {
     apiUrl?: string;
     /** Timeout in ms for API calls. Default: 5000 */
     timeout?: number;
+    /** Maximum number of retries for transient failures (5xx, network). Default: 3 */
+    maxRetries?: number;
+    /** Initial delay in ms for exponential backoff. Default: 500 */
+    retryDelay?: number;
+}
+
+export interface RequestOptions {
+    /** Per-call timeout override in ms */
+    timeout?: number;
+    /** Per-call retry override */
+    maxRetries?: number;
 }
 
 export interface InvokeRequest {

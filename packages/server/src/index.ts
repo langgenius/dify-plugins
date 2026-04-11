@@ -78,6 +78,20 @@ app.use((req, res, next) => {
     next();
 });
 
+// Response body scrubbing middleware for telemetry/logging safety
+app.use((req, res, next) => {
+    const originalJson = res.json;
+    res.json = function (body) {
+        if ((res as any)._scrubBody && body && typeof body === 'object') {
+            const scrubbedBody = { ...body };
+            if (scrubbedBody.agentApiKey) scrubbedBody.agentApiKey = '[REDACTED]';
+            return originalJson.call(this, scrubbedBody);
+        }
+        return originalJson.call(this, body);
+    };
+    next();
+});
+
 // Healthcheck with DB status
 app.get("/health", async (req, res) => {
     try {

@@ -19,7 +19,10 @@ const router = express.Router();
 
 if (!process.env.VAULT_ENCRYPTION_KEY) {
     logger.error("[Paperclip] VAULT_ENCRYPTION_KEY is not set. Vault operations will be disabled.");
+} else if (process.env.VAULT_ENCRYPTION_KEY.length < 32) {
+    logger.error("[Paperclip] VAULT_ENCRYPTION_KEY is too short. Must be at least 32 characters.");
 }
+
 if (!process.env.PAPERCLIP_WEBHOOK_SECRET) {
     logger.warn("[Paperclip] PAPERCLIP_WEBHOOK_SECRET is not set. Webhook endpoint will reject all requests.");
 }
@@ -435,6 +438,11 @@ router.post(
                 }
             } else {
                 // SQLite fallback for local dev only
+                if (process.env.NODE_ENV === 'production') {
+                    logger.error("[Paperclip] Refusing to use SQLite vault resolution in production environment.");
+                    return res.status(503).json({ error: "Vault requires PostgreSQL in production." });
+                }
+
                 const secretResult = await pool.query(
                     `SELECT vs.secret_name
                      FROM vault_secrets vs
@@ -458,7 +466,7 @@ router.post(
                 `INSERT INTO paperclip_run_tokens (id, tenant_id, agent_id, run_id, scoped_credentials, ttl_seconds, expires_at)
                  VALUES ($1, $2, $3, $4, $5, $6, $7)
                  ON CONFLICT (tenant_id, agent_id, run_id)
-                 DO UPDATE SET issued_at = NOW(), expires_at = $7, revoked = FALSE, revoked_at = NULL`,
+                 DO UPDATE SET issued_at = NOW(), expires_at = $7`,
                 // scoped_credentials stores the authorized secret names only, never decrypted values
                 [runTokenId, tenantId, agentId, runId, JSON.stringify({ authorizedSecrets: secretNames }), ttlSeconds, expiresAt]
             );
@@ -467,7 +475,8 @@ router.post(
             for (const secretName of secretNames) {
                 await pool.query(
                     `INSERT INTO vault_access_log (tenant_id, agent_id, secret_name, tool_name, action, request_metadata)
-                     VALUES ($1, $2, $3, $4, $5, $6)`,
+                     VALUES ($1, $2, $3, $4, $5, $6)
+                     ON CONFLICT DO NOTHING`,
                     [
                         tenantId, agentId, secretName.toUpperCase(),
                         sanitizedRole,
@@ -481,14 +490,14 @@ router.post(
             await recordEvaluation(tenantId!, tierLimits);
 
             // Return the run token ID — agent fetches actual credentials via separate
-            // authenticated call to /v1/vault/run-token/:runTokenId
+            // authenticated call to /v1/paperclip/run-token/:runTokenId
             return res.status(202).json({
                 status: "accepted",
                 runTokenId,
                 expiresAt: expiresAt.toISOString(),
                 allowedTools,
                 authorizedSecrets: secretNames,  // names only, no values
-                resolveUrl: `${process.env.SUPRAWALL_PUBLIC_URL || "https://api.supra-wall.com"}/v1/vault/run-token/${runTokenId}`,
+                resolveUrl: `${process.env.SUPRAWALL_PUBLIC_URL || "https://api.supra-wall.com"}/v1/paperclip/run-token/${runTokenId}`,
             });
         } catch (e) {
             logger.error("[Paperclip] Invoke error:", { error: e });
@@ -721,9 +730,9 @@ router.post(
                 const tier = tierResult.rows[0]?.tier || "developer";
                 const limits = TIER_LIMITS[tier as Tier] || TIER_LIMITS.developer;
 
-                if (isFinite(limits.maxAgents)) {
+                if (limits.maxAgents !== null && limits.maxAgents !== undefined) {
                     const countResult = await client.query(
-                        "SELECT COUNT(*) FROM agents WHERE tenantid = $1",
+                        "SELECT COUNT(*) as count FROM agents WHERE tenantid = $1",
                         [tenantId]
                     );
                     const currentCount = parseInt(countResult.rows[0].count, 10);
@@ -790,14 +799,20 @@ router.post(
 
                 logger.info(`[Paperclip] Agent hired: ${agentId} (${agent.role}) → tenant: ${tenantId}`);
                 
-                // H-1: Return the raw API key to Paperclip so it can be injected into the agent's environment
-                return res.json({ 
+                // H-1: Return the raw API key to Paperclip so it can be injected into the agent's environment.
+                // SECURITY: This response must not be logged in its raw form by request loggers.
+                const responsePayload = { 
                     success: true, 
                     event, 
                     agentId, 
                     agentApiKey, // Raw key returned ONCE
                     credentialsGranted: allowedCredentials 
-                });
+                };
+
+                // Explicitly scrub from telemetry/logging context if applicable
+                (res as any)._scrubBody = true; 
+
+                return res.json(responsePayload);
             }
 
             // ----------------------------------------------------------------
@@ -929,6 +944,27 @@ router.post(
         }
     }
 );
+
+// ---------------------------------------------------------------------------
+// GET /v1/paperclip/vault-status — Health check for vault configuration
+// ---------------------------------------------------------------------------
+
+router.get("/vault-status", async (req: Request, res: Response) => {
+    const encryptionKey = process.env.VAULT_ENCRYPTION_KEY;
+    const isPostgres = !!process.env.DATABASE_URL && !process.env.DATABASE_URL.includes("sqlite");
+    
+    const status = {
+        vault_config: encryptionKey ? "configured" : "missing",
+        database_type: isPostgres ? "postgres" : "sqlite",
+        ready: !!(encryptionKey && (isPostgres || process.env.NODE_ENV !== 'production')),
+        version: "1.0.0"
+    };
+
+    if (!status.ready) {
+        return res.status(503).json(status);
+    }
+    return res.json(status);
+});
 
 // ---------------------------------------------------------------------------
 // GET /v1/paperclip/status — Check integration status for a company

@@ -78,13 +78,8 @@ export function createPlugin(config: SupraWallConfig = {}) {
                 };
             } catch (resolveErr) {
                 console.error("[SupraWall] Failed to resolve run token credentials:", resolveErr);
-                // Return the runTokenId so the agent can retry resolution if needed
-                return {
-                    runTokenId: response.runTokenId,
-                    authorizedSecrets: response.authorizedSecrets,
-                    credentials: {},
-                    error: resolveErr instanceof Error ? resolveErr.message : "Credential resolution failed",
-                };
+                // Hard-fail if resolution fails — agents should not proceed with empty credentials
+                throw resolveErr;
             }
         },
 
