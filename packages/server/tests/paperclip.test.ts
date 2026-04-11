@@ -14,6 +14,7 @@ import request from "supertest";
 import crypto from "crypto";
 import app from "../src/index";
 import { pool, initDb } from "../src/db";
+import { hashApiKey } from "../src/util/hash";
 
 // Set required env vars before any module imports run
 process.env.VAULT_ENCRYPTION_KEY = "test-key-1234567890abcdef12345678";
@@ -49,7 +50,7 @@ beforeAll(async () => {
     await pool.query(
         `INSERT OR IGNORE INTO tenants (id, name, master_api_key, tier)
          VALUES ('test_tenant', 'Test Tenant', $1, 'developer')`,
-        [adminKey]
+        [hashApiKey(adminKey)]
     );
 });
 
