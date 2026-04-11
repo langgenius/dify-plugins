@@ -115,6 +115,18 @@ def my_agent_action():
                             </div>
                         ))}
                     </div>
+                {/* Step 5 */}
+                <section className="space-y-4">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold border border-emerald-500/30">5</div>
+                        <h2 className="text-2xl font-bold text-white tracking-wide">Automate with GitHub Actions</h2>
+                    </div>
+                    <p className="text-neutral-400">
+                        Enable continuous security auditing by adding the SupraWall Scan action to your repository. Detect risks before they reach production.
+                    </p>
+                    <Link href={`/docs/integrations/github-action`} className="inline-flex items-center gap-2 text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors">
+                        Setup GitHub Action <ArrowRight className="w-4 h-4" />
+                    </Link>
                 </section>
             </div>
 
