@@ -1,6 +1,6 @@
 {
   "buildCommand": "npx turbo run build --filter=@suprawall/dashboard",
   "outputDirectory": "packages/dashboard/.next",
-  "installCommand": "npm install",
+  "installCommand": "npm install --legacy-peer-deps",
   "framework": "nextjs"
 }
