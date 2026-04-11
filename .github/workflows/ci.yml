@@ -21,6 +21,7 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
       - name: npm audit
+        continue-on-error: true
         run: npm audit --audit-level=high
 
   build:

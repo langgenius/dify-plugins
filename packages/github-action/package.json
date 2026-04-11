@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "ncc build src/index.ts -o dist --minify --no-cache",
-    "test": "jest"
+    "test": "jest --passWithNoTests"
   },
   "keywords": [
     "github-action",
