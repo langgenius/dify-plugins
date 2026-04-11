@@ -21,12 +21,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: packages/github-action/package-lock.json
 
       - name: Install dependencies
         working-directory: packages/github-action
-        run: npm ci
+        run: npm install
 
       - name: Build dist/index.js
         working-directory: packages/github-action
@@ -49,11 +47,10 @@ jobs:
 
       - name: Copy action files to public repo
         run: |
-          # Copy core action files
-          cp packages/github-action/dist/index.js public-repo/dist/index.js 2>/dev/null || mkdir -p public-repo/dist && cp packages/github-action/dist/index.js public-repo/dist/index.js
+          mkdir -p public-repo/dist
+          cp packages/github-action/dist/index.js public-repo/dist/index.js
           cp packages/github-action/action.yml public-repo/action.yml
           cp LICENSE public-repo/LICENSE
-
           echo "Files copied successfully:"
           ls -la public-repo/dist/
           ls -la public-repo/action.yml
@@ -63,14 +60,10 @@ jobs:
         run: |
           git config user.name "SupraWall Bot"
           git config user.email "bot@supra-wall.com"
-
           git add dist/index.js action.yml LICENSE
-
-          # Only commit if there are actual changes
           if git diff --staged --quiet; then
             echo "No changes to sync. Public repo is already up to date."
           else
-            # Get the short SHA of the triggering commit for the message
             PRIVATE_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
             git commit -m "chore: sync action from private repo (${PRIVATE_SHA})"
             git push
