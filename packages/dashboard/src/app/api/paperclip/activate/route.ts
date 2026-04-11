@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
             `SELECT pt.id, pt.paperclip_company_id, pt.tier, pt.expires_at, pt.activated, pt.activation_email,
                     pc.agent_count, pc.paperclip_version, pc.status as company_status
              FROM paperclip_tokens pt
-             LEFT JOIN paperclip_companies pc ON pc.paperclip_company_id = pt.paperclip_company_id
+             JOIN paperclip_companies pc ON pc.paperclip_company_id = pt.paperclip_company_id
              WHERE pt.token = $1
              LIMIT 1`,
             [tokenHash]
@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
             `UPDATE paperclip_tokens
              SET activated = TRUE, activation_email = $1
              WHERE token = $2`,
-            [email.toLowerCase().trim(), token]
+            [email.toLowerCase().trim(), tokenHash]
         );
 
         // Update company status to active
