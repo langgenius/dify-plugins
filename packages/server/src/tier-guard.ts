@@ -110,9 +110,9 @@ export async function recordEvaluation(tenantId: string, limits: TierLimits): Pr
                     WHEN (tenant_usage.evaluation_count + 1) > $3 THEN (tenant_usage.evaluation_count + 1) - $3
                     ELSE 0
                 END,
-                last_updated = NOW()
+                last_updated = $4
              RETURNING evaluation_count`,
-            [tenantId, month, limits.maxEvaluationsPerMonth]
+            [tenantId, month, limits.maxEvaluationsPerMonth, new Date().toISOString()]
         );
 
         // Discord usage alerts at 50%, 75%, 90%, 100% thresholds
@@ -186,8 +186,8 @@ export function tierLimitError(
 ) {
     const upgradeMap: Record<string, { nextTier: string; price: string }> = {
         open_source: { nextTier: "developer", price: "Free" },
-        developer:   { nextTier: "team",      price: "$149/mo" },
-        team:        { nextTier: "business",   price: "$499/mo" },
+        developer:   { nextTier: "team",      price: "$79/mo" },
+        team:        { nextTier: "business",   price: "$249/mo" },
         business:    { nextTier: "enterprise", price: "Custom" },
     };
     const upgrade = upgradeMap[currentTier || "developer"] ?? upgradeMap.developer;

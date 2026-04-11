@@ -3,6 +3,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { pool } from "@/lib/db_sql";
+import { hashApiKey } from "@/lib/hash";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,8 @@ export async function GET(request: NextRequest) {
     }
 
     try {
+        // Tokens are stored as SHA-256 hashes — must hash the incoming raw token before querying
+        const tokenHash = hashApiKey(token);
         const result = await pool.query(
             `SELECT pt.id, pt.paperclip_company_id, pt.tier, pt.expires_at, pt.activated, pt.activation_email,
                     pc.agent_count, pc.paperclip_version, pc.status as company_status
@@ -26,7 +29,7 @@ export async function GET(request: NextRequest) {
              LEFT JOIN paperclip_companies pc ON pc.paperclip_company_id = pt.paperclip_company_id
              WHERE pt.token = $1
              LIMIT 1`,
-            [token]
+            [tokenHash]
         );
 
         if (result.rows.length === 0) {
@@ -77,12 +80,14 @@ export async function POST(request: NextRequest) {
     }
 
     try {
+        // Tokens are stored as SHA-256 hashes — must hash the incoming raw token before querying
+        const tokenHash = hashApiKey(token);
         const tokenResult = await pool.query(
             `SELECT pt.id, pt.tenant_id, pt.paperclip_company_id, pt.tier, pt.expires_at, pt.activated
              FROM paperclip_tokens pt
              WHERE pt.token = $1
              LIMIT 1`,
-            [token]
+            [tokenHash]
         );
 
         if (tokenResult.rows.length === 0) {

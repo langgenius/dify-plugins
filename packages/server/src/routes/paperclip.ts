@@ -1,5 +1,9 @@
 // Copyright 2026 SupraWall Contributors
 // SPDX-License-Identifier: Apache-2.0
+//
+// Plugin source (client-side): https://github.com/wiserautomation/suprawall-plugins-/tree/main/paperclip
+// This file contains the server-side API routes (vault engine, billing, tier enforcement).
+// The client plugin only calls this API — zero proprietary logic on the client side.
 
 import express, { Request, Response } from "express";
 import { pool, isPostgres } from "../db";

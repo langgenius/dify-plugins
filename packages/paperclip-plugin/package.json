@@ -43,9 +43,9 @@
   "homepage": "https://docs.supra-wall.com/paperclip",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wiserautomation/Supra-Wall-Private"
+    "url": "https://github.com/wiserautomation/suprawall-plugins-"
   },
   "bugs": {
-    "url": "https://github.com/wiserautomation/Supra-Wall-Private/issues"
+    "url": "https://github.com/wiserautomation/suprawall-plugins-/issues"
   }
 }

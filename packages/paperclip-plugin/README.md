@@ -190,7 +190,7 @@ const result = await client.invoke({
 - **Dashboard:** [supra-wall.com/dashboard](https://supra-wall.com/dashboard)
 - **Pricing:** [supra-wall.com/pricing](https://supra-wall.com/pricing)
 - **Support:** support@wiserautomation.agency
-- **Issues:** [github.com/suprawall/suprawall-vault/issues](https://github.com/suprawall/suprawall-vault/issues)
+- **Issues:** [github.com/wiserautomation/suprawall-plugins-/issues](https://github.com/wiserautomation/suprawall-plugins-/issues)
 
 ---
 
