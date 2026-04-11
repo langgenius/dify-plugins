@@ -1,12 +1,7 @@
 name: Sync Action to Public Repo
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'packages/github-action/**'
-  workflow_dispatch:
+  workflow_dispatch: # Allow manual trigger only per user policy
 
 jobs:
   sync:
@@ -16,27 +11,33 @@ jobs:
     steps:
       - name: Checkout private repo
         uses: actions/checkout@v4
+        with:
+          path: private-repo
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: private-repo/package-lock.json
 
       - name: Install dependencies
-        working-directory: packages/github-action
-        run: npm install
+        run: |
+          cd private-repo
+          npm ci
 
-      - name: Build dist/index.js
-        working-directory: packages/github-action
-        run: npm run build
+      - name: Build Action
+        run: |
+          cd private-repo/packages/github-action
+          npm run build
 
       - name: Verify build output
         run: |
-          if [ ! -f packages/github-action/dist/index.js ]; then
+          if [ ! -f private-repo/packages/github-action/dist/index.js ]; then
             echo "ERROR: dist/index.js was not generated. Check the build step."
             exit 1
           fi
-          echo "Build successful. dist/index.js size: $(wc -c < packages/github-action/dist/index.js) bytes"
+          echo "Build successful. dist/index.js size: $(wc -c < private-repo/packages/github-action/dist/index.js) bytes"
 
       - name: Checkout public repo
         uses: actions/checkout@v4
@@ -45,27 +46,33 @@ jobs:
           token: ${{ secrets.SUPRAWALL_PUBLIC_REPO_TOKEN }}
           path: public-repo
 
-      - name: Copy action files to public repo
+      - name: Sync files to public repo
         run: |
-          mkdir -p public-repo/dist
-          cp packages/github-action/dist/index.js public-repo/dist/index.js
-          cp packages/github-action/action.yml public-repo/action.yml
-          cp LICENSE public-repo/LICENSE
-          echo "Files copied successfully:"
-          ls -la public-repo/dist/
-          ls -la public-repo/action.yml
+          # Clean public repo except for .git
+          cd public-repo
+          find . -maxdepth 1 -not -name '.git' -not -name '.' -delete
+          
+          # Copy files from private repo
+          cp ../private-repo/packages/github-action/action.yml .
+          cp -r ../private-repo/packages/github-action/dist .
+          cp ../private-repo/LICENSE .
+          
+          # Use dedicated README if available
+          if [ -f ../private-repo/packages/github-action/README_ACTION.md ]; then
+            cp ../private-repo/packages/github-action/README_ACTION.md README.md
+          else
+            cp ../private-repo/README.md .
+          fi
 
       - name: Commit and push to public repo
-        working-directory: public-repo
         run: |
-          git config user.name "SupraWall Bot"
+          cd public-repo
+          git config user.name "SupraWall Automation"
           git config user.email "bot@supra-wall.com"
-          git add dist/index.js action.yml LICENSE
+          git add .
           if git diff --staged --quiet; then
-            echo "No changes to sync. Public repo is already up to date."
+            echo "No changes to sync."
           else
-            PRIVATE_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
-            git commit -m "chore: sync action from private repo (${PRIVATE_SHA})"
-            git push
-            echo "Successfully pushed to public repo."
+            git commit -m "chore: sync action from private repo"
+            git push origin main
           fi

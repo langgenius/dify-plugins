@@ -418,7 +418,7 @@ async function internalEvaluate(
 
         let data: SupraWallResponse & { approvalId?: string };
         try {
-            data = await response.json();
+            data = (await response.json()) as SupraWallResponse & { approvalId?: string };
         } catch (err) {
             throw new Error("Failed to parse SupraWall response: Malformed JSON");
         }
