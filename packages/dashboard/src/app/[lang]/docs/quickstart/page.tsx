@@ -115,6 +115,8 @@ def my_agent_action():
                             </div>
                         ))}
                     </div>
+                </section>
+
                 {/* Step 5 */}
                 <section className="space-y-4">
                     <div className="flex items-center gap-3">
