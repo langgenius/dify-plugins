@@ -7,3 +7,4 @@ requests
 huggingface_hub
 python-dotenv
 duckduckgo-search>=6.3.0
+ddgs
