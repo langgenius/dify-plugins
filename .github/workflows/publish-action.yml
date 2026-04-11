@@ -1,0 +1,78 @@
+name: Sync Action to Public Repo
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/github-action/**'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    name: Build and Sync to Public Repo
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout private repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: packages/github-action/package-lock.json
+
+      - name: Install dependencies
+        working-directory: packages/github-action
+        run: npm ci
+
+      - name: Build dist/index.js
+        working-directory: packages/github-action
+        run: npm run build
+
+      - name: Verify build output
+        run: |
+          if [ ! -f packages/github-action/dist/index.js ]; then
+            echo "ERROR: dist/index.js was not generated. Check the build step."
+            exit 1
+          fi
+          echo "Build successful. dist/index.js size: $(wc -c < packages/github-action/dist/index.js) bytes"
+
+      - name: Checkout public repo
+        uses: actions/checkout@v4
+        with:
+          repository: wiserautomation/SupraWall
+          token: ${{ secrets.SUPRAWALL_PUBLIC_REPO_TOKEN }}
+          path: public-repo
+
+      - name: Copy action files to public repo
+        run: |
+          # Copy core action files
+          cp packages/github-action/dist/index.js public-repo/dist/index.js 2>/dev/null || mkdir -p public-repo/dist && cp packages/github-action/dist/index.js public-repo/dist/index.js
+          cp packages/github-action/action.yml public-repo/action.yml
+          cp LICENSE public-repo/LICENSE
+
+          echo "Files copied successfully:"
+          ls -la public-repo/dist/
+          ls -la public-repo/action.yml
+
+      - name: Commit and push to public repo
+        working-directory: public-repo
+        run: |
+          git config user.name "SupraWall Bot"
+          git config user.email "bot@supra-wall.com"
+
+          git add dist/index.js action.yml LICENSE
+
+          # Only commit if there are actual changes
+          if git diff --staged --quiet; then
+            echo "No changes to sync. Public repo is already up to date."
+          else
+            # Get the short SHA of the triggering commit for the message
+            PRIVATE_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+            git commit -m "chore: sync action from private repo (${PRIVATE_SHA})"
+            git push
+            echo "Successfully pushed to public repo."
+          fi
