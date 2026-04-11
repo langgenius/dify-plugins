@@ -160,7 +160,7 @@ router.post("/webhook", express.raw({ type: "application/json" }), async (req: R
             // Subscription renewal — confirm tier stays active
             case "invoice.paid": {
                 const invoice = event.data.object as Stripe.Invoice;
-                const subId = typeof invoice.subscription === "string" ? invoice.subscription : null;
+                const subId = typeof (invoice as any).subscription === "string" ? (invoice as any).subscription : null;
                 if (!subId) break;
 
                 // Retrieve the plan from subscription metadata and re-affirm the tier
