@@ -350,6 +350,12 @@ export const initDb = async () => {
                 evidence TEXT DEFAULT '{}',
                 UNIQUE(agent_id, template_id, control_id)
             )`,
+            // Performance indices for SQLite
+            `CREATE INDEX IF NOT EXISTS idx_audit_logs_tenant ON audit_logs(tenantid, timestamp)`,
+            `CREATE INDEX IF NOT EXISTS idx_agents_apikeyhash ON agents(apikeyhash)`,
+            `CREATE INDEX IF NOT EXISTS idx_tenants_master_key ON tenants(master_api_key)`,
+            `CREATE INDEX IF NOT EXISTS idx_vault_secrets_tenant ON vault_secrets(tenant_id)`,
+            `CREATE INDEX IF NOT EXISTS idx_vault_access_rules_lookup ON vault_access_rules(tenant_id, agent_id, secret_id)`,
             // Insert seed data so the dashboard is not empty
             `INSERT OR IGNORE INTO tenants (id, name, tier) VALUES ('default', 'SupraWall Org', 'business')`,
             `INSERT OR IGNORE INTO agents (id, tenantid, name, status) VALUES ('agent_1', 'default', 'LinkedIn Manager', 'active')`,

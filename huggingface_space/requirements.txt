@@ -6,4 +6,4 @@ openai
 requests
 huggingface_hub
 python-dotenv
-duckduckgo-search
+duckduckgo-search>=6.3.0

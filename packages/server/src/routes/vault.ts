@@ -3,7 +3,7 @@
 
 import { Router, Request, Response } from "express";
 import { pool } from "../db";
-import { adminAuth, AuthenticatedRequest } from "../auth";
+import { adminAuth, gatekeeperAuth, AuthenticatedRequest } from "../auth";
 import { resolveTier, TieredRequest, tierLimitError } from "../tier-guard";
 import { logger } from "../logger";
 import { validate, CreateVaultSecretSchema } from "../validation";
@@ -45,29 +45,22 @@ async function logVaultAccess(tenantId: string, agentId: string, secretName: str
  * Shared logic for secret resolution (JIT hydration)
  */
 async function handleResolve(req: Request, res: Response) {
-    let tenantId = "unknown";
-    let agentId = "unknown";
-    let secretName = req.body.secretName || "unknown";
-    const { apiKey, toolName } = req.body;
+    const authReq = req as AuthenticatedRequest;
+    const agent = authReq.agent;
+    const tenantId = authReq.tenantId;
+    
+    if (!agent || !tenantId) {
+        return res.status(401).json({ error: "Unauthorized: Agent or Tenant not resolved" });
+    }
+
+    const agentId = agent.id;
+    const secretName = req.body.secretName;
+    const { toolName } = req.body;
 
     try {
-        if (!apiKey || !secretName) {
-            return res.status(400).json({ error: "Missing required fields: apiKey, secretName" });
+        if (!secretName) {
+            return res.status(400).json({ error: "Missing required field: secretName" });
         }
-
-        // 1. Resolve Agent by API Key
-        const agentResult = await pool.query(
-            "SELECT id, tenantid FROM agents WHERE apikeyhash = $1 AND status = 'active'",
-            [apiKey]
-        );
-
-        if (agentResult.rows.length === 0) {
-            return res.status(403).json({ error: "Invalid API Key" });
-        }
-
-        const agent = agentResult.rows[0];
-        agentId = agent.id;
-        tenantId = agent.tenantid;
 
         // 2. Resolve Secret (PGP Decrypt)
         const secretResult = await pool.query(
@@ -399,7 +392,7 @@ router.get("/log", adminAuth, async (req: Request, res: Response) => {
 });
 
 // Resolution Endpoints
-router.post("/resolve", handleResolve);
-router.post("/", handleResolve);
+router.post("/resolve", gatekeeperAuth, handleResolve);
+router.post("/", gatekeeperAuth, handleResolve);
 
 export default router;

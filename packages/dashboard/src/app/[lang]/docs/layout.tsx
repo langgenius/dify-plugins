@@ -27,6 +27,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
                 { name: "Python SDK", href: `/${lang}/docs/python`, icon: Terminal },
                 { name: "Claude (MCP)", href: `/${lang}/docs/mcp`, icon: Puzzle },
                 { name: "Browser (OpenClaw)", href: `/${lang}/docs/integrations/openclaw`, icon: Terminal },
+                { name: "GitHub Action", href: `/${lang}/docs/integrations/github-action`, icon: Activity },
                 { name: "Stripe Marketplace", href: `/${lang}/docs/integrations/stripe`, icon: BadgeDollarSign },
             ]
         },

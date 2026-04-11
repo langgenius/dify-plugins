@@ -9,12 +9,21 @@ import path from 'path';
 
 async function run() {
   try {
-    const apiKey = core.getInput('api-key', { required: true });
+    const apiKey = core.getInput('api-key', { required: false });
     const policyFile = core.getInput('policy-file');
     const failOn = core.getInput('fail-on');
     const agentPath = core.getInput('agent-path');
 
-    core.info(`🚀 Starting SupraWall Security Scan in ${agentPath}...`);
+    core.info('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    core.info('🛡️  SupraWall Security Scan');
+    core.info('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
+    if (!apiKey) {
+        core.setFailed('❌ SupraWall API key not found. Get your free key at https://supra-wall.com/signup');
+        return;
+    }
+
+    core.info(`🚀 Starting scan in: ${agentPath}`);
 
     // 1. Detect and Collect Files
     const filesToScan: { path: string; content: string }[] = [];
@@ -27,7 +36,7 @@ async function run() {
         const relPath = path.relative(process.cwd(), fullPath);
 
         if (entry.isDirectory()) {
-          if (['node_modules', '.git', 'dist', 'build', 'venv', '__pycache__'].includes(entry.name)) continue;
+          if (['node_modules', '.git', 'dist', 'build', 'venv', '__pycache__', '.circleci', '.github'].includes(entry.name)) continue;
           walk(fullPath);
         } else if (entry.isFile()) {
             const ext = path.extname(entry.name).toLowerCase();
@@ -46,44 +55,54 @@ async function run() {
         return;
     }
 
-    core.info(`🔍 Found ${filesToScan.length} files to scan.`);
+    core.info(`🔍 Analyzed ${filesToScan.length} files for potential vulnerabilities.`);
 
     // 2. Load Policy if exists
     let policyContent = null;
     const absolutePolicyPath = path.resolve(process.cwd(), policyFile);
     if (fs.existsSync(absolutePolicyPath)) {
-        policyContent = JSON.parse(fs.readFileSync(absolutePolicyPath, 'utf8'));
-        core.info(`📝 Using policy from ${policyFile}`);
+        try {
+            policyContent = JSON.parse(fs.readFileSync(absolutePolicyPath, 'utf8'));
+            core.info(`📝 Using custom policy from: ${policyFile}`);
+        } catch (e) {
+            core.warning(`⚠️ Could not parse policy file ${policyFile}. Using default policies.`);
+        }
     }
 
     // 3. POST to SupraWall API
-    core.info('📡 Sending data to SupraWall API (api.supra-wall.com)...');
+    core.info('📡 Validating agent security with SupraWall AI...');
     
     try {
         const response = await axios.post('https://api.supra-wall.com/v1/scan', {
             files: filesToScan,
-            policy: policyContent
+            policy: policyContent,
+            metadata: {
+                repo: `${github.context.repo.owner}/${github.context.repo.repo}`,
+                sha: github.context.sha,
+                workflow: github.context.workflow
+            }
         }, {
             headers: {
                 'Authorization': `Bearer ${apiKey}`,
                 'Content-Type': 'application/json'
-            }
+            },
+            timeout: 30000 // 30s timeout
         });
 
         const { status, violations, reportUrl } = response.data;
 
         // 4. Handle Violations
         if (violations && violations.length > 0) {
-            core.warning(`⚠️ Found ${violations.length} security violations.`);
+            core.warning(`⚠️ Found ${violations.length} security violation(s).`);
             
             for (const v of violations) {
                 const annotation = {
-                    title: `SupraWall Violation: ${v.severity.toUpperCase()}`,
+                    title: `SupraWall [${v.severity.toUpperCase()}]: ${v.message}`,
                     file: v.file,
                     startLine: v.line || 1
                 };
 
-                const msg = `[${v.severity.toUpperCase()}] ${v.message}`;
+                const msg = `[${v.severity.toUpperCase()}] ${v.message}\nFile: ${v.file}:${v.line || 1}`;
                 
                 if (v.severity === 'critical' || v.severity === 'high') {
                     core.error(msg, annotation);
@@ -105,9 +124,9 @@ async function run() {
             });
 
             if (highSeverityViolations.length > 0) {
-                core.setFailed(`❌ Scan failed with ${highSeverityViolations.length} violations at or above depth '${failOn}'.`);
+                core.setFailed(`❌ Scan failed with ${highSeverityViolations.length} high-severity violations. Review them at: ${reportUrl}`);
             } else {
-                core.info('✅ Scan passed (violations within threshold).');
+                core.info('✅ Scan passed (minor violations found but within threshold).');
             }
         } else {
             core.info('✅ No security violations found. Your agents are secure!');
@@ -115,14 +134,27 @@ async function run() {
             core.setOutput('report-url', reportUrl);
         }
 
+        core.info('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        core.info(`📊 View full report: ${reportUrl}`);
+        core.info('💡 Get more at: https://www.supra-wall.com/dashboard');
+        core.info('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
     } catch (apiErr: any) {
         if (apiErr.response) {
-            core.error(`API Error: ${apiErr.response.status} - ${JSON.stringify(apiErr.response.data)}`);
-            core.setFailed(`SupraWall API rejected the scan request.`);
+            if (apiErr.response.status === 401) {
+                core.setFailed('❌ Unauthorized: Invalid SupraWall API Key. Get a new one or sign up at https://supra-wall.com/signup');
+            } else {
+                core.setFailed(`❌ SupraWall API rejected the scan request (${apiErr.response.status}). Support: https://discord.gg/suprawall`);
+            }
+        } else if (apiErr.code === 'ECONNABORTED') {
+            core.error('❌ Request timed out. Your project might be too large for a single scan.');
+            core.setFailed('Scan timeout.');
         } else {
-            core.error(`Network Error: ${apiErr.message}`);
+            core.error(`❌ Network Error: ${apiErr.message}`);
             core.setFailed(`Could not connect to SupraWall API.`);
         }
+        
+        core.info('💡 Support: https://discord.gg/suprawall');
     }
 
   } catch (error: any) {

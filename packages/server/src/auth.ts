@@ -7,6 +7,7 @@ import { getAuth } from "./firebase";
 import { AuthProvider, AgentInfo } from "./auth/types";
 import { PostgresAuthProvider } from "./auth/postgres";
 import { logger } from "./logger";
+import { hashApiKey } from "./util/hash";
 
 // Re-export types for backward compatibility
 export type { AgentInfo } from "./auth/types";
@@ -66,12 +67,13 @@ export const adminAuth = async (req: Request, res: Response, next: NextFunction)
     }
 
     const masterKey = authHeader.split(" ")[1];
+    const hashedMasterKey = hashApiKey(masterKey);
 
     try {
         // 1. Try resolving via Master API Key
         const result = await pool.query(
             "SELECT id FROM tenants WHERE master_api_key = $1 LIMIT 1",
-            [masterKey]
+            [hashedMasterKey]
         );
 
         if (result.rows.length > 0) {
@@ -110,11 +112,12 @@ export async function gatekeeperAuth(req: Request, res: Response, next: NextFunc
     // Support Bearer Token (Master Key or Firebase Token) in gatekeeper as well
     if (!apiKey && authHeader && authHeader.startsWith("Bearer ")) {
         const token = authHeader.substring(7);
+        const hashedToken = hashApiKey(token);
         
         // 1. Try resolving as Master API Key
         const masterRes = await pool.query(
             "SELECT id FROM tenants WHERE master_api_key = $1",
-            [token]
+            [hashedToken]
         );
         if (masterRes.rows.length === 0) {
             // 2. Try Firebase ID Token

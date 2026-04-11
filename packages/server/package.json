@@ -23,7 +23,9 @@
         "testEnvironment": "node",
         "testTimeout": 30000,
         "testPathPattern": "tests/(agents|tier|vault)",
-        "setupFilesAfterEnv": ["<rootDir>/tests/setup.ts"]
+        "setupFilesAfterEnv": [
+          "<rootDir>/tests/setup.ts"
+        ]
       },
       {
         "displayName": "integration",
@@ -44,11 +46,11 @@
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
-    "firebase-admin": "^13.7.0",
+    "firebase-admin": "^10.3.0",
     "font-awesome": "^4.7.0",
     "handlebars": "^4.7.9",
     "helmet": "^8.1.0",
-    "next": "16.2.1",
+    "next": "^16.2.3",
     "pdfkit": "^0.17.2",
     "pg": "^8.18.0",
     "puppeteer": "^24.40.0",

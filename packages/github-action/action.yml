@@ -1,25 +1,25 @@
-name: 'Suprawall Scan'
-description: 'Secret detection and static analysis for AI agent code — enforces runtime security policies and prevents credential leaks in CI/CD pipelines.'
-author: 'Suprawall'
+name: 'SupraWall Security Scan'
+description: 'Deterministic security layer for AI agents. Detects credential leaks, prompt injections, and policy violations in CI/CD pipelines.'
+author: 'SupraWall'
 
 branding:
   icon: 'shield'
-  color: 'green'
+  color: 'blue'
 
 inputs:
   api-key:
-    description: 'Suprawall API key (store in GitHub Secrets)'
+    description: 'SupraWall API key (get one at supra-wall.com/signup)'
     required: true
   policy-file:
     description: 'Path to your suprawall.config.json policy config'
     required: false
     default: 'suprawall.config.json'
   fail-on:
-    description: 'Severity level to fail the build: critical | high | medium'
+    description: 'Minimum severity level to fail the build: critical | high | medium | low'
     required: false
     default: 'high'
   agent-path:
-    description: 'Path to agent code directory to scan'
+    description: 'Directory containing agent code to scan'
     required: false
     default: '.'
 

@@ -1,9 +1,7 @@
-// Copyright 2026 SupraWall Contributors
-// SPDX-License-Identifier: Apache-2.0
-
 import { pool } from "../db";
 import { AuthProvider, AgentInfo } from "./types";
 import { logger } from "../logger";
+import { hashApiKey } from "../util/hash";
 
 /**
  * PostgreSQL Auth Provider
@@ -14,13 +12,16 @@ import { logger } from "../logger";
 export class PostgresAuthProvider implements AuthProvider {
     async validateApiKey(apiKey: string): Promise<AgentInfo | null> {
         try {
+            // Hash the incoming key before lookup
+            const hashedKey = hashApiKey(apiKey);
+
             // Query agents table by API key hash
             const result = await pool.query(
                 `SELECT id, tenantid, name, scopes, status, max_cost_usd, budget_alert_usd, slack_webhook
                  FROM agents
                  WHERE apikeyhash = $1 AND status = 'active'
                  LIMIT 1`,
-                [apiKey]
+                [hashedKey]
             );
 
             if (result.rows.length === 0) {

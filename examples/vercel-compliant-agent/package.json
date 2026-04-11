@@ -9,7 +9,7 @@
     "@langchain/core": "1.1.36",
     "@suprawall/vercel-ai": "*",
     "ai": "^6.0.138",
-    "next": "latest",
+    "next": "^16.2.3",
     "react": "latest",
     "react-dom": "latest"
   }

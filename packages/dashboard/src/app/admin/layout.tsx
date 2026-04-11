@@ -52,12 +52,35 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         }
     }, [user, loading, router]);
 
-    if (loading || !user || !isAdminEmail(user.email)) {
+    if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-black text-white">
                 <div className="flex flex-col items-center gap-4">
                     <BrickWall className="w-12 h-12 text-emerald-500 animate-pulse" />
-                    <p className="text-xl font-semibold">Verifying Admin Access...</p>
+                    <p className="text-xl font-semibold italic text-neutral-400">Initializing Admin Session...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (!user || !isAdminEmail(user.email)) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-black text-white p-6">
+                <div className="max-w-md w-full bg-neutral-950 border border-white/10 rounded-2xl p-8 text-center shadow-2xl">
+                    <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <Shield className="w-8 h-8 text-red-500" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-white mb-2">Access Denied</h2>
+                    <p className="text-neutral-400 mb-8">
+                        This area is restricted to SupraWall administrators. 
+                        Your activity has been logged for security purposes.
+                    </p>
+                    <Link 
+                        href="/dashboard" 
+                        className="inline-flex items-center px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-neutral-200 transition-colors"
+                    >
+                        Return to Personal Dashboard
+                    </Link>
                 </div>
             </div>
         );
