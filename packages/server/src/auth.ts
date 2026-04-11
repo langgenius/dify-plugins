@@ -141,7 +141,7 @@ export async function gatekeeperAuth(req: Request, res: Response, next: NextFunc
             const tokenResult = await pool.query(
                 `SELECT tenant_id, tier, expires_at, activated
                  FROM paperclip_tokens WHERE token = $1 LIMIT 1`,
-                [apiKey]
+                [hashApiKey(apiKey)]
             );
             if (tokenResult.rows.length > 0) {
                 const tokenRow = tokenResult.rows[0];

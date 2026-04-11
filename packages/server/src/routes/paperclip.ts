@@ -139,7 +139,7 @@ router.post(
                 await pool.query(
                     `INSERT INTO paperclip_tokens (id, token, tenant_id, paperclip_company_id, tier, expires_at)
                      VALUES ($1, $2, $3, $4, $5, $6)`,
-                    [crypto.randomUUID(), hashApiKey(tempKey), existing.rows[0].tenant_id, sanitizedCompanyId, "developer", expiresAt]
+                    [crypto.randomUUID(), hashApiKey(tempKey), existing.rows[0].tenant_id, sanitizedCompanyId, "developer", expiresAt.toISOString()]
                 );
                 return res.json({
                     status: "already_onboarded",
@@ -298,7 +298,7 @@ router.post(
             await client.query(
                 `INSERT INTO paperclip_tokens (id, token, tenant_id, paperclip_company_id, tier, expires_at)
                  VALUES ($1, $2, $3, $4, $5, $6)`,
-                [crypto.randomUUID(), hashApiKey(tempKey), tenantId, sanitizedCompanyId, "developer", expiresAt]
+                [crypto.randomUUID(), hashApiKey(tempKey), tenantId, sanitizedCompanyId, "developer", expiresAt.toISOString()]
             );
 
             await client.query("COMMIT");
@@ -432,7 +432,7 @@ router.post(
                  WHERE var.tenant_id = $1 AND var.agent_id = $2
                    AND (vs.expires_at IS NULL OR vs.expires_at > $3)
                  LIMIT 50`,
-                [tenantId, agentId, new Date()]
+                [tenantId, agentId, new Date().toISOString()]
             );
             for (const row of secretResult.rows) {
                 secretNames.push(row.secret_name);
@@ -452,7 +452,7 @@ router.post(
                  DO UPDATE SET issued_at = $8, expires_at = $7, scoped_credentials = $5
                  RETURNING id`,
                 // scoped_credentials stores the authorized secret names only, never decrypted values
-                [runTokenId, tenantId, agentId, runId, JSON.stringify({ authorizedSecrets: secretNames }), ttlSeconds, expiresAt, new Date()]
+                [runTokenId, tenantId, agentId, runId, JSON.stringify({ authorizedSecrets: secretNames }), ttlSeconds, expiresAt.toISOString(), new Date().toISOString()]
             );
 
             // 6. Audit log each authorized secret (not values)
@@ -520,7 +520,7 @@ router.get(
                  FROM paperclip_run_tokens
                  WHERE id = $1 AND tenant_id = $2
                    AND (expires_at IS NULL OR expires_at > $3)`,
-                [runTokenId, tenantId, new Date()]
+                [runTokenId, tenantId, new Date().toISOString()]
             );
 
             if (tokenResult.rows.length === 0) {
@@ -580,7 +580,7 @@ router.get(
                      FROM vault_secrets
                      WHERE tenant_id = $2 AND secret_name = ANY($3)
                        AND (expires_at IS NULL OR expires_at > $4)`,
-                    [encryptionKey, tenantId, authorizedSecrets, new Date()]
+                    [encryptionKey, tenantId, authorizedSecrets, new Date().toISOString()]
                 );
                 for (const row of secretResult.rows) {
                     credentials[row.secret_name.toLowerCase()] = row.value;
@@ -615,7 +615,7 @@ router.get(
                 `UPDATE paperclip_run_tokens
                  SET consumed = TRUE, consumed_at = $2
                  WHERE id = $1`,
-                [runTokenId, new Date()]
+                [runTokenId, new Date().toISOString()]
             );
 
             return res.json({
@@ -829,7 +829,7 @@ router.post(
                     `UPDATE paperclip_run_tokens
                      SET revoked = TRUE, revoked_at = $3
                      WHERE agent_id = $1 AND tenant_id = $2 AND revoked = FALSE`,
-                    [agent.id, tenantId, new Date()]
+                    [agent.id, tenantId, new Date().toISOString()]
                 );
 
                 // Delete vault access rules
@@ -912,7 +912,7 @@ router.post(
                      SET revoked = TRUE, revoked_at = $3
                      WHERE run_id = $1 AND tenant_id = $2 AND revoked = FALSE
                      RETURNING id, agent_id, tenant_id`,
-                    [runId, tenantId, new Date()]
+                    [runId, tenantId, new Date().toISOString()]
                 );
 
                 logger.info(`[Paperclip] Run completed: ${runId} → ${result.rowCount} token(s) revoked`);
@@ -972,7 +972,7 @@ router.get(
 
         const counts = await pool.query(
             "SELECT COUNT(*) FROM paperclip_run_tokens WHERE tenant_id = $1 AND revoked = FALSE AND expires_at > $2",
-            [tenantId, new Date()]
+            [tenantId, new Date().toISOString()]
         );
         res.json({
             status: "healthy",

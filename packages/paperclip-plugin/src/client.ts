@@ -54,7 +54,11 @@ export class SupraWallClient {
                 return await fn(options);
             } catch (err) {
                 const axiosErr = err as AxiosError;
-                const isRetryable = !axiosErr.response || (axiosErr.response.status >= 500 && axiosErr.response.status <= 599);
+                const isRetryable = !axiosErr.response || (
+                    axiosErr.response.status >= 500 && 
+                    axiosErr.response.status <= 599 && 
+                    axiosErr.response.status !== 503 // 503 usually means config error in SupraWall
+                );
                 
                 if (!isRetryable || attempt >= maxRetries) {
                     throw err;
