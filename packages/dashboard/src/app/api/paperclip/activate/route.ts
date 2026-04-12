@@ -123,6 +123,14 @@ export async function POST(request: NextRequest) {
             [row.paperclip_company_id]
         );
 
+        console.log(JSON.stringify({
+            message: "[Metric] Paperclip Funnel",
+            event_type: "funnel_activate",
+            company_id: row.paperclip_company_id,
+            tenant_id: row.tenant_id,
+            tier: row.tier
+        }));
+
         return NextResponse.json({
             success: true,
             message: "Account activated successfully",

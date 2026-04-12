@@ -14,8 +14,11 @@ import { resolveTier, TieredRequest, tierLimitError, checkEvaluationLimit, recor
 import { TIER_LIMITS, Tier } from "../tier-config";
 import { logger } from "../logger";
 import { rateLimit } from "../rate-limit";
+import { observabilityMiddleware, maskSensitiveData } from "../observability";
+import { trackEvent } from "../posthog";
 
 const router = express.Router();
+router.use(observabilityMiddleware);
 
 // ---------------------------------------------------------------------------
 // Startup guard — fail loudly if critical secrets are absent
@@ -117,7 +120,8 @@ router.post(
     express.json(),
     rateLimit({ max: 5, windowMs: 60_000, message: "Too many install attempts. Please wait before retrying." }),
     async (req: Request, res: Response) => {
-        const { companyId, paperclipApiKey, paperclipVersion, agentCount, apiUrl } = req.body || {};
+        const { companyId, paperclipApiKey, paperclipVersion, agentCount, apiUrl, template_name, source, template_id } = req.body || {};
+        const inferredTemplate = template_name || source || template_id || "cli-install";
 
         if (!companyId || typeof companyId !== "string") {
             return res.status(400).json({ error: "Missing required field: companyId" });
@@ -308,6 +312,13 @@ router.post(
             await client.query("COMMIT");
 
             logger.info(`[Paperclip] Onboarded company: ${sanitizedCompanyId} → tenant: ${tenantId}, agents: ${agents.length}`);
+            logger.info("[Metric] Paperclip Funnel", {
+                event_type: "funnel_onboard",
+                company_id: sanitizedCompanyId,
+                tenant_id: tenantId,
+                agent_count: agents.length,
+                tier: "developer"
+            });
 
             // Execute Firestore writes after successful commit — failures are non-fatal
             for (const write of firestoreWrites) {
@@ -356,7 +367,10 @@ router.post(
         const tenantId = (req as AuthenticatedRequest).tenantId;
         const tierLimits = (req as TieredRequest).tierLimits!;
 
-        const { agentId, companyId, role, runId } = req.body || {};
+        const { agentId, runId } = req.body || {};
+        // companyId is intentionally ignored here for validation, we only trust the API key's tenantId.
+        // We extract it only if provided to pass to the logger (and potentially flag a mismatch).
+        const companyIdFromPayload = req.body?.companyId;
 
         // All fields are required and must be non-empty strings
         if (!agentId || typeof agentId !== "string" || agentId.trim() === "") {
@@ -364,10 +378,6 @@ router.post(
         }
         if (!runId || typeof runId !== "string" || runId.trim() === "") {
             return res.status(400).json({ error: "Missing required field: runId" });
-        }
-        // companyId is validated against the authenticated tenant to prevent cross-tenant access
-        if (companyId !== undefined && typeof companyId !== "string") {
-            return res.status(400).json({ error: "Invalid field: companyId must be a string" });
         }
         // role is optional but when provided must be a safe string
         const sanitizedRole = typeof role === "string" ? role.slice(0, 64).replace(/[^a-zA-Z0-9_-]/g, "") : "invoke";
@@ -389,11 +399,12 @@ router.post(
             );
 
             if (agentResult.rows.length === 0) {
-                // If companyId provided, give a helpful hint — but never reveal cross-tenant data
-                if (companyId) {
+                // We no longer rely on companyId for lookups. If the agent isn't in this tenant, they are forbidden.
+                // We only use companyIdFromPayload for a helpful hint if they provided it.
+                if (companyIdFromPayload) {
                     const companyResult = await pool.query(
                         "SELECT tenant_id FROM paperclip_companies WHERE paperclip_company_id = $1",
-                        [companyId]
+                        [companyIdFromPayload]
                     );
                     if (companyResult.rows.length === 0) {
                         return res.status(403).json({ error: "Agent not registered in SupraWall. Run: paperclipai plugin install suprawall-vault" });
@@ -675,7 +686,10 @@ router.post(
             crypto.timingSafeEqual(sigBuffer, expectedBuffer);
 
         if (!isValid) {
-            logger.warn("[Paperclip] Webhook signature mismatch — rejected");
+            logger.warn("[Paperclip] Webhook signature mismatch — rejected", {
+                ip: req.ip,
+                providedSig: sig.substring(0, 15) + "..." // safe to log part of the signature
+            });
             return res.status(401).json({ error: "Invalid webhook signature" });
         }
 
@@ -688,13 +702,9 @@ router.post(
             return res.status(400).json({ error: "Invalid JSON body" });
         }
 
-        const { event, agent, run } = parsedBody;
-
-        if (!event || typeof event !== "string") {
-            return res.status(400).json({ error: "Missing event type" });
-        }
-
-        logger.info(`[Paperclip] Webhook received: ${event}`);
+        logger.info(`[Paperclip] Webhook received: ${parsedBody.event}`, {
+            payload: maskSensitiveData(parsedBody)
+        });
 
         const client = await pool.connect();
         try {

@@ -139,6 +139,7 @@ router.post("/webhook", express.raw({ type: "application/json" }), async (req: R
                 const plan = session.metadata?.plan;
                 const subscriptionId = typeof session.subscription === "string" ? session.subscription : null;
                 const customerId = typeof session.customer === "string" ? session.customer : null;
+                const companyId = session.metadata?.companyId;
 
                 if (!tenantId || !plan) {
                     logger.warn("[Stripe Webhook] checkout.sessions.completed missing tenantId or plan in metadata", { sessionId: session.id });
@@ -154,6 +155,14 @@ router.post("/webhook", express.raw({ type: "application/json" }), async (req: R
                     [plan, subscriptionId, customerId, tenantId]
                 );
                 logger.info(`[Stripe Webhook] Upgraded tenant ${tenantId} to ${plan} (sub: ${subscriptionId})`);
+                if (companyId) {
+                    logger.info("[Metric] Paperclip Funnel", {
+                        event_type: "funnel_paid",
+                        company_id: companyId,
+                        tenant_id: tenantId,
+                        tier: plan
+                    });
+                }
                 break;
             }
 

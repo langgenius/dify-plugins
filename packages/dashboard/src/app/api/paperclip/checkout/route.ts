@@ -140,6 +140,14 @@ export async function POST(req: NextRequest) {
             },
         });
 
+        console.log(JSON.stringify({
+            message: "[Metric] Paperclip Funnel",
+            event_type: "funnel_checkout_start",
+            company_id: companyId,
+            tenant_id: tenantId,
+            tier: plan
+        }));
+
         return NextResponse.json({
             checkoutUrl: session.url,
             sessionId: session.id,
