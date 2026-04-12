@@ -37,6 +37,30 @@ const nextConfig: NextConfig = {
     }
     return routes;
   },
+  async redirects() {
+    return [
+      {
+        source: '/login',
+        destination: '/en/login',
+        permanent: false,
+      },
+      {
+        source: '/admin/:path*',
+        destination: '/en/admin/:path*',
+        permanent: false,
+      },
+      {
+        source: '/dashboard/:path*',
+        destination: '/en/dashboard/:path*',
+        permanent: false,
+      },
+      {
+        source: '/beta',
+        destination: '/en/beta',
+        permanent: false,
+      }
+    ];
+  },
   async headers() {
     return [
       {
