@@ -23,4 +23,4 @@ runner:
 plugins:
   tools:
     - "provider/oraclaw.yaml"
-privacy: "privacy.md"
+privacy: "PRIVACY.md"
