@@ -239,10 +239,10 @@ router.post(
 
             // 2. Register Paperclip company
             await client.query(
-                `INSERT INTO paperclip_companies (id, tenant_id, paperclip_company_id, agent_count, paperclip_version, api_url, status)
-                 VALUES ($1, $2, $3, $4, $5, $6, 'active')
-                 ON CONFLICT (paperclip_company_id) DO UPDATE SET status = 'active', paperclip_version = $5, api_url = $6`,
-                [crypto.randomUUID(), tenantId, sanitizedCompanyId, agents.length, paperclipVersion || null, resolvedApiUrl]
+                `INSERT INTO paperclip_companies (id, tenant_id, paperclip_company_id, agent_count, paperclip_version, api_url, template_name, status)
+                 VALUES ($1, $2, $3, $4, $5, $6, $7, 'active')
+                 ON CONFLICT (paperclip_company_id) DO UPDATE SET status = 'active', paperclip_version = $5, api_url = $6, template_name = $7`,
+                [crypto.randomUUID(), tenantId, sanitizedCompanyId, agents.length, paperclipVersion || null, resolvedApiUrl, inferredTemplate]
             );
 
             // 3. Create agents with role-based policies
@@ -312,6 +312,15 @@ router.post(
             await client.query("COMMIT");
 
             logger.info(`[Paperclip] Onboarded company: ${sanitizedCompanyId} → tenant: ${tenantId}, agents: ${agents.length}`);
+            
+            trackEvent("paperclip_install", {
+                tenant_id: tenantId,
+                companyId: sanitizedCompanyId,
+                template_name: inferredTemplate,
+                plan: "developer",
+                agentCount: agents.length
+            });
+
             logger.info("[Metric] Paperclip Funnel", {
                 event_type: "funnel_onboard",
                 company_id: sanitizedCompanyId,

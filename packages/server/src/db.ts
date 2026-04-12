@@ -306,7 +306,9 @@ export const initDb = async () => {
                 paperclip_api_key_encrypted BLOB,
                 agent_count INTEGER DEFAULT 0,
                 paperclip_version TEXT,
+                tier TEXT DEFAULT 'developer',
                 api_url TEXT DEFAULT 'https://api.paperclipai.com',
+                template_name TEXT DEFAULT 'cli-install',
                 status TEXT DEFAULT 'pending',
                 onboarded_at DATETIME DEFAULT CURRENT_TIMESTAMP
             )`,
@@ -701,6 +703,7 @@ export const initDb = async () => {
             agent_count INTEGER DEFAULT 0,
             paperclip_version VARCHAR(50),
             api_url VARCHAR(500) DEFAULT 'https://api.paperclipai.com',
+            template_name VARCHAR(255) DEFAULT 'cli-install',
             status VARCHAR(50) DEFAULT 'pending',
             onboarded_at TIMESTAMP DEFAULT NOW()
         );
@@ -708,6 +711,9 @@ export const initDb = async () => {
         DO $$ BEGIN
             IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='paperclip_companies' AND column_name='api_url') THEN
                 ALTER TABLE paperclip_companies ADD COLUMN api_url VARCHAR(500) DEFAULT 'https://api.paperclipai.com';
+            END IF;
+            IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='paperclip_companies' AND column_name='template_name') THEN
+                ALTER TABLE paperclip_companies ADD COLUMN template_name VARCHAR(255) DEFAULT 'cli-install';
             END IF;
         END $$;
         CREATE INDEX IF NOT EXISTS idx_paperclip_companies_tenant ON paperclip_companies(tenant_id);

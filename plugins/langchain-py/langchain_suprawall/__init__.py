@@ -9,16 +9,17 @@ from langchain_core.callbacks import BaseCallbackHandler
 class SupraWallCallbackHandler(BaseCallbackHandler):
     """Callback handler to enforce suprawall policies in LangChain."""
     
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: Optional[str] = None, agent_id: str = "langchain_agent"):
         self.api_key = api_key or os.environ.get("SUPRAWALL_API_KEY")
         if not self.api_key:
             raise ValueError("SUPRAWALL_API_KEY is required")
-        self.api_url = os.environ.get("suprawall_API_URL", "https://api.suprawall.io/v1/evaluate")
+        self.agent_id = agent_id
+        self.api_url = os.environ.get("suprawall_API_URL", "https://api.supra-wall.com/v1/evaluate")
 
     def on_tool_start(self, serialized: Dict[str, Any], input_str: str, **kwargs: Any) -> Any:
         tool_name = serialized.get("name")
         res = requests.post(self.api_url, json={
-            "agentId": "langchain_agent",
+            "agentId": self.agent_id,
             "toolName": tool_name,
             "arguments": input_str
         }, headers={"Authorization": f"Bearer {self.api_key}"})

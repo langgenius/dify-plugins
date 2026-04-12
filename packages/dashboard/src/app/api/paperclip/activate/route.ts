@@ -4,6 +4,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { pool } from "@/lib/db_sql";
 import { hashApiKey } from "@/lib/hash";
+import { trackEvent } from "@/lib/posthog-client"; // Assuming a shared client lib for Next.js too or similar.
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +38,11 @@ export async function GET(request: NextRequest) {
         }
 
         const row = result.rows[0];
+        
+        trackEvent("activation_page_view", {
+            companyId: row.paperclip_company_id,
+            tier: row.tier
+        }, token);
 
         if (new Date(row.expires_at) < new Date()) {
             return NextResponse.json({ error: "Activation token has expired. Reinstall the plugin to get a new one." }, { status: 410 });
@@ -130,6 +136,12 @@ export async function POST(request: NextRequest) {
             tenant_id: row.tenant_id,
             tier: row.tier
         }));
+
+        trackEvent("activation_success", {
+            tenantId: row.tenant_id,
+            companyId: row.paperclip_company_id,
+            email: email.toLowerCase().trim()
+        }, token);
 
         return NextResponse.json({
             success: true,

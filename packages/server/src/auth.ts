@@ -8,6 +8,10 @@ import { AuthProvider, AgentInfo } from "./auth/types";
 import { PostgresAuthProvider } from "./auth/postgres";
 import { logger } from "./logger";
 import { hashApiKey } from "./util/hash";
+import { checkEvaluationLimit } from "./tier-guard";
+import { TIER_LIMITS } from "./tier-config";
+
+const TEMP_KEY_EVAL_LIMIT = 50;
 
 // Re-export types for backward compatibility
 export type { AgentInfo } from "./auth/types";
@@ -146,6 +150,21 @@ export async function gatekeeperAuth(req: Request, res: Response, next: NextFunc
             if (tokenResult.rows.length > 0) {
                 const tokenRow = tokenResult.rows[0];
                 if (new Date(tokenRow.expires_at) > new Date()) {
+                    // Enforce usage cap on temporary keys (frictionless onboarding limit)
+                    const { allowed, current } = await checkEvaluationLimit(tokenRow.tenant_id, {
+                        ...TIER_LIMITS.developer,
+                        maxEvaluationsPerMonth: TEMP_KEY_EVAL_LIMIT,
+                        overageRatePerEval: null // Hard stop
+                    });
+
+                    if (!allowed) {
+                        return res.status(402).json({
+                            decision: "DENY",
+                            reason: `Temporary API key evaluation limit reached (${current}/${TEMP_KEY_EVAL_LIMIT}). Activate your account to unlock full developer tier limits.`,
+                            upgradeUrl: `https://supra-wall.com/activate?token=${apiKey}`
+                        });
+                    }
+
                     (req as AuthenticatedRequest).tenantId = tokenRow.tenant_id;
                     return next();
                 }
