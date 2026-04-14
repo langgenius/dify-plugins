@@ -1,0 +1,279 @@
+● Validation Warning:
+
+  Unknown option "testTimeout" with value 30000 was found.
+  This is probably a typing mistake. Fixing it will remove this message.
+
+  Configuration Documentation:
+  https://jestjs.io/docs/configuration
+
+● Validation Warning:
+
+  Unknown option "testPathPattern" with value "tests/(agents|tier|vault)" was found.
+  This is probably a typing mistake. Fixing it will remove this message.
+
+  Configuration Documentation:
+  https://jestjs.io/docs/configuration
+
+● Validation Warning:
+
+  Unknown option "testTimeout" with value 30000 was found.
+  This is probably a typing mistake. Fixing it will remove this message.
+
+  Configuration Documentation:
+  https://jestjs.io/docs/configuration
+
+● Validation Warning:
+
+  Unknown option "testPathPattern" with value "tests/paperclip" was found.
+  This is probably a typing mistake. Fixing it will remove this message.
+
+  Configuration Documentation:
+  https://jestjs.io/docs/configuration
+
+Running one project: integration
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.warn
+    [2026-04-11T17:10:30.418Z] [33mWARN[0m: [DB] No DATABASE_URL found and not on Vercel. Falling back to SQLite for local development.
+
+      36 |
+      37 |     warn(message: string, meta?: any) {
+    > 38 |         console.warn(this.formatMessage('WARN', message, meta));
+         |                 ^
+      39 |     }
+      40 |
+      41 |     error(message: string, meta?: any) {
+
+      at Logger.warn (src/logger.ts:38:17)
+      at Object.<anonymous> (src/db.ts:29:12)
+      at Object.<anonymous> (src/index.ts:8:1)
+      at Object.<anonymous> (tests/paperclip.test.ts:15:1)
+
+  console.warn
+    [2026-04-11T17:10:30.523Z] [33mWARN[0m: [Firebase] No Firebase credentials found. Real-time dashboard sync disabled.
+
+      36 |
+      37 |     warn(message: string, meta?: any) {
+    > 38 |         console.warn(this.formatMessage('WARN', message, meta));
+         |                 ^
+      39 |     }
+      40 |
+      41 |     error(message: string, meta?: any) {
+
+      at Logger.warn (src/logger.ts:38:17)
+      at Object.<anonymous> (src/firebase.ts:38:16)
+      at Object.<anonymous> (src/policy.ts:8:1)
+      at Object.<anonymous> (src/index.ts:9:1)
+      at Object.<anonymous> (tests/paperclip.test.ts:15:1)
+
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.info
+    [2026-04-11T17:10:31.167Z] [32mINFO[0m: [DB] Initializing SQLite schema...
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.info
+    [2026-04-11T17:10:31.169Z] [32mINFO[0m: [DB] Initializing SQLite schema...
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.log
+    [DB] SQLite query: INSERT OR IGNORE INTO tenants (id, name, master_api_key, tier)
+             VALUES ('test_tenant', 'Test Tenant', ?, 'developer') [ 'sw_admin_8945b2befaadae3d47a17dd66186c4c4' ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: SELECT tenant_id FROM paperclip_companies WHERE paperclip_company_id = ? [ 'invoke-test-1775927431175' ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: BEGIN []
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: INSERT INTO tenants (id, name, master_api_key, tier)
+                     VALUES (?, ?, ?, ?)
+                     ON CONFLICT (id) DO NOTHING [
+      'pc_invoke-test-1775927431175',
+      'Paperclip: invoke-test-1775927431175',
+      'sw_admin__TY1aQCvxIPZe8-z3ZbZHA079ajf9lEn',
+      'developer'
+    ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: INSERT INTO paperclip_companies (id, tenant_id, paperclip_company_id, agent_count, paperclip_version, api_url, status)
+                     VALUES (?, ?, ?, ?, ?, ?, 'active') [
+      'bf0e3056-ab3a-4eab-87b8-5044a92e659b',
+      'pc_invoke-test-1775927431175',
+      'invoke-test-1775927431175',
+      1,
+      null,
+      'https://api.paperclipai.com'
+    ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: INSERT INTO agents (id, tenantid, name, apikeyhash, scopes)
+                         VALUES (?, ?, ?, ?, ?)
+                         ON CONFLICT (id) DO NOTHING [
+      '2156c965-f578-4d5a-ac0c-f45ff6a15341',
+      'pc_invoke-test-1775927431175',
+      'Agent 1',
+      '110e629b6dc375dd6d676f58be561dbcae0dcc93024d37925aed5a31697c81f8',
+      '["read:all"]'
+    ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: INSERT INTO policies (tenantid, agentid, name, toolname, ruletype, description)
+                             VALUES (?, ?, ?, ?, ?, ?)
+                             ON CONFLICT DO NOTHING [
+      'pc_invoke-test-1775927431175',
+      '2156c965-f578-4d5a-ac0c-f45ff6a15341',
+      'Paperclip: read:all for Agent 1',
+      'read:all',
+      'ALLOW',
+      'Auto-created by Paperclip onboard for role: ceo'
+    ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: INSERT INTO paperclip_tokens (id, token, tenant_id, paperclip_company_id, tier, expires_at)
+                     VALUES (?, ?, ?, ?, ?, ?) [
+      '7da7e0df-f23b-417e-99fb-660172befd44',
+      'sw_temp_q2SpWbvDuGr0Zh-g-lvYtdsWw3044JOw',
+      'pc_invoke-test-1775927431175',
+      'invoke-test-1775927431175',
+      'developer',
+      '2026-04-14T17:10:31.186Z'
+    ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: COMMIT []
+
+      at Object.query (src/db.ts:68:21)
+
+  console.info
+    [2026-04-11T17:10:31.191Z] [32mINFO[0m: [Paperclip] Onboarded company: invoke-test-1775927431175 → tenant: pc_invoke-test-1775927431175, agents: 1
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.log
+    Onboard response for invoke: 201 {
+      status: 'activation_required',
+      message: 'SupraWall Vault installed. Activate your free account at the URL below.',
+      activationUrl: 'https://supra-wall.com/activate?token=sw_temp_q2SpWbvDuGr0Zh-g-lvYtdsWw3044JOw',
+      tempApiKey: 'sw_temp_q2SpWbvDuGr0Zh-g-lvYtdsWw3044JOw',
+      docsUrl: 'https://docs.supra-wall.com/paperclip',
+      syncedAgents: 1,
+      tier: 'developer',
+      tierLimits: { maxAgents: 5, maxEvaluationsPerMonth: 25000 }
+    }
+
+      at Object.<anonymous> (tests/paperclip.test.ts:147:17)
+
+  console.log
+    [DB] SQLite query: SELECT id FROM agents WHERE tenantid = ? LIMIT 1 [ 'pc_invoke-test-1775927431175' ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: SELECT tenant_id, tier, expires_at, activated
+                     FROM paperclip_tokens WHERE token = ? LIMIT 1 [ 'sw_temp_q2SpWbvDuGr0Zh-g-lvYtdsWw3044JOw' ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    Gatekeeper debug: sw_temp_q2SpWbvDuGr0Zh-g-lvYtdsWw3044JOw [
+      {
+        tenant_id: 'pc_invoke-test-1775927431175',
+        tier: 'developer',
+        expires_at: '[object Object]',
+        activated: 0
+      }
+    ]
+
+      at gatekeeperAuth (src/auth.ts:146:21)
+
+  console.log
+    Gatekeeper tokenRow: {
+      tenant_id: 'pc_invoke-test-1775927431175',
+      tier: 'developer',
+      expires_at: '[object Object]',
+      activated: 0
+    } typeof expires_at: string
+
+      at gatekeeperAuth (src/auth.ts:149:25)
+
+  console.log
+    [DB] SQLite query: DELETE FROM tenants WHERE id = 'test_tenant' []
+
+      at Object.query (src/db.ts:68:21)
+
+FAIL integration tests/paperclip.test.ts
+  POST /v1/paperclip/onboard
+    ○ skipped rejects requests with missing companyId
+    ○ skipped rejects companyId that is not a string
+    ○ skipped successfully onboards a new company and returns activation URL
+    ○ skipped returns already_onboarded on re-install and issues fresh temp key
+    ○ skipped blocks SSRF via apiUrl pointing to internal address
+    ○ skipped caps agent count to developer tier limit even if agentCount is very large
+  POST /v1/agent/invoke
+    ✕ succeeds and returns runTokenId (never raw credentials) (5 ms)
+    ○ skipped rejects requests with missing agentId
+    ○ skipped rejects requests with missing runId
+    ○ skipped rejects unauthenticated requests
+    ○ skipped does not accept cross-tenant agent IDs
+    ○ skipped rejects non-string companyId
+  POST /v1/paperclip/webhooks — signature verification
+    ○ skipped rejects requests with no signature header
+    ○ skipped rejects requests with tampered signature
+    ○ skipped accepts requests with valid HMAC over raw body
+    ○ skipped rejects agent.hired when company is not onboarded
+    ○ skipped is idempotent: second agent.hired with same agent creates no duplicate policies
+    ○ skipped agent.fired revokes all tokens for that agent — cross-tenant revocation is blocked
+  Security invariants
+    ○ skipped agent API keys are never returned by any endpoint after initial onboard
+    ○ skipped agent keys stored in DB are hashed (not plain text)
+    ○ skipped vault encryption key fallback does not exist (server must fail when key is absent)
+    ○ skipped webhook endpoint rejects all requests when PAPERCLIP_WEBHOOK_SECRET is not set
+
+  ● POST /v1/agent/invoke › succeeds and returns runTokenId (never raw credentials)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 202
+    Received: 401
+
+      191 |             .send({ agentId: createdAgentId, runId: "run-" + Date.now(), companyId });
+      192 |
+    > 193 |         expect(res.status).toBe(202);
+          |                            ^
+      194 |         expect(res.body.runTokenId).toBeDefined();
+      195 |         // CRITICAL: credentials must NOT be in the response
+      196 |         expect(res.body.credentials).toBeUndefined();
+
+      at Object.<anonymous> (tests/paperclip.test.ts:193:28)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 21 skipped, 22 total
+Snapshots:   0 total
+Time:        2.864 s, estimated 4 s
+Ran all test suites matching /tests\/paperclip.test.ts/i with tests matching "succeeds and returns runTokenId".

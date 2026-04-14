@@ -29,6 +29,7 @@ jest.mock("../src/db", () => {
 
     const mockClient = {
         query: jest.fn(async (text: string, params: any[]) => {
+            if (text.includes("INSERT INTO vault_secrets")) {
                 const s = { 
                     id: crypto.randomUUID(), 
                     tenant_id: params[0], 

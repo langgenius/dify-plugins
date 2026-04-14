@@ -1,0 +1,421 @@
+● Validation Warning:
+
+  Unknown option "testTimeout" with value 30000 was found.
+  This is probably a typing mistake. Fixing it will remove this message.
+
+  Configuration Documentation:
+  https://jestjs.io/docs/configuration
+
+● Validation Warning:
+
+  Unknown option "testPathPattern" with value "tests/(agents|tier|vault)" was found.
+  This is probably a typing mistake. Fixing it will remove this message.
+
+  Configuration Documentation:
+  https://jestjs.io/docs/configuration
+
+● Validation Warning:
+
+  Unknown option "testTimeout" with value 30000 was found.
+  This is probably a typing mistake. Fixing it will remove this message.
+
+  Configuration Documentation:
+  https://jestjs.io/docs/configuration
+
+● Validation Warning:
+
+  Unknown option "testPathPattern" with value "tests/paperclip" was found.
+  This is probably a typing mistake. Fixing it will remove this message.
+
+  Configuration Documentation:
+  https://jestjs.io/docs/configuration
+
+Running one project: integration
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: 🛡️ auth for agents: https://vestauth.com
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.warn
+    [2026-04-11T17:12:38.495Z] [33mWARN[0m: [DB] No DATABASE_URL found and not on Vercel. Falling back to SQLite for local development.
+
+      36 |
+      37 |     warn(message: string, meta?: any) {
+    > 38 |         console.warn(this.formatMessage('WARN', message, meta));
+         |                 ^
+      39 |     }
+      40 |
+      41 |     error(message: string, meta?: any) {
+
+      at Logger.warn (src/logger.ts:38:17)
+      at Object.<anonymous> (src/db.ts:29:12)
+      at Object.<anonymous> (src/index.ts:8:1)
+      at Object.<anonymous> (tests/paperclip.test.ts:15:1)
+
+  console.warn
+    [2026-04-11T17:12:38.610Z] [33mWARN[0m: [Firebase] No Firebase credentials found. Real-time dashboard sync disabled.
+
+      36 |
+      37 |     warn(message: string, meta?: any) {
+    > 38 |         console.warn(this.formatMessage('WARN', message, meta));
+         |                 ^
+      39 |     }
+      40 |
+      41 |     error(message: string, meta?: any) {
+
+      at Logger.warn (src/logger.ts:38:17)
+      at Object.<anonymous> (src/firebase.ts:38:16)
+      at Object.<anonymous> (src/policy.ts:8:1)
+      at Object.<anonymous> (src/index.ts:9:1)
+      at Object.<anonymous> (tests/paperclip.test.ts:15:1)
+
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.info
+    [2026-04-11T17:12:39.305Z] [32mINFO[0m: [DB] Initializing SQLite schema...
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.info
+    [2026-04-11T17:12:39.306Z] [32mINFO[0m: [DB] Initializing SQLite schema...
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.log
+    [DB] SQLite query: INSERT OR IGNORE INTO tenants (id, name, master_api_key, tier)
+             VALUES ('test_tenant', 'Test Tenant', ?, 'developer') [ 'sw_admin_efe36404e08ca55ddc4abe09401c8885' ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: SELECT tenant_id FROM paperclip_companies WHERE paperclip_company_id = ? [ 'webhook-idem-1775927559314' ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: BEGIN []
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: INSERT INTO tenants (id, name, master_api_key, tier)
+                     VALUES (?, ?, ?, ?)
+                     ON CONFLICT (id) DO NOTHING [
+      'pc_webhook-idem-1775927559314',
+      'Paperclip: webhook-idem-1775927559314',
+      'sw_admin_-thx8mSq90l11qq9Nb5PG6BzVaBsNJ0G',
+      'developer'
+    ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: INSERT INTO paperclip_companies (id, tenant_id, paperclip_company_id, agent_count, paperclip_version, api_url, status)
+                     VALUES (?, ?, ?, ?, ?, ?, 'active') [
+      'bb4d1c14-9ef4-4305-8426-ab692035d478',
+      'pc_webhook-idem-1775927559314',
+      'webhook-idem-1775927559314',
+      1,
+      null,
+      'https://api.paperclipai.com'
+    ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: INSERT INTO agents (id, tenantid, name, apikeyhash, scopes)
+                         VALUES (?, ?, ?, ?, ?)
+                         ON CONFLICT (id) DO NOTHING [
+      '9a6e52a5-568f-419b-ab4a-017bbc8be0bc',
+      'pc_webhook-idem-1775927559314',
+      'Agent 1',
+      '3c9320e01ccd013f25c6e2ddf5b025ef7e88b47b078f83341e3572172a932598',
+      '["read:all"]'
+    ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: INSERT INTO policies (tenantid, agentid, name, toolname, ruletype, description)
+                             VALUES (?, ?, ?, ?, ?, ?)
+                             ON CONFLICT DO NOTHING [
+      'pc_webhook-idem-1775927559314',
+      '9a6e52a5-568f-419b-ab4a-017bbc8be0bc',
+      'Paperclip: read:all for Agent 1',
+      'read:all',
+      'ALLOW',
+      'Auto-created by Paperclip onboard for role: ceo'
+    ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: INSERT INTO paperclip_tokens (id, token, tenant_id, paperclip_company_id, tier, expires_at)
+                     VALUES (?, ?, ?, ?, ?, ?) [
+      '73b15d80-ff29-4656-bc99-5234fb481872',
+      'sw_temp_9KjwUVQssRha8moSNACw2U_sm1EmcGlt',
+      'pc_webhook-idem-1775927559314',
+      'webhook-idem-1775927559314',
+      'developer',
+      '2026-04-14T17:12:39.328Z'
+    ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: COMMIT []
+
+      at Object.query (src/db.ts:68:21)
+
+  console.info
+    [2026-04-11T17:12:39.330Z] [32mINFO[0m: [Paperclip] Onboarded company: webhook-idem-1775927559314 → tenant: pc_webhook-idem-1775927559314, agents: 1
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.info
+    [2026-04-11T17:12:39.333Z] [32mINFO[0m: [Paperclip] Webhook received: agent.hired
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.log
+    [DB] SQLite query: SELECT tenant_id FROM paperclip_companies WHERE paperclip_company_id = ? [ 'webhook-idem-1775927559314' ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: SELECT tier FROM tenants WHERE id = ? [ 'pc_webhook-idem-1775927559314' ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: SELECT COUNT(*) as count FROM agents WHERE tenantid = ? [ 'pc_webhook-idem-1775927559314' ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: BEGIN []
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: INSERT INTO agents (id, tenantid, name, apikeyhash, scopes)
+                         VALUES (?, ?, ?, ?, ?)
+                         ON CONFLICT (id) DO UPDATE SET name = ?, scopes = ? [
+      'wb-agent-idem',
+      'pc_webhook-idem-1775927559314',
+      'Build Bot',
+      'ea593a57eb2fb5d7da5e74878bdf81fe883cace761b35e4c3bf51d0d582bb61f',
+      '["github","supabase","vercel"]',
+      'Build Bot',
+      '["github","supabase","vercel"]'
+    ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: INSERT INTO policies (tenantid, agentid, name, toolname, ruletype, description)
+                             VALUES (?, ?, ?, ?, ?, ?)
+                             ON CONFLICT DO NOTHING [
+      'pc_webhook-idem-1775927559314',
+      'wb-agent-idem',
+      'Paperclip: github for Build Bot',
+      'github',
+      'ALLOW',
+      'Auto-created by agent.hired webhook for role: engineering'
+    ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: INSERT INTO policies (tenantid, agentid, name, toolname, ruletype, description)
+                             VALUES (?, ?, ?, ?, ?, ?)
+                             ON CONFLICT DO NOTHING [
+      'pc_webhook-idem-1775927559314',
+      'wb-agent-idem',
+      'Paperclip: supabase for Build Bot',
+      'supabase',
+      'ALLOW',
+      'Auto-created by agent.hired webhook for role: engineering'
+    ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: INSERT INTO policies (tenantid, agentid, name, toolname, ruletype, description)
+                             VALUES (?, ?, ?, ?, ?, ?)
+                             ON CONFLICT DO NOTHING [
+      'pc_webhook-idem-1775927559314',
+      'wb-agent-idem',
+      'Paperclip: vercel for Build Bot',
+      'vercel',
+      'ALLOW',
+      'Auto-created by agent.hired webhook for role: engineering'
+    ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: COMMIT []
+
+      at Object.query (src/db.ts:68:21)
+
+  console.info
+    [2026-04-11T17:12:39.335Z] [32mINFO[0m: [Paperclip] Agent hired: wb-agent-idem (engineering) → tenant: pc_webhook-idem-1775927559314
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.info
+    [2026-04-11T17:12:39.337Z] [32mINFO[0m: [Paperclip] Webhook received: agent.hired
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.log
+    [DB] SQLite query: SELECT tenant_id FROM paperclip_companies WHERE paperclip_company_id = ? [ 'webhook-idem-1775927559314' ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: SELECT tier FROM tenants WHERE id = ? [ 'pc_webhook-idem-1775927559314' ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: SELECT COUNT(*) as count FROM agents WHERE tenantid = ? [ 'pc_webhook-idem-1775927559314' ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: BEGIN []
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: INSERT INTO agents (id, tenantid, name, apikeyhash, scopes)
+                         VALUES (?, ?, ?, ?, ?)
+                         ON CONFLICT (id) DO UPDATE SET name = ?, scopes = ? [
+      'wb-agent-idem',
+      'pc_webhook-idem-1775927559314',
+      'Build Bot',
+      '18ba0bdf5c445901c6fdb2a35d5ea722fb975f0fb91fda3926720236ba81c9ce',
+      '["github","supabase","vercel"]',
+      'Build Bot',
+      '["github","supabase","vercel"]'
+    ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: INSERT INTO policies (tenantid, agentid, name, toolname, ruletype, description)
+                             VALUES (?, ?, ?, ?, ?, ?)
+                             ON CONFLICT DO NOTHING [
+      'pc_webhook-idem-1775927559314',
+      'wb-agent-idem',
+      'Paperclip: github for Build Bot',
+      'github',
+      'ALLOW',
+      'Auto-created by agent.hired webhook for role: engineering'
+    ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: INSERT INTO policies (tenantid, agentid, name, toolname, ruletype, description)
+                             VALUES (?, ?, ?, ?, ?, ?)
+                             ON CONFLICT DO NOTHING [
+      'pc_webhook-idem-1775927559314',
+      'wb-agent-idem',
+      'Paperclip: supabase for Build Bot',
+      'supabase',
+      'ALLOW',
+      'Auto-created by agent.hired webhook for role: engineering'
+    ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: INSERT INTO policies (tenantid, agentid, name, toolname, ruletype, description)
+                             VALUES (?, ?, ?, ?, ?, ?)
+                             ON CONFLICT DO NOTHING [
+      'pc_webhook-idem-1775927559314',
+      'wb-agent-idem',
+      'Paperclip: vercel for Build Bot',
+      'vercel',
+      'ALLOW',
+      'Auto-created by agent.hired webhook for role: engineering'
+    ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: COMMIT []
+
+      at Object.query (src/db.ts:68:21)
+
+  console.info
+    [2026-04-11T17:12:39.338Z] [32mINFO[0m: [Paperclip] Agent hired: wb-agent-idem (engineering) → tenant: pc_webhook-idem-1775927559314
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.log
+    [DB] SQLite query: SELECT COUNT(*) as count FROM policies WHERE tenantid = ? AND agentid = 'wb-agent-idem' [ 'pc_webhook-idem-1775927559314' ]
+
+      at Object.query (src/db.ts:68:21)
+
+  console.log
+    [DB] SQLite query: DELETE FROM tenants WHERE id = 'test_tenant' []
+
+      at Object.query (src/db.ts:68:21)
+
+FAIL integration tests/paperclip.test.ts
+  POST /v1/paperclip/onboard
+    ○ skipped rejects requests with missing companyId
+    ○ skipped rejects companyId that is not a string
+    ○ skipped successfully onboards a new company and returns activation URL
+    ○ skipped returns already_onboarded on re-install and issues fresh temp key
+    ○ skipped blocks SSRF via apiUrl pointing to internal address
+    ○ skipped caps agent count to developer tier limit even if agentCount is very large
+  POST /v1/agent/invoke
+    ○ skipped rejects requests with missing agentId
+    ○ skipped rejects requests with missing runId
+    ○ skipped rejects unauthenticated requests
+    ○ skipped succeeds and returns runTokenId (never raw credentials)
+    ○ skipped does not accept cross-tenant agent IDs
+    ○ skipped rejects non-string companyId
+  POST /v1/paperclip/webhooks — signature verification
+    ✕ is idempotent: second agent.hired with same agent creates no duplicate policies (26 ms)
+    ○ skipped rejects requests with no signature header
+    ○ skipped rejects requests with tampered signature
+    ○ skipped accepts requests with valid HMAC over raw body
+    ○ skipped rejects agent.hired when company is not onboarded
+    ○ skipped agent.fired revokes all tokens for that agent — cross-tenant revocation is blocked
+  Security invariants
+    ○ skipped agent API keys are never returned by any endpoint after initial onboard
+    ○ skipped agent keys stored in DB are hashed (not plain text)
+    ○ skipped vault encryption key fallback does not exist (server must fail when key is absent)
+    ○ skipped webhook endpoint rejects all requests when PAPERCLIP_WEBHOOK_SECRET is not set
+
+  ● POST /v1/paperclip/webhooks — signature verification › is idempotent: second agent.hired with same agent creates no duplicate policies
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 3
+    Received:    6
+
+      307 |         const count = parseInt(res.rows[0].count, 10);
+      308 |         // Engineering role has 3 scopes — should not be duplicated
+    > 309 |         expect(count).toBeLessThanOrEqual(3);
+          |                       ^
+      310 |     });
+      311 |
+      312 |     it("agent.fired revokes all tokens for that agent — cross-tenant revocation is blocked", async () => {
+
+      at Object.<anonymous> (tests/paperclip.test.ts:309:23)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 21 skipped, 22 total
+Snapshots:   0 total
+Time:        3.061 s
+Ran all test suites matching /tests\/paperclip.test.ts/i with tests matching "second agent.hired with same agent".

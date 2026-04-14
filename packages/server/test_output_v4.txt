@@ -1,0 +1,411 @@
+● Validation Warning:
+
+  Unknown option "testTimeout" with value 30000 was found.
+  This is probably a typing mistake. Fixing it will remove this message.
+
+  Configuration Documentation:
+  https://jestjs.io/docs/configuration
+
+● Validation Warning:
+
+  Unknown option "testPathPattern" with value "tests/(agents|tier|vault)" was found.
+  This is probably a typing mistake. Fixing it will remove this message.
+
+  Configuration Documentation:
+  https://jestjs.io/docs/configuration
+
+● Validation Warning:
+
+  Unknown option "testTimeout" with value 30000 was found.
+  This is probably a typing mistake. Fixing it will remove this message.
+
+  Configuration Documentation:
+  https://jestjs.io/docs/configuration
+
+● Validation Warning:
+
+  Unknown option "testPathPattern" with value "tests/paperclip" was found.
+  This is probably a typing mistake. Fixing it will remove this message.
+
+  Configuration Documentation:
+  https://jestjs.io/docs/configuration
+
+Running one project: integration
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.warn
+    [2026-04-11T17:07:58.044Z] [33mWARN[0m: [DB] No DATABASE_URL found and not on Vercel. Falling back to SQLite for local development.
+
+      36 |
+      37 |     warn(message: string, meta?: any) {
+    > 38 |         console.warn(this.formatMessage('WARN', message, meta));
+         |                 ^
+      39 |     }
+      40 |
+      41 |     error(message: string, meta?: any) {
+
+      at Logger.warn (src/logger.ts:38:17)
+      at Object.<anonymous> (src/db.ts:29:12)
+      at Object.<anonymous> (src/index.ts:8:1)
+      at Object.<anonymous> (tests/paperclip.test.ts:15:1)
+
+  console.warn
+    [2026-04-11T17:07:58.156Z] [33mWARN[0m: [Firebase] No Firebase credentials found. Real-time dashboard sync disabled.
+
+      36 |
+      37 |     warn(message: string, meta?: any) {
+    > 38 |         console.warn(this.formatMessage('WARN', message, meta));
+         |                 ^
+      39 |     }
+      40 |
+      41 |     error(message: string, meta?: any) {
+
+      at Logger.warn (src/logger.ts:38:17)
+      at Object.<anonymous> (src/firebase.ts:38:16)
+      at Object.<anonymous> (src/policy.ts:8:1)
+      at Object.<anonymous> (src/index.ts:9:1)
+      at Object.<anonymous> (tests/paperclip.test.ts:15:1)
+
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env -- tip: ⚡️ secrets for agents: https://dotenvx.com/as2
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.info
+    [2026-04-11T17:07:58.814Z] [32mINFO[0m: [DB] Initializing SQLite schema...
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.info
+    [2026-04-11T17:07:58.815Z] [32mINFO[0m: [DB] Initializing SQLite schema...
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.info
+    [2026-04-11T17:07:58.834Z] [32mINFO[0m: [Paperclip] Onboarded company: test-company-1775927278833 → tenant: pc_test-company-1775927278833, agents: 2
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.info
+    [2026-04-11T17:07:58.843Z] [32mINFO[0m: [Paperclip] Onboarded company: ssrf-test-1775927278842 → tenant: pc_ssrf-test-1775927278842, agents: 1
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.info
+    [2026-04-11T17:07:58.847Z] [32mINFO[0m: [Paperclip] Onboarded company: large-company-1775927278844 → tenant: pc_large-company-1775927278844, agents: 5
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.info
+    [2026-04-11T17:07:58.849Z] [32mINFO[0m: [Paperclip] Onboarded company: invoke-test-1775927278848 → tenant: pc_invoke-test-1775927278848, agents: 1
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.log
+    Onboard response for invoke: 201 {
+      status: 'activation_required',
+      message: 'SupraWall Vault installed. Activate your free account at the URL below.',
+      activationUrl: 'https://supra-wall.com/activate?token=sw_temp_eAsfYoA3LsCtLbiJMkjm_BgqM60EELFJ',
+      tempApiKey: 'sw_temp_eAsfYoA3LsCtLbiJMkjm_BgqM60EELFJ',
+      docsUrl: 'https://docs.supra-wall.com/paperclip',
+      syncedAgents: 1,
+      tier: 'developer',
+      tierLimits: { maxAgents: 5, maxEvaluationsPerMonth: 25000 }
+    }
+
+      at Object.<anonymous> (tests/paperclip.test.ts:147:17)
+
+  console.log
+    Gatekeeper debug: sw_temp_eAsfYoA3LsCtLbiJMkjm_BgqM60EELFJ [
+      {
+        tenant_id: 'pc_invoke-test-1775927278848',
+        tier: 'developer',
+        expires_at: '[object Object]',
+        activated: 0
+      }
+    ]
+
+      at gatekeeperAuth (src/auth.ts:146:21)
+
+  console.log
+    Gatekeeper debug: sw_temp_eAsfYoA3LsCtLbiJMkjm_BgqM60EELFJ [
+      {
+        tenant_id: 'pc_invoke-test-1775927278848',
+        tier: 'developer',
+        expires_at: '[object Object]',
+        activated: 0
+      }
+    ]
+
+      at gatekeeperAuth (src/auth.ts:146:21)
+
+  console.log
+    Gatekeeper debug: sw_temp_eAsfYoA3LsCtLbiJMkjm_BgqM60EELFJ [
+      {
+        tenant_id: 'pc_invoke-test-1775927278848',
+        tier: 'developer',
+        expires_at: '[object Object]',
+        activated: 0
+      }
+    ]
+
+      at gatekeeperAuth (src/auth.ts:146:21)
+
+  console.log
+    Gatekeeper debug: sw_temp_eAsfYoA3LsCtLbiJMkjm_BgqM60EELFJ [
+      {
+        tenant_id: 'pc_invoke-test-1775927278848',
+        tier: 'developer',
+        expires_at: '[object Object]',
+        activated: 0
+      }
+    ]
+
+      at gatekeeperAuth (src/auth.ts:146:21)
+
+  console.log
+    Gatekeeper debug: sw_temp_eAsfYoA3LsCtLbiJMkjm_BgqM60EELFJ [
+      {
+        tenant_id: 'pc_invoke-test-1775927278848',
+        tier: 'developer',
+        expires_at: '[object Object]',
+        activated: 0
+      }
+    ]
+
+      at gatekeeperAuth (src/auth.ts:146:21)
+
+  console.warn
+    [2026-04-11T17:07:58.866Z] [33mWARN[0m: [Paperclip] Webhook signature mismatch — rejected
+
+      36 |
+      37 |     warn(message: string, meta?: any) {
+    > 38 |         console.warn(this.formatMessage('WARN', message, meta));
+         |                 ^
+      39 |     }
+      40 |
+      41 |     error(message: string, meta?: any) {
+
+      at Logger.warn (src/logger.ts:38:17)
+      at src/routes/paperclip.ts:695:20
+      at Layer.handleRequest (../../node_modules/router/lib/layer.js:152:17)
+      at next (../../node_modules/router/lib/route.js:157:13)
+      at ../../node_modules/body-parser/lib/read.js:171:5
+      at invokeCallback (../../node_modules/raw-body/index.js:238:16)
+      at done (../../node_modules/raw-body/index.js:227:7)
+      at IncomingMessage.onEnd (../../node_modules/raw-body/index.js:287:7)
+
+  console.info
+    [2026-04-11T17:07:58.868Z] [32mINFO[0m: [Paperclip] Webhook received: run.completed
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.info
+    [2026-04-11T17:07:58.869Z] [32mINFO[0m: [Paperclip] Webhook received: agent.hired
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.info
+    [2026-04-11T17:07:58.872Z] [32mINFO[0m: [Paperclip] Onboarded company: webhook-idem-1775927278870 → tenant: pc_webhook-idem-1775927278870, agents: 1
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.info
+    [2026-04-11T17:07:58.873Z] [32mINFO[0m: [Paperclip] Webhook received: agent.hired
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.error
+    [2026-04-11T17:07:58.873Z] [31mERROR[0m: [Paperclip] Webhook error (agent.hired): {"error":{"errno":19,"code":"SQLITE_CONSTRAINT"}}
+
+      40 |
+      41 |     error(message: string, meta?: any) {
+    > 42 |         console.error(this.formatMessage('ERROR', message, meta));
+         |                 ^
+      43 |     }
+      44 | }
+      45 |
+
+      at Logger.error (src/logger.ts:42:17)
+      at src/routes/paperclip.ts:949:20
+
+  console.info
+    [2026-04-11T17:07:58.876Z] [32mINFO[0m: [Paperclip] Webhook received: agent.hired
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.error
+    [2026-04-11T17:07:58.877Z] [31mERROR[0m: [Paperclip] Webhook error (agent.hired): {"error":{"errno":19,"code":"SQLITE_CONSTRAINT"}}
+
+      40 |
+      41 |     error(message: string, meta?: any) {
+    > 42 |         console.error(this.formatMessage('ERROR', message, meta));
+         |                 ^
+      43 |     }
+      44 | }
+      45 |
+
+      at Logger.error (src/logger.ts:42:17)
+      at src/routes/paperclip.ts:949:20
+
+  console.info
+    [2026-04-11T17:07:58.879Z] [32mINFO[0m: [Paperclip] Onboarded company: webhook-fired-1775927278878 → tenant: pc_webhook-fired-1775927278878, agents: 1
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.info
+    [2026-04-11T17:07:58.879Z] [32mINFO[0m: [Paperclip] Webhook received: agent.fired
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.info
+    [2026-04-11T17:07:58.881Z] [32mINFO[0m: [Paperclip] Onboarded company: sec-inv-1775927278880 → tenant: pc_sec-inv-1775927278880, agents: 1
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.info
+    [2026-04-11T17:07:58.883Z] [32mINFO[0m: [Paperclip] Onboarded company: hash-inv-1775927278883 → tenant: pc_hash-inv-1775927278883, agents: 1
+
+      at Logger.info (src/logger.ts:34:17)
+
+  console.error
+    [2026-04-11T17:07:58.884Z] [31mERROR[0m: [Paperclip] PAPERCLIP_WEBHOOK_SECRET not set — rejecting all webhook traffic
+
+      40 |
+      41 |     error(message: string, meta?: any) {
+    > 42 |         console.error(this.formatMessage('ERROR', message, meta));
+         |                 ^
+      43 |     }
+      44 | }
+      45 |
+
+      at Logger.error (src/logger.ts:42:17)
+      at src/routes/paperclip.ts:669:20
+      at Layer.handleRequest (../../node_modules/router/lib/layer.js:152:17)
+      at next (../../node_modules/router/lib/route.js:157:13)
+      at ../../node_modules/body-parser/lib/read.js:171:5
+      at invokeCallback (../../node_modules/raw-body/index.js:238:16)
+      at done (../../node_modules/raw-body/index.js:227:7)
+      at IncomingMessage.onEnd (../../node_modules/raw-body/index.js:287:7)
+
+FAIL integration tests/paperclip.test.ts
+  POST /v1/paperclip/onboard
+    ✓ rejects requests with missing companyId (10 ms)
+    ✓ rejects companyId that is not a string (2 ms)
+    ✓ successfully onboards a new company and returns activation URL (5 ms)
+    ✓ returns already_onboarded on re-install and issues fresh temp key (3 ms)
+    ✓ blocks SSRF via apiUrl pointing to internal address (3 ms)
+    ✓ caps agent count to developer tier limit even if agentCount is very large (4 ms)
+  POST /v1/agent/invoke
+    ✕ rejects requests with missing agentId (3 ms)
+    ✕ rejects requests with missing runId (3 ms)
+    ✓ rejects unauthenticated requests
+    ✕ succeeds and returns runTokenId (never raw credentials) (1 ms)
+    ✕ does not accept cross-tenant agent IDs (1 ms)
+    ✕ rejects non-string companyId
+  POST /v1/paperclip/webhooks — signature verification
+    ✓ rejects requests with no signature header
+    ✓ rejects requests with tampered signature (2 ms)
+    ✓ accepts requests with valid HMAC over raw body (1 ms)
+    ✓ rejects agent.hired when company is not onboarded (1 ms)
+    ✓ is idempotent: second agent.hired with same agent creates no duplicate policies (8 ms)
+    ✓ agent.fired revokes all tokens for that agent — cross-tenant revocation is blocked (2 ms)
+  Security invariants
+    ✓ agent API keys are never returned by any endpoint after initial onboard (2 ms)
+    ✓ agent keys stored in DB are hashed (not plain text) (1 ms)
+    ✓ vault encryption key fallback does not exist (server must fail when key is absent)
+    ✓ webhook endpoint rejects all requests when PAPERCLIP_WEBHOOK_SECRET is not set (1 ms)
+
+  ● POST /v1/agent/invoke › rejects requests with missing agentId
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 401
+
+      163 |             .send({ runId: "run-123" });
+      164 |
+    > 165 |         expect(res.status).toBe(400);
+          |                            ^
+      166 |         expect(res.body.error).toMatch(/agentId/i);
+      167 |     });
+      168 |
+
+      at Object.<anonymous> (tests/paperclip.test.ts:165:28)
+
+  ● POST /v1/agent/invoke › rejects requests with missing runId
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 401
+
+      173 |             .send({ agentId: createdAgentId });
+      174 |
+    > 175 |         expect(res.status).toBe(400);
+          |                            ^
+      176 |         expect(res.body.error).toMatch(/runId/i);
+      177 |     });
+      178 |
+
+      at Object.<anonymous> (tests/paperclip.test.ts:175:28)
+
+  ● POST /v1/agent/invoke › succeeds and returns runTokenId (never raw credentials)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 202
+    Received: 401
+
+      191 |             .send({ agentId: createdAgentId, runId: "run-" + Date.now(), companyId });
+      192 |
+    > 193 |         expect(res.status).toBe(202);
+          |                            ^
+      194 |         expect(res.body.runTokenId).toBeDefined();
+      195 |         // CRITICAL: credentials must NOT be in the response
+      196 |         expect(res.body.credentials).toBeUndefined();
+
+      at Object.<anonymous> (tests/paperclip.test.ts:193:28)
+
+  ● POST /v1/agent/invoke › does not accept cross-tenant agent IDs
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 403
+    Received: 401
+
+      205 |             .send({ agentId: "agent_from_another_tenant", runId: "run-" + Date.now() });
+      206 |
+    > 207 |         expect(res.status).toBe(403);
+          |                            ^
+      208 |     });
+      209 |
+      210 |     it("rejects non-string companyId", async () => {
+
+      at Object.<anonymous> (tests/paperclip.test.ts:207:28)
+
+  ● POST /v1/agent/invoke › rejects non-string companyId
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 401
+
+      214 |             .send({ agentId: createdAgentId, runId: "run-123", companyId: 12345 });
+      215 |
+    > 216 |         expect(res.status).toBe(400);
+          |                            ^
+      217 |     });
+      218 | });
+      219 |
+
+      at Object.<anonymous> (tests/paperclip.test.ts:216:28)
+
+Test Suites: 1 failed, 1 total
+Tests:       5 failed, 17 passed, 22 total
+Snapshots:   0 total
+Time:        2.919 s, estimated 3 s
+Ran all test suites matching /tests\/paperclip.test.ts/i.

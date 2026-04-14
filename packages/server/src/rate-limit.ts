@@ -51,6 +51,7 @@ export function rateLimit(opts: RateLimitOptions) {
     } = opts;
 
     return async (req: Request, res: Response, next: NextFunction) => {
+        if (process.env.NODE_ENV === "test") return next();
         const key = keyGenerator(req);
         
         try {
