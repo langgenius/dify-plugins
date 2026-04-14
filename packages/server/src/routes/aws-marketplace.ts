@@ -182,16 +182,72 @@ async function resolveAwsCustomerIdentifier(registrationToken: string): Promise<
 }
 
 /**
- * Validates that an SNS notification came from the genuine AWS Marketplace topic.
- * SNS messages include a SignatureVersion, Signature, and SigningCertURL that must
- * be verified before trusting the payload.
- *
- * For correctness in production, verify the X.509 certificate chain from SigningCertURL.
- * Here we perform the practical minimum: ARN prefix check + structure validation.
+ * Validates that the certificate URL belongs to a trusted AWS SNS domain.
+ * Prevents SSRF and certificate spoofing.
  */
-function validateSnsTopicArn(topicArn: string | undefined): boolean {
-    if (!topicArn) return false;
-    return topicArn.startsWith(AWS_SNS_TOPIC_ARN_PREFIX);
+function isValidSnsCertUrl(url: string): boolean {
+    const parsed = new URL(url);
+    return (
+        parsed.protocol === "https:" &&
+        parsed.hostname.endsWith(".amazonaws.com") &&
+        /^sns\.[a-z0-9\-]+\.amazonaws\.com$/.test(parsed.hostname)
+    );
+}
+
+/**
+ * Verifies the cryptographic signature of an AWS SNS message.
+ * See: https://docs.aws.amazon.com/sns/latest/dg/sns-verify-signature-endpoint.html
+ */
+async function verifySnsSignature(body: any): Promise<boolean> {
+    const { Signature, SignatureVersion, SigningCertURL, Type } = body;
+
+    if (SignatureVersion !== "1") {
+        logger.warn("[AWS SNS] Unsupported SignatureVersion:", { version: SignatureVersion });
+        return false;
+    }
+
+    if (!isValidSnsCertUrl(SigningCertURL)) {
+        logger.warn("[AWS SNS] Invalid SigningCertURL domain:", { url: SigningCertURL });
+        return false;
+    }
+
+    try {
+        // Fetch the public certificate from AWS
+        const certResponse = await fetch(SigningCertURL);
+        if (!certResponse.ok) throw new Error(`HTTP ${certResponse.status}`);
+        const certText = await certResponse.text();
+
+        // Construct the "String to Sign"
+        let stringToSign = "";
+        const keys = Type === "Notification"
+            ? ["Message", "MessageId", "Subject", "Timestamp", "TopicArn", "Type"]
+            : ["Message", "MessageId", "SubscribeURL", "Timestamp", "Token", "TopicArn", "Type"];
+
+        for (const key of keys) {
+            if (key in body && body[key] !== undefined) {
+                stringToSign += `${key}\n${body[key]}\n`;
+            }
+        }
+
+        // Verify the signature using the certificate's public key
+        const verifier = crypto.createVerify("sha1WithRSAEncryption");
+        verifier.update(stringToSign, "utf8");
+        return verifier.verify(certText, Signature, "base64");
+    } catch (err) {
+        logger.error("[AWS SNS] Signature verification failed:", err);
+        return false;
+    }
+}
+
+/**
+ * Validates that an SNS notification came from the genuine AWS Marketplace topic.
+ */
+async function validateSnsNotification(body: any): Promise<boolean> {
+    const topicArn = body.TopicArn;
+    if (!topicArn || !topicArn.startsWith(AWS_SNS_TOPIC_ARN_PREFIX)) {
+        return false;
+    }
+    return await verifySnsSignature(body);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -299,10 +355,10 @@ router.post("/sns", express.raw({ type: "application/json" }), async (req: Reque
         return res.status(400).json({ error: "Invalid JSON body" });
     }
 
-    // Validate SNS topic ARN before trusting any content
-    if (!validateSnsTopicArn(body.TopicArn)) {
-        logger.warn("[AWS SNS] Rejected notification from unexpected TopicArn:", { topicArn: body.TopicArn });
-        return res.status(403).json({ error: "Forbidden: unexpected SNS topic" });
+    // Validate SNS notification signatures before trusting any content
+    if (!(await validateSnsNotification(body))) {
+        logger.warn("[AWS SNS] Rejected notification: Signature or TopicArn validation failed.", { topicArn: body.TopicArn });
+        return res.status(403).json({ error: "Forbidden: Invalid SNS notification" });
     }
 
     // Handle SNS subscription confirmation (one-time handshake)
@@ -362,7 +418,7 @@ router.post("/sns", express.raw({ type: "application/json" }), async (req: Reque
                 await pool.query(
                     `UPDATE tenants
                      SET aws_subscription_status = 'failed', updated_at = NOW()
-                     WHERE aws_customer_id = $2`,
+                     WHERE aws_customer_id = $1`,
                     [customerId]
                 );
                 logger.warn("[AWS SNS] Subscription failed for customer:", { customerId });

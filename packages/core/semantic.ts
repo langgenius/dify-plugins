@@ -1,4 +1,7 @@
+// Copyright 2026 SupraWall Contributors
+// SPDX-License-Identifier: Apache-2.0
 
+import { scrubPayload } from "./src/scrubber";
 
 export interface SemanticAnalysisRequest {
     tenantId: string;
@@ -159,8 +162,9 @@ export async function updateBaseline(
 }
 
 function buildAnalysisPrompt(req: SemanticAnalysisRequest): string {
-    const truncated = req.argsString.length > 2000
-        ? req.argsString.slice(0, 2000) + '...[truncated]' : req.argsString;
+    const safeArgs = scrubPayload(req.argsString);
+    const truncated = safeArgs.length > 2000
+        ? safeArgs.slice(0, 2000) + '...[truncated]' : safeArgs;
 
     return `You are a security analyst evaluating an AI agent tool call for potential threats.
 Assess the threat level on a scale of 0.0 (completely safe) to 1.0 (definitely malicious).

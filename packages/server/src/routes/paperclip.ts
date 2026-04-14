@@ -389,6 +389,7 @@ router.post(
             return res.status(400).json({ error: "Missing required field: runId" });
         }
         // role is optional but when provided must be a safe string
+        const role = req.body?.role;
         const sanitizedRole = typeof role === "string" ? role.slice(0, 64).replace(/[^a-zA-Z0-9_-]/g, "") : "invoke";
 
         try {
@@ -488,7 +489,7 @@ router.post(
                         tenantId, agentId, secretName.toUpperCase(),
                         sanitizedRole,
                         "ISSUED_RUN_TOKEN",
-                        JSON.stringify({ runId, companyId: companyId || null, source: "paperclip_invoke" })
+                        JSON.stringify({ runId, companyId: companyIdFromPayload || null, source: "paperclip_invoke" })
                     ]
                 );
             }

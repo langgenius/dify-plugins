@@ -56,11 +56,27 @@ app.use(rateLimit({
 // MUST be registered before routers so res.json is monkey-patched.
 app.use((req, res, next) => {
     const originalJson = res.json;
+    const redactSensitive = (obj: any): any => {
+        if (!obj || typeof obj !== 'object') return obj;
+        if (Array.isArray(obj)) return obj.map(redactSensitive);
+        const redacted = { ...obj };
+        const keysToRedact = [
+            'apiKey', 'agentApiKey', 'secret', 'password', 'token', 
+            'authorization', 'credentials', 'vault_key'
+        ];
+        for (const key of Object.keys(redacted)) {
+            if (keysToRedact.some(k => key.toLowerCase().includes(k))) {
+                redacted[key] = '[REDACTED]';
+            } else if (typeof redacted[key] === 'object') {
+                redacted[key] = redactSensitive(redacted[key]);
+            }
+        }
+        return redacted;
+    };
+
     res.json = function (body) {
         if ((res as any)._scrubBody && body && typeof body === 'object') {
-            const scrubbedBody = { ...body };
-            if (scrubbedBody.agentApiKey) scrubbedBody.agentApiKey = '[REDACTED]';
-            return originalJson.call(this, scrubbedBody);
+            return originalJson.call(this, redactSensitive(body));
         }
         return originalJson.call(this, body);
     };

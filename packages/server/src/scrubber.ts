@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export function scrubResponse(response: any, secretValues: string[]): any {
+    if (response == null) return response;
     if (secretValues.length === 0) return response;
 
     let responseString = typeof response === "string" ? response : JSON.stringify(response);

@@ -4,6 +4,8 @@
 import { db as firestore } from '@/lib/firebase-admin';
 import { pool } from '@/lib/db_sql';
 import crypto from 'crypto';
+import { dispatchEmail } from '@/lib/emails/dispatcher';
+import { getUserEmail, getTenantAdminEmails } from '@/lib/user';
 
 /**
  * Approval Workflow System for High-Risk Operations
@@ -110,7 +112,26 @@ export async function createApprovalRequest(
         [requestId, tenantId, userId, operationType, resourceId, JSON.stringify(parameters), 'pending', now, expiresAt]
     );
 
-    return mapRowToApprovalRequest(result.rows[0]);
+    const request = mapRowToApprovalRequest(result.rows[0]);
+
+    // ASYNC: Notify reviewers
+    getTenantAdminEmails(tenantId).then(emails => {
+        emails.forEach(email => {
+            dispatchEmail("SW-HITL-001", email, {
+                agent_name: parameters.agent_name || "Unknown Agent",
+                action_summary: operationType.replace('_', ' '),
+                tool_name: parameters.tool_name || "Unknown Tool",
+                params: JSON.stringify(parameters.params || {}),
+                risk_level: "HIGH",
+                expiry_time: "24 hours",
+                approve_url: `https://app.supra-wall.com/approvals/${request.id}/approve`,
+                deny_url: `https://app.supra-wall.com/approvals/${request.id}/deny`,
+                dashboard_url: "https://app.supra-wall.com/dashboard/approvals"
+            }).catch(console.error);
+        });
+    });
+
+    return request;
 }
 
 /**
@@ -152,7 +173,23 @@ export async function approveRequest(
         throw new Error('Approval request not found or already processed');
     }
 
-    return mapRowToApprovalRequest(result.rows[0]);
+    const request = mapRowToApprovalRequest(result.rows[0]);
+
+    // ASYNC: Notify requester
+    getUserEmail(request.userId).then(email => {
+        if (email) {
+            dispatchEmail("SW-HITL-002", email, {
+                action: request.operationType.replace('_', ' '),
+                agent_name: request.parameters.agent_name || "Agent",
+                reviewer_name: approvedBy,
+                timestamp: request.approvedAt?.toISOString() || new Date().toISOString(),
+                ref_id: request.id,
+                log_url: `https://app.supra-wall.com/dashboard/intercepts/${request.resourceId}`
+            }).catch(console.error);
+        }
+    });
+
+    return request;
 }
 
 /**
@@ -176,7 +213,24 @@ export async function rejectRequest(
         throw new Error('Approval request not found or already processed');
     }
 
-    return mapRowToApprovalRequest(result.rows[0]);
+    const request = mapRowToApprovalRequest(result.rows[0]);
+
+    // ASYNC: Notify requester
+    getUserEmail(request.userId).then(email => {
+        if (email) {
+            dispatchEmail("SW-HITL-003", email, {
+                action: request.operationType.replace('_', ' '),
+                agent_name: request.parameters.agent_name || "Agent",
+                reviewer_name: rejectedBy,
+                reason: reason,
+                timestamp: request.approvedAt?.toISOString() || new Date().toISOString(),
+                ref_id: request.id,
+                policy_url: "https://app.supra-wall.com/dashboard/policies"
+            }).catch(console.error);
+        }
+    });
+
+    return request;
 }
 
 /**
