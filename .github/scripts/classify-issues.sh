@@ -45,7 +45,7 @@ create_label() {
   if gh label list --repo "$REPO" --search "$name" --json name -q '.[].name' 2>/dev/null | grep -qx "$name"; then
     echo "  Label '$name' already exists."
   else
-    run_cmd gh label create "$name" --repo "$REPO" --color "$color" --description "$description" --force
+    run_cmd gh label create "$name" --repo "$REPO" --color "$color" --description "$description"
   fi
 }
 
