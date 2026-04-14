@@ -144,6 +144,7 @@ describe("POST /v1/agent/invoke", () => {
             .post("/v1/paperclip/onboard")
             .send({ companyId, agentCount: 1 });
 
+        console.log("Onboard response for invoke:", res.status, res.body);
         tempApiKey = res.body.tempApiKey;
 
         // Look up the created agent for this tenant
@@ -300,7 +301,7 @@ describe("POST /v1/paperclip/webhooks — signature verification", () => {
 
         const tenantId = "pc_" + wbCompanyId.replace(/[^a-zA-Z0-9-_]/g, "_").slice(0, 60);
         const res = await pool.query(
-            "SELECT COUNT(*) FROM policies WHERE tenantid = $1 AND agentid = 'wb-agent-idem'",
+            "SELECT COUNT(*) as count FROM policies WHERE tenantid = $1 AND agentid = 'wb-agent-idem'",
             [tenantId]
         );
         const count = parseInt(res.rows[0].count, 10);

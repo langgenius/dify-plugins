@@ -106,7 +106,7 @@ export const adminAuth = async (req: Request, res: Response, next: NextFunction)
  * Validates agent API keys using the configured AuthProvider.
  */
 export async function gatekeeperAuth(req: Request, res: Response, next: NextFunction) {
-    let apiKey = req.body.apiKey || req.headers["x-api-key"];
+    let apiKey = req.body?.apiKey || req.headers["x-api-key"];
     const authHeader = req.headers.authorization;
 
     // Support Bearer Token (Master Key or Firebase Token) in gatekeeper as well

@@ -52,15 +52,40 @@ interface QueryResult {
 export const pool = {
     query: async (text: string, params?: any[]): Promise<QueryResult> => {
         if (sqliteDb) {
-            const sql = text.replace(/\$(\d+)/g, "?");
-            if (sql.trim().toUpperCase().startsWith("SELECT")) {
-                const all = promisify(sqliteDb.all.bind(sqliteDb));
-                const rows = await all(sql, params || []) as any[];
-                return { rows, rowCount: rows.length };
+            const sqlParams: any[] = [];
+            const sql = text.replace(/\$(\d+)/g, (match, d) => {
+                if (params && params.length >= parseInt(d, 10)) {
+                    let val = params[parseInt(d, 10) - 1];
+                    if (val && Object.prototype.toString.call(val) === '[object Date]') {
+                        val = val.toISOString();
+                    } else if (val && typeof val === 'object' && Object.prototype.toString.call(val) !== '[object Uint8Array]') {
+                        val = JSON.stringify(val);
+                    }
+                    sqlParams.push(val);
+                }
+                return "?";
+            });
+            // console.log(`[DB] SQLite query: ${sql}`, sqlParams);
+            if (sql.trim().toUpperCase().startsWith("SELECT") || sql.trim().toUpperCase().includes("RETURNING")) {
+                return new Promise((resolve, reject) => {
+                    sqliteDb!.all(sql, sqlParams, (err, rows) => {
+                        if (err) {
+                            console.error(`[DB] SQLite SELECT Error: ${err.message} \nQuery: ${sql}`);
+                            return reject(err);
+                        }
+                        resolve({ rows: rows as any[], rowCount: (rows as any[]).length });
+                    });
+                });
             } else {
-                const run = promisify(sqliteDb.run.bind(sqliteDb));
-                const result: any = await run(sql, params || []);
-                return { rows: [], rowCount: result ? result.changes : 0 };
+                return new Promise((resolve, reject) => {
+                    sqliteDb!.run(sql, sqlParams, function(err) {
+                        if (err) {
+                            console.error(`[DB] SQLite RUN Error: ${err.message} \nQuery: ${sql}`);
+                            return reject(err);
+                        }
+                        resolve({ rows: [], rowCount: this.changes });
+                    });
+                });
             }
         }
         return pgPool.query(text, params);
@@ -83,6 +108,10 @@ export const pool = {
 export const initDb = async () => {
     if (sqliteDb) {
         logger.info("[DB] Initializing SQLite schema...");
+        if (process.env.NODE_ENV === "test") {
+            const run = promisify(sqliteDb.run.bind(sqliteDb));
+            await run("DROP TABLE IF EXISTS policies").catch(() => {});
+        }
         const queries = [
             `CREATE TABLE IF NOT EXISTS policies (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -95,7 +124,8 @@ export const initDb = async () => {
                 priority INTEGER DEFAULT 100,
                 isdryrun INTEGER DEFAULT 0,
                 description TEXT,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(tenantid, agentid, toolname)
             )`,
             `CREATE TABLE IF NOT EXISTS audit_logs (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -381,7 +411,8 @@ export const initDb = async () => {
             priority INTEGER DEFAULT 100,
             isdryrun BOOLEAN DEFAULT FALSE,
             description TEXT,
-            created_at TIMESTAMP DEFAULT NOW()
+            created_at TIMESTAMP DEFAULT NOW(),
+            UNIQUE(tenantid, agentid, toolname)
         );
         CREATE TABLE IF NOT EXISTS audit_logs (
             id SERIAL PRIMARY KEY,

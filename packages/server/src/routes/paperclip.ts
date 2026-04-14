@@ -110,6 +110,7 @@ const generateAgentKey = (): string =>
 
 router.post(
     "/onboard",
+    express.json(),
     rateLimit({ max: 5, windowMs: 60_000, message: "Too many install attempts. Please wait before retrying." }),
     async (req: Request, res: Response) => {
         const { companyId, paperclipApiKey, paperclipVersion, agentCount, apiUrl } = req.body;
@@ -296,7 +297,7 @@ router.post(
             await client.query(
                 `INSERT INTO paperclip_tokens (id, token, tenant_id, paperclip_company_id, tier, expires_at)
                  VALUES ($1, $2, $3, $4, $5, $6)`,
-                [crypto.randomUUID(), tempKey, tenantId, sanitizedCompanyId, "developer", expiresAt]
+                [crypto.randomUUID(), tempKey, tenantId, sanitizedCompanyId, "developer", expiresAt.toISOString()]
             );
 
             await client.query("COMMIT");
@@ -343,6 +344,7 @@ router.post(
 
 router.post(
     "/invoke",
+    express.json(),
     gatekeeperAuth,
     resolveTier,
     async (req: Request, res: Response) => {
@@ -429,7 +431,7 @@ router.post(
                      FROM vault_secrets vs
                      JOIN vault_access_rules var ON var.secret_id = vs.id
                      WHERE var.tenant_id = $2 AND var.agent_id = $3
-                       AND (vs.expires_at IS NULL OR vs.expires_at > NOW())
+                       AND (vs.expires_at IS NULL OR vs.expires_at > CURRENT_TIMESTAMP)
                      LIMIT 50`,
                     [encryptionKey, tenantId, agentId]
                 );
@@ -466,7 +468,7 @@ router.post(
                 `INSERT INTO paperclip_run_tokens (id, tenant_id, agent_id, run_id, scoped_credentials, ttl_seconds, expires_at)
                  VALUES ($1, $2, $3, $4, $5, $6, $7)
                  ON CONFLICT (tenant_id, agent_id, run_id)
-                 DO UPDATE SET issued_at = NOW(), expires_at = $7`,
+                 DO UPDATE SET issued_at = CURRENT_TIMESTAMP, expires_at = $7`,
                 // scoped_credentials stores the authorized secret names only, never decrypted values
                 [runTokenId, tenantId, agentId, runId, JSON.stringify({ authorizedSecrets: secretNames }), ttlSeconds, expiresAt]
             );
@@ -568,6 +570,13 @@ router.get(
             }
 
             if (authorizedSecrets.length === 0) {
+                // Mark token as consumed even if no secrets to return
+                await pool.query(
+                    `UPDATE paperclip_run_tokens
+                     SET consumed = 1, consumed_at = CURRENT_TIMESTAMP
+                     WHERE id = $1 AND tenant_id = $2`,
+                    [runTokenId, tenantId]
+                );
                 return res.json({ credentials: {}, runId: tokenRow.run_id });
             }
 
@@ -591,7 +600,7 @@ router.get(
                     `SELECT secret_name, pgp_sym_decrypt(encrypted_value, $1) as value
                      FROM vault_secrets
                      WHERE tenant_id = $2 AND secret_name = ANY(ARRAY[${placeholders}])
-                       AND (expires_at IS NULL OR expires_at > NOW())`,
+                       AND (expires_at IS NULL OR expires_at > CURRENT_TIMESTAMP)`,
                     [encryptionKey, tenantId, ...authorizedSecrets]
                 );
                 for (const row of secretResult.rows) {
@@ -625,7 +634,7 @@ router.get(
             // Mark token as consumed (one-time use only)
             await pool.query(
                 `UPDATE paperclip_run_tokens
-                 SET consumed = TRUE, consumed_at = NOW()
+                 SET consumed = 1, consumed_at = CURRENT_TIMESTAMP
                  WHERE id = $1 AND tenant_id = $2`,
                 [runTokenId, tenantId]
             );
@@ -839,8 +848,8 @@ router.post(
                 // Revoke all run tokens immediately
                 await client.query(
                     `UPDATE paperclip_run_tokens
-                     SET revoked = TRUE, revoked_at = NOW()
-                     WHERE agent_id = $1 AND tenant_id = $2 AND revoked = FALSE`,
+                     SET revoked = 1, revoked_at = CURRENT_TIMESTAMP
+                     WHERE agent_id = $1 AND tenant_id = $2 AND revoked = 0`,
                     [agent.id, tenantId]
                 );
 
@@ -921,8 +930,8 @@ router.post(
                 // Revoke only within the verified tenant scope
                 const result = await client.query(
                     `UPDATE paperclip_run_tokens
-                     SET revoked = TRUE, revoked_at = NOW()
-                     WHERE run_id = $1 AND tenant_id = $2 AND revoked = FALSE
+                     SET revoked = 1, revoked_at = CURRENT_TIMESTAMP
+                     WHERE run_id = $1 AND tenant_id = $2 AND revoked = 0
                      RETURNING id, agent_id, tenant_id`,
                     [runId, tenantId]
                 );
@@ -982,7 +991,7 @@ router.get(
             pool.query("SELECT * FROM paperclip_companies WHERE tenant_id = $1", [tenantId]),
             pool.query("SELECT COUNT(*) FROM agents WHERE tenantid = $1", [tenantId]),
             pool.query(
-                "SELECT COUNT(*) FROM paperclip_run_tokens WHERE tenant_id = $1 AND revoked = FALSE AND expires_at > NOW()",
+                "SELECT COUNT(*) FROM paperclip_run_tokens WHERE tenant_id = $1 AND revoked = 0 AND expires_at > CURRENT_TIMESTAMP",
                 [tenantId]
             ),
         ]);
