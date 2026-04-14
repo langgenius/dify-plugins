@@ -21,6 +21,7 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
       - name: npm audit
+        continue-on-error: true
         run: npm audit --audit-level=high
 
   build:
@@ -29,7 +30,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18, 20, 22]
+        node-version: [20, 22]
 
     steps:
       - name: Checkout

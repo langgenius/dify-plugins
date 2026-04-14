@@ -3,6 +3,8 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { pool } from "@/lib/db_sql";
+import { hashApiKey } from "@/lib/hash";
+import { trackEvent } from "@/lib/posthog-client"; // Assuming a shared client lib for Next.js too or similar.
 
 export const dynamic = "force-dynamic";
 
@@ -19,14 +21,16 @@ export async function GET(request: NextRequest) {
     }
 
     try {
+        // Tokens are stored as SHA-256 hashes — must hash the incoming raw token before querying
+        const tokenHash = hashApiKey(token);
         const result = await pool.query(
             `SELECT pt.id, pt.paperclip_company_id, pt.tier, pt.expires_at, pt.activated, pt.activation_email,
                     pc.agent_count, pc.paperclip_version, pc.status as company_status
              FROM paperclip_tokens pt
-             LEFT JOIN paperclip_companies pc ON pc.paperclip_company_id = pt.paperclip_company_id
+             JOIN paperclip_companies pc ON pc.paperclip_company_id = pt.paperclip_company_id
              WHERE pt.token = $1
              LIMIT 1`,
-            [token]
+            [tokenHash]
         );
 
         if (result.rows.length === 0) {
@@ -34,6 +38,11 @@ export async function GET(request: NextRequest) {
         }
 
         const row = result.rows[0];
+        
+        trackEvent("activation_page_view", {
+            companyId: row.paperclip_company_id,
+            tier: row.tier
+        }, token);
 
         if (new Date(row.expires_at) < new Date()) {
             return NextResponse.json({ error: "Activation token has expired. Reinstall the plugin to get a new one." }, { status: 410 });
@@ -77,12 +86,14 @@ export async function POST(request: NextRequest) {
     }
 
     try {
+        // Tokens are stored as SHA-256 hashes — must hash the incoming raw token before querying
+        const tokenHash = hashApiKey(token);
         const tokenResult = await pool.query(
             `SELECT pt.id, pt.tenant_id, pt.paperclip_company_id, pt.tier, pt.expires_at, pt.activated
              FROM paperclip_tokens pt
              WHERE pt.token = $1
              LIMIT 1`,
-            [token]
+            [tokenHash]
         );
 
         if (tokenResult.rows.length === 0) {
@@ -108,7 +119,7 @@ export async function POST(request: NextRequest) {
             `UPDATE paperclip_tokens
              SET activated = TRUE, activation_email = $1
              WHERE token = $2`,
-            [email.toLowerCase().trim(), token]
+            [email.toLowerCase().trim(), tokenHash]
         );
 
         // Update company status to active
@@ -117,6 +128,20 @@ export async function POST(request: NextRequest) {
              WHERE paperclip_company_id = $1`,
             [row.paperclip_company_id]
         );
+
+        console.log(JSON.stringify({
+            message: "[Metric] Paperclip Funnel",
+            event_type: "funnel_activate",
+            company_id: row.paperclip_company_id,
+            tenant_id: row.tenant_id,
+            tier: row.tier
+        }));
+
+        trackEvent("activation_success", {
+            tenantId: row.tenant_id,
+            companyId: row.paperclip_company_id,
+            email: email.toLowerCase().trim()
+        }, token);
 
         return NextResponse.json({
             success: true,

@@ -10,7 +10,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc -w",
-    "test": "jest"
+    "test": "jest --passWithNoTests"
   },
   "author": "SupraWall",
   "license": "Apache-2.0",

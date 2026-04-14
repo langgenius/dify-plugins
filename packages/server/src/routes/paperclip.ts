@@ -1,8 +1,12 @@
 // Copyright 2026 SupraWall Contributors
 // SPDX-License-Identifier: Apache-2.0
+//
+// Plugin source (client-side): https://github.com/wiserautomation/suprawall-plugins-/tree/main/paperclip
+// This file contains the server-side API routes (vault engine, billing, tier enforcement).
+// The client plugin only calls this API — zero proprietary logic on the client side.
 
 import express, { Request, Response } from "express";
-import { pool } from "../db";
+import { pool, isPostgres } from "../db";
 import { adminAuth, gatekeeperAuth, AuthenticatedRequest } from "../auth";
 import { getFirestore } from "../firebase";
 import crypto from "crypto";
@@ -10,8 +14,11 @@ import { resolveTier, TieredRequest, tierLimitError, checkEvaluationLimit, recor
 import { TIER_LIMITS, Tier } from "../tier-config";
 import { logger } from "../logger";
 import { rateLimit } from "../rate-limit";
+import { observabilityMiddleware, maskSensitiveData } from "../observability";
+import { trackEvent } from "../posthog";
 
 const router = express.Router();
+router.use(observabilityMiddleware);
 
 // ---------------------------------------------------------------------------
 // Startup guard — fail loudly if critical secrets are absent
@@ -113,7 +120,8 @@ router.post(
     express.json(),
     rateLimit({ max: 5, windowMs: 60_000, message: "Too many install attempts. Please wait before retrying." }),
     async (req: Request, res: Response) => {
-        const { companyId, paperclipApiKey, paperclipVersion, agentCount, apiUrl } = req.body;
+        const { companyId, paperclipApiKey, paperclipVersion, agentCount, apiUrl, template_name, source, template_id } = req.body || {};
+        const inferredTemplate = template_name || source || template_id || "cli-install";
 
         if (!companyId || typeof companyId !== "string") {
             return res.status(400).json({ error: "Missing required field: companyId" });
@@ -139,7 +147,7 @@ router.post(
                 await pool.query(
                     `INSERT INTO paperclip_tokens (id, token, tenant_id, paperclip_company_id, tier, expires_at)
                      VALUES ($1, $2, $3, $4, $5, $6)`,
-                    [crypto.randomUUID(), tempKey, existing.rows[0].tenant_id, sanitizedCompanyId, "developer", expiresAt]
+                    [crypto.randomUUID(), hashApiKey(tempKey), existing.rows[0].tenant_id, sanitizedCompanyId, "developer", expiresAt.toISOString()]
                 );
                 return res.json({
                     status: "already_onboarded",
@@ -225,15 +233,16 @@ router.post(
             await client.query(
                 `INSERT INTO tenants (id, name, master_api_key, tier)
                  VALUES ($1, $2, $3, $4)
-                 ON CONFLICT (id) DO NOTHING`,
-                [tenantId, `Paperclip: ${sanitizedCompanyId}`, masterKey, "developer"]
+                 ON CONFLICT (id) DO UPDATE SET master_api_key = $3`,
+                [tenantId, `Paperclip: ${sanitizedCompanyId}`, hashApiKey(masterKey), "developer"]
             );
 
             // 2. Register Paperclip company
             await client.query(
-                `INSERT INTO paperclip_companies (id, tenant_id, paperclip_company_id, agent_count, paperclip_version, api_url, status)
-                 VALUES ($1, $2, $3, $4, $5, $6, 'active')`,
-                [crypto.randomUUID(), tenantId, sanitizedCompanyId, agents.length, paperclipVersion || null, resolvedApiUrl]
+                `INSERT INTO paperclip_companies (id, tenant_id, paperclip_company_id, agent_count, paperclip_version, api_url, template_name, status)
+                 VALUES ($1, $2, $3, $4, $5, $6, $7, 'active')
+                 ON CONFLICT (paperclip_company_id) DO UPDATE SET status = 'active', paperclip_version = $5, api_url = $6, template_name = $7`,
+                [crypto.randomUUID(), tenantId, sanitizedCompanyId, agents.length, paperclipVersion || null, resolvedApiUrl, inferredTemplate]
             );
 
             // 3. Create agents with role-based policies
@@ -249,8 +258,8 @@ router.post(
                 await client.query(
                     `INSERT INTO agents (id, tenantid, name, apikeyhash, scopes)
                      VALUES ($1, $2, $3, $4, $5)
-                     ON CONFLICT (id) DO NOTHING`,
-                    [agentId, tenantId, agentName, agentKeyHash, allowedCredentials]
+                     ON CONFLICT (id) DO UPDATE SET name = $3, scopes = $5, apikeyhash = $4`,
+                    [agentId, tenantId, agentName, agentKeyHash, isPostgres ? allowedCredentials : JSON.stringify(allowedCredentials)]
                 );
 
                 // Create ALLOW policies for each credential scope
@@ -258,7 +267,7 @@ router.post(
                     await client.query(
                         `INSERT INTO policies (tenantid, agentid, name, toolname, ruletype, description)
                          VALUES ($1, $2, $3, $4, $5, $6)
-                         ON CONFLICT DO NOTHING`,
+                         ON CONFLICT (tenantid, agentid, toolname) WHERE agentid IS NOT NULL DO NOTHING`,
                         [
                             tenantId, agentId,
                             `Paperclip: ${credential} for ${agentName}`,
@@ -297,12 +306,28 @@ router.post(
             await client.query(
                 `INSERT INTO paperclip_tokens (id, token, tenant_id, paperclip_company_id, tier, expires_at)
                  VALUES ($1, $2, $3, $4, $5, $6)`,
-                [crypto.randomUUID(), tempKey, tenantId, sanitizedCompanyId, "developer", expiresAt.toISOString()]
+                [crypto.randomUUID(), hashApiKey(tempKey), tenantId, sanitizedCompanyId, "developer", expiresAt.toISOString()]
             );
 
             await client.query("COMMIT");
 
             logger.info(`[Paperclip] Onboarded company: ${sanitizedCompanyId} → tenant: ${tenantId}, agents: ${agents.length}`);
+            
+            trackEvent("paperclip_install", {
+                tenant_id: tenantId,
+                companyId: sanitizedCompanyId,
+                template_name: inferredTemplate,
+                plan: "developer",
+                agentCount: agents.length
+            });
+
+            logger.info("[Metric] Paperclip Funnel", {
+                event_type: "funnel_onboard",
+                company_id: sanitizedCompanyId,
+                tenant_id: tenantId,
+                agent_count: agents.length,
+                tier: "developer"
+            });
 
             // Execute Firestore writes after successful commit — failures are non-fatal
             for (const write of firestoreWrites) {
@@ -351,7 +376,10 @@ router.post(
         const tenantId = (req as AuthenticatedRequest).tenantId;
         const tierLimits = (req as TieredRequest).tierLimits!;
 
-        const { agentId, companyId, role, runId } = req.body;
+        const { agentId, runId } = req.body || {};
+        // companyId is intentionally ignored here for validation, we only trust the API key's tenantId.
+        // We extract it only if provided to pass to the logger (and potentially flag a mismatch).
+        const companyIdFromPayload = req.body?.companyId;
 
         // All fields are required and must be non-empty strings
         if (!agentId || typeof agentId !== "string" || agentId.trim() === "") {
@@ -359,10 +387,6 @@ router.post(
         }
         if (!runId || typeof runId !== "string" || runId.trim() === "") {
             return res.status(400).json({ error: "Missing required field: runId" });
-        }
-        // companyId is validated against the authenticated tenant to prevent cross-tenant access
-        if (companyId !== undefined && typeof companyId !== "string") {
-            return res.status(400).json({ error: "Invalid field: companyId must be a string" });
         }
         // role is optional but when provided must be a safe string
         const sanitizedRole = typeof role === "string" ? role.slice(0, 64).replace(/[^a-zA-Z0-9_-]/g, "") : "invoke";
@@ -384,11 +408,12 @@ router.post(
             );
 
             if (agentResult.rows.length === 0) {
-                // If companyId provided, give a helpful hint — but never reveal cross-tenant data
-                if (companyId) {
+                // We no longer rely on companyId for lookups. If the agent isn't in this tenant, they are forbidden.
+                // We only use companyIdFromPayload for a helpful hint if they provided it.
+                if (companyIdFromPayload) {
                     const companyResult = await pool.query(
                         "SELECT tenant_id FROM paperclip_companies WHERE paperclip_company_id = $1",
-                        [companyId]
+                        [companyIdFromPayload]
                     );
                     if (companyResult.rows.length === 0) {
                         return res.status(403).json({ error: "Agent not registered in SupraWall. Run: paperclipai plugin install suprawall-vault" });
@@ -422,39 +447,19 @@ router.post(
             }
 
             const secretNames: string[] = [];
-            const isPostgres = !!process.env.DATABASE_URL && !process.env.DATABASE_URL.includes("sqlite");
-
-            if (isPostgres) {
-                // PostgreSQL: use pgp_sym_decrypt — secure at-rest decryption
-                const secretResult = await pool.query(
-                    `SELECT vs.secret_name, pgp_sym_decrypt(vs.encrypted_value, $1) as value
-                     FROM vault_secrets vs
-                     JOIN vault_access_rules var ON var.secret_id = vs.id
-                     WHERE var.tenant_id = $2 AND var.agent_id = $3
-                       AND (vs.expires_at IS NULL OR vs.expires_at > CURRENT_TIMESTAMP)
-                     LIMIT 50`,
-                    [encryptionKey, tenantId, agentId]
-                );
-                for (const row of secretResult.rows) {
-                    secretNames.push(row.secret_name);
-                }
-            } else {
-                // SQLite fallback for local dev only
-                if (process.env.NODE_ENV === 'production') {
-                    logger.error("[Paperclip] Refusing to use SQLite vault resolution in production environment.");
-                    return res.status(503).json({ error: "Vault requires PostgreSQL in production." });
-                }
-
-                const secretResult = await pool.query(
-                    `SELECT vs.secret_name
-                     FROM vault_secrets vs
-                     JOIN vault_access_rules var ON var.secret_id = vs.id
-                     WHERE var.tenant_id = $1 AND var.agent_id = $2`,
-                    [tenantId, agentId]
-                );
-                for (const row of secretResult.rows) {
-                    secretNames.push(row.secret_name);
-                }
+            
+            // Fetch secret names the agent is authorized to access
+            const secretResult = await pool.query(
+                `SELECT vs.secret_name
+                 FROM vault_secrets vs
+                 JOIN vault_access_rules var ON var.secret_id = vs.id
+                 WHERE var.tenant_id = $1 AND var.agent_id = $2
+                   AND (vs.expires_at IS NULL OR vs.expires_at > $3)
+                 LIMIT 50`,
+                [tenantId, agentId, new Date().toISOString()]
+            );
+            for (const row of secretResult.rows) {
+                secretNames.push(row.secret_name);
             }
 
             // 5. Create run token — store ONLY the list of authorized secret names,
@@ -468,17 +473,17 @@ router.post(
                 `INSERT INTO paperclip_run_tokens (id, tenant_id, agent_id, run_id, scoped_credentials, ttl_seconds, expires_at)
                  VALUES ($1, $2, $3, $4, $5, $6, $7)
                  ON CONFLICT (tenant_id, agent_id, run_id)
-                 DO UPDATE SET issued_at = CURRENT_TIMESTAMP, expires_at = $7`,
+                 DO UPDATE SET issued_at = $8, expires_at = $7, scoped_credentials = $5
+                 RETURNING id`,
                 // scoped_credentials stores the authorized secret names only, never decrypted values
-                [runTokenId, tenantId, agentId, runId, JSON.stringify({ authorizedSecrets: secretNames }), ttlSeconds, expiresAt]
+                [runTokenId, tenantId, agentId, runId, JSON.stringify({ authorizedSecrets: secretNames }), ttlSeconds, expiresAt.toISOString(), new Date().toISOString()]
             );
 
             // 6. Audit log each authorized secret (not values)
             for (const secretName of secretNames) {
                 await pool.query(
                     `INSERT INTO vault_access_log (tenant_id, agent_id, secret_name, tool_name, action, request_metadata)
-                     VALUES ($1, $2, $3, $4, $5, $6)
-                     ON CONFLICT DO NOTHING`,
+                     VALUES ($1, $2, $3, $4, $5, $6)`,
                     [
                         tenantId, agentId, secretName.toUpperCase(),
                         sanitizedRole,
@@ -519,7 +524,8 @@ router.get(
     "/run-token/:runTokenId",
     gatekeeperAuth,
     async (req: Request, res: Response) => {
-        const tenantId = (req as AuthenticatedRequest).tenantId;
+        const authReq = req as AuthenticatedRequest;
+        const tenantId = authReq.tenantId;
         const { runTokenId } = req.params;
 
         if (!runTokenId || typeof runTokenId !== "string") {
@@ -536,8 +542,9 @@ router.get(
             const tokenResult = await pool.query(
                 `SELECT id, agent_id, run_id, scoped_credentials, expires_at, revoked, consumed
                  FROM paperclip_run_tokens
-                 WHERE id = $1 AND tenant_id = $2`,
-                [runTokenId, tenantId]
+                 WHERE id = $1 AND tenant_id = $2
+                   AND (expires_at IS NULL OR expires_at > $3)`,
+                [runTokenId, tenantId, new Date().toISOString()]
             );
 
             if (tokenResult.rows.length === 0) {
@@ -546,16 +553,21 @@ router.get(
 
             const tokenRow = tokenResult.rows[0];
 
+            // H-4: Security Hardening - Ensure the agent resolving the token is the same agent it was issued for.
+            // This prevents intra-tenant privilege escalation where Agent A guesses Agent B's token ID.
+            // When authenticated via ag_* key, authReq.agent.id holds the agent identity.
+            // When authenticated via master/temp key, we trust tenant-level access (agent.id is unavailable).
+            if (authReq.agent && authReq.agent.id !== tokenRow.agent_id) {
+                logger.warn(`[Vault] Unauthorized run-token resolution: agent ${authReq.agent.id} tried to resolve token for ${tokenRow.agent_id}`);
+                return res.status(403).json({ error: "Unauthorized: Run token belongs to a different agent." });
+            }
+
             if (tokenRow.revoked) {
                 return res.status(410).json({ error: "Run token has been revoked" });
             }
 
             if (tokenRow.consumed) {
                 return res.status(410).json({ error: "Run token has already been used" });
-            }
-
-            if (new Date(tokenRow.expires_at) < new Date()) {
-                return res.status(410).json({ error: "Run token has expired" });
             }
 
             // Parse the authorized secret names from the stored JSON
@@ -570,18 +582,10 @@ router.get(
             }
 
             if (authorizedSecrets.length === 0) {
-                // Mark token as consumed even if no secrets to return
-                await pool.query(
-                    `UPDATE paperclip_run_tokens
-                     SET consumed = 1, consumed_at = CURRENT_TIMESTAMP
-                     WHERE id = $1 AND tenant_id = $2`,
-                    [runTokenId, tenantId]
-                );
                 return res.json({ credentials: {}, runId: tokenRow.run_id });
             }
 
             // Decrypt only the authorized secrets for this agent
-            const isPostgres = !!process.env.DATABASE_URL && !process.env.DATABASE_URL.includes("sqlite");
 
             // Refuse to serve secrets on unencrypted SQLite in production
             if (!isPostgres && process.env.NODE_ENV === 'production') {
@@ -595,13 +599,12 @@ router.get(
 
             if (isPostgres) {
                 // Batch-fetch all authorized secrets in a single query
-                const placeholders = authorizedSecrets.map((_, i) => `$${i + 3}`).join(", ");
                 const secretResult = await pool.query(
-                    `SELECT secret_name, pgp_sym_decrypt(encrypted_value, $1) as value
+                    `SELECT secret_name, pgp_sym_decrypt(encrypted_value::bytea, $1) as value
                      FROM vault_secrets
-                     WHERE tenant_id = $2 AND secret_name = ANY(ARRAY[${placeholders}])
-                       AND (expires_at IS NULL OR expires_at > CURRENT_TIMESTAMP)`,
-                    [encryptionKey, tenantId, ...authorizedSecrets]
+                     WHERE tenant_id = $2 AND secret_name = ANY($3)
+                       AND (expires_at IS NULL OR expires_at > $4)`,
+                    [encryptionKey, tenantId, authorizedSecrets, new Date().toISOString()]
                 );
                 for (const row of secretResult.rows) {
                     credentials[row.secret_name.toLowerCase()] = row.value;
@@ -634,9 +637,9 @@ router.get(
             // Mark token as consumed (one-time use only)
             await pool.query(
                 `UPDATE paperclip_run_tokens
-                 SET consumed = 1, consumed_at = CURRENT_TIMESTAMP
-                 WHERE id = $1 AND tenant_id = $2`,
-                [runTokenId, tenantId]
+                 SET consumed = TRUE, consumed_at = $2
+                 WHERE id = $1`,
+                [runTokenId, new Date().toISOString()]
             );
 
             return res.json({
@@ -692,7 +695,10 @@ router.post(
             crypto.timingSafeEqual(sigBuffer, expectedBuffer);
 
         if (!isValid) {
-            logger.warn("[Paperclip] Webhook signature mismatch — rejected");
+            logger.warn("[Paperclip] Webhook signature mismatch — rejected", {
+                ip: req.ip,
+                providedSig: sig.substring(0, 15) + "..." // safe to log part of the signature
+            });
             return res.status(401).json({ error: "Invalid webhook signature" });
         }
 
@@ -705,13 +711,9 @@ router.post(
             return res.status(400).json({ error: "Invalid JSON body" });
         }
 
-        const { event, agent, run } = parsedBody;
-
-        if (!event || typeof event !== "string") {
-            return res.status(400).json({ error: "Missing event type" });
-        }
-
-        logger.info(`[Paperclip] Webhook received: ${event}`);
+        logger.info(`[Paperclip] Webhook received: ${parsedBody.event}`, {
+            payload: maskSensitiveData(parsedBody)
+        });
 
         const client = await pool.connect();
         try {
@@ -765,15 +767,15 @@ router.post(
                 await client.query(
                     `INSERT INTO agents (id, tenantid, name, apikeyhash, scopes)
                      VALUES ($1, $2, $3, $4, $5)
-                     ON CONFLICT (id) DO UPDATE SET name = $3, scopes = $5`,
-                    [agentId, tenantId, agentName, agentKeyHash, allowedCredentials]
+                     ON CONFLICT (id) DO UPDATE SET name = $3, scopes = $5, apikeyhash = $4`,
+                    [agentId, tenantId, agentName, agentKeyHash, isPostgres ? allowedCredentials : JSON.stringify(allowedCredentials)]
                 );
 
                 for (const credential of allowedCredentials) {
                     await client.query(
                         `INSERT INTO policies (tenantid, agentid, name, toolname, ruletype, description)
                          VALUES ($1, $2, $3, $4, $5, $6)
-                         ON CONFLICT DO NOTHING`,
+                         ON CONFLICT (tenantid, agentid, toolname) WHERE agentid IS NOT NULL DO NOTHING`,
                         [
                             tenantId, agentId,
                             `Paperclip: ${credential} for ${agentName}`,
@@ -848,9 +850,9 @@ router.post(
                 // Revoke all run tokens immediately
                 await client.query(
                     `UPDATE paperclip_run_tokens
-                     SET revoked = 1, revoked_at = CURRENT_TIMESTAMP
-                     WHERE agent_id = $1 AND tenant_id = $2 AND revoked = 0`,
-                    [agent.id, tenantId]
+                     SET revoked = TRUE, revoked_at = $3
+                     WHERE agent_id = $1 AND tenant_id = $2 AND revoked = FALSE`,
+                    [agent.id, tenantId, new Date().toISOString()]
                 );
 
                 // Delete vault access rules
@@ -930,10 +932,10 @@ router.post(
                 // Revoke only within the verified tenant scope
                 const result = await client.query(
                     `UPDATE paperclip_run_tokens
-                     SET revoked = 1, revoked_at = CURRENT_TIMESTAMP
-                     WHERE run_id = $1 AND tenant_id = $2 AND revoked = 0
+                     SET revoked = TRUE, revoked_at = $3
+                     WHERE run_id = $1 AND tenant_id = $2 AND revoked = FALSE
                      RETURNING id, agent_id, tenant_id`,
-                    [runId, tenantId]
+                    [runId, tenantId, new Date().toISOString()]
                 );
 
                 logger.info(`[Paperclip] Run completed: ${runId} → ${result.rowCount} token(s) revoked`);
@@ -960,7 +962,6 @@ router.post(
 
 router.get("/vault-status", async (req: Request, res: Response) => {
     const encryptionKey = process.env.VAULT_ENCRYPTION_KEY;
-    const isPostgres = !!process.env.DATABASE_URL && !process.env.DATABASE_URL.includes("sqlite");
     
     const status = {
         vault_config: encryptionKey ? "configured" : "missing",
@@ -985,25 +986,25 @@ router.get(
     rateLimit({ max: 5, windowMs: 60_000, message: "Too many status checks. Please wait." }),
     async (req: Request, res: Response) => {
         try {
-        const tenantId = (req as AuthenticatedRequest).tenantId;
+        const { companyId } = req.query;
+        if (!companyId) {
+            return res.status(400).json({ error: "Missing companyId query parameter" });
+        }
 
-        const [companyResult, agentResult, tokenResult] = await Promise.all([
-            pool.query("SELECT * FROM paperclip_companies WHERE tenant_id = $1", [tenantId]),
-            pool.query("SELECT COUNT(*) FROM agents WHERE tenantid = $1", [tenantId]),
-            pool.query(
-                "SELECT COUNT(*) FROM paperclip_run_tokens WHERE tenant_id = $1 AND revoked = 0 AND expires_at > CURRENT_TIMESTAMP",
-                [tenantId]
-            ),
-        ]);
+        const tenantId = "pc_" + (companyId as string).replace(/[^a-zA-Z0-9-_]/g, "_").slice(0, 60);
 
-        return res.json({
-            company: companyResult.rows[0] || null,
-            agentCount: parseInt(agentResult.rows[0].count, 10),
-            activeRunTokens: parseInt(tokenResult.rows[0].count, 10),
+        const counts = await pool.query(
+            "SELECT COUNT(*) FROM paperclip_run_tokens WHERE tenant_id = $1 AND revoked = FALSE AND expires_at > $2",
+            [tenantId, new Date().toISOString()]
+        );
+        res.json({
+            status: "healthy",
+            activeRunTokens: parseInt(counts.rows[0].count, 10),
+            vaultEndpoint: `/v1/paperclip/run-token`,
         });
     } catch (e) {
-        logger.error("[Paperclip] Status error:", { error: e });
-        return res.status(500).json({ error: "Internal Server Error" });
+        logger.error("[Paperclip] Status check failed:", e);
+        res.status(500).json({ status: "degraded", error: "Database error" });
     }
 });
 

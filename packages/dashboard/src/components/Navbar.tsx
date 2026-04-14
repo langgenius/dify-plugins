@@ -134,7 +134,7 @@ export function Navbar({ lang = 'en', dictionary }: { lang?: Locale, dictionary?
 
                     <div className="flex items-center gap-3">
                         <Link
-                            href="/login"
+                            href={prefix("/login")}
                             onClick={() => sendGAEvent('event', 'nav_cta_click', { type: 'deploy_cloud' })}
                             className="px-5 py-2.5 bg-white text-black font-black rounded-xl hover:bg-neutral-200 transition-all shadow-[0_4px_20px_rgba(255,255,255,0.15)] active:scale-95 flex items-center gap-2"
                         >

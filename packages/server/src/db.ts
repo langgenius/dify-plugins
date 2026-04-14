@@ -105,12 +105,26 @@ export const pool = {
     }
 };
 
+export const isPostgres = !sqliteDb;
+
 export const initDb = async () => {
     if (sqliteDb) {
         logger.info("[DB] Initializing SQLite schema...");
-        if (process.env.NODE_ENV === "test") {
-            const run = promisify(sqliteDb.run.bind(sqliteDb));
-            await run("DROP TABLE IF EXISTS policies").catch(() => {});
+        const run = promisify(sqliteDb.run.bind(sqliteDb));
+
+        // In test mode, drop and recreate tables to prevent cross-test pollution
+        // from Jest's persistent in-memory SQLite instance.
+        if (process.env.NODE_ENV === 'test') {
+            const tablesToReset = [
+                'policies', 'agents', 'tenants', 'paperclip_companies',
+                'paperclip_tokens', 'paperclip_run_tokens', 'vault_secrets',
+                'vault_access_rules', 'vault_access_log', 'vault_rate_limits',
+                'audit_logs', 'tenant_usage', 'agent_templates',
+                'template_compliance_status', 'api_rate_limits'
+            ];
+            for (const table of tablesToReset) {
+                await run(`DROP TABLE IF EXISTS ${table}`);
+            }
         }
         const queries = [
             `CREATE TABLE IF NOT EXISTS policies (
@@ -316,7 +330,9 @@ export const initDb = async () => {
                 paperclip_api_key_encrypted BLOB,
                 agent_count INTEGER DEFAULT 0,
                 paperclip_version TEXT,
+                tier TEXT DEFAULT 'developer',
                 api_url TEXT DEFAULT 'https://api.paperclipai.com',
+                template_name TEXT DEFAULT 'cli-install',
                 status TEXT DEFAULT 'pending',
                 onboarded_at DATETIME DEFAULT CURRENT_TIMESTAMP
             )`,
@@ -380,19 +396,39 @@ export const initDb = async () => {
                 evidence TEXT DEFAULT '{}',
                 UNIQUE(agent_id, template_id, control_id)
             )`,
+            `CREATE TABLE IF NOT EXISTS vault_access_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                tenant_id TEXT NOT NULL,
+                agent_id TEXT NOT NULL,
+                secret_name TEXT NOT NULL,
+                tool_name TEXT,
+                action TEXT NOT NULL,
+                request_metadata TEXT,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )`,
+            `CREATE TABLE IF NOT EXISTS vault_rate_limits (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                tenant_id TEXT NOT NULL,
+                agent_id TEXT NOT NULL,
+                secret_name TEXT NOT NULL,
+                window_start DATETIME NOT NULL,
+                use_count INTEGER DEFAULT 1,
+                UNIQUE(tenant_id, agent_id, secret_name, window_start)
+            )`,
             // Performance indices for SQLite
             `CREATE INDEX IF NOT EXISTS idx_audit_logs_tenant ON audit_logs(tenantid, timestamp)`,
             `CREATE INDEX IF NOT EXISTS idx_agents_apikeyhash ON agents(apikeyhash)`,
             `CREATE INDEX IF NOT EXISTS idx_tenants_master_key ON tenants(master_api_key)`,
             `CREATE INDEX IF NOT EXISTS idx_vault_secrets_tenant ON vault_secrets(tenant_id)`,
             `CREATE INDEX IF NOT EXISTS idx_vault_access_rules_lookup ON vault_access_rules(tenant_id, agent_id, secret_id)`,
-            // Insert seed data so the dashboard is not empty
+            `CREATE UNIQUE INDEX IF NOT EXISTS idx_policies_unique_credential 
+                ON policies(tenantid, agentid, toolname) 
+                WHERE agentid IS NOT NULL`,
             `INSERT OR IGNORE INTO tenants (id, name, tier) VALUES ('default', 'SupraWall Org', 'business')`,
             `INSERT OR IGNORE INTO agents (id, tenantid, name, status) VALUES ('agent_1', 'default', 'LinkedIn Manager', 'active')`,
             `INSERT OR IGNORE INTO agents (id, tenantid, name, status) VALUES ('agent_2', 'default', 'X.com Scout', 'active')`
         ];
 
-        const run = promisify(sqliteDb.run.bind(sqliteDb));
         for (const q of queries) {
             await run(q);
         }
@@ -692,6 +728,7 @@ export const initDb = async () => {
             agent_count INTEGER DEFAULT 0,
             paperclip_version VARCHAR(50),
             api_url VARCHAR(500) DEFAULT 'https://api.paperclipai.com',
+            template_name VARCHAR(255) DEFAULT 'cli-install',
             status VARCHAR(50) DEFAULT 'pending',
             onboarded_at TIMESTAMP DEFAULT NOW()
         );
@@ -699,6 +736,9 @@ export const initDb = async () => {
         DO $$ BEGIN
             IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='paperclip_companies' AND column_name='api_url') THEN
                 ALTER TABLE paperclip_companies ADD COLUMN api_url VARCHAR(500) DEFAULT 'https://api.paperclipai.com';
+            END IF;
+            IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='paperclip_companies' AND column_name='template_name') THEN
+                ALTER TABLE paperclip_companies ADD COLUMN template_name VARCHAR(255) DEFAULT 'cli-install';
             END IF;
         END $$;
         CREATE INDEX IF NOT EXISTS idx_paperclip_companies_tenant ON paperclip_companies(tenant_id);
@@ -793,11 +833,14 @@ export async function purgeOldLogs(): Promise<void> {
         );
 
         for (const tier of tiers) {
+            const cutoff = new Date();
+            cutoff.setDate(cutoff.getDate() - tier.days);
+            
             const result = await pool.query(
                 `DELETE FROM audit_logs WHERE tenantid IN (
                     SELECT id FROM tenants WHERE tier = $1
-                 ) AND timestamp < NOW() - ($2 || ' days')::INTERVAL`,
-                [tier.id, tier.days]
+                 ) AND timestamp < $2`,
+                [tier.id, cutoff.toISOString()]
             );
             if (result.rowCount && result.rowCount > 0) {
                 logger.info(`[Purge] Cleared ${result.rowCount} logs for ${tier.id} tier.`);
@@ -805,18 +848,24 @@ export async function purgeOldLogs(): Promise<void> {
         }
 
         // Purge expired paperclip temp tokens (> 7 days past expiry gives activation grace period)
+        const tokenCutoff = new Date();
+        tokenCutoff.setDate(tokenCutoff.getDate() - 7);
         const expiredTokens = await pool.query(
-            `DELETE FROM paperclip_tokens WHERE expires_at < NOW() - INTERVAL '7 days' RETURNING id`
+            `DELETE FROM paperclip_tokens WHERE expires_at < $1 RETURNING id`,
+            [tokenCutoff.toISOString()]
         );
         if (expiredTokens.rowCount && expiredTokens.rowCount > 0) {
             logger.info(`[Purge] Cleared ${expiredTokens.rowCount} expired paperclip_tokens.`);
         }
 
         // Purge revoked and expired run tokens (> 24h post-expiry)
+        const runTokenCutoff = new Date();
+        runTokenCutoff.setHours(runTokenCutoff.getHours() - 24);
         const expiredRunTokens = await pool.query(
             `DELETE FROM paperclip_run_tokens
-             WHERE (revoked = TRUE OR expires_at < NOW() - INTERVAL '24 hours')
-             RETURNING id`
+             WHERE revoked = TRUE OR expires_at < $1
+             RETURNING id`,
+            [runTokenCutoff.toISOString()]
         );
         if (expiredRunTokens.rowCount && expiredRunTokens.rowCount > 0) {
             logger.info(`[Purge] Cleared ${expiredRunTokens.rowCount} expired paperclip_run_tokens.`);

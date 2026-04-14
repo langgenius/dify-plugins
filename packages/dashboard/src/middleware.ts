@@ -41,7 +41,7 @@ export function middleware(request: NextRequest) {
   const url = new URL(request.url);
   url.pathname = `/${locale}${pathname === '/' ? '' : pathname}`;
   
-  return NextResponse.redirect(url, 301);
+  return NextResponse.redirect(url, 307);
 }
 
 export const config = {
@@ -49,7 +49,8 @@ export const config = {
     // Skip all internal paths (_next, static)
     // Skip static files (images, favicon, robots.txt, etc.)
     // Skip API routes
-    // Skip private dashboard/admin area
-    '/((?!api|dashboard|login|admin|share|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|og-image.png|.*\\..*).*)',
+    // Skip internal dashboard area logic (which should handle its own session)
+    // BUT INCLUDE login and admin/login to handle the root-level redirect to [lang]
+    '/((?!api|dashboard|share|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|og-image.png|.*\\..*).*)',
   ],
 };

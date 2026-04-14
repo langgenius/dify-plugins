@@ -132,17 +132,84 @@ router.post("/webhook", express.raw({ type: "application/json" }), async (req: R
 
     try {
         switch (event.type) {
-            case "customer.subscription.deleted":
-            case "invoice.payment_failed":
+            // Payment completed — upgrade tenant to the purchased tier
+            case "checkout.sessions.completed": {
+                const session = event.data.object as Stripe.Checkout.Session;
+                const tenantId = session.client_reference_id || session.metadata?.tenantId;
+                const plan = session.metadata?.plan;
+                const subscriptionId = typeof session.subscription === "string" ? session.subscription : null;
+                const customerId = typeof session.customer === "string" ? session.customer : null;
+                const companyId = session.metadata?.companyId;
+
+                if (!tenantId || !plan) {
+                    logger.warn("[Stripe Webhook] checkout.sessions.completed missing tenantId or plan in metadata", { sessionId: session.id });
+                    break;
+                }
+
+                await pool.query(
+                    `UPDATE tenants
+                     SET tier = $1,
+                         stripe_subscription_id = COALESCE($2, stripe_subscription_id),
+                         stripe_customer_id = COALESCE($3, stripe_customer_id)
+                     WHERE id = $4`,
+                    [plan, subscriptionId, customerId, tenantId]
+                );
+                logger.info(`[Stripe Webhook] Upgraded tenant ${tenantId} to ${plan} (sub: ${subscriptionId})`);
+                if (companyId) {
+                    logger.info("[Metric] Paperclip Funnel", {
+                        event_type: "funnel_paid",
+                        company_id: companyId,
+                        tenant_id: tenantId,
+                        tier: plan
+                    });
+                }
+                break;
+            }
+
+            // Subscription renewal — confirm tier stays active
+            case "invoice.paid": {
+                const invoice = event.data.object as Stripe.Invoice;
+                const subId = typeof (invoice as any).subscription === "string" ? (invoice as any).subscription : null;
+                if (!subId) break;
+
+                // Retrieve the plan from subscription metadata and re-affirm the tier
+                const sub = await stripe.subscriptions.retrieve(subId);
+                const plan = sub.metadata?.plan;
+                if (plan) {
+                    await pool.query(
+                        "UPDATE tenants SET tier = $1 WHERE stripe_subscription_id = $2",
+                        [plan, subId]
+                    );
+                    logger.info(`[Stripe Webhook] Renewed: tier ${plan} confirmed for sub ${subId}`);
+                }
+                break;
+            }
+
+            // Plan upgrade/downgrade via Stripe portal
+            case "customer.subscription.updated": {
                 const subscription = event.data.object as Stripe.Subscription;
-                // Downgrade to open_source or mark for restriction
+                const plan = subscription.metadata?.plan;
+                if (plan) {
+                    await pool.query(
+                        "UPDATE tenants SET tier = $1 WHERE stripe_subscription_id = $2",
+                        [plan, subscription.id]
+                    );
+                    logger.info(`[Stripe Webhook] Plan updated to ${plan} for sub ${subscription.id}`);
+                }
+                break;
+            }
+
+            // Cancellation or payment failure — downgrade to open_source
+            case "customer.subscription.deleted":
+            case "invoice.payment_failed": {
+                const subscription = event.data.object as Stripe.Subscription;
                 await pool.query(
                     "UPDATE tenants SET tier = 'open_source' WHERE stripe_subscription_id = $1",
                     [subscription.id]
                 );
                 logger.info(`[Stripe Webhook] Downgraded tenant for sub ${subscription.id} due to payment failure or cancellation.`);
                 break;
-            // Add more cases as needed
+            }
         }
     } catch (err) {
         logger.error("[Stripe Webhook] Processing error:", err);

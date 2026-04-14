@@ -48,37 +48,12 @@ app.use(rateLimit({
 }));
 
 // ---------------------------------------------------------------------------
-// Paperclip webhook MUST be registered before express.json() so the handler
-// receives the raw Buffer needed for HMAC signature verification.
-// All other Paperclip routes (onboard, invoke, status, run-token) use the
-// global express.json() parser that is applied below.
 // ---------------------------------------------------------------------------
-app.use("/v1/paperclip", paperclipRouter);
-
-// Global JSON body parser — applied to all remaining routes
-const allowedOrigins = [
-    'https://www.supra-wall.com',
-    'https://supra-wall.com',
-    ...(process.env.NODE_ENV !== 'production' ? ['http://localhost:3000'] : [])
-];
-app.use(cors({ origin: allowedOrigins, credentials: true }));
-app.use(express.json());
-
-// CSRF defence: reject POST/PUT/DELETE requests that lack a JSON Content-Type.
-// This blocks cross-origin HTML form submissions (the primary CSRF vector for API servers
-// that rely on Bearer token auth instead of cookies).
-app.use((req, res, next) => {
-    const method = req.method.toUpperCase();
-    if (["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
-        const ct = req.headers["content-type"] ?? "";
-        if (!ct.includes("application/json") && !ct.includes("multipart/form-data")) {
-            return res.status(415).json({ error: "Unsupported Media Type: application/json required" });
-        }
-    }
-    next();
-});
+// 1. Global Safety & Security Middleware
+// ---------------------------------------------------------------------------
 
 // Response body scrubbing middleware for telemetry/logging safety
+// MUST be registered before routers so res.json is monkey-patched.
 app.use((req, res, next) => {
     const originalJson = res.json;
     res.json = function (body) {
@@ -91,6 +66,48 @@ app.use((req, res, next) => {
     };
     next();
 });
+
+const allowedOrigins = [
+    'https://www.supra-wall.com',
+    'https://supra-wall.com',
+    ...(process.env.NODE_ENV !== 'production' ? ['http://localhost:3000'] : [])
+];
+app.use(cors({ origin: allowedOrigins, credentials: true }));
+
+// CSRF defence: reject POST/PUT/DELETE requests that lack a JSON Content-Type.
+app.use((req, res, next) => {
+    const method = req.method.toUpperCase();
+    if (["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
+        const ct = req.headers["content-type"] ?? "";
+        // Webhooks use raw-body parsing but still have application/json CT
+        if (!ct.includes("application/json") && !ct.includes("multipart/form-data")) {
+            return res.status(415).json({ error: "Unsupported Media Type: application/json required" });
+        }
+    }
+    next();
+});
+
+// ---------------------------------------------------------------------------
+// 2. Specialized Routing
+// ---------------------------------------------------------------------------
+
+// Important: Paperclip router handles its own parsing (express.raw for webhooks,
+// express.json for others) to ensure HMAC verification is possible.
+app.use("/v1/paperclip", paperclipRouter);
+
+// Paperclip: Agent Invoke — top-level alias so Paperclip agents call /v1/agent/invoke.
+// Must be mounted before the global express.json() to prevent double-parsing.
+app.post(
+    "/v1/agent/invoke",
+    rateLimit({ max: 120, windowMs: 60_000, message: "Agent invoke rate limit exceeded." }),
+    (req, res, next) => {
+        req.url = "/invoke";
+        paperclipRouter(req, res, next);
+    }
+);
+
+// Global JSON body parser for all other standard routes
+app.use(express.json());
 
 // Healthcheck with DB status
 app.get("/health", async (req, res) => {
@@ -157,17 +174,6 @@ app.use("/v1/members", membersRouter);
 
 // AWS Marketplace Integration Routes (Registration URL + SNS webhook + Entitlement check)
 app.use("/v1/aws", awsMarketplaceRouter);
-
-// Paperclip: Agent Invoke — top-level alias so Paperclip agents call /v1/agent/invoke
-// Rate-limited at the outer level; auth + tier enforcement are inside the router.
-app.post(
-    "/v1/agent/invoke",
-    rateLimit({ max: 120, windowMs: 60_000, message: "Agent invoke rate limit exceeded." }),
-    (req, res, next) => {
-        req.url = "/invoke";
-        paperclipRouter(req, res, next);
-    }
-);
 
 // Export the app for Vercel
 export default app;
