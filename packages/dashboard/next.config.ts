@@ -82,11 +82,7 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  transpilePackages: [
-    "react-remove-scroll",
-    "use-sync-external-store",
-    "web-streams-polyfill"
-  ],
+  transpilePackages: [],
   webpack: (config, { isServer }) => {
     // For client bundles: stub out any Node.js-only modules that may be
     // transitively referenced but never actually executed on the client.
