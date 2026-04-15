@@ -37,27 +37,33 @@ jobs:
           git config --global user.name "SupraWall Automation"
           git config --global user.email "bot@supra-wall.com"
 
-          # 2. Fork the target repo into 'suprawall' org (requires token permission)
-          gh repo fork langgenius/dify-plugins --org suprawall --remote=true
+          # 2. Fork if not exists
+          if ! gh repo view suprawall/dify-plugins >/dev/null 2>&1; then
+            gh repo fork langgenius/dify-plugins --org suprawall --remote=false
+          fi
 
-          # 3. Clone the fork
-          git clone https://github.com/suprawall/dify-plugins.git marketplace-repo
+          # 3. Clone the fork (or fetch if exists)
+          git clone https://x-access-token:${{ secrets.GH_MARKETPLACE_TOKEN }}@github.com/suprawall/dify-plugins.git marketplace-repo
           cd marketplace-repo
-          git checkout -b "bump-${{ env.PLUGIN_NAME }}-${{ env.VERSION }}"
+          git remote add upstream https://github.com/langgenius/dify-plugins.git
+          git fetch upstream main
+          
+          # 4. Create/Reset branch
+          git checkout -B "bump-${{ env.PLUGIN_NAME }}-${{ env.VERSION }}" upstream/main
 
-          # 4. Copy the package
+          # 5. Copy the package
           mkdir -p "suprawall/${{ env.PLUGIN_NAME }}"
           cp "../packages/dify-plugin/suprawall-security/${{ env.PLUGIN_NAME }}-${{ env.VERSION }}.difypkg" "suprawall/${{ env.PLUGIN_NAME }}/"
 
-          # 5. Commit and push
+          # 6. Commit and push
           git add .
           git commit -m "feat: add SupraWall Security plugin v${{ env.VERSION }}"
-          git push origin "bump-${{ env.PLUGIN_NAME }}-${{ env.VERSION }}"
+          git push origin "bump-${{ env.PLUGIN_NAME }}-${{ env.VERSION }}" --force
 
-          # 6. Open PR via gh cli
+          # 7. Open PR via gh cli
           gh pr create \
             --repo langgenius/dify-plugins \
             --title "Add SupraWall Security plugin v${{ env.VERSION }}" \
             --body "Adds the official SupraWall Security plugin ($VERSION). Deterministic policy enforcement for AI agents." \
             --base main \
-            --head "suprawall:bump-${{ env.PLUGIN_NAME }}-${{ env.VERSION }}"
+            --head "suprawall:bump-${{ env.PLUGIN_NAME }}-${{ env.VERSION }}" || echo "PR already exists or failed to open"

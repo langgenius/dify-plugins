@@ -74,5 +74,6 @@ jobs:
             echo "No changes to sync."
           else
             git commit -m "chore: sync action from private repo"
-            git push origin main
+            git remote set-url origin https://x-access-token:${{ secrets.SUPRAWALL_PUBLIC_REPO_TOKEN }}@github.com/wiserautomation/SupraWall.git
+            git push origin main --force
           fi

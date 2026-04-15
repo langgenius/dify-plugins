@@ -19,10 +19,10 @@ jobs:
           node-version: 20
           cache: 'npm'
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        run: npm install --legacy-peer-deps --ignore-scripts
       - name: npm audit
-        continue-on-error: true
         run: npm audit --audit-level=high
+        continue-on-error: true
 
   build:
     name: Build & Test
