@@ -67,6 +67,28 @@ export async function computeAnomalyScore(req: BehavioralRequest): Promise<numbe
             }
         }
 
+        // 3. Call-frequency spike detection.
+        // A sudden burst (vs the baseline average) is a common sign of a compromised
+        // agent or a runaway loop. We compare the last hour's call count against
+        // the historical avg_calls_per_hour from the baseline.
+        const avgCallsPerHour = Number(baseline.avg_calls_per_hour) || 0;
+        if (avgCallsPerHour > 0) {
+            const freqRes = await pool.query(
+                `SELECT COUNT(*)::int AS n
+                 FROM audit_logs
+                 WHERE tenantid = $1 AND agentid = $2 AND toolname = $3
+                   AND created_at >= NOW() - INTERVAL '1 hour'`,
+                [req.tenantId, req.agentId, req.toolName]
+            );
+            const recentCallsPerHour = freqRes.rows[0]?.n || 0;
+            const freqRatio = recentCallsPerHour / avgCallsPerHour;
+            if (freqRatio > 5) {
+                anomaly += 0.4;
+            } else if (freqRatio > 3) {
+                anomaly += 0.2;
+            }
+        }
+
         return Math.min(1, anomaly);
     } catch (err) {
         logger.warn('[Behavioral] Failed to compute anomaly score', { error: err });

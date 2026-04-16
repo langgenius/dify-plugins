@@ -15,6 +15,7 @@ import { checkEvaluationLimit, recordEvaluation } from "./tier-guard";
 import { analyzeCall, type SemanticAnalysisResult } from "./semantic";
 import { updateBaseline } from "./behavioral";
 import { getDataEncryptionKey, encryptPayload } from "./gdpr";
+import RE2 from "re2";
 
 export interface EvaluationRequest {
     agentId: string;
@@ -26,17 +27,16 @@ export interface EvaluationRequest {
 
 /**
  * Safely test a regex pattern with ReDoS protection.
- * Returns false if regex is invalid or test fails.
+ * Uses RE2 (Google's linear-time DFA regex engine) so catastrophic backtracking
+ * from user-supplied patterns stored in the DB is impossible.
+ * Returns false if the pattern is invalid or uses unsupported RE2 syntax.
  */
 function safeRegexTest(pattern: string, testString: string): boolean {
     try {
-        // Limit test string to prevent ReDoS on very long inputs
         const limitedString = testString.substring(0, 5000);
-        const regex = new RegExp(pattern);
-        // Add a timeout check by limiting operations
-        return regex.test(limitedString);
+        return new RE2(pattern).test(limitedString);
     } catch (e) {
-        logger.error("[Policy] Invalid regex in condition:", { pattern, error: e });
+        logger.error("[Policy] Invalid or unsupported regex in condition:", { pattern, error: e });
         return false;
     }
 }
@@ -85,13 +85,19 @@ export const evaluatePolicy = async (req: Request, res: Response) => {
         
         const { toolName, arguments: args } = req.body as EvaluationRequest;
         const agentId = agent?.id || req.body.agentId;
-        const tenantId = agent?.tenantId || req.body.tenantId || "default-tenant";
+        // SECURITY: Do NOT fall back to a shared "default-tenant" when tenant identity
+        // is missing. Unauthenticated or misconfigured callers must fail hard, not
+        // silently share audit logs / policies with a ghost tenant.
+        const tenantId = agent?.tenantId || req.body.tenantId;
 
+        if (!tenantId) {
+            return res.status(401).json({ decision: "DENY", reason: "Missing tenant identity" });
+        }
         if (!agentId || !toolName) {
             return res.status(400).json({ error: "Missing agentId or toolName" });
         }
 
-        // 0. Cost Estimation (Alignment with Dashboard Evaluator)
+        // 1. Cost Estimation (Alignment with Dashboard Evaluator)
         const inputTokens = req.body.inputTokens || 0;
         const outputTokens = req.body.outputTokens || 0;
         const model = req.body.model || "gpt-4o-mini";
@@ -123,8 +129,9 @@ export const evaluatePolicy = async (req: Request, res: Response) => {
         const estimatedCost = req.body.costUsd ?? estimateActionCost(inputTokens, outputTokens, model);
 
         // 0a. Resolve tenant tier
-        // resolveTier middleware already ran at app.use("/v1", resolveTier) — use it.
-        // Fall back to a fresh DB query only if not already on the request (defensive).
+        // resolveTier is mounted directly on /v1/evaluate in index.ts — use it.
+        // The fallback DB query below should never run in production; it is retained
+        // as a defensive guard for routes that invoke evaluatePolicy without resolveTier.
         let tenantTier: Tier = (authReq.tier as Tier) || "open_source";
         let tierLimits = authReq.tierLimits || TIER_LIMITS["open_source"];
         if (!authReq.tierLimits) {
@@ -155,22 +162,31 @@ export const evaluatePolicy = async (req: Request, res: Response) => {
         // Uses tenant_usage table via checkEvaluationLimit (same table as recordEvaluation).
         // open_source hard-stops at 5K; paid tiers allow overage.
         if (isFinite(tierLimits.maxEvaluationsPerMonth)) {
-            const { allowed, current } = await checkEvaluationLimit(tenantId, tierLimits);
-            if (!allowed) {
+            const limitCheck = await checkEvaluationLimit(tenantId, tierLimits);
+            if (!limitCheck.allowed) {
+                // Distinguish infrastructure failures (503) from genuine limit exceeded (402)
+                // so callers and billing dashboards don't show "-1/5000" as a tier error.
+                if (limitCheck.dbError) {
+                    return res.status(503).json({
+                        decision: "DENY",
+                        reason: "Service temporarily unavailable. Please retry in a few seconds.",
+                        code: "INFRA_ERROR",
+                    });
+                }
                 return res.status(402).json({
                     decision: "DENY",
-                    reason: `Monthly evaluation limit reached (${current.toLocaleString()}/${tierLimits.maxEvaluationsPerMonth.toLocaleString()}). Upgrade your plan to continue.`,
+                    reason: `Monthly evaluation limit reached (${limitCheck.current.toLocaleString()}/${tierLimits.maxEvaluationsPerMonth.toLocaleString()}). Upgrade your plan to continue.`,
                     upgradeUrl: "https://www.supra-wall.com/pricing",
                     code: "TIER_LIMIT_EXCEEDED",
                 });
             }
         }
 
-        // 0. Budget Enforcement (Cloud/Enterprise only)
+        // 2. Budget Enforcement (Cloud/Enterprise only)
         if (tierLimits.budgetEnforcement) {
             const maxBudget = agent?.max_cost_usd || 10;
             const spendResult = await pool.query(
-                "SELECT SUM(cost_usd) as total FROM audit_logs WHERE agentid = $1 AND decision = 'ALLOW'",
+                "SELECT SUM(cost_usd) as total FROM audit_logs WHERE agentid = $1 AND decision = 'ALLOW' AND created_at >= date_trunc('month', NOW())",
                 [agentId]
             );
             const currentSpend = parseFloat(spendResult.rows[0].total || 0);
@@ -188,14 +204,15 @@ export const evaluatePolicy = async (req: Request, res: Response) => {
             }
         }
 
-        // 0. Threat Detection (Blocking — returns DENY on match)
+        // 3. Threat Detection (Blocking — returns DENY on match)
         const argsString = JSON.stringify(args || {});
 
         const THREAT_RULES: { type: string, severity: string, riskScore: number, labelPrefix: string, patterns: { pattern: RegExp, label?: string }[] }[] = [
             { type: "sql_injection", severity: "critical", riskScore: 100, labelPrefix: "SQL injection", patterns: [
                 { pattern: /DROP\s+TABLE/i, label: "DROP TABLE" },
                 { pattern: /DELETE\s+FROM/i, label: "DELETE FROM" },
-                { pattern: /INSERT\s+INTO/i, label: "INSERT INTO" },
+                // INSERT INTO is NOT included: it is not an injection vector in parameterized
+                // query contexts and produces false positives for legitimate SQL admin tools.
                 { pattern: /UPDATE\s+\S+\s+SET/i, label: "UPDATE SET" },
                 { pattern: /UNION\s+SELECT/i, label: "UNION SELECT" },
                 { pattern: /OR\s+['"]?1['"]?\s*=\s*['"]?1/i, label: "OR 1=1" },
@@ -293,12 +310,15 @@ export const evaluatePolicy = async (req: Request, res: Response) => {
             [tenantId]
         );
         
-        // Advanced matching in JS
+        // Advanced matching in JS — RE2 used to prevent ReDoS on wildcard patterns
         const toolMatches = (ruleTool: string, targetTool: string) => {
             if (!ruleTool || ruleTool === "*" || ruleTool === "" || ruleTool === targetTool) return true;
             if (ruleTool.includes("*")) {
-                const regex = new RegExp("^" + ruleTool.replace(/\*/g, ".*") + "$");
-                return regex.test(targetTool);
+                try {
+                    return new RE2("^" + ruleTool.replace(/\*/g, ".*") + "$").test(targetTool);
+                } catch {
+                    return false;
+                }
             }
             return false;
         };
@@ -311,19 +331,35 @@ export const evaluatePolicy = async (req: Request, res: Response) => {
         let decision = "ALLOW";
         let matchedRule = "default";
 
-        // Check DENY policies
-        const denyRules = policies.filter((p) => p.ruletype && p.ruletype.toUpperCase() === "DENY");
-        for (const rule of denyRules) {
-            if (rule.condition) {
-                if (safeRegexTest(rule.condition, argsString)) {
+        // Check explicit ALLOW overrides first: an ALLOW rule that matches (by tool + condition)
+        // short-circuits DENY evaluation. This lets operators whitelist specific tools that
+        // a broader DENY rule (e.g., DENY on "*") would otherwise catch.
+        const allowRules = policies.filter((p) => p.ruletype && p.ruletype.toUpperCase() === "ALLOW");
+        let explicitlyAllowed = false;
+        for (const rule of allowRules) {
+            const conditionMatches = !rule.condition || safeRegexTest(rule.condition, argsString);
+            if (conditionMatches) {
+                explicitlyAllowed = true;
+                matchedRule = rule.name || "Explicit ALLOW";
+                break;
+            }
+        }
+
+        // Check DENY policies (skipped entirely if an explicit ALLOW matched)
+        if (!explicitlyAllowed) {
+            const denyRules = policies.filter((p) => p.ruletype && p.ruletype.toUpperCase() === "DENY");
+            for (const rule of denyRules) {
+                if (rule.condition) {
+                    if (safeRegexTest(rule.condition, argsString)) {
+                        decision = "DENY";
+                        matchedRule = rule.name || "Unnamed Rule";
+                        break;
+                    }
+                } else {
                     decision = "DENY";
                     matchedRule = rule.name || "Unnamed Rule";
                     break;
                 }
-            } else {
-                decision = "DENY";
-                matchedRule = rule.name || "Unnamed Rule";
-                break;
             }
         }
 
@@ -332,8 +368,9 @@ export const evaluatePolicy = async (req: Request, res: Response) => {
             reason: decision === "ALLOW" ? "No restrictions matched" : `Matched rule ${matchedRule}`,
         };
 
-        // Check REQUIRE_APPROVAL policies
-        if (decision !== "DENY") {
+        // Check REQUIRE_APPROVAL policies — skipped if explicit ALLOW matched, for the same
+        // reason the DENY block is skipped: operators use ALLOW to fully whitelist a tool.
+        if (decision !== "DENY" && !explicitlyAllowed) {
             const approvalRules = policies.filter((p) => p.ruletype && p.ruletype.toUpperCase() === "REQUIRE_APPROVAL");
             for (const rule of approvalRules) {
                 let match = false;
@@ -574,11 +611,15 @@ export const evaluatePolicy = async (req: Request, res: Response) => {
 };
 
 export const scrubToolResponse = async (req: Request, res: Response) => {
-    let tenantId = "default-tenant";
+    const authReq = req as any;
+    let tenantId: string | undefined;
     try {
         const { tenantId: reqTenantId, secretNames, toolResponse } = req.body;
-        tenantId = reqTenantId || "default-tenant";
-        
+        tenantId = authReq.agent?.tenantId || reqTenantId;
+        if (!tenantId) {
+            return res.status(401).json({ error: "Missing tenant identity" });
+        }
+
         if (!secretNames || secretNames.length === 0) {
             return res.json({ scrubbedResponse: toolResponse });
         }
@@ -589,7 +630,7 @@ export const scrubToolResponse = async (req: Request, res: Response) => {
                 `SELECT pgp_sym_decrypt(encrypted_value, $1) as value
                  FROM vault_secrets
                  WHERE tenant_id = $2 AND secret_name = $3`,
-                [process.env.VAULT_ENCRYPTION_KEY, tenantId || "default-tenant", name]
+                [process.env.VAULT_ENCRYPTION_KEY, tenantId, name]
             );
             if (result.rows.length > 0) {
                 secretValues.push(result.rows[0].value);

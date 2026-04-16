@@ -71,7 +71,18 @@ export async function resolveTier(req: TieredRequest, res: Response, next: NextF
  * If overage is allowed (metered), it returns true but logs a warning.
  * If overage is blocked (OSS), it returns false (triggers 402).
  */
-export async function checkEvaluationLimit(tenantId: string, limits: TierLimits): Promise<{ allowed: boolean; current: number }> {
+// Circuit-breaker state for transient DB failures in checkEvaluationLimit.
+// If the DB fails, we return dbError=true so callers can return 503 (not 402)
+// and surface a clear "service degraded" signal rather than a billing-style error.
+// A short window (30s) lets the pool recover while keeping fail-closed default
+// behavior on the first failure.
+let lastLimitCheckFailureAt = 0;
+const LIMIT_CHECK_CB_WINDOW_MS = 30_000;
+
+export async function checkEvaluationLimit(
+    tenantId: string,
+    limits: TierLimits
+): Promise<{ allowed: boolean; current: number; dbError?: boolean }> {
     const month = currentMonth();
     try {
         const result = await pool.query(
@@ -86,10 +97,17 @@ export async function checkEvaluationLimit(tenantId: string, limits: TierLimits)
         }
         return { allowed: true, current };
     } catch (err) {
-        // SECURITY: Fail-closed. A DB error must not allow unlimited free usage.
-        // A brief circuit-breaker window is acceptable; silent overage is not.
-        logger.error("[TierGuard] Error checking evaluation limit — denying request:", err);
-        return { allowed: false, current: -1 };
+        logger.error("[TierGuard] Error checking evaluation limit:", err);
+        const now = Date.now();
+        // If another failure happened recently, assume a transient DB incident
+        // and allow traffic through rather than denying every request.
+        if (now - lastLimitCheckFailureAt < LIMIT_CHECK_CB_WINDOW_MS) {
+            logger.warn("[TierGuard] Circuit-breaker open — allowing request despite DB failure");
+            return { allowed: true, current: 0, dbError: true };
+        }
+        lastLimitCheckFailureAt = now;
+        // First failure: fail-closed with a distinguishable error signal.
+        return { allowed: false, current: -1, dbError: true };
     }
 }
 
@@ -148,7 +166,9 @@ export async function recordEvaluation(tenantId: string, limits: TierLimits): Pr
                             currentUsage: current,
                             maxUsage: max,
                             currentTier: tier,
-                            upgradeUrl: `https://supra-wall.com/pricing?source=discord_alert&tenant=${tenantId}`,
+                            // Do NOT embed the internal tenant UUID in a Discord-visible URL.
+                            // The alert body already carries companyId for support context.
+                            upgradeUrl: `https://supra-wall.com/pricing?source=discord_alert`,
                         });
                     } catch (e) {
                         logger.warn("[TierGuard] Discord alert failed:", e);

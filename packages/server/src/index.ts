@@ -125,20 +125,23 @@ app.post(
 // Global JSON body parser for all other standard routes
 app.use(express.json());
 
-// Healthcheck with DB status
+// Healthcheck — returns status only. We deliberately do NOT expose DB-connection
+// detail in the public response body to avoid aiding reconnaissance; detailed
+// failure reasons are still logged server-side for operators.
 app.get("/health", async (req, res) => {
     try {
         await pool.query("SELECT 1");
-        res.status(200).json({ status: "ok", database: "connected" });
+        res.status(200).json({ status: "ok" });
     } catch (err) {
-        res.status(503).json({ status: "degraded", database: "disconnected" });
+        logger.error("[Health] DB connectivity check failed:", err);
+        res.status(503).json({ status: "degraded" });
     }
 });
 
 // Policy Evaluation Webhook (rate limited: 120 req/min per IP)
 const evaluateRateLimit = rateLimit({ max: 120, windowMs: 60_000, message: "Evaluate rate limit exceeded. Upgrade your plan or reduce request frequency." });
-app.post("/v1/evaluate", evaluateRateLimit, gatekeeperAuth, evaluatePolicy);
-app.post("/v1/evaluateAction", evaluateRateLimit, gatekeeperAuth, evaluatePolicy); // Alias for MCP compatibility
+app.post("/v1/evaluate", evaluateRateLimit, gatekeeperAuth, resolveTier, evaluatePolicy);
+app.post("/v1/evaluateAction", evaluateRateLimit, gatekeeperAuth, resolveTier, evaluatePolicy); // Alias for MCP compatibility
 
 // Vault scrub endpoint
 app.post("/v1/scrub", gatekeeperAuth, scrubToolResponse);

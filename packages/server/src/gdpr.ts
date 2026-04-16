@@ -66,28 +66,25 @@ export async function getDataEncryptionKey(tenantId: string, subjectId: string):
     const newKeyBuffer = crypto.randomBytes(32);
     const newKeyHex = newKeyBuffer.toString("hex");
 
-    try {
-        await pool.query(
-            `INSERT INTO tenant_data_keys (tenant_id, subject_id, encrypted_key)
-             VALUES ($1, $2, pgp_sym_encrypt($3, $4))
-             ON CONFLICT (tenant_id, subject_id) DO NOTHING`,
-            [tenantId, subjectId, newKeyHex, masterKey]
-        );
-        
-        // Due to DO NOTHING, a concurrent insert could have won
-        const verifyRes = await pool.query(
-            `SELECT pgp_sym_decrypt(encrypted_key, $1) as key_hex FROM tenant_data_keys WHERE tenant_id = $2 AND subject_id = $3`,
-            [masterKey, tenantId, subjectId]
-        );
+    // Use DO UPDATE with RETURNING to guarantee we always get back the key that is
+    // actually stored, even if a concurrent insert won the race. Setting encrypted_key
+    // to its existing value is a no-op that keeps the original key intact while still
+    // triggering the RETURNING clause — eliminating the prior orphaned-key risk.
+    const insertRes = await pool.query(
+        `INSERT INTO tenant_data_keys (tenant_id, subject_id, encrypted_key)
+         VALUES ($1, $2, pgp_sym_encrypt($3, $4))
+         ON CONFLICT (tenant_id, subject_id)
+         DO UPDATE SET encrypted_key = tenant_data_keys.encrypted_key
+         RETURNING pgp_sym_decrypt(encrypted_key, $4) AS key_hex`,
+        [tenantId, subjectId, newKeyHex, masterKey]
+    );
 
-        if (verifyRes.rows && verifyRes.rows.length > 0) {
-             return Buffer.from(verifyRes.rows[0].key_hex, "hex");
-        }
-    } catch (e) {
-        logger.error("[GDPR] Failed to save new data encryption key", { error: e });
+    if (!insertRes.rows || insertRes.rows.length === 0) {
+        logger.error("[GDPR] INSERT/UPSERT returned no rows — cannot guarantee key integrity", { tenantId, subjectId });
+        throw new Error("[GDPR] Failed to persist data encryption key");
     }
 
-    return newKeyBuffer;
+    return Buffer.from(insertRes.rows[0].key_hex, "hex");
 }
 
 // Process GDPR Erasure Request
@@ -104,9 +101,10 @@ export async function processGDPRErasure(
 
     const wasKeyPresent = (delRes.rowCount || 0) > 0;
 
-    // 2. Null out plaintext parameters in audit_logs for this subject (GDPR Article 17)
+    // 2. Null out plaintext parameters in audit_logs for this subject (GDPR Article 17).
+    // Column is named 'tenantid' (no underscore) — matches insertAuditLog in policy.ts.
     await pool.query(
-        `UPDATE audit_logs SET parameters = NULL WHERE tenant_id = $1 AND subject_id = $2`,
+        `UPDATE audit_logs SET parameters = NULL WHERE tenantid = $1 AND subject_id = $2`,
         [tenantId, subjectId]
     );
 
