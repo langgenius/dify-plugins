@@ -59,7 +59,7 @@ export default function AutoGenIntegrationPage() {
                                  pip install <span className="text-white">suprawall</span>
                              </div>
                              <div className="flex gap-4">
-                                 <Link href="https://github.com/wiserautomation/SupraWall" className="p-6 bg-white text-black rounded-3xl font-black uppercase tracking-widest text-[10px] hover:bg-neutral-200 transition-all flex items-center gap-2">
+                                 <Link href="https://github.com/wiserautomation/SupraWall" prefetch={false} rel="noopener noreferrer" target="_blank" className="p-6 bg-white text-black rounded-3xl font-black uppercase tracking-widest text-[10px] hover:bg-neutral-200 transition-all flex items-center gap-2">
                                      GitHub <ArrowRight className="w-4 h-4" />
                                  </Link>
                                  <Link href="https://docs.suprawall.com" className="p-6 bg-white/5 border border-white/10 text-white rounded-3xl font-black uppercase tracking-widest text-[10px] hover:bg-white/10 transition-all">

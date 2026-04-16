@@ -4,27 +4,36 @@
 "use client";
 
 import { useState } from "react";
+import { useParams } from "next/navigation";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-    Shield, 
-    ArrowRight, 
-    Zap, 
-    CheckCircle2, 
-    ChevronRight, 
+import Link from "next/link";
+import {
+    Shield,
+    ArrowRight,
+    Zap,
+    CheckCircle2,
+    ChevronRight,
     Loader2,
     Users,
     Activity,
     Lock,
     Cpu,
-    Network
+    Network,
+    Github,
+    BookOpen,
+    MessageCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function BetaLandingPage() {
+    const params = useParams();
+    const lang = (params?.lang as string) || 'en';
+
     const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+    const [errorMessage, setErrorMessage] = useState<string>("");
     const [formData, setFormData] = useState({
         name: "",
         surname: "",
@@ -37,20 +46,32 @@ export default function BetaLandingPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setStatus("submitting");
-        
+        setErrorMessage("");
+
+        // QA-007: trim email before sending
+        const payload = { ...formData, email: formData.email.trim() };
+
         try {
             const res = await fetch("/api/waitlist", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(payload)
             });
-            
+
             if (res.ok) {
                 setStatus("success");
             } else {
+                // QA-006: surface the actual error from the server
+                let msg = "Submission failed. Please try again.";
+                try {
+                    const data = await res.json();
+                    if (data?.error) msg = data.error;
+                } catch {}
+                setErrorMessage(msg);
                 setStatus("error");
             }
         } catch (err) {
+            setErrorMessage("Connection failed. Please check your network and try again.");
             setStatus("error");
         }
     };
@@ -64,16 +85,16 @@ export default function BetaLandingPage() {
             <Navbar />
 
             <main className="relative pt-32 pb-32 px-6 overflow-hidden">
-                {/* Background Decor */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none overflow-hidden">
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[800px] bg-emerald-600/10 blur-[180px] rounded-full translate-y-[-50%]" />
-                    <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-600/5 blur-[150px] rounded-full translate-x-[30%] translate-y-[30%]" />
+                {/* Background Decor — orbs capped to viewport width so they don't overflow on mobile */}
+                <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[min(1200px,80vw)] h-[800px] bg-emerald-600/10 blur-[180px] rounded-full -translate-y-1/2" />
+                    <div className="absolute bottom-0 right-0 w-[min(600px,60vw)] h-[min(600px,60vw)] bg-blue-600/5 blur-[150px] rounded-full translate-x-1/3 translate-y-1/3" />
                 </div>
 
                 <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center relative z-10">
                     {/* Content Column */}
                     <div className="space-y-12">
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             className="inline-flex items-center px-4 py-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 text-[10px] font-black tracking-[0.2em] text-emerald-400 uppercase"
@@ -82,7 +103,7 @@ export default function BetaLandingPage() {
                             Private Beta Access
                         </motion.div>
 
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1 }}
@@ -97,7 +118,7 @@ export default function BetaLandingPage() {
                             </p>
                         </motion.div>
 
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}
@@ -123,46 +144,96 @@ export default function BetaLandingPage() {
                     </div>
 
                     {/* Form Column */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.3 }}
                         className="relative"
                     >
                         <div className="absolute inset-0 bg-emerald-500/10 blur-[100px] rounded-full opacity-50" />
-                        
+
                         <div className="bg-[#080808] border border-white/10 rounded-[3.5rem] p-10 md:p-14 shadow-2xl backdrop-blur-3xl relative overflow-hidden">
                             <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
-                            
+
                             <AnimatePresence mode="wait">
                                 {status === "success" ? (
-                                    <motion.div 
+                                    // QA-020: Post-submit "What's next" card — no more dead end
+                                    <motion.div
                                         key="success"
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        className="h-full flex flex-col items-center justify-center text-center space-y-8 py-20"
+                                        className="h-full flex flex-col items-center text-center space-y-8 py-10"
                                     >
-                                        <div className="w-24 h-24 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                                            <CheckCircle2 className="w-12 h-12 text-emerald-500" />
+                                        <div className="w-20 h-20 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                                            <CheckCircle2 className="w-10 h-10 text-emerald-500" />
                                         </div>
-                                        <div className="space-y-4">
-                                            <h2 className="text-4xl font-black italic uppercase text-white tracking-tighter">Request Received.</h2>
-                                            <p className="text-neutral-400 font-medium">We&apos;ve added you to the queue. An engineer will reach out to schedule your onboarding session.</p>
+                                        <div className="space-y-3">
+                                            <h2 className="text-3xl font-black italic uppercase text-white tracking-tighter">You&apos;re on the list.</h2>
+                                            <p className="text-neutral-400 font-medium text-sm max-w-xs mx-auto">An engineer will reach out to schedule your onboarding. While you wait:</p>
                                         </div>
-                                        <Button 
-                                            onClick={() => setStatus("idle")}
+
+                                        <div className="w-full space-y-3 text-left">
+                                            <Link
+                                                href={`/${lang}/docs`}
+                                                className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-emerald-500/30 transition-all group"
+                                            >
+                                                <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:scale-110 transition-transform">
+                                                    <BookOpen className="w-4 h-4" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-white font-black text-xs uppercase tracking-widest">Read the Docs</p>
+                                                    <p className="text-neutral-500 text-[10px] mt-0.5">SDK guides, API reference, quickstart</p>
+                                                </div>
+                                                <ArrowRight className="w-4 h-4 text-neutral-600 ml-auto group-hover:text-emerald-400 transition-colors" />
+                                            </Link>
+
+                                            <a
+                                                href="https://github.com/wiserautomation/SupraWall"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-white/30 transition-all group"
+                                            >
+                                                <div className="p-2.5 rounded-xl bg-white/5 text-neutral-300 group-hover:scale-110 transition-transform">
+                                                    <Github className="w-4 h-4" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-white font-black text-xs uppercase tracking-widest">Self-Host Now</p>
+                                                    <p className="text-neutral-500 text-[10px] mt-0.5">docker compose up — runs in 30 seconds</p>
+                                                </div>
+                                                <ArrowRight className="w-4 h-4 text-neutral-600 ml-auto group-hover:text-white transition-colors" />
+                                            </a>
+
+                                            <a
+                                                href="https://discord.gg/suprawall"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-indigo-500/30 transition-all group"
+                                            >
+                                                <div className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400 group-hover:scale-110 transition-transform">
+                                                    <MessageCircle className="w-4 h-4" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-white font-black text-xs uppercase tracking-widest">Join Discord</p>
+                                                    <p className="text-neutral-500 text-[10px] mt-0.5">Chat with the team and other beta testers</p>
+                                                </div>
+                                                <ArrowRight className="w-4 h-4 text-neutral-600 ml-auto group-hover:text-indigo-400 transition-colors" />
+                                            </a>
+                                        </div>
+
+                                        <Button
+                                            onClick={() => { setStatus("idle"); setErrorMessage(""); }}
                                             className="bg-white/5 hover:bg-white/10 text-white font-black uppercase tracking-widest text-xs px-8 py-4 rounded-xl border border-white/10"
                                         >
                                             Submit Another Request
                                         </Button>
                                     </motion.div>
                                 ) : (
-                                    <motion.form 
+                                    <motion.form
                                         key="form"
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         exit={{ opacity: 0 }}
-                                        onSubmit={handleSubmit} 
+                                        onSubmit={handleSubmit}
                                         className="space-y-8"
                                     >
                                         <div className="space-y-2">
@@ -241,7 +312,7 @@ export default function BetaLandingPage() {
                                         </div>
 
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500 ml-1">One sentence: what's the main risk you're trying to control?</label>
+                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500 ml-1">One sentence: what&apos;s the main risk you&apos;re trying to control?</label>
                                             <textarea
                                                 name="mainRisk"
                                                 value={formData.mainRisk}
@@ -253,10 +324,12 @@ export default function BetaLandingPage() {
                                         </div>
 
                                         {status === "error" && (
-                                            <p className="text-rose-500 text-xs font-black uppercase tracking-widest text-center">Connection failed. Please try again.</p>
+                                            <p className="text-rose-500 text-xs font-black uppercase tracking-widest text-center">
+                                                {errorMessage || "Connection failed. Please try again."}
+                                            </p>
                                         )}
 
-                                        <Button 
+                                        <Button
                                             disabled={status === "submitting"}
                                             className="w-full h-16 bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-[0.1em] text-lg rounded-2xl transition-all shadow-xl shadow-emerald-600/20 flex items-center justify-center gap-3 active:scale-[0.98]"
                                         >

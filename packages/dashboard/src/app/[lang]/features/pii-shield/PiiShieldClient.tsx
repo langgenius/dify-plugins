@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import { TagBadge } from "@/app/HomeClient";
 
 // ── Comparison Table Data ──
@@ -26,6 +27,8 @@ const COMPARISON_DATA = [
 ];
 
 export default function PiiShieldClient() {
+    const params = useParams();
+    const lang = (params?.lang as string) || 'en';
     const [activeTab, setActiveTab] = useState("insecure");
 
     return (
@@ -50,7 +53,7 @@ export default function PiiShieldClient() {
                     </div>
 
                     <div className="flex flex-col sm:flex-row items-center gap-6 pt-4">
-                        <Link href="/beta" className="px-14 py-6 bg-white text-black font-black uppercase tracking-tighter text-2xl rounded-2xl hover:bg-purple-500 hover:text-white transition-all transform hover:scale-105 shadow-[0_20px_40px_rgba(255,255,255,0.1)] group flex items-center gap-3">
+                        <Link href={`/${lang}/beta`} className="px-14 py-6 bg-white text-black font-black uppercase tracking-tighter text-2xl rounded-2xl hover:bg-purple-500 hover:text-white transition-all transform hover:scale-105 shadow-[0_20px_40px_rgba(255,255,255,0.1)] group flex items-center gap-3">
                             Start Free <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
                         </Link>
                         <Link href="/docs/pii" className="px-14 py-6 border-2 border-white/10 text-white font-black uppercase tracking-tighter text-2xl rounded-2xl hover:bg-white/5 transition-all underline decoration-white/10 underline-offset-8">
@@ -236,7 +239,7 @@ export default function PiiShieldClient() {
                         Don&apos;t wait for a GDPR fine. Secure your autonomous agent pipelines with automated PII scrubbing today.
                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
-                        <Link href="/beta" className="px-16 py-8 bg-purple-600 text-white font-black text-3xl rounded-2xl hover:bg-purple-500 transition-all shadow-[0_0_100px_rgba(168,85,247,0.3)] tracking-tighter flex items-center gap-4 group">
+                        <Link href={`/${lang}/beta`} className="px-16 py-8 bg-purple-600 text-white font-black text-3xl rounded-2xl hover:bg-purple-500 transition-all shadow-[0_0_100px_rgba(168,85,247,0.3)] tracking-tighter flex items-center gap-4 group">
                             Unlock API Access <ArrowRight className="w-10 h-10 group-hover:translate-x-4 transition-transform" />
                         </Link>
                     </div>

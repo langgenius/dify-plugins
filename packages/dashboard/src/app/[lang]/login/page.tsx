@@ -6,18 +6,22 @@
 import { useState, useEffect } from "react";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { sendGAEvent } from "@next/third-parties/google";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Shield, ArrowRight, Lock, Mail, Loader2 } from "lucide-react";
+import { Shield, ArrowRight, Lock, Mail, Loader2, Eye, EyeOff } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { getAuthMode, isAdminEmail } from "@/lib/auth-config";
 
 export default function LoginPage() {
     const authMode = getAuthMode();
+    const params = useParams();
+    const lang = (params?.lang as string) || 'en';
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [isRegistering, setIsRegistering] = useState(false);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +36,7 @@ export default function LoginPage() {
                 if (authMode === "stealth" && !isAdminEmail(email)) {
                     setError("Public registration is currently closed. Please join our beta waitlist.");
                     setIsLoading(false);
-                    setTimeout(() => router.push("/beta"), 2000);
+                    setTimeout(() => router.push(`/${lang}/beta`), 2000);
                     return;
                 }
                 await createUserWithEmailAndPassword(auth, email, password);
@@ -44,13 +48,13 @@ export default function LoginPage() {
                 if (authMode === "stealth" && !isAdminEmail(user.email)) {
                     await auth.signOut();
                     setError("Authorized personnel only. Redirecting to beta...");
-                    setTimeout(() => router.push("/beta"), 2000);
+                    setTimeout(() => router.push(`/${lang}/beta`), 2000);
                     return;
                 }
 
                 sendGAEvent('event', 'login', { method: 'email' });
             }
-            router.push("/dashboard");
+            router.push(`/${lang}/dashboard`);
         } catch (err: unknown) {
             if (err instanceof Error) {
                 // Friendly error messages
@@ -74,14 +78,14 @@ export default function LoginPage() {
                 <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-emerald-600/5 blur-[120px] rounded-full" />
             </div>
 
-            <motion.div 
+            <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
                 className="w-full max-w-md px-6 relative z-10"
             >
                 <div className="mb-10 text-center">
-                    <motion.div 
+                    <motion.div
                         initial={{ scale: 0.8 }}
                         animate={{ scale: 1 }}
                         className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 mb-6"
@@ -132,19 +136,27 @@ export default function LoginPage() {
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-600 group-focus-within/input:text-emerald-400 transition-colors" />
                                 <Input
                                     id="password"
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••"
                                     required
-                                    className="h-14 pl-12 bg-black border-white/10 focus:border-emerald-500/50 text-white placeholder:text-neutral-700 rounded-xl transition-all font-medium"
+                                    className="h-14 pl-12 pr-12 bg-black border-white/10 focus:border-emerald-500/50 text-white placeholder:text-neutral-700 rounded-xl transition-all font-medium"
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-600 hover:text-emerald-400 transition-colors"
+                                    aria-label={showPassword ? "Hide password" : "Show password"}
+                                >
+                                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                </button>
                             </div>
                         </div>
 
                         <AnimatePresence mode="wait">
                             {error && (
-                                <motion.div 
+                                <motion.div
                                     initial={{ opacity: 0, height: 0 }}
                                     animate={{ opacity: 1, height: "auto" }}
                                     exit={{ opacity: 0, height: 0 }}
@@ -155,9 +167,9 @@ export default function LoginPage() {
                             )}
                         </AnimatePresence>
 
-                        <Button 
+                        <Button
                             disabled={isLoading}
-                            type="submit" 
+                            type="submit"
                             className="w-full h-14 bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-widest rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.1)] active:scale-[0.98] group"
                         >
                             {isLoading ? (
@@ -181,9 +193,18 @@ export default function LoginPage() {
                                 {isRegistering ? "Already have an account? Sign in" : "Don\u2019t have an account? Create one"}
                             </button>
                         ) : (
-                            <p className="text-[10px] font-black uppercase tracking-[0.1em] text-neutral-600 italic">
-                                Authorized Access Only &bull; System Locked
-                            </p>
+                            // QA-003: In stealth mode show a link to the beta waitlist instead of a dead end
+                            <div className="space-y-2">
+                                <p className="text-[10px] font-black uppercase tracking-[0.1em] text-neutral-600 italic">
+                                    Authorized Access Only &bull; System Locked
+                                </p>
+                                <Link
+                                    href={`/${lang}/beta`}
+                                    className="text-[10px] font-black uppercase tracking-[0.1em] text-emerald-500/50 italic hover:text-emerald-400 transition-colors"
+                                >
+                                    Request beta access &rarr;
+                                </Link>
+                            </div>
                         )}
                     </div>
                 </div>

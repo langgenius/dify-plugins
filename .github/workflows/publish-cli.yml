@@ -1,0 +1,38 @@
+name: Publish CLI to npm
+
+on:
+  push:
+    tags:
+      - "cli-v*"
+
+jobs:
+  publish:
+    name: Build and publish @suprawall/cli
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write  # required for npm provenance
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        working-directory: packages/cli
+        run: npm ci
+
+      - name: Build
+        working-directory: packages/cli
+        run: npm run build
+
+      - name: Publish to npm (beta tag)
+        working-directory: packages/cli
+        run: npm publish --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

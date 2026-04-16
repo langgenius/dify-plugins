@@ -168,8 +168,11 @@ export default function SelfHostPage() {
                             Ready to <span className="text-emerald-500 underline decoration-white/10 font-bold italic">Shield</span> Your Swarm?
                         </h2>
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                            <Link 
-                                href="https://github.com/wiserautomation/SupraWall" 
+                            <Link
+                                href="https://github.com/wiserautomation/SupraWall"
+                                target="_blank"
+                                prefetch={false}
+                                rel="noopener noreferrer"
                                 className="px-16 py-8 bg-emerald-600 text-white font-black text-2xl rounded-3xl hover:bg-emerald-500 transition-all shadow-[0_20px_50px_rgba(16,185,129,0.3)] flex items-center gap-4 group"
                             >
                                 <Github className="w-8 h-8" /> STAR THE REPO

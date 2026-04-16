@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import { TagBadge } from "@/app/HomeClient";
 
 // ── Comparison Table Data ──
@@ -46,6 +47,8 @@ const POLICY_TYPES = [
 ];
 
 export default function PolicyEngineClient() {
+    const params = useParams();
+    const lang = (params?.lang as string) || 'en';
     const [activeTab, setActiveTab] = useState("insecure");
 
     return (
@@ -70,7 +73,7 @@ export default function PolicyEngineClient() {
                     </div>
 
                     <div className="flex flex-col sm:flex-row items-center gap-6 pt-4">
-                        <Link href="/beta" className="px-14 py-6 bg-white text-black font-black uppercase tracking-tighter text-2xl rounded-2xl hover:bg-emerald-500 hover:text-white transition-all transform hover:scale-105 shadow-[0_20px_40px_rgba(255,255,255,0.1)] group flex items-center gap-3">
+                        <Link href={`/${lang}/beta`} className="px-14 py-6 bg-white text-black font-black uppercase tracking-tighter text-2xl rounded-2xl hover:bg-emerald-500 hover:text-white transition-all transform hover:scale-105 shadow-[0_20px_40px_rgba(255,255,255,0.1)] group flex items-center gap-3">
                             Start Building <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
                         </Link>
                         <Link href="/docs/policies" className="px-14 py-6 border-2 border-white/10 text-white font-black uppercase tracking-tighter text-2xl rounded-2xl hover:bg-white/5 transition-all underline decoration-white/10 underline-offset-8">
@@ -345,7 +348,7 @@ export default function PolicyEngineClient() {
                         Your agent is only as safe as your weakest prompt. Move to deterministic governance today and ship with confidence.
                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
-                        <Link href="/beta" className="px-16 py-8 bg-emerald-600 text-white font-black text-3xl rounded-2xl hover:bg-emerald-500 transition-all shadow-[0_0_100px_rgba(16,185,129,0.3)] tracking-tighter flex items-center gap-4 group">
+                        <Link href={`/${lang}/beta`} className="px-16 py-8 bg-emerald-600 text-white font-black text-3xl rounded-2xl hover:bg-emerald-500 transition-all shadow-[0_0_100px_rgba(16,185,129,0.3)] tracking-tighter flex items-center gap-4 group">
                             Get Your API Key <ArrowRight className="w-10 h-10 group-hover:translate-x-4 transition-transform" />
                         </Link>
                     </div>

@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/firebase-admin';
 import { admin } from '@/lib/firebase-admin';
+import { z } from 'zod';
 import * as crypto from 'crypto';
 import { resolveVaultTokens } from '@/lib/vault-server';
 import { scrubPii } from '@/lib/guardrail-scrubber';
@@ -44,11 +45,46 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
     }
 
-    let {
+    // ── Input Validation (SEC-005, SEC-007) ──
+    // Zod schema validates shape before any DB access. Reject malformed/injection
+    // payloads with 400; reserve 401 for authentication failures.
+
+    const BodySchema = z.object({
+        apiKey: z.string().min(1),
+        toolName: z.string().min(1).max(500).regex(/^[\w.\-/ ]+$/, "toolName contains invalid characters"),
+        args: z.unknown().optional(),
+        arguments: z.unknown().optional(), // SDK-native alias
+        sessionId: z.string().nullable().optional(),
+        agentRole: z.string().nullable().optional(),
+        model: z.string().optional().default("gpt-4o-mini"),
+        inputTokens: z.number().optional().default(0),
+        outputTokens: z.number().optional().default(0),
+        costUsd: z.number().nullable().optional(),
+        isLoop: z.boolean().optional().default(false),
+        source: z.string().optional().default("direct-sdk"),
+    });
+
+    const parsed = BodySchema.safeParse(body);
+    if (!parsed.success) {
+        const missing = parsed.error.errors.map(e => e.path.join('.'));
+        // apiKey missing → 401; other validation failures → 400
+        if (missing.includes('apiKey')) {
+            return NextResponse.json(
+                { error: "API key required" },
+                { status: 401, headers: { 'WWW-Authenticate': 'Bearer' } }
+            );
+        }
+        return NextResponse.json(
+            { error: "Invalid request", details: parsed.error.errors.map(e => ({ field: e.path.join('.'), message: e.message })) },
+            { status: 400 }
+        );
+    }
+
+    const {
         apiKey,
         toolName,
         args,
-        arguments: argsAlias, // Alias for SDK-native naming
+        arguments: argsAlias,
         sessionId = null,
         agentRole = null,
         model = "gpt-4o-mini",
@@ -57,13 +93,9 @@ export async function POST(req: NextRequest) {
         costUsd = null,
         isLoop = false,
         source = "direct-sdk"
-    } = body;
+    } = parsed.data;
 
     let finalArgs = args ?? argsAlias;
-
-    if (!apiKey || !toolName || finalArgs === undefined) {
-        return NextResponse.json({ error: "apiKey and toolName are required." }, { status: 400 });
-    }
 
     try {
         let tenantId: string;
@@ -106,10 +138,18 @@ export async function POST(req: NextRequest) {
             effectiveRules = [...(subKey.policyOverrides ?? []), ...baseRules];
             effectiveRateLimit = subKey.rateLimitOverride ?? baseRateLimit;
         } else {
-            // Regular agent key
+            // Regular agent key — validate format before hitting Firestore (SEC-004)
+            const AGENT_KEY_FORMAT = /^sw_(agent|admin|agc)_[a-zA-Z0-9]{16,}$/;
+            if (!AGENT_KEY_FORMAT.test(apiKey)) {
+                return NextResponse.json(
+                    { error: "Invalid API key format" },
+                    { status: 401, headers: { 'WWW-Authenticate': 'Bearer' } }
+                );
+            }
+
             const agentsSnapshot = await db.collection("agents").where("apiKey", "==", apiKey).limit(1).get();
             if (agentsSnapshot.empty) {
-                return NextResponse.json({ decision: "DENY", reason: "Invalid API Key" }, { status: 403 });
+                return NextResponse.json({ error: "Invalid API key" }, { status: 401, headers: { 'WWW-Authenticate': 'Bearer' } });
             }
 
             const agentDoc = agentsSnapshot.docs[0];

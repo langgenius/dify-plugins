@@ -3,6 +3,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getAdminDb } from '@/lib/firebase-admin';
+import { requireDashboardAuth } from '@/lib/api-guard';
+import { apiError } from '@/lib/api-errors';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -11,19 +13,22 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const guard = await requireDashboardAuth(request);
+  if (guard instanceof NextResponse) return guard;
+
   const db = getAdminDb();
   try {
     const { id } = await params;
-    
+
     console.log(`[API Agent GET] Fetching agent detail by ID: ${id}`);
     const docRef = db.collection("agents").doc(id);
     const docSnap = await docRef.get();
-    
+
     if (!docSnap.exists) {
       console.warn(`[API Agent GET] Agent not found: ${id}`);
-      return NextResponse.json({ error: "Agent not found" }, { status: 404 });
+      return apiError.notFound("Agent");
     }
-    
+
     const data = docSnap.data();
     const sanitized = JSON.parse(JSON.stringify(data, (key, value) => {
       if (value && typeof value === 'object' && '_seconds' in value) {
@@ -38,7 +43,7 @@ export async function GET(
     });
   } catch (err: any) {
     console.error("[API Agent GET] Error:", err);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return apiError.internal();
   }
 }
 
@@ -46,21 +51,24 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-    const db = getAdminDb();
+  const guard = await requireDashboardAuth(request);
+  if (guard instanceof NextResponse) return guard;
+
+  const db = getAdminDb();
   try {
     const { id } = await params;
     const body = await request.json();
-    
+
     console.log(`[API Agent PATCH] Updating agent: ${id}`, body);
     const docRef = db.collection("agents").doc(id);
     const docSnap = await docRef.get();
 
     if (!docSnap.exists) {
-        return NextResponse.json({ error: "Agent not found" }, { status: 404 });
+      return apiError.notFound("Agent");
     }
 
     const updateData: any = {
-        updatedAt: new Date()
+      updatedAt: new Date()
     };
 
     if (body.name) updateData.name = body.name;
@@ -75,33 +83,36 @@ export async function PATCH(
     if ("loop_detection" in body) updateData.loop_detection = body.loop_detection;
 
     await docRef.update(updateData);
-    
+
     const updatedSnap = await docRef.get();
     const data = updatedSnap.data();
 
     return NextResponse.json({
-        id: updatedSnap.id,
-        ...data,
-        createdAt: data?.createdAt?.toDate?.()?.toISOString() || data?.createdAt
+      id: updatedSnap.id,
+      ...data,
+      createdAt: data?.createdAt?.toDate?.()?.toISOString() || data?.createdAt
     });
   } catch (err: any) {
     console.error("[API Agent PATCH] Error:", err);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return apiError.internal();
   }
 }
 
 export async function DELETE(
-    request: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-    const db = getAdminDb();
-    try {
-        const { id } = await params;
-        console.log(`[API Agent DELETE] Deleting agent: ${id}`);
-        await db.collection("agents").doc(id).delete();
-        return NextResponse.json({ message: "Agent deleted successfully" });
-    } catch (err: any) {
-        console.error("[API Agent DELETE] Error:", err);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
-    }
+  const guard = await requireDashboardAuth(request);
+  if (guard instanceof NextResponse) return guard;
+
+  const db = getAdminDb();
+  try {
+    const { id } = await params;
+    console.log(`[API Agent DELETE] Deleting agent: ${id}`);
+    await db.collection("agents").doc(id).delete();
+    return NextResponse.json({ message: "Agent deleted successfully" });
+  } catch (err: any) {
+    console.error("[API Agent DELETE] Error:", err);
+    return apiError.internal();
+  }
 }

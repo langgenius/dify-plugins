@@ -3,25 +3,36 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { query } from '@/lib/db_sql';
+import { requireDashboardAuth } from '@/lib/api-guard';
+import { apiError } from '@/lib/api-errors';
 
 export const dynamic = "force-dynamic";
 
 /**
  * GET /api/v1/approvals/status/[id]
- * 
+ *
  * Checked by SDKs to see if a REQUIRE_APPROVAL action has been decided.
  * Polls Postgres for the decision.
+ * Requires a valid Firebase ID token.
  */
 export async function GET(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const guard = await requireDashboardAuth(request);
+    if (guard instanceof NextResponse) return guard;
+
     try {
         const { id } = await params;
 
+        // Validate id is non-empty before hitting the DB
+        if (!id || typeof id !== 'string' || id.trim().length === 0) {
+            return apiError.badRequest("Invalid approval request ID");
+        }
+
         // Check Postgres first (Primary source for dashboard actions)
         const result = await query(
-            `SELECT status, decision_comment FROM approval_requests 
+            `SELECT status, decision_comment FROM approval_requests
              WHERE id = $1 OR metadata->>'id' = $1`,
             [id]
         );
@@ -44,9 +55,9 @@ export async function GET(
             });
         }
 
-        return NextResponse.json({ error: "Approval request not found" }, { status: 404 });
+        return apiError.notFound("Approval request");
     } catch (err: any) {
         console.error("[API Approval Status GET] Error:", err);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        return apiError.internal();
     }
 }

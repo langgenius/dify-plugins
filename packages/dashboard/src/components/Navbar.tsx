@@ -140,9 +140,11 @@ export function Navbar({ lang = 'en', dictionary }: { lang?: Locale, dictionary?
                         >
                             {common.deployOnCloud} <ArrowRight className="w-3 h-3" />
                         </Link>
-                        <Link 
-                            href="https://github.com/wiserautomation/SupraWall" 
+                        <Link
+                            href="https://github.com/wiserautomation/SupraWall"
                             target="_blank"
+                            prefetch={false}
+                            rel="noopener noreferrer"
                             onClick={() => sendGAEvent('event', 'nav_cta_click', { type: 'self_host' })}
                             className="hidden sm:flex px-5 py-2.5 border border-white/10 text-white font-black rounded-xl hover:bg-white/5 transition-all items-center gap-2"
                         >

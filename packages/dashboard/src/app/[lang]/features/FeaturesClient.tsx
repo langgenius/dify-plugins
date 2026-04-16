@@ -9,9 +9,12 @@ import {
     ArrowRight, Zap, Target, Lock, LayoutDashboard, Globe
 } from "lucide-react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { TagBadge } from "@/app/HomeClient";
 
 export default function FeaturesClient({ dictionary }: { dictionary: any }) {
+    const params = useParams();
+    const lang = (params?.lang as string) || 'en';
     const t = dictionary.features;
     const common = dictionary.common;
 
@@ -138,7 +141,7 @@ export default function FeaturesClient({ dictionary }: { dictionary: any }) {
                              <p className="text-neutral-500 text-lg leading-relaxed font-bold italic uppercase tracking-tighter">
                                  {t.convergence.dashboard.desc}
                              </p>
-                             <Link href="/dashboard" className="inline-flex items-center gap-2 text-blue-500 font-black uppercase tracking-widest text-sm hover:text-blue-400 transition-colors uppercase italic">{t.convergence.dashboard.cta} →</Link>
+                             <Link href={`/${lang}/dashboard`} className="inline-flex items-center gap-2 text-blue-500 font-black uppercase tracking-widest text-sm hover:text-blue-400 transition-colors uppercase italic">{t.convergence.dashboard.cta} →</Link>
                          </div>
                          <div className="p-12 rounded-[4rem] bg-neutral-900/20 border border-white/5 space-y-8 text-left group hover:border-purple-500/30 transition-all">
                              <div className="flex items-center gap-4">
@@ -198,7 +201,7 @@ export default function FeaturesClient({ dictionary }: { dictionary: any }) {
                          {t.final.description}
                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
-                        <Link href="/beta" className="px-16 py-8 bg-emerald-600 text-white font-black text-3xl rounded-3xl hover:bg-emerald-500 transition-all shadow-[0_0_100px_rgba(16,185,129,0.3)] tracking-tighter flex items-center gap-4 group">
+                        <Link href={`/${lang}/beta`} className="px-16 py-8 bg-emerald-600 text-white font-black text-3xl rounded-3xl hover:bg-emerald-500 transition-all shadow-[0_0_100px_rgba(16,185,129,0.3)] tracking-tighter flex items-center gap-4 group">
                              {t.final.cta} <ArrowRight className="w-10 h-10 group-hover:translate-x-4 transition-transform" />
                         </Link>
                     </div>
