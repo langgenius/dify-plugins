@@ -2,16 +2,21 @@ name: Pre Check Plugin
 
 on:
   pull_request:
-    types: [opened, synchronize, ready_for_review, review_requested, edited]
-    branches: 
+    types: [opened, synchronize, ready_for_review]
+    branches:
       - main
       - dev
     paths-ignore:
       - ".github/**"
       - ".gitignore"
+      - "**/.gitignore"
       - "unpacked_plugin/**"
-      - "README.md"
+      - "**/*.md"
       - "LICENSE"
+
+concurrency:
+  group: pre-check-plugin-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 env:
   REPO_NAME: langgenius/dify-plugins
@@ -21,12 +26,13 @@ env:
 
 jobs:
   pre-check-plugin:
-    runs-on: ubuntu-latest
+    runs-on: depot-ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+          fetch-depth: 2
 
       - name: Clone Marketplace Toolkit
         run: |
@@ -45,7 +51,6 @@ jobs:
       - name: Install Dependencies
         run: |
           echo "Installing Python dependencies..."
-          python -m pip install --upgrade pip
           pip install requests
           
           echo "Ensuring required build tools system dependencies are available..."
@@ -69,12 +74,12 @@ jobs:
 
       - name: Get PR Path
         run: |
-          echo "Retrieving PR files information..."
-          if ! PR_FILES=$(gh pr view -R ${{ env.REPO_NAME }} ${{ github.event.pull_request.number }} --json files --jq .files); then
-            echo "Failed to retrieve PR files. Make sure PR number and repository are correct."
+          echo "Retrieving PR files information from git diff..."
+          if ! PR_FILES=$(git diff --name-only HEAD^1 HEAD^2 | jq -R -s 'split("\n") | map(select(length > 0) | {path: .})'); then
+            echo "Failed to compute changed files from git diff."
             exit 1
           fi
-          
+
           export PR_FILES
           
           echo "Checking for plugin package file changes..."
@@ -288,23 +293,14 @@ jobs:
           
           echo "Running packaging check..."
           
-          # Check if plugin daemon exists and is executable
-          if [ ! -f ".scripts/dify-plugin-linux-amd64" ]; then
-            ERROR_MSG="Plugin daemon file not found"
+          # Check if plugin daemon exists (executable bit set at download time)
+          if [ ! -x ".scripts/dify-plugin-linux-amd64" ]; then
+            ERROR_MSG="Plugin daemon file not found or not executable"
             echo "$ERROR_MSG" >> $ERROR_FILE
             echo "$ERROR_MSG"
             exit 1
           fi
-          
-          if [ ! -x ".scripts/dify-plugin-linux-amd64" ]; then
-            chmod +x .scripts/dify-plugin-linux-amd64 || {
-              ERROR_MSG="Failed to make plugin daemon executable"
-              echo "$ERROR_MSG" >> $ERROR_FILE
-              echo "$ERROR_MSG"
-              exit 1
-            }
-          fi
-          
+
           # Run the packaging check with a timeout
           timeout 300 python3 .scripts/uploader/upload-package.py -d "$PLUGIN_PATH" -t "$MARKETPLACE_TOKEN" --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u "$MARKETPLACE_BASE_URL" -f --test || {
             ERROR_MSG="Packaging check failed or timed out"
