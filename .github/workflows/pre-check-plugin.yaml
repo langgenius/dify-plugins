@@ -74,9 +74,9 @@ jobs:
 
       - name: Get PR Path
         run: |
-          echo "Retrieving PR files information from git diff..."
-          if ! PR_FILES=$(git diff --name-only HEAD^1 HEAD^2 | jq -R -s 'split("\n") | map(select(length > 0) | {path: .})'); then
-            echo "Failed to compute changed files from git diff."
+          echo "Retrieving PR files information..."
+          if ! PR_FILES=$(gh pr view -R ${{ env.REPO_NAME }} ${{ github.event.pull_request.number }} --json files --jq .files); then
+            echo "Failed to retrieve PR files. Make sure PR number and repository are correct."
             exit 1
           fi
 
