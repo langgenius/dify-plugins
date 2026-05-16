@@ -1,0 +1,35 @@
+version: 0.0.1
+type: plugin
+author: biosolver
+name: coingecko-price
+label:
+  en_US: coingecko-price
+  ja_JP: coingecko-price
+  zh_Hans: coingecko-price
+  pt_BR: coingecko-price
+description:
+  en_US: Get cryptocurrency price from CoinGecko
+  ja_JP: Get cryptocurrency price from CoinGecko
+  zh_Hans: Get cryptocurrency price from CoinGecko
+  pt_BR: Get cryptocurrency price from CoinGecko
+icon: icon.svg
+icon_dark: icon-dark.svg
+resource:
+  memory: 268435456
+  permission: {}
+plugins:
+  tools:
+    - provider/coingecko-price.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: null
+created_at: 2026-05-16T05:28:18.2680656+07:00
+privacy: PRIVACY.md
+verified: false
