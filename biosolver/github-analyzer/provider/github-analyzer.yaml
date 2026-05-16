@@ -1,0 +1,20 @@
+identity:
+  author: biosolver
+  name: github-analyzer
+  label:
+    en_US: GitHub Analyzer
+    zh_Hans: GitHub 分析器
+  description:
+    en_US: Analyze any GitHub repository - stats, issues, pull requests and contributors
+    zh_Hans: 分析任何GitHub仓库
+  icon: icon.svg
+  tags:
+    - utilities
+tools:
+  - tools/get_repo_stats.yaml
+  - tools/get_issues.yaml
+  - tools/get_contributors.yaml
+  - tools/get_pull_requests.yaml
+extra:
+  python:
+    source: provider/github-analyzer.py
