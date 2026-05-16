@@ -1,0 +1,22 @@
+identity:
+  name: get_contributors
+  author: biosolver
+  label:
+    en_US: Get Contributors
+description:
+  human:
+    en_US: Get top contributors of a GitHub repository.
+  llm: Get list of top contributors of a GitHub repository with their contribution count.
+parameters:
+  - name: repo
+    type: string
+    required: true
+    label:
+      en_US: Repository
+    human_description:
+      en_US: GitHub repository in format owner/repo
+    llm_description: GitHub repository in format owner/repo
+    form: llm
+extra:
+  python:
+    source: tools/get_contributors.py
