@@ -1,0 +1,22 @@
+identity:
+  name: get_repo_stats
+  author: biosolver
+  label:
+    en_US: Get Repository Stats
+description:
+  human:
+    en_US: Get general statistics of a GitHub repository - stars, forks, watchers, language, description.
+  llm: Get GitHub repository statistics including stars, forks, watchers, open issues count, primary language and description.
+parameters:
+  - name: repo
+    type: string
+    required: true
+    label:
+      en_US: Repository
+    human_description:
+      en_US: GitHub repository in format owner/repo, e.g. langgenius/dify
+    llm_description: GitHub repository in format owner/repo, e.g. langgenius/dify, microsoft/vscode
+    form: llm
+extra:
+  python:
+    source: tools/get_repo_stats.py
