@@ -1,0 +1,35 @@
+version: 0.0.1
+type: plugin
+author: biosolver
+name: github-analyzer
+label:
+  en_US: github-analyzer
+  ja_JP: github-analyzer
+  zh_Hans: github-analyzer
+  pt_BR: github-analyzer
+description:
+  en_US: Analyze any GitHub repository - stats, issues, PRs, contributors
+  ja_JP: Analyze any GitHub repository - stats, issues, PRs, contributors
+  zh_Hans: Analyze any GitHub repository - stats, issues, PRs, contributors
+  pt_BR: Analyze any GitHub repository - stats, issues, PRs, contributors
+icon: icon.svg
+icon_dark: icon-dark.svg
+resource:
+  memory: 268435456
+  permission: {}
+plugins:
+  tools:
+    - provider/github-analyzer.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: null
+created_at: 2026-05-16T20:48:58.5783593+07:00
+privacy: PRIVACY.md
+verified: false
