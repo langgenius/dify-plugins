@@ -1,0 +1,17 @@
+identity:
+  author: biosolver
+  name: coingecko-price
+  label:
+    en_US: CoinGecko Price
+    zh_Hans: CoinGecko 价格
+  description:
+    en_US: Get real-time cryptocurrency prices from CoinGecko (no API key needed)
+    zh_Hans: 从 CoinGecko 获取实时加密货币价格
+  icon: icon.svg
+  tags:
+    - finance
+tools:
+  - tools/get_price.yaml
+extra:
+  python:
+    source: provider/coingecko.py
