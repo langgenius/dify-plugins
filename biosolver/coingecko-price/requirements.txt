@@ -1,0 +1,2 @@
+requests
+dify-plugin
