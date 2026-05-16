@@ -1,0 +1,31 @@
+identity:
+  name: get_issues
+  author: biosolver
+  label:
+    en_US: Get Issues
+description:
+  human:
+    en_US: Get recent issues from a GitHub repository.
+  llm: Get list of recent open issues from a GitHub repository with titles, labels and creation dates.
+parameters:
+  - name: repo
+    type: string
+    required: true
+    label:
+      en_US: Repository
+    human_description:
+      en_US: GitHub repository in format owner/repo
+    llm_description: GitHub repository in format owner/repo
+    form: llm
+  - name: limit
+    type: number
+    required: false
+    label:
+      en_US: Limit
+    human_description:
+      en_US: Number of issues to return (default 10, max 30)
+    llm_description: Number of issues to return, default 10
+    form: llm
+extra:
+  python:
+    source: tools/get_issues.py
