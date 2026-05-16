@@ -1,0 +1,26 @@
+identity:
+  name: get_price
+  author: biosolver
+  label:
+    en_US: Get Crypto Price
+    zh_Hans: 获取加密货币价格
+description:
+  human:
+    en_US: Get the current price of any cryptocurrency in USD using CoinGecko. Input the coin ID (e.g. bitcoin, ethereum, solana).
+    zh_Hans: 通过CoinGecko获取任意加密货币的当前美元价格。
+  llm: Get real-time cryptocurrency price from CoinGecko API. Use coin ID like 'bitcoin', 'ethereum', 'solana'.
+parameters:
+  - name: coin_id
+    type: string
+    required: true
+    label:
+      en_US: Coin ID
+      zh_Hans: 代币ID
+    human_description:
+      en_US: CoinGecko coin ID, e.g. bitcoin, ethereum, solana, dogecoin
+      zh_Hans: CoinGecko代币ID
+    llm_description: The CoinGecko coin ID for the cryptocurrency. Examples - bitcoin, ethereum, solana, dogecoin
+    form: llm
+extra:
+  python:
+    source: tools/get_price.py
