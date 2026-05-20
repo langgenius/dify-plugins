@@ -1,0 +1,45 @@
+identity:
+  author: lumetra
+  name: engram
+  label:
+    en_US: Engram
+  description:
+    en_US: "Durable, explainable memory for AI agents. Six tools — store_memory, query_memory, list_memories, list_buckets, delete_memory, clear_memories — backed by the hosted Engram service at api.lumetra.io."
+  icon: icon.svg
+  tags:
+    - productivity
+    - utilities
+
+credentials_for_provider:
+  engram_api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: Engram API Key
+    placeholder:
+      en_US: eng_live_...
+    help:
+      en_US: "Bearer token for api.lumetra.io. Sign up at https://lumetra.io to get one — free tier, no card."
+    url: https://lumetra.io
+  engram_api_base:
+    type: text-input
+    required: false
+    default: https://api.lumetra.io
+    label:
+      en_US: Engram API Base URL
+    placeholder:
+      en_US: https://api.lumetra.io
+    help:
+      en_US: "Override only if you're running a self-hosted Engram. Leave as default for the hosted service."
+
+tools:
+  - tools/store_memory.yaml
+  - tools/query_memory.yaml
+  - tools/list_memories.yaml
+  - tools/list_buckets.yaml
+  - tools/delete_memory.yaml
+  - tools/clear_memories.yaml
+
+extra:
+  python:
+    source: provider/engram.py

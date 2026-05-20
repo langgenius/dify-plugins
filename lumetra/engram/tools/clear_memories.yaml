@@ -1,0 +1,22 @@
+identity:
+  name: clear_memories
+  author: lumetra
+  label:
+    en_US: Clear Memories
+description:
+  human:
+    en_US: Empty a bucket. Destructive — all memories in the bucket are deleted.
+  llm: "Delete ALL memories in a bucket. Destructive and irreversible. Only call when the user explicitly asks to wipe / clear / reset / empty a bucket. Always confirm with the user before invoking."
+parameters:
+  - name: bucket
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Bucket
+    human_description:
+      en_US: Bucket to empty.
+    llm_description: 'The bucket to empty. Destructive — every memory in this bucket will be deleted. Confirm with the user first.'
+extra:
+  python:
+    source: tools/clear_memories.py

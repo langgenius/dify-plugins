@@ -1,0 +1,32 @@
+identity:
+  name: query_memory
+  author: lumetra
+  label:
+    en_US: Query Memory
+description:
+  human:
+    en_US: Ask a natural-language question against your Engram memory. Returns a synthesized answer with citations.
+  llm: "Search Engram memory with a natural-language question. Use BEFORE answering questions where prior context, user preferences, or earlier decisions could be relevant. Returns a synthesized answer plus the source memories."
+parameters:
+  - name: question
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Question
+    human_description:
+      en_US: The natural-language question to ask of memory.
+    llm_description: "The natural-language question. Phrase it the way you would ask a colleague — Engram does hybrid retrieval (semantic + graph) and synthesizes an answer."
+  - name: bucket
+    type: string
+    required: false
+    form: llm
+    default: default
+    label:
+      en_US: Bucket
+    human_description:
+      en_US: 'Bucket to search. Use "default" unless you are scoping to a specific project.'
+    llm_description: 'The Engram bucket to search. Use "default" unless the user mentioned a project-specific bucket.'
+extra:
+  python:
+    source: tools/query_memory.py

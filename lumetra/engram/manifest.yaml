@@ -1,0 +1,35 @@
+author: lumetra
+created_at: "2026-05-19T00:00:00Z"
+description:
+  en_US: Engram — durable, explainable memory for AI agents. Six tools for storing and querying long-term memory backed by Lumetra's hosted Engram service.
+icon: icon.svg
+label:
+  en_US: Engram
+meta:
+  arch:
+    - amd64
+    - arm64
+  runner:
+    entrypoint: main
+    language: python
+    version: "3.12"
+  version: 0.0.2
+name: engram
+plugins:
+  tools:
+    - provider/engram.yaml
+resource:
+  memory: 1048576
+  permission:
+    model:
+      enabled: false
+    tool:
+      enabled: true
+tags:
+  - productivity
+  - utilities
+type: plugin
+version: 0.0.2
+privacy: PRIVACY.md
+repo: https://github.com/lumetra-io/engram-dify
+verified: false

@@ -1,0 +1,33 @@
+identity:
+  name: list_memories
+  author: lumetra
+  label:
+    en_US: List Memories
+description:
+  human:
+    en_US: List the newest memories in a bucket.
+  llm: "List the newest-first memories in an Engram bucket. Use when you need to enumerate what's stored (e.g. for review, audit, or to find an id to delete) rather than answer a question — use query_memory for question-answering."
+parameters:
+  - name: bucket
+    type: string
+    required: false
+    form: llm
+    default: default
+    label:
+      en_US: Bucket
+    human_description:
+      en_US: 'Bucket to list. Use "default" unless scoping to a specific project.'
+    llm_description: 'The Engram bucket to list memories from.'
+  - name: limit
+    type: number
+    required: false
+    form: llm
+    default: 20
+    label:
+      en_US: Limit
+    human_description:
+      en_US: Max number of memories to return (default 20).
+    llm_description: 'Max number of memories to return. Default 20. Increase only if the user explicitly asks for more.'
+extra:
+  python:
+    source: tools/list_memories.py

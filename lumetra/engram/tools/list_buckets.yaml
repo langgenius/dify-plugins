@@ -1,0 +1,33 @@
+identity:
+  name: list_buckets
+  author: lumetra
+  label:
+    en_US: List Buckets
+description:
+  human:
+    en_US: List all memory buckets in your Engram tenant.
+  llm: "List all Engram memory buckets in the tenant. Use when the user asks what projects/buckets exist, or when you need to pick a bucket name before storing or querying."
+parameters:
+  - name: limit
+    type: number
+    required: false
+    form: llm
+    default: 50
+    label:
+      en_US: Limit
+    human_description:
+      en_US: Max number of buckets to return (default 50).
+    llm_description: 'Max number of buckets to return. Default 50.'
+  - name: offset
+    type: number
+    required: false
+    form: llm
+    default: 0
+    label:
+      en_US: Offset
+    human_description:
+      en_US: Pagination offset (default 0).
+    llm_description: 'Pagination offset for the bucket list. Default 0.'
+extra:
+  python:
+    source: tools/list_buckets.py

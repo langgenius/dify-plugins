@@ -1,0 +1,31 @@
+identity:
+  name: delete_memory
+  author: lumetra
+  label:
+    en_US: Delete Memory
+description:
+  human:
+    en_US: Remove a single memory by id.
+  llm: "Delete one memory from a bucket by its UUID. Use only when the user explicitly asks to remove a specific memory. Get the memory_id from list_memories first."
+parameters:
+  - name: memory_id
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Memory ID
+    human_description:
+      en_US: UUID of the memory to delete.
+    llm_description: 'The UUID of the memory to delete. Get this from list_memories before calling.'
+  - name: bucket
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Bucket
+    human_description:
+      en_US: Bucket the memory lives in.
+    llm_description: 'The bucket the memory belongs to. Required.'
+extra:
+  python:
+    source: tools/delete_memory.py

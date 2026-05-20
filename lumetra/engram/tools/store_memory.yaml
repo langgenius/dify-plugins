@@ -1,0 +1,32 @@
+identity:
+  name: store_memory
+  author: lumetra
+  label:
+    en_US: Store Memory
+description:
+  human:
+    en_US: Save a fact, decision, or piece of context to long-term memory in Engram.
+  llm: "Persist a memory in the Engram knowledge graph. Use whenever the user states a durable fact, preference, or decision that should be available in future conversations. The content should be a single atomic fact phrased so it stands alone."
+parameters:
+  - name: content
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Memory content
+    human_description:
+      en_US: The fact to remember. One atomic concept per call works best.
+    llm_description: "The atomic fact, decision, or preference to memorize. Phrase it as a self-contained sentence so it stands alone outside of the current conversation."
+  - name: bucket
+    type: string
+    required: false
+    form: llm
+    default: default
+    label:
+      en_US: Bucket
+    human_description:
+      en_US: 'Bucket to store in. Use "default" unless you have a reason to segment.'
+    llm_description: 'The Engram bucket name. Use "default" unless the user or task implies a project-specific bucket. Buckets auto-create on first write.'
+extra:
+  python:
+    source: tools/store_memory.py
