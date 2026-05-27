@@ -246,7 +246,11 @@ jobs:
               
               # Determine installation method based on dify_plugin version
               echo "Detecting dify_plugin version..."
-              dify_version=$(pip list | grep -o 'dify_plugin\s\+[0-9.]\+' | awk '{print $2}' || echo "not_found")
+              dify_version=$(pip list | grep -oE 'dify[-_]plugin[[:space:]]+[0-9][0-9.a-zA-Z]*' | awk '{print $2}')
+              if [ -z "$dify_version" ]; then
+                dify_version="not_found"
+              fi
+
               
               if [ "$dify_version" = "not_found" ]; then
                 echo "dify_plugin not found in installed packages, using default configuration"
