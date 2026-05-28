@@ -244,22 +244,42 @@ jobs:
                 exit 1
               }
               
-              # Determine installation method based on dify_plugin version
+              # Determine installation method based on the installed dify_plugin distribution.
               echo "Detecting dify_plugin version..."
-              dify_version=$(pip list | grep -o 'dify_plugin\s\+[0-9.]\+' | awk '{print $2}' || echo "not_found")
-              
-              if [ "$dify_version" = "not_found" ]; then
-                echo "dify_plugin not found in installed packages, using default configuration"
-                export INSTALL_METHOD=aws_lambda
-                export AWS_LAMBDA_PORT=8080
-                export AWS_LAMBDA_HOST=0.0.0.0
+              dify_version=$(python3 - <<'PY' || true
+              from importlib.metadata import PackageNotFoundError, version
+              for dist_name in ("dify_plugin", "dify-plugin"):
+                  try:
+                      print(version(dist_name))
+                      break
+                  except PackageNotFoundError:
+                      continue
+              else:
+                  raise SystemExit(1)
+              PY
+              )
+              if [ -z "$dify_version" ]; then
+                echo "dify_plugin not found in installed packages, using serverless installation method"
+                export INSTALL_METHOD=serverless
+                export SERVERLESS_PORT=8080
+                export SERVERLESS_HOST=0.0.0.0
               else
                 target_version="0.0.1b64"
                 echo "Found dify_plugin version: $dify_version"
                 echo "Comparing with target version: $target_version"
                 
                 # Set environment variables based on version comparison
-                if python -c "from packaging.version import Version; exit(0 if Version('$dify_version') > Version('$target_version') else 1)"; then
+                if DIFY_PLUGIN_VERSION="$dify_version" TARGET_VERSION="$target_version" python3 - <<'PY'
+              import os
+              from packaging.version import InvalidVersion, Version
+              try:
+                  use_serverless = Version(os.environ["DIFY_PLUGIN_VERSION"]) >= Version(os.environ["TARGET_VERSION"])
+              except InvalidVersion as exc:
+                  print(f"Unable to parse dify_plugin version, using serverless installation method: {exc}")
+                  use_serverless = True
+              raise SystemExit(0 if use_serverless else 1)
+              PY
+                then
                     echo "Using serverless installation method"
                     export INSTALL_METHOD=serverless
                     export SERVERLESS_PORT=8080
