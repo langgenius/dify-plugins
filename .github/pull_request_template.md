@@ -1,50 +1,46 @@
-# Plugin Submission Form
+# Plugin Submission
 
-## 1. Metadata
+## Plugin information
+
+- **Author**:
+- **Plugin name**:
+- **Version**:
+- **Source repository**:
+- **Package path**:
+
+## Submission type
+
+- [ ] New plugin
+- [ ] Version update
+
+## What changed
+
+<!-- Briefly describe what the plugin does or what changed in this version. -->
+
+## Required checks
+
+- [ ] I have read and followed the [Marketplace submission requirements](docs/plugin-submission-requirements.md).
+- [ ] I have read and comply with the Plugin Developer Agreement.
+- [ ] I tested this plugin on Dify Community Edition and Dify Cloud, or documented any limitation below.
+- [ ] The package contains only files needed at runtime.
+- [ ] The package does not contain secrets, local credentials, `.env` files, `.git` directories, virtual environments, caches, logs, or IDE files.
+- [ ] The package does not contain executables or bundled binaries, or I explained why they are required below.
+- [ ] The plugin README includes setup steps, usage instructions, required APIs or credentials, connection requirements, and the source repository link.
+- [ ] The plugin includes `PRIVACY.md` or a hosted privacy policy, and `manifest.yaml` references it.
+- [ ] All user-facing text is primarily in English.
+
+## Security and privacy notes
+
 <!--
-Please provide the following metadata of your plugin to make it easier for the reviewer to check the changes.
-  - Plugin Author : The author of the plugin which is defined in your manifest.yaml
-  - Plugin Name   : The name of the plugin which is defined in your manifest.yaml
-  - Repository URL: The URL of the repository where the source code of your plugin is hosted
+List any sensitive capability, such as command execution, code execution, SQL, SSH/SFTP,
+browser automation, file operations, arbitrary URL fetching, proxying, or handling health,
+financial, biometric, children, or other sensitive data. Write "None" if not applicable.
 -->
 
-- **Plugin Author**: 
-- **Plugin Name**: 
-- **Repository URL**: 
+## Local validation
 
-## 2. Submission Type
+<!-- Paste the commands you ran and the result. -->
 
-- [ ] New plugin submission
-- [ ] Version update for existing plugin
+## Reviewer notes
 
-## 3. Description
-<!-- Please briefly describe the purpose of the new plugin or the updates made to the existing plugin -->
-
-## 4. Checklist
-
-- [ ] I have read and followed the Publish to Dify Marketplace guidelines
-- [ ] I have read and comply with the Plugin Developer Agreement
-- [ ] I confirm my plugin works properly on both Dify Community Edition and Cloud Version
-- [ ] I confirm my plugin has been thoroughly tested for completeness and functionality
-- [ ] My plugin brings new value to Dify
-
-## 5. Documentation Checklist
-
-Please confirm that your plugin README includes all necessary information:
-
-- [ ] Step-by-step setup instructions
-- [ ] Detailed usage instructions
-- [ ] All required APIs and credentials are clearly listed
-- [ ] Connection requirements and configuration details
-- [ ] Link to the repository for the plugin source code
-
-## 6. Privacy Protection Information
-
-Based on Dify Plugin Privacy Protection [Guidelines](https://docs.dify.ai/plugins/publish-plugins/publish-to-dify-marketplace/plugin-privacy-protection-guidelines):
-
-### Data Collection
-<!-- Does your plugin collect any user personal data? If yes, please list what types of user personal data are being collected according to the Plugin Privacy Protection Guidelines (for example: Email address, IP address, Age, etc) -->
-
-### Privacy Policy
-
-- [ ] I confirm that I have prepared and included a privacy policy in my plugin package based on the Plugin Privacy Protection Guidelines
+<!-- Optional: migration notes, known limitations, binary/package exceptions, or breaking changes. -->
