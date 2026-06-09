@@ -26,6 +26,16 @@ Every submission must include:
 
 Keep dependencies minimal and explain unusual runtime requirements. Python plugins should avoid unbounded or unnecessary dependencies, direct URL installs, and git-based package installs unless the PR explains why they are required.
 
+## Risk classification
+
+Select one risk level in the PR template:
+
+- Low risk: The plugin only calls fixed, documented third-party HTTPS APIs and does not execute user-controlled code, commands, SQL, file operations, browser automation, or arbitrary network requests.
+- Medium risk: The plugin processes uploaded files or user-provided URLs, performs write actions in a third-party service, sends user content to external services, or handles personal data that is not highly sensitive.
+- High risk: The plugin can execute commands or code, run SQL, access databases, use SSH/SFTP, operate on filesystems, automate browsers, proxy or crawl arbitrary URLs, bundle executables, or handle health, financial, biometric, children, authentication, location, or other sensitive personal data.
+
+When more than one level seems possible, choose the higher risk level.
+
 ## Version updates
 
 Version update PRs should normally add only the new `.difypkg` file. The plugin version in `manifest.yaml` must be incremented and must not already exist on the Dify Marketplace.

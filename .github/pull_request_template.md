@@ -6,7 +6,7 @@
 - **Plugin name**:
 - **Version**:
 - **Source repository**:
-- **Package path**:
+- **Contact**:
 
 ## Submission type
 
@@ -16,6 +16,14 @@
 ## What changed
 
 <!-- Briefly describe what the plugin does or what changed in this version. -->
+
+## Risk level
+
+- [ ] Low risk
+- [ ] Medium risk
+- [ ] High risk
+
+<!-- Select one based on the risk classification in docs/plugin-submission-requirements.md. -->
 
 ## Required checks
 

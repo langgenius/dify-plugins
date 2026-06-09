@@ -16,6 +16,8 @@ Check that the privacy policy matches the plugin behavior and the third-party se
 
 ## Security review
 
+Confirm that the PR risk level matches the plugin behavior. When a plugin fits multiple levels, review it at the higher level.
+
 Look for high-risk capabilities first: command execution, code execution, SQL, SSH/SFTP, file operations, browser automation, arbitrary URL fetching, proxying, and webhook forwarding.
 
 For high-risk plugins, verify that user inputs are constrained, network requests have timeouts, credentials are not returned in errors, and dangerous behavior is documented in the PR.
