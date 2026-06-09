@@ -20,7 +20,7 @@ Every submission must include:
 - A valid `manifest.yaml` with accurate author, name, version, plugin type, runner, icon, and privacy fields.
 - A README with setup steps, usage instructions, required APIs or credentials, connection requirements, and a link to the source repository.
 - A `PRIVACY.md` file or hosted privacy policy that explains what user data is collected, stored, logged, or sent to third parties. If no user data is collected, say so explicitly.
-- Primary user-facing text in English. Additional translations are welcome.
+- Primary user-facing text in English. Additional localized README files are welcome and should follow the [i18n guidance](https://docs.dify.ai/en/develop-plugin/features-and-specs/plugin-types/multilingual-readme).
 
 ## Dependencies
 

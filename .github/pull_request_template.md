@@ -35,7 +35,7 @@
 - [ ] The package does not contain executables or bundled binaries, or I explained why they are required below.
 - [ ] The plugin README includes setup steps, usage instructions, required APIs or credentials, connection requirements, and the source repository link.
 - [ ] The plugin includes `PRIVACY.md` or a hosted privacy policy, and `manifest.yaml` references it.
-- [ ] All user-facing text is primarily in English.
+- [ ] All user-facing text is primarily in English, with any localized README files following the [i18n guidance](https://docs.dify.ai/en/develop-plugin/features-and-specs/plugin-types/multilingual-readme).
 
 ## Security and privacy notes
 
