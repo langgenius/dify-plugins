@@ -1,0 +1,18 @@
+identity:
+  author: fangyong
+  name: kg_builder
+  label:
+    en_US: Knowledge Graph Builder (Online)
+    zh_Hans: 知识图谱构建器（图谱化分块·在线版）
+  description:
+    en_US: '[Online build] Turn Markdown documents into knowledge-graph-style chunks with entity/relation annotations for Dify knowledge bases.'
+    zh_Hans: 【在线版】将 Markdown 文档转换为带实体-关系标注的图谱化分块，导入 Dify 知识库。
+  icon: icon.svg
+  tags:
+    - utilities
+extra:
+  python:
+    source: kg_builder.py
+tools:
+  - kg_chunk.yaml
+  - kg_validate.yaml

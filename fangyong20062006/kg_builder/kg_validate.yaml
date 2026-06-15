@@ -1,0 +1,26 @@
+identity:
+  name: kg_validate
+  author: fangyong
+  label:
+    en_US: KG Chunk Validator
+    zh_Hans: 图谱分块校验
+description:
+  human:
+    en_US: Validate a KG-chunked Markdown file. Checks entity coverage, relation completeness, trap blocks, and outputs a quality report.
+    zh_Hans: 校验已生成的图谱化分块 Markdown 文件，检查实体覆盖率、关系完整性、陷阱块，输出质量报告。
+  llm: Validates a knowledge graph chunked Markdown file and returns a quality report with entity coverage, relation chain completeness, and missing trap warnings.
+parameters:
+  - name: file
+    type: file
+    required: true
+    label:
+      en_US: KG Chunk File
+      zh_Hans: 图谱分块文件
+    human_description:
+      en_US: Upload the KG-chunked Markdown file output from the KG Chunk Generator tool.
+      zh_Hans: 上传由图谱化分块生成工具输出的 Markdown 文件进行质量校验。
+    llm_description: The KG-chunked Markdown file to validate.
+    form: llm
+extra:
+  python:
+    source: kg_validate.py

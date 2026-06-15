@@ -1,0 +1,59 @@
+identity:
+  name: kg_chunk
+  author: fangyong
+  label:
+    en_US: KG Chunk Generator
+    zh_Hans: 图谱化分块生成
+description:
+  human:
+    en_US: Upload a Markdown document, automatically split it into knowledge-graph-style chunks with entity/relation annotations for Dify knowledge base import.
+    zh_Hans: 上传 Markdown 文档，自动切分为带实体-关系标注的图谱化分块，直接用于 Dify 知识库导入。
+  llm: Splits a Markdown document into structured knowledge graph chunks. Each chunk contains entity name, type, upstream/downstream relations, key rules, and trap warnings. Returns a Markdown file ready for Dify knowledge base import.
+parameters:
+  - name: file
+    type: file
+    required: true
+    label:
+      en_US: Document File
+      zh_Hans: 文档文件
+    human_description:
+      en_US: Upload a Markdown (.md) document to convert into KG chunks.
+      zh_Hans: 上传 Markdown (.md) 文档进行图谱化分块。
+    llm_description: The Markdown document file to process into knowledge graph chunks.
+    form: llm
+  - name: domain
+    type: string
+    required: false
+    default: "通用"
+    label:
+      en_US: Domain Hint
+      zh_Hans: 领域提示
+    human_description:
+      en_US: 'Domain hint for better entity extraction, e.g. power grid, medical, legal.'
+      zh_Hans: 领域提示词，帮助提取更准确的实体，例如：电网、医疗、法规。
+    llm_description: Optional domain hint to improve entity and relation extraction accuracy.
+    form: form
+  - name: trap_mode
+    type: select
+    required: false
+    default: "on"
+    label:
+      en_US: Trap/Correction Block
+      zh_Hans: 陷阱纠错块
+    human_description:
+      en_US: Whether to generate a dedicated block for common confusions and corrections found in the document.
+      zh_Hans: 是否在输出中生成一个专门收录文档内常见混淆点和纠错内容的块。
+    options:
+      - value: "on"
+        label:
+          en_US: "Enable"
+          zh_Hans: "开启"
+      - value: "off"
+        label:
+          en_US: "Disable"
+          zh_Hans: "关闭"
+    llm_description: Whether to generate a trap/correction block for common misconceptions in the document.
+    form: form
+extra:
+  python:
+    source: kg_chunk.py
