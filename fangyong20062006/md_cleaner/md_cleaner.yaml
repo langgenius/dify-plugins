@@ -1,0 +1,17 @@
+identity:
+  author: fangyong
+  name: md_cleaner
+  label:
+    en_US: Markdown Cleaner for RAG (Online)
+    zh_Hans: Markdown 文档清洗器（RAG 优化·在线版）
+  description:
+    en_US: '[Online build] Clean Markdown documents to boost retrieval quality in Dify knowledge bases (parent-child chunking).'
+    zh_Hans: 【在线版】清洗 Markdown 文档，提升 Dify 父子知识库的检索质量。
+  icon: icon.svg
+  tags:
+    - utilities
+extra:
+  python:
+    source: md_cleaner.py
+tools:
+  - clean_md.yaml

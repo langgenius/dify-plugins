@@ -1,0 +1,65 @@
+identity:
+  name: clean_md
+  author: fangyong
+  label:
+    en_US: Clean Markdown
+    zh_Hans: 清洗 Markdown 文档
+description:
+  human:
+    en_US: >
+      Clean a Markdown file for Dify knowledge base ingestion (parent-child chunking).
+      Handles: header/footer noise, cross-page sentence breaks, clause number protection,
+      symbol encoding errors, term normalization, and MD5 deduplication.
+    zh_Hans: >
+      清洗 Markdown 文件，用于 Dify 父子知识库构建。
+      处理：页眉页脚噪音、跨页断句修复、条款编号保护、符号乱码修复、术语归一化、MD5去重。
+  llm: >
+    Clean a Markdown document to improve retrieval hit rate in Dify knowledge bases.
+    Input a Markdown file. Returns cleaned Markdown text and a downloadable .md file.
+parameters:
+  - name: file
+    type: file
+    required: true
+    label:
+      en_US: Markdown File
+      zh_Hans: Markdown 文件
+    human_description:
+      en_US: Upload the Markdown file to clean (.md).
+      zh_Hans: 上传需要清洗的 Markdown 文件（.md）。
+    llm_description: The Markdown file to clean.
+    form: llm
+  - name: extra_noise_patterns
+    type: string
+    required: false
+    label:
+      en_US: Extra Noise Patterns
+      zh_Hans: 自定义噪音规则
+    human_description:
+      en_US: >
+        Optional. Additional regex patterns to remove, one per line.
+        Example: 中国电力建设集团
+      zh_Hans: >
+        可选。自定义正则去噪规则，每行一条。
+        示例：中国电力建设集团
+    llm_description: Optional extra regex patterns (one per line) to strip from the document.
+    form: form
+    default: ""
+  - name: extra_term_map
+    type: string
+    required: false
+    label:
+      en_US: Extra Term Map
+      zh_Hans: 自定义术语归一
+    human_description:
+      en_US: >
+        Optional. Extra term normalization rules, one per line, format: 简称=全称
+        Example: 局变=局部变电站
+      zh_Hans: >
+        可选。自定义术语归一化规则，每行一条，格式：简称=全称
+        示例：局变=局部变电站
+    llm_description: Optional term normalization pairs (one per line, format short=full).
+    form: form
+    default: ""
+extra:
+  python:
+    source: clean_md.py

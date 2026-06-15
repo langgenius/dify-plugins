@@ -1,0 +1,51 @@
+version: 0.0.3
+type: plugin
+author: fangyong20062006
+name: md_cleaner
+label:
+  en_US: Markdown Cleaner for RAG
+  zh_Hans: Markdown 文档清洗器（RAG 优化）
+description:
+  en_US: 'Clean Markdown documents to boost retrieval quality in Dify knowledge bases (parent-child chunking). A 12-step pipeline removes header/footer noise, fixes cross-page sentence breaks, protects clause numbers, repairs garbled symbols, normalizes terminology, and deduplicates chunks by MD5. Returns cleaned Markdown text plus a downloadable .md file.'
+  zh_Hans: '清洗 Markdown 文档，提升 Dify 父子知识库的检索质量。12 步流水线依次处理：页眉页脚噪音、跨页断句修复、条款编号保护、符号乱码修复、术语归一化、MD5 去重，输出清洗后的 Markdown 文本并附带可下载的 .md 文件。'
+icon: icon.svg
+tags:
+  - utilities
+  - productivity
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+    model:
+      enabled: false
+      llm: false
+      text_embedding: false
+      rerank: false
+      tts: false
+      speech2text: false
+      moderation: false
+    node:
+      enabled: false
+    endpoint:
+      enabled: false
+    app:
+      enabled: false
+    storage:
+      enabled: false
+      size: 1024
+plugins:
+  tools:
+    - md_cleaner.yaml
+meta:
+  version: 0.0.3
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: 1.0.0
+created_at: 2026-06-15T00:00:00+08:00
+privacy: PRIVACY.md
