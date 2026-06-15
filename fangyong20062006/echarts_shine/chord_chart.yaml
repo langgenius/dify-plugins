@@ -1,0 +1,52 @@
+identity:
+  name: chord_chart
+  author: fangyong
+  label:
+    en_US: Chord Chart
+    zh_Hans: 和弦图
+description:
+  human:
+    en_US: Generate a chord diagram with Shine theme, showing relationships between entities.
+    zh_Hans: 生成和弦图，使用 Shine 主题，展示实体间关系。
+  llm: Generate a chord diagram using ECharts Shine theme (implemented as circular graph layout).
+parameters:
+  - name: title
+    type: string
+    required: true
+    label: {en_US: Chart Title, zh_Hans: 图表标题}
+    human_description: {en_US: Chart title., zh_Hans: 图表标题。}
+    llm_description: Chart title.
+    form: llm
+  - name: nodes
+    type: string
+    required: true
+    label: {en_US: Nodes (JSON array), zh_Hans: 节点（JSON数组）}
+    human_description: {en_US: 'Nodes as JSON array, e.g. [{"name":"A","value":10},{"name":"B","value":8}]', zh_Hans: '节点，例如：[{"name":"A","value":10},{"name":"B","value":8}]'}
+    llm_description: 'Nodes as JSON array. Each item has "name" and "value".'
+    form: llm
+  - name: links
+    type: string
+    required: true
+    label: {en_US: Links (JSON array), zh_Hans: 连接（JSON数组）}
+    human_description: {en_US: 'Links as JSON array, e.g. [{"source":"A","target":"B","value":5}]', zh_Hans: '连接，例如：[{"source":"A","target":"B","value":5}]'}
+    llm_description: 'Links as JSON array. Each item has "source", "target", "value".'
+    form: llm
+  - name: width
+    type: number
+    required: false
+    label: {en_US: Width (px), zh_Hans: 宽度}
+    human_description: {en_US: Width in pixels., zh_Hans: 宽度像素。}
+    llm_description: Chart width in pixels.
+    form: form
+    default: 900
+  - name: height
+    type: number
+    required: false
+    label: {en_US: Height (px), zh_Hans: 高度}
+    human_description: {en_US: Height in pixels., zh_Hans: 高度像素。}
+    llm_description: Chart height in pixels.
+    form: form
+    default: 500
+extra:
+  python:
+    source: chord_chart.py

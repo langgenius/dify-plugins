@@ -1,0 +1,93 @@
+identity:
+  name: bar_chart
+  author: fangyong
+  label:
+    en_US: Bar Chart
+    zh_Hans: 柱状图
+description:
+  human:
+    en_US: Generate a bar chart (vertical or horizontal) with Shine theme.
+    zh_Hans: 生成柱状图（支持垂直/水平方向），使用 Shine 主题。
+  llm: Generate a bar chart using ECharts Shine theme. Input JSON data with categories and series values.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label:
+      en_US: Chart Title
+      zh_Hans: 图表标题
+    human_description:
+      en_US: The title of the chart.
+      zh_Hans: 图表标题。
+    llm_description: The title displayed at the top of the chart.
+    form: llm
+  - name: categories
+    type: string
+    required: true
+    label:
+      en_US: Categories (JSON array)
+      zh_Hans: 分类标签（JSON数组）
+    human_description:
+      en_US: 'X-axis categories as JSON array, e.g. ["Q1","Q2","Q3","Q4"]'
+      zh_Hans: 'X轴分类标签，JSON数组格式，例如：["Q1","Q2","Q3","Q4"]'
+    llm_description: 'X-axis category labels as a JSON array string, e.g. ["Q1","Q2","Q3","Q4"]'
+    form: llm
+  - name: series_data
+    type: string
+    required: true
+    label:
+      en_US: Series Data (JSON)
+      zh_Hans: 数据系列（JSON）
+    human_description:
+      en_US: 'Series data as JSON array, e.g. [{"name":"Sales","data":[120,200,150,80]}]'
+      zh_Hans: '数据系列，JSON数组格式，例如：[{"name":"销售额","data":[120,200,150,80]}]'
+    llm_description: 'Series data as JSON array. Each item has "name" and "data" fields. e.g. [{"name":"Sales","data":[120,200,150,80]}]'
+    form: llm
+  - name: direction
+    type: select
+    required: false
+    label:
+      en_US: Direction
+      zh_Hans: 方向
+    human_description:
+      en_US: Bar direction, vertical (default) or horizontal.
+      zh_Hans: 柱状图方向，垂直（默认）或水平。
+    llm_description: "Bar direction: 'vertical' (default) or 'horizontal'."
+    form: form
+    default: vertical
+    options:
+      - value: vertical
+        label:
+          en_US: Vertical
+          zh_Hans: 垂直
+      - value: horizontal
+        label:
+          en_US: Horizontal
+          zh_Hans: 水平
+  - name: width
+    type: number
+    required: false
+    label:
+      en_US: Width (px)
+      zh_Hans: 宽度（像素）
+    human_description:
+      en_US: Chart width in pixels, default 900.
+      zh_Hans: 图表宽度（像素），默认900。
+    llm_description: Chart width in pixels.
+    form: form
+    default: 900
+  - name: height
+    type: number
+    required: false
+    label:
+      en_US: Height (px)
+      zh_Hans: 高度（像素）
+    human_description:
+      en_US: Chart height in pixels, default 500.
+      zh_Hans: 图表高度（像素），默认500。
+    llm_description: Chart height in pixels.
+    form: form
+    default: 500
+extra:
+  python:
+    source: bar_chart.py

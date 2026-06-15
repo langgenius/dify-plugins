@@ -1,0 +1,47 @@
+identity:
+  name: themeriver_chart
+  author: fangyong
+  label:
+    en_US: Theme River Chart
+    zh_Hans: 主题河流图
+description:
+  human:
+    en_US: Generate a theme river chart with Shine theme.
+    zh_Hans: 生成主题河流图，使用 Shine 主题。
+  llm: Generate a themeRiver chart using ECharts Shine theme. Shows how values of multiple themes change over time.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label: {en_US: Chart Title, zh_Hans: 图表标题}
+    human_description: {en_US: Chart title., zh_Hans: 图表标题。}
+    llm_description: Chart title.
+    form: llm
+  - name: data
+    type: string
+    required: true
+    label: {en_US: "Data (JSON)", zh_Hans: "数据（JSON）"}
+    human_description:
+      en_US: 'Data as JSON array: [["2024-01-01",10,"Theme A"],["2024-01-02",15,"Theme A"],["2024-01-01",8,"Theme B"]]'
+      zh_Hans: '数据：[["2024-01-01",10,"主题A"],["2024-01-02",15,"主题A"],["2024-01-01",8,"主题B"]]'
+    llm_description: 'ThemeRiver data as JSON array of [date_string, value, theme_name] triples.'
+    form: llm
+  - name: width
+    type: number
+    required: false
+    label: {en_US: Width (px), zh_Hans: 宽度}
+    human_description: {en_US: Width in pixels., zh_Hans: 宽度像素。}
+    llm_description: Chart width in pixels.
+    form: form
+    default: 900
+  - name: height
+    type: number
+    required: false
+    label: {en_US: Height (px), zh_Hans: 高度}
+    human_description: {en_US: Height in pixels., zh_Hans: 高度像素。}
+    llm_description: Chart height in pixels.
+    form: form
+    default: 500
+extra:
+  python:
+    source: themeriver_chart.py

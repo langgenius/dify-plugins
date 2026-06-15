@@ -1,0 +1,52 @@
+identity:
+  name: matrix_scatter_chart
+  author: fangyong
+  label:
+    en_US: Matrix Scatter Chart
+    zh_Hans: 矩阵坐标系
+description:
+  human:
+    en_US: Generate a scatter matrix chart with Shine theme, showing multiple scatter plots in a grid.
+    zh_Hans: 生成矩阵散点图（多坐标系），使用 Shine 主题。
+  llm: Generate a matrix scatter chart (multiple scatter plots in grid layout) using ECharts Shine theme.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label: {en_US: Chart Title, zh_Hans: 图表标题}
+    human_description: {en_US: Chart title., zh_Hans: 图表标题。}
+    llm_description: Chart title.
+    form: llm
+  - name: dimensions
+    type: string
+    required: true
+    label: {en_US: Dimensions (JSON array), zh_Hans: 维度（JSON数组）}
+    human_description: {en_US: 'Dimension names, e.g. ["dim1","dim2","dim3"]', zh_Hans: '维度名称，例如：["维度1","维度2","维度3"]'}
+    llm_description: 'Dimension names as JSON array. N dimensions create N×N scatter matrix.'
+    form: llm
+  - name: data
+    type: string
+    required: true
+    label: {en_US: Data (JSON array), zh_Hans: 数据（JSON数组）}
+    human_description: {en_US: 'Data rows as JSON 2D array, each row has values for all dimensions, e.g. [[1,2,3],[4,5,6]]', zh_Hans: '数据行，二维数组，每行对应各维度的值，例如：[[1,2,3],[4,5,6]]'}
+    llm_description: 'Data as JSON 2D array. Each row corresponds to one data point with values for each dimension.'
+    form: llm
+  - name: width
+    type: number
+    required: false
+    label: {en_US: Width (px), zh_Hans: 宽度}
+    human_description: {en_US: Width in pixels., zh_Hans: 宽度像素。}
+    llm_description: Chart width in pixels.
+    form: form
+    default: 900
+  - name: height
+    type: number
+    required: false
+    label: {en_US: Height (px), zh_Hans: 高度}
+    human_description: {en_US: Height in pixels., zh_Hans: 高度像素。}
+    llm_description: Chart height in pixels.
+    form: form
+    default: 700
+extra:
+  python:
+    source: matrix_scatter_chart.py

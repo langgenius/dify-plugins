@@ -1,0 +1,47 @@
+identity:
+  name: boxplot_chart
+  author: fangyong
+  label:
+    en_US: Boxplot Chart
+    zh_Hans: 盒须图
+description:
+  human:
+    en_US: Generate a boxplot chart with Shine theme.
+    zh_Hans: 生成盒须图，使用 Shine 主题。
+  llm: Generate a boxplot (box-and-whisker) chart using ECharts Shine theme.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label: {en_US: Chart Title, zh_Hans: 图表标题}
+    human_description: {en_US: Chart title., zh_Hans: 图表标题。}
+    llm_description: Chart title.
+    form: llm
+  - name: data
+    type: string
+    required: true
+    label: {en_US: "Data (JSON)", zh_Hans: "数据（JSON）"}
+    human_description:
+      en_US: 'Data as JSON: {"categories":["A","B"],"data":[[min,Q1,median,Q3,max],...]}'
+      zh_Hans: '数据格式：{"categories":["A","B"],"data":[[最小值,Q1,中位数,Q3,最大值],...]}'
+    llm_description: 'Boxplot data as JSON with "categories" array and "data" array of [min,Q1,median,Q3,max] per category.'
+    form: llm
+  - name: width
+    type: number
+    required: false
+    label: {en_US: Width (px), zh_Hans: 宽度}
+    human_description: {en_US: Width in pixels., zh_Hans: 宽度像素。}
+    llm_description: Chart width in pixels.
+    form: form
+    default: 900
+  - name: height
+    type: number
+    required: false
+    label: {en_US: Height (px), zh_Hans: 高度}
+    human_description: {en_US: Height in pixels., zh_Hans: 高度像素。}
+    llm_description: Chart height in pixels.
+    form: form
+    default: 500
+extra:
+  python:
+    source: boxplot_chart.py

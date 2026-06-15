@@ -1,0 +1,45 @@
+identity:
+  name: gl_line3d_chart
+  author: fangyong
+  label:
+    en_US: 3D Line Chart
+    zh_Hans: 3D折线图
+description:
+  human:
+    en_US: Generate a 3D line chart using echarts-gl. Requires echarts-gl.
+    zh_Hans: 生成3D折线图，需要 echarts-gl。
+  llm: Generate a 3D line chart using echarts-gl. Uses echarts-gl for WebGL rendering.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label: {en_US: Chart Title, zh_Hans: 图表标题}
+    human_description: {en_US: Chart title., zh_Hans: 图表标题。}
+    llm_description: Chart title.
+    form: llm
+  - name: data
+    type: string
+    required: true
+    label: {en_US: "Data (JSON)", zh_Hans: "数据（JSON）"}
+    human_description: {en_US: "Chart data in JSON format.", zh_Hans: "图表数据，JSON格式。"}
+    llm_description: "Chart data as JSON."
+    form: llm
+  - name: width
+    type: number
+    required: false
+    label: {en_US: Width (px), zh_Hans: 宽度}
+    human_description: {en_US: Width in pixels., zh_Hans: 宽度像素。}
+    llm_description: Chart width in pixels.
+    form: form
+    default: 900
+  - name: height
+    type: number
+    required: false
+    label: {en_US: Height (px), zh_Hans: 高度}
+    human_description: {en_US: Height in pixels., zh_Hans: 高度像素。}
+    llm_description: Chart height in pixels.
+    form: form
+    default: 600
+extra:
+  python:
+    source: gl_line3d_chart.py

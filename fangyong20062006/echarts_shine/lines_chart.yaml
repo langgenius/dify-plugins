@@ -1,0 +1,47 @@
+identity:
+  name: lines_chart
+  author: fangyong
+  label:
+    en_US: Lines / Path Chart
+    zh_Hans: 路径图
+description:
+  human:
+    en_US: Generate a lines/path chart on map with Shine theme.
+    zh_Hans: 生成路径图（地图飞线），使用 Shine 主题。
+  llm: Generate a lines chart (flight path / flow lines on map) using ECharts Shine theme.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label: {en_US: Chart Title, zh_Hans: 图表标题}
+    human_description: {en_US: Chart title., zh_Hans: 图表标题。}
+    llm_description: Chart title.
+    form: llm
+  - name: data
+    type: string
+    required: true
+    label: {en_US: "Data (JSON)", zh_Hans: "数据（JSON）"}
+    human_description:
+      en_US: 'Data as JSON: {"coords":[[{"name":"City A","coord":[lng,lat]},{"name":"City B","coord":[lng,lat]}],...]}'
+      zh_Hans: '数据：{"coords":[[{"name":"城市A","coord":[经度,纬度]},{"name":"城市B","coord":[经度,纬度]}],...]}'
+    llm_description: 'Lines data as JSON with "coords" array. Each item is a pair of [{name,coord:[lng,lat]},{name,coord:[lng,lat]}].'
+    form: llm
+  - name: width
+    type: number
+    required: false
+    label: {en_US: Width (px), zh_Hans: 宽度}
+    human_description: {en_US: Width in pixels., zh_Hans: 宽度像素。}
+    llm_description: Chart width in pixels.
+    form: form
+    default: 900
+  - name: height
+    type: number
+    required: false
+    label: {en_US: Height (px), zh_Hans: 高度}
+    human_description: {en_US: Height in pixels., zh_Hans: 高度像素。}
+    llm_description: Chart height in pixels.
+    form: form
+    default: 500
+extra:
+  python:
+    source: lines_chart.py

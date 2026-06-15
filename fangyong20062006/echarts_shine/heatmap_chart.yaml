@@ -1,0 +1,83 @@
+identity:
+  name: heatmap_chart
+  author: fangyong
+  label:
+    en_US: Heatmap Chart
+    zh_Hans: 热力图
+description:
+  human:
+    en_US: Generate a heatmap chart with Shine theme.
+    zh_Hans: 生成热力图，使用 Shine 主题。
+  llm: Generate a heatmap chart using ECharts Shine theme.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label:
+      en_US: Chart Title
+      zh_Hans: 图表标题
+    human_description:
+      en_US: The title of the chart.
+      zh_Hans: 图表标题。
+    llm_description: Chart title.
+    form: llm
+  - name: x_categories
+    type: string
+    required: true
+    label:
+      en_US: X Categories (JSON array)
+      zh_Hans: X轴分类（JSON数组）
+    human_description:
+      en_US: 'X-axis categories, e.g. ["Mon","Tue","Wed","Thu","Fri"]'
+      zh_Hans: 'X轴分类，例如：["周一","周二","周三","周四","周五"]'
+    llm_description: X-axis category labels as JSON array.
+    form: llm
+  - name: y_categories
+    type: string
+    required: true
+    label:
+      en_US: Y Categories (JSON array)
+      zh_Hans: Y轴分类（JSON数组）
+    human_description:
+      en_US: 'Y-axis categories, e.g. ["Morning","Afternoon","Evening"]'
+      zh_Hans: 'Y轴分类，例如：["早晨","下午","晚上"]'
+    llm_description: Y-axis category labels as JSON array.
+    form: llm
+  - name: data
+    type: string
+    required: true
+    label:
+      en_US: Data (JSON array)
+      zh_Hans: 数据（JSON数组）
+    human_description:
+      en_US: 'Data as JSON array of [x_index, y_index, value], e.g. [[0,0,5],[0,1,1],[1,0,3]]'
+      zh_Hans: '数据，格式为[x索引, y索引, 值]的二维数组，例如：[[0,0,5],[0,1,1],[1,0,3]]'
+    llm_description: 'Heatmap data as JSON array. Each item is [x_index, y_index, value].'
+    form: llm
+  - name: width
+    type: number
+    required: false
+    label:
+      en_US: Width (px)
+      zh_Hans: 宽度（像素）
+    human_description:
+      en_US: Chart width in pixels, default 900.
+      zh_Hans: 图表宽度（像素），默认900。
+    llm_description: Chart width in pixels.
+    form: form
+    default: 900
+  - name: height
+    type: number
+    required: false
+    label:
+      en_US: Height (px)
+      zh_Hans: 高度（像素）
+    human_description:
+      en_US: Chart height in pixels, default 500.
+      zh_Hans: 图表高度（像素），默认500。
+    llm_description: Chart height in pixels.
+    form: form
+    default: 500
+extra:
+  python:
+    source: heatmap_chart.py

@@ -1,0 +1,82 @@
+identity:
+  name: pie_chart
+  author: fangyong
+  label:
+    en_US: Pie / Donut Chart
+    zh_Hans: 饼图 / 环形图
+description:
+  human:
+    en_US: Generate a pie chart or donut chart with Shine theme.
+    zh_Hans: 生成饼图或环形图，使用 Shine 主题。
+  llm: Generate a pie or donut chart using ECharts Shine theme.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label:
+      en_US: Chart Title
+      zh_Hans: 图表标题
+    human_description:
+      en_US: The title of the chart.
+      zh_Hans: 图表标题。
+    llm_description: The title displayed at the top of the chart.
+    form: llm
+  - name: data
+    type: string
+    required: true
+    label:
+      en_US: Data (JSON array)
+      zh_Hans: 数据（JSON数组）
+    human_description:
+      en_US: 'Data as JSON array, e.g. [{"name":"Direct","value":335},{"name":"Search","value":400}]'
+      zh_Hans: '数据，JSON数组格式，例如：[{"name":"直接访问","value":335},{"name":"搜索引擎","value":400}]'
+    llm_description: 'Pie chart data as JSON array. Each item has "name" and "value".'
+    form: llm
+  - name: donut
+    type: select
+    required: false
+    label:
+      en_US: Donut Style
+      zh_Hans: 环形图样式
+    human_description:
+      en_US: Whether to show as donut chart.
+      zh_Hans: 是否显示为环形图。
+    llm_description: "Whether to use donut style: 'true' or 'false'."
+    form: form
+    default: "false"
+    options:
+      - value: "true"
+        label:
+          en_US: "Yes (Donut)"
+          zh_Hans: "是（环形）"
+      - value: "false"
+        label:
+          en_US: "No (Pie)"
+          zh_Hans: "否（饼图）"
+  - name: width
+    type: number
+    required: false
+    label:
+      en_US: Width (px)
+      zh_Hans: 宽度（像素）
+    human_description:
+      en_US: Chart width in pixels, default 900.
+      zh_Hans: 图表宽度（像素），默认900。
+    llm_description: Chart width in pixels.
+    form: form
+    default: 900
+  - name: height
+    type: number
+    required: false
+    label:
+      en_US: Height (px)
+      zh_Hans: 高度（像素）
+    human_description:
+      en_US: Chart height in pixels, default 500.
+      zh_Hans: 图表高度（像素），默认500。
+    llm_description: Chart height in pixels.
+    form: form
+    default: 500
+extra:
+  python:
+    source: pie_chart.py

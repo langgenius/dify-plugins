@@ -1,0 +1,61 @@
+identity:
+  name: treemap_chart
+  author: fangyong
+  label:
+    en_US: Treemap Chart
+    zh_Hans: 矩形树图
+description:
+  human:
+    en_US: Generate a treemap chart with Shine theme, for showing proportional hierarchical data.
+    zh_Hans: 生成矩形树图，使用 Shine 主题，适合展示比例化的层级数据。
+  llm: Generate a treemap chart using ECharts Shine theme. For showing proportional hierarchical data like market share breakdown.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label:
+      en_US: Chart Title
+      zh_Hans: 图表标题
+    human_description:
+      en_US: The title of the chart.
+      zh_Hans: 图表标题。
+    llm_description: Chart title.
+    form: llm
+  - name: data
+    type: string
+    required: true
+    label:
+      en_US: Data (JSON array)
+      zh_Hans: 数据（JSON数组）
+    human_description:
+      en_US: 'Treemap data as JSON array, e.g. [{"name":"CategoryA","value":100,"children":[{"name":"A1","value":60},{"name":"A2","value":40}]},{"name":"CategoryB","value":80}]'
+      zh_Hans: '矩形树图数据，JSON数组，支持嵌套children，例如：[{"name":"类别A","value":100,"children":[{"name":"A1","value":60}]},{"name":"类别B","value":80}]'
+    llm_description: 'Treemap data as JSON array. Each item has "name", "value", and optional "children" array for nesting.'
+    form: llm
+  - name: width
+    type: number
+    required: false
+    label:
+      en_US: Width (px)
+      zh_Hans: 宽度（像素）
+    human_description:
+      en_US: Chart width in pixels, default 900.
+      zh_Hans: 图表宽度（像素），默认900。
+    llm_description: Chart width in pixels.
+    form: form
+    default: 900
+  - name: height
+    type: number
+    required: false
+    label:
+      en_US: Height (px)
+      zh_Hans: 高度（像素）
+    human_description:
+      en_US: Chart height in pixels, default 500.
+      zh_Hans: 图表高度（像素），默认500。
+    llm_description: Chart height in pixels.
+    form: form
+    default: 500
+extra:
+  python:
+    source: treemap_chart.py

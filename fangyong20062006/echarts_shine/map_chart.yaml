@@ -1,0 +1,52 @@
+identity:
+  name: map_chart
+  author: fangyong
+  label:
+    en_US: Map Chart
+    zh_Hans: 地图
+description:
+  human:
+    en_US: Generate a geographic map chart with Shine theme. Supports China map and all provinces.
+    zh_Hans: 生成地理地图，使用 Shine 主题，支持全国及各省地图。
+  llm: Generate a map chart using ECharts Shine theme with built-in China GeoJSON data.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label: {en_US: Chart Title, zh_Hans: 图表标题}
+    human_description: {en_US: Chart title., zh_Hans: 图表标题。}
+    llm_description: Chart title.
+    form: llm
+  - name: region
+    type: string
+    required: false
+    label: {en_US: Region, zh_Hans: 地区}
+    human_description: {en_US: "Region name: 'China' or a province like '广东'. Default: China", zh_Hans: "地区名称：'China' 或省份名如 '广东'，默认全国"}
+    llm_description: "Region name. 'China' for national map, or province name like '广东','北京' etc."
+    form: llm
+  - name: data
+    type: string
+    required: true
+    label: {en_US: Data (JSON array), zh_Hans: 数据（JSON数组）}
+    human_description: {en_US: 'Map data, e.g. [{"name":"广东","value":100},{"name":"北京","value":80}]', zh_Hans: '地图数据，例如：[{"name":"广东","value":100},{"name":"北京","value":80}]'}
+    llm_description: 'Map data as JSON array. Each item has "name" (region name) and "value".'
+    form: llm
+  - name: width
+    type: number
+    required: false
+    label: {en_US: Width (px), zh_Hans: 宽度}
+    human_description: {en_US: Width in pixels., zh_Hans: 宽度像素。}
+    llm_description: Chart width in pixels.
+    form: form
+    default: 900
+  - name: height
+    type: number
+    required: false
+    label: {en_US: Height (px), zh_Hans: 高度}
+    human_description: {en_US: Height in pixels., zh_Hans: 高度像素。}
+    llm_description: Chart height in pixels.
+    form: form
+    default: 500
+extra:
+  python:
+    source: map_chart.py

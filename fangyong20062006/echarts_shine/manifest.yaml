@@ -1,0 +1,51 @@
+version: 0.0.2
+type: plugin
+author: fangyong20062006
+name: echarts_shine
+label:
+  en_US: ECharts Shine Charts
+  zh_Hans: ECharts 图表生成器（Shine 主题）
+description:
+  en_US: 'Render publication-ready ECharts visualizations in the elegant Shine theme. Covers 30+ chart types — bar, line, pie, scatter, radar, heatmap, funnel, gauge, candlestick, sankey, tree/treemap, sunburst, parallel, boxplot, graph, themeriver, calendar, and 3D/GL charts — plus built-in China national & provincial geo-maps. All ECharts assets are embedded for fully offline rendering.'
+  zh_Hans: '基于优雅的 Shine 主题，一键生成可直接出图的 ECharts 可视化。覆盖 30+ 图表类型：柱状图、折线图、饼图、散点图、雷达图、热力图、漏斗图、仪表盘、K线图、桑基图、树图/矩形树图、旭日图、平行坐标、箱线图、关系图、主题河流、日历图，以及 3D/GL 图表；并内置全国及各省市地理地图。ECharts 资源全部内嵌，出图过程零网络依赖。'
+icon: icon.svg
+tags:
+  - design
+  - utilities
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+    model:
+      enabled: false
+      llm: false
+      text_embedding: false
+      rerank: false
+      tts: false
+      speech2text: false
+      moderation: false
+    node:
+      enabled: false
+    endpoint:
+      enabled: false
+    app:
+      enabled: false
+    storage:
+      enabled: false
+      size: 1024
+plugins:
+  tools:
+    - echarts_shine.yaml
+meta:
+  version: 0.0.2
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: 1.0.0
+created_at: 2026-06-15T00:00:00+08:00
+privacy: PRIVACY.md

@@ -1,0 +1,85 @@
+identity:
+  name: gauge_chart
+  author: fangyong
+  label:
+    en_US: Gauge Chart
+    zh_Hans: 仪表盘
+description:
+  human:
+    en_US: Generate a gauge chart with Shine theme, ideal for KPI display.
+    zh_Hans: 生成仪表盘，使用 Shine 主题，适合KPI展示。
+  llm: Generate a gauge chart using ECharts Shine theme. Useful for showing single metric progress or completion rate.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label:
+      en_US: Chart Title
+      zh_Hans: 图表标题
+    human_description:
+      en_US: The title of the chart.
+      zh_Hans: 图表标题。
+    llm_description: Chart title.
+    form: llm
+  - name: data
+    type: string
+    required: true
+    label:
+      en_US: Gauge Data (JSON array)
+      zh_Hans: 仪表数据（JSON数组）
+    human_description:
+      en_US: 'Data as JSON array, e.g. [{"name":"Completion","value":75}]. Value should be between min and max.'
+      zh_Hans: '仪表数据，JSON数组，例如：[{"name":"完成率","value":75}]，value在min和max之间。'
+    llm_description: 'Gauge data as JSON array. Each item has "name" and "value" (numeric).'
+    form: llm
+  - name: min_value
+    type: number
+    required: false
+    label:
+      en_US: Min Value
+      zh_Hans: 最小值
+    human_description:
+      en_US: Minimum value of the gauge, default 0.
+      zh_Hans: 仪表最小值，默认0。
+    llm_description: Minimum value of the gauge scale.
+    form: form
+    default: 0
+  - name: max_value
+    type: number
+    required: false
+    label:
+      en_US: Max Value
+      zh_Hans: 最大值
+    human_description:
+      en_US: Maximum value of the gauge, default 100.
+      zh_Hans: 仪表最大值，默认100。
+    llm_description: Maximum value of the gauge scale.
+    form: form
+    default: 100
+  - name: width
+    type: number
+    required: false
+    label:
+      en_US: Width (px)
+      zh_Hans: 宽度（像素）
+    human_description:
+      en_US: Chart width in pixels, default 900.
+      zh_Hans: 图表宽度（像素），默认900。
+    llm_description: Chart width in pixels.
+    form: form
+    default: 900
+  - name: height
+    type: number
+    required: false
+    label:
+      en_US: Height (px)
+      zh_Hans: 高度（像素）
+    human_description:
+      en_US: Chart height in pixels, default 500.
+      zh_Hans: 图表高度（像素），默认500。
+    llm_description: Chart height in pixels.
+    form: form
+    default: 500
+extra:
+  python:
+    source: gauge_chart.py

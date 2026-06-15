@@ -1,0 +1,72 @@
+identity:
+  name: radar_chart
+  author: fangyong
+  label:
+    en_US: Radar Chart
+    zh_Hans: 雷达图
+description:
+  human:
+    en_US: Generate a radar chart with Shine theme.
+    zh_Hans: 生成雷达图，使用 Shine 主题。
+  llm: Generate a radar chart using ECharts Shine theme.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label:
+      en_US: Chart Title
+      zh_Hans: 图表标题
+    human_description:
+      en_US: The title of the chart.
+      zh_Hans: 图表标题。
+    llm_description: Chart title.
+    form: llm
+  - name: indicators
+    type: string
+    required: true
+    label:
+      en_US: Indicators (JSON array)
+      zh_Hans: 指标（JSON数组）
+    human_description:
+      en_US: 'Radar indicators as JSON array, e.g. [{"name":"Sales","max":100},{"name":"Marketing","max":100}]'
+      zh_Hans: '雷达指标，JSON数组，例如：[{"name":"销售","max":100},{"name":"营销","max":100}]'
+    llm_description: 'Radar indicators as JSON array. Each item has "name" and "max".'
+    form: llm
+  - name: series_data
+    type: string
+    required: true
+    label:
+      en_US: Series Data (JSON)
+      zh_Hans: 数据系列（JSON）
+    human_description:
+      en_US: 'Series as JSON array, e.g. [{"name":"Product A","value":[80,70,90,60,85]}]'
+      zh_Hans: '数据系列，JSON数组，例如：[{"name":"产品A","value":[80,70,90,60,85]}]'
+    llm_description: 'Series data as JSON array. Each item has "name" and "value" (array matching indicators order).'
+    form: llm
+  - name: width
+    type: number
+    required: false
+    label:
+      en_US: Width (px)
+      zh_Hans: 宽度（像素）
+    human_description:
+      en_US: Chart width in pixels, default 900.
+      zh_Hans: 图表宽度（像素），默认900。
+    llm_description: Chart width in pixels.
+    form: form
+    default: 900
+  - name: height
+    type: number
+    required: false
+    label:
+      en_US: Height (px)
+      zh_Hans: 高度（像素）
+    human_description:
+      en_US: Chart height in pixels, default 500.
+      zh_Hans: 图表高度（像素），默认500。
+    llm_description: Chart height in pixels.
+    form: form
+    default: 500
+extra:
+  python:
+    source: radar_chart.py

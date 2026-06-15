@@ -1,0 +1,47 @@
+identity:
+  name: parallel_chart
+  author: fangyong
+  label:
+    en_US: Parallel Coordinates Chart
+    zh_Hans: 平行坐标系
+description:
+  human:
+    en_US: Generate a parallel coordinates chart with Shine theme.
+    zh_Hans: 生成平行坐标系，使用 Shine 主题。
+  llm: Generate a parallel coordinates chart using ECharts Shine theme. Good for multi-dimensional data analysis.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label: {en_US: Chart Title, zh_Hans: 图表标题}
+    human_description: {en_US: Chart title., zh_Hans: 图表标题。}
+    llm_description: Chart title.
+    form: llm
+  - name: data
+    type: string
+    required: true
+    label: {en_US: "Data (JSON)", zh_Hans: "数据（JSON）"}
+    human_description:
+      en_US: 'Data as JSON: {"dimensions":["dim1","dim2","dim3"],"data":[[v1,v2,v3],[v1,v2,v3],...]}'
+      zh_Hans: '数据：{"dimensions":["维度1","维度2","维度3"],"data":[[v1,v2,v3],[v1,v2,v3],...]}'
+    llm_description: 'Parallel data as JSON with "dimensions" array and "data" array of value arrays.'
+    form: llm
+  - name: width
+    type: number
+    required: false
+    label: {en_US: Width (px), zh_Hans: 宽度}
+    human_description: {en_US: Width in pixels., zh_Hans: 宽度像素。}
+    llm_description: Chart width in pixels.
+    form: form
+    default: 900
+  - name: height
+    type: number
+    required: false
+    label: {en_US: Height (px), zh_Hans: 高度}
+    human_description: {en_US: Height in pixels., zh_Hans: 高度像素。}
+    llm_description: Chart height in pixels.
+    form: form
+    default: 500
+extra:
+  python:
+    source: parallel_chart.py

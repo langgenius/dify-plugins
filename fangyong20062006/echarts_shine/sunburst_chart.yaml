@@ -1,0 +1,47 @@
+identity:
+  name: sunburst_chart
+  author: fangyong
+  label:
+    en_US: Sunburst Chart
+    zh_Hans: 旭日图
+description:
+  human:
+    en_US: Generate a sunburst chart with Shine theme.
+    zh_Hans: 生成旭日图，使用 Shine 主题。
+  llm: Generate a sunburst chart using ECharts Shine theme.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label: {en_US: Chart Title, zh_Hans: 图表标题}
+    human_description: {en_US: Chart title., zh_Hans: 图表标题。}
+    llm_description: Chart title.
+    form: llm
+  - name: data
+    type: string
+    required: true
+    label: {en_US: "Data (JSON)", zh_Hans: "数据（JSON）"}
+    human_description:
+      en_US: 'Nested data as JSON array: [{"name":"A","value":10,"children":[{"name":"A1","value":6},{"name":"A2","value":4}]}]'
+      zh_Hans: '嵌套数据：[{"name":"A","value":10,"children":[{"name":"A1","value":6},{"name":"A2","value":4}]}]'
+    llm_description: 'Sunburst data as nested JSON array. Each node has "name","value", and optional "children".'
+    form: llm
+  - name: width
+    type: number
+    required: false
+    label: {en_US: Width (px), zh_Hans: 宽度}
+    human_description: {en_US: Width in pixels., zh_Hans: 宽度像素。}
+    llm_description: Chart width in pixels.
+    form: form
+    default: 900
+  - name: height
+    type: number
+    required: false
+    label: {en_US: Height (px), zh_Hans: 高度}
+    human_description: {en_US: Height in pixels., zh_Hans: 高度像素。}
+    llm_description: Chart height in pixels.
+    form: form
+    default: 500
+extra:
+  python:
+    source: sunburst_chart.py

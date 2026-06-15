@@ -1,0 +1,49 @@
+identity:
+  author: fangyong
+  name: echarts_shine
+  label:
+    en_US: ECharts Shine Charts (Online)
+    zh_Hans: ECharts 图表生成器（Shine 主题·在线版）
+  description:
+    en_US: '[Online build] Full ECharts visualization suite in the Shine theme — 30+ chart types including 3D/GL charts and built-in China geo-maps. Chart assets are embedded for offline rendering.'
+    zh_Hans: 【在线版】完整 ECharts 可视化套件，Shine 主题，覆盖 30+ 图表类型（含 3D/GL 图表）并内置全国及各省市地图；ECharts 资源内嵌，出图零网络依赖。
+  icon: icon.svg
+  tags:
+    - utilities
+extra:
+  python:
+    source: echarts_shine.py
+tools:
+  # ── 基础图表 ──────────────────────────────
+  - bar_chart.yaml
+  - line_chart.yaml
+  - pie_chart.yaml
+  - scatter_chart.yaml
+  - radar_chart.yaml
+  - heatmap_chart.yaml
+  - funnel_chart.yaml
+  - gauge_chart.yaml
+  - candlestick_chart.yaml
+  - sankey_chart.yaml
+  - tree_chart.yaml
+  - treemap_chart.yaml
+  # ── 扩展图表 ──────────────────────────────
+  - map_chart.yaml
+  - boxplot_chart.yaml
+  - graph_chart.yaml
+  - lines_chart.yaml
+  - sunburst_chart.yaml
+  - parallel_chart.yaml
+  - pictorial_bar_chart.yaml
+  - themeriver_chart.yaml
+  - calendar_chart.yaml
+  - matrix_scatter_chart.yaml
+  - chord_chart.yaml
+  # ── GL / 3D 图表 ──────────────────────────
+  - gl_bar3d_chart.yaml
+  - gl_scatter3d_chart.yaml
+  - gl_surface_chart.yaml
+  - gl_map3d_chart.yaml
+  - gl_line3d_chart.yaml
+  - gl_scatter_gl_chart.yaml
+  - gl_graph_gl_chart.yaml

@@ -1,0 +1,61 @@
+identity:
+  name: funnel_chart
+  author: fangyong
+  label:
+    en_US: Funnel Chart
+    zh_Hans: 漏斗图
+description:
+  human:
+    en_US: Generate a funnel chart with Shine theme, ideal for conversion analysis.
+    zh_Hans: 生成漏斗图，使用 Shine 主题，适合转化率分析。
+  llm: Generate a funnel chart using ECharts Shine theme. Useful for showing conversion rates or process stages.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label:
+      en_US: Chart Title
+      zh_Hans: 图表标题
+    human_description:
+      en_US: The title of the chart.
+      zh_Hans: 图表标题。
+    llm_description: Chart title.
+    form: llm
+  - name: data
+    type: string
+    required: true
+    label:
+      en_US: Data (JSON array)
+      zh_Hans: 数据（JSON数组）
+    human_description:
+      en_US: 'Data as JSON array ordered from largest to smallest, e.g. [{"name":"Visit","value":100},{"name":"Click","value":80},{"name":"Purchase","value":40}]'
+      zh_Hans: '数据，从大到小排列，例如：[{"name":"访问","value":100},{"name":"点击","value":80},{"name":"购买","value":40}]'
+    llm_description: 'Funnel data as JSON array ordered largest to smallest. Each item has "name" and "value".'
+    form: llm
+  - name: width
+    type: number
+    required: false
+    label:
+      en_US: Width (px)
+      zh_Hans: 宽度（像素）
+    human_description:
+      en_US: Chart width in pixels, default 900.
+      zh_Hans: 图表宽度（像素），默认900。
+    llm_description: Chart width in pixels.
+    form: form
+    default: 900
+  - name: height
+    type: number
+    required: false
+    label:
+      en_US: Height (px)
+      zh_Hans: 高度（像素）
+    human_description:
+      en_US: Chart height in pixels, default 500.
+      zh_Hans: 图表高度（像素），默认500。
+    llm_description: Chart height in pixels.
+    form: form
+    default: 500
+extra:
+  python:
+    source: funnel_chart.py

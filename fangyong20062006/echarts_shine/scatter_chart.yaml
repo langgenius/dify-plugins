@@ -1,0 +1,83 @@
+identity:
+  name: scatter_chart
+  author: fangyong
+  label:
+    en_US: Scatter Chart
+    zh_Hans: 散点图
+description:
+  human:
+    en_US: Generate a scatter chart with Shine theme.
+    zh_Hans: 生成散点图，使用 Shine 主题。
+  llm: Generate a scatter chart using ECharts Shine theme.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label:
+      en_US: Chart Title
+      zh_Hans: 图表标题
+    human_description:
+      en_US: The title of the chart.
+      zh_Hans: 图表标题。
+    llm_description: Chart title.
+    form: llm
+  - name: series_data
+    type: string
+    required: true
+    label:
+      en_US: Series Data (JSON)
+      zh_Hans: 数据系列（JSON）
+    human_description:
+      en_US: 'Series data as JSON, e.g. [{"name":"Group A","data":[[10,20],[15,30],[25,10]]}]'
+      zh_Hans: '数据系列，JSON格式，例如：[{"name":"组A","data":[[10,20],[15,30],[25,10]]}]'
+    llm_description: 'Scatter data as JSON array. Each series has "name" and "data" (array of [x,y] pairs). Optionally add "symbolSize" per series.'
+    form: llm
+  - name: x_name
+    type: string
+    required: false
+    label:
+      en_US: X Axis Name
+      zh_Hans: X轴名称
+    human_description:
+      en_US: X axis label name.
+      zh_Hans: X轴标签名称。
+    llm_description: X axis name.
+    form: llm
+  - name: y_name
+    type: string
+    required: false
+    label:
+      en_US: Y Axis Name
+      zh_Hans: Y轴名称
+    human_description:
+      en_US: Y axis label name.
+      zh_Hans: Y轴标签名称。
+    llm_description: Y axis name.
+    form: llm
+  - name: width
+    type: number
+    required: false
+    label:
+      en_US: Width (px)
+      zh_Hans: 宽度（像素）
+    human_description:
+      en_US: Chart width in pixels, default 900.
+      zh_Hans: 图表宽度（像素），默认900。
+    llm_description: Chart width in pixels.
+    form: form
+    default: 900
+  - name: height
+    type: number
+    required: false
+    label:
+      en_US: Height (px)
+      zh_Hans: 高度（像素）
+    human_description:
+      en_US: Chart height in pixels, default 500.
+      zh_Hans: 图表高度（像素），默认500。
+    llm_description: Chart height in pixels.
+    form: form
+    default: 500
+extra:
+  python:
+    source: scatter_chart.py

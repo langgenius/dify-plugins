@@ -1,0 +1,72 @@
+identity:
+  name: sankey_chart
+  author: fangyong
+  label:
+    en_US: Sankey Chart
+    zh_Hans: 桑基图
+description:
+  human:
+    en_US: Generate a Sankey flow diagram with Shine theme, for showing flow relationships.
+    zh_Hans: 生成桑基图，使用 Shine 主题，适合展示流向关系。
+  llm: Generate a Sankey diagram using ECharts Shine theme. For showing data flow, energy flow, or process flow.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label:
+      en_US: Chart Title
+      zh_Hans: 图表标题
+    human_description:
+      en_US: The title of the chart.
+      zh_Hans: 图表标题。
+    llm_description: Chart title.
+    form: llm
+  - name: nodes
+    type: string
+    required: true
+    label:
+      en_US: Nodes (JSON array)
+      zh_Hans: 节点（JSON数组）
+    human_description:
+      en_US: 'Nodes as JSON array, e.g. [{"name":"A"},{"name":"B"},{"name":"C"}]'
+      zh_Hans: '节点，JSON数组，例如：[{"name":"来源A"},{"name":"来源B"},{"name":"目标C"}]'
+    llm_description: 'Sankey nodes as JSON array. Each item has "name".'
+    form: llm
+  - name: links
+    type: string
+    required: true
+    label:
+      en_US: Links (JSON array)
+      zh_Hans: 连接（JSON数组）
+    human_description:
+      en_US: 'Links as JSON array, e.g. [{"source":"A","target":"C","value":20},{"source":"B","target":"C","value":30}]'
+      zh_Hans: '连接，JSON数组，例如：[{"source":"来源A","target":"目标C","value":20}]'
+    llm_description: 'Sankey links as JSON array. Each item has "source", "target", and "value".'
+    form: llm
+  - name: width
+    type: number
+    required: false
+    label:
+      en_US: Width (px)
+      zh_Hans: 宽度（像素）
+    human_description:
+      en_US: Chart width in pixels, default 900.
+      zh_Hans: 图表宽度（像素），默认900。
+    llm_description: Chart width in pixels.
+    form: form
+    default: 900
+  - name: height
+    type: number
+    required: false
+    label:
+      en_US: Height (px)
+      zh_Hans: 高度（像素）
+    human_description:
+      en_US: Chart height in pixels, default 500.
+      zh_Hans: 图表高度（像素），默认500。
+    llm_description: Chart height in pixels.
+    form: form
+    default: 500
+extra:
+  python:
+    source: sankey_chart.py

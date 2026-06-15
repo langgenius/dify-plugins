@@ -1,0 +1,114 @@
+identity:
+  name: line_chart
+  author: fangyong
+  label:
+    en_US: Line Chart
+    zh_Hans: 折线图
+description:
+  human:
+    en_US: Generate a line chart (supports area fill and smooth curve) with Shine theme.
+    zh_Hans: 生成折线图（支持面积填充和平滑曲线），使用 Shine 主题。
+  llm: Generate a line chart using ECharts Shine theme. Supports smooth lines and area fill.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label:
+      en_US: Chart Title
+      zh_Hans: 图表标题
+    human_description:
+      en_US: The title of the chart.
+      zh_Hans: 图表标题。
+    llm_description: The title displayed at the top of the chart.
+    form: llm
+  - name: categories
+    type: string
+    required: true
+    label:
+      en_US: Categories (JSON array)
+      zh_Hans: 分类标签（JSON数组）
+    human_description:
+      en_US: 'X-axis categories as JSON array, e.g. ["Jan","Feb","Mar"]'
+      zh_Hans: 'X轴分类标签，JSON数组格式，例如：["一月","二月","三月"]'
+    llm_description: 'X-axis labels as JSON array string.'
+    form: llm
+  - name: series_data
+    type: string
+    required: true
+    label:
+      en_US: Series Data (JSON)
+      zh_Hans: 数据系列（JSON）
+    human_description:
+      en_US: 'Series data as JSON array, e.g. [{"name":"Revenue","data":[150,230,224,218]}]'
+      zh_Hans: '数据系列，JSON数组，例如：[{"name":"收入","data":[150,230,224,218]}]'
+    llm_description: 'Series data as JSON array. Each item has "name" and "data".'
+    form: llm
+  - name: smooth
+    type: select
+    required: false
+    label:
+      en_US: Smooth Curve
+      zh_Hans: 平滑曲线
+    human_description:
+      en_US: Whether to use smooth curves.
+      zh_Hans: 是否使用平滑曲线。
+    llm_description: "Whether lines should be smooth: 'true' or 'false'."
+    form: form
+    default: "false"
+    options:
+      - value: "true"
+        label:
+          en_US: "Yes"
+          zh_Hans: "是"
+      - value: "false"
+        label:
+          en_US: "No"
+          zh_Hans: "否"
+  - name: area
+    type: select
+    required: false
+    label:
+      en_US: Area Fill
+      zh_Hans: 面积填充
+    human_description:
+      en_US: Whether to fill area under lines.
+      zh_Hans: 是否填充折线下方面积。
+    llm_description: "Whether to show area fill under lines: 'true' or 'false'."
+    form: form
+    default: "false"
+    options:
+      - value: "true"
+        label:
+          en_US: "Yes"
+          zh_Hans: "是"
+      - value: "false"
+        label:
+          en_US: "No"
+          zh_Hans: "否"
+  - name: width
+    type: number
+    required: false
+    label:
+      en_US: Width (px)
+      zh_Hans: 宽度（像素）
+    human_description:
+      en_US: Chart width in pixels, default 900.
+      zh_Hans: 图表宽度（像素），默认900。
+    llm_description: Chart width in pixels.
+    form: form
+    default: 900
+  - name: height
+    type: number
+    required: false
+    label:
+      en_US: Height (px)
+      zh_Hans: 高度（像素）
+    human_description:
+      en_US: Chart height in pixels, default 500.
+      zh_Hans: 图表高度（像素），默认500。
+    llm_description: Chart height in pixels.
+    form: form
+    default: 500
+extra:
+  python:
+    source: line_chart.py

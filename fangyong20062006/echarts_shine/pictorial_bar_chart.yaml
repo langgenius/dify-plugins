@@ -1,0 +1,47 @@
+identity:
+  name: pictorial_bar_chart
+  author: fangyong
+  label:
+    en_US: Pictorial Bar Chart
+    zh_Hans: 象形柱图
+description:
+  human:
+    en_US: Generate a pictorial bar chart with Shine theme.
+    zh_Hans: 生成象形柱图，使用 Shine 主题。
+  llm: Generate a pictorial bar chart using ECharts Shine theme. Supports symbol shapes like circle, arrow, diamond.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label: {en_US: Chart Title, zh_Hans: 图表标题}
+    human_description: {en_US: Chart title., zh_Hans: 图表标题。}
+    llm_description: Chart title.
+    form: llm
+  - name: data
+    type: string
+    required: true
+    label: {en_US: "Data (JSON)", zh_Hans: "数据（JSON）"}
+    human_description:
+      en_US: 'Data as JSON: {"categories":["A","B","C"],"values":[10,20,15],"symbol":"circle"}'
+      zh_Hans: '数据：{"categories":["A","B","C"],"values":[10,20,15],"symbol":"circle'
+    llm_description: 'Pictorial bar data as JSON with "categories","values" arrays and "symbol" (circle/rect/roundRect/triangle/diamond/pin/arrow).'
+    form: llm
+  - name: width
+    type: number
+    required: false
+    label: {en_US: Width (px), zh_Hans: 宽度}
+    human_description: {en_US: Width in pixels., zh_Hans: 宽度像素。}
+    llm_description: Chart width in pixels.
+    form: form
+    default: 900
+  - name: height
+    type: number
+    required: false
+    label: {en_US: Height (px), zh_Hans: 高度}
+    human_description: {en_US: Height in pixels., zh_Hans: 高度像素。}
+    llm_description: Chart height in pixels.
+    form: form
+    default: 500
+extra:
+  python:
+    source: pictorial_bar_chart.py
