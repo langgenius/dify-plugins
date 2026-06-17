@@ -1,0 +1,52 @@
+version: 0.0.2
+type: plugin
+author: fangyong20062006
+name: webcrawler
+label:
+  en_US: Recursive Web Crawler
+  zh_Hans: 递归网页爬虫（结构化抓取）
+description:
+  en_US: 'Recursively crawl web pages from a starting URL and depth, returning structured JSON for each page (title, main content as Markdown, links, and metadata). Supports same-domain restriction, max-page limits, and URL include patterns; tolerant of self-signed intranet certificates.'
+  zh_Hans: '从起始 URL 按设定深度递归爬取网页，逐页返回结构化 JSON（标题、正文 Markdown、链接与元数据）。支持同域限制、最大页数上限与 URL 包含规则；兼容内网自签名证书。'
+icon: icon.svg
+tags:
+  - utilities
+  - productivity
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+    model:
+      enabled: false
+      llm: false
+      text_embedding: false
+      rerank: false
+      tts: false
+      speech2text: false
+      moderation: false
+    node:
+      enabled: false
+    endpoint:
+      enabled: false
+    app:
+      enabled: false
+    storage:
+      enabled: false
+      size: 1024
+plugins:
+  tools:
+    - webcrawler.yaml
+meta:
+  version: 0.0.2
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: 1.0.0
+created_at: 2025-05-19T00:00:00+08:00
+privacy: PRIVACY.md
+verified: false

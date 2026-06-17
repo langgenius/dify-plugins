@@ -1,0 +1,17 @@
+identity:
+  author: fangyong
+  name: webcrawler
+  label:
+    en_US: Recursive Web Crawler (Online)
+    zh_Hans: 递归网页爬虫（结构化抓取·在线版）
+  description:
+    en_US: '[Online build] Recursively crawl web pages, returning structured JSON (title, content, links, metadata).'
+    zh_Hans: 【在线版】从起始 URL 按深度递归爬取网页，逐页返回结构化 JSON（标题、正文、链接、元数据）。
+  icon: icon.svg
+  tags:
+    - utilities
+extra:
+  python:
+    source: webcrawler.py
+tools:
+  - crawl.yaml

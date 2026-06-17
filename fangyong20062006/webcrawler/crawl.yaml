@@ -1,0 +1,78 @@
+identity:
+  name: crawl
+  author: fangyong
+  label:
+    en_US: Crawl
+    zh_Hans: 爬取网页
+description:
+  human:
+    en_US: Recursively crawl web pages starting from a URL up to the specified depth. Returns structured JSON with title, text content, links and metadata for each page.
+    zh_Hans: 从指定 URL 开始递归爬取网页，支持设置爬取深度。返回每个页面的标题、正文、链接和元数据等结构化 JSON 数据。
+  llm: Crawl one or more web pages recursively. Input a start URL and depth (0=single page, 1=start page + all linked pages, 2=two levels deep, etc.). Returns a JSON array where each element contains url, title, text, links, status_code, and crawled_at fields.
+parameters:
+  - name: url
+    type: string
+    required: true
+    label:
+      en_US: Start URL
+      zh_Hans: 起始 URL
+    human_description:
+      en_US: The URL to start crawling from (e.g. http://intranet.example.com/docs).
+      zh_Hans: 爬取起始 URL，例如 http://intranet.example.com/docs。
+    llm_description: The starting URL for crawling. Must include the protocol (http:// or https://).
+    form: llm
+
+  - name: depth
+    type: number
+    required: false
+    default: 1
+    label:
+      en_US: Depth
+      zh_Hans: 爬取深度
+    human_description:
+      en_US: "Crawl depth: 0 = start page only, 1 = start page + direct links, 2 = two levels. Default: 1. Max: 3."
+      zh_Hans: "爬取深度：0=仅起始页，1=起始页+直接链接，2=两层。默认 1，最大 3。"
+    llm_description: "Depth of recursive crawling. 0 means only the start URL. 1 means start URL plus all pages it links to. Maximum allowed is 3."
+    form: llm
+
+  - name: max_pages
+    type: number
+    required: false
+    default: 20
+    label:
+      en_US: Max Pages
+      zh_Hans: 最大页数
+    human_description:
+      en_US: Maximum number of pages to crawl in total. Default 20, max 100.
+      zh_Hans: 最多爬取的页面数量，默认 20，最大 100。
+    llm_description: Maximum total pages to crawl. Prevents runaway crawls on large sites. Default is 20.
+    form: llm
+
+  - name: same_domain_only
+    type: boolean
+    required: false
+    default: true
+    label:
+      en_US: Same Domain Only
+      zh_Hans: 仅限同域名
+    human_description:
+      en_US: Only follow links within the same domain as the start URL. Recommended for intranet crawling.
+      zh_Hans: 只跟踪与起始 URL 相同域名的链接，内网爬取推荐开启。
+    llm_description: If true, only crawl pages on the same domain as the start URL. Default true.
+    form: llm
+
+  - name: include_pattern
+    type: string
+    required: false
+    label:
+      en_US: Include URL Pattern
+      zh_Hans: URL 包含过滤
+    human_description:
+      en_US: Only crawl URLs containing this substring (e.g. /docs/ to limit to documentation pages). Leave empty to crawl all.
+      zh_Hans: 只爬取 URL 中包含该字符串的页面（如 /docs/ 限定文档页），留空则不过滤。
+    llm_description: Optional substring filter. Only URLs containing this string will be crawled.
+    form: llm
+
+extra:
+  python:
+    source: crawl.py
