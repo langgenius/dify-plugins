@@ -1,0 +1,70 @@
+identity:
+  name: smart_summary
+  author: fangyong
+  label:
+    en_US: Smart Summary
+    zh_Hans: 智能摘要
+description:
+  human:
+    en_US: Convert a large JSON array into a compact statistical summary with grouping, counting and top-N, drastically reducing token usage.
+    zh_Hans: 把大JSON数组转成紧凑的统计摘要（分组/计数/TopN），极大减少Token，适合需要总览统计的场景。
+  llm: Aggregates a large JSON array into statistical summaries (counts, group-by, top values). Use when user wants overview or statistics rather than raw records.
+parameters:
+  - name: json_data
+    type: string
+    required: true
+    label:
+      en_US: JSON Data
+      zh_Hans: JSON数据
+    human_description:
+      en_US: Raw JSON string (array of objects).
+      zh_Hans: 原始JSON字符串（对象数组）。
+    llm_description: Raw JSON string array to summarize.
+    form: llm
+  - name: group_by_field
+    type: string
+    required: false
+    label:
+      en_US: Group By Field
+      zh_Hans: 分组字段
+    human_description:
+      en_US: 'Field name to group and count by, e.g. "status" or "type".'
+      zh_Hans: 按哪个字段分组计数，如 status 或 type。
+    llm_description: Field to group records by. Returns count per group value.
+    form: llm
+  - name: sum_fields
+    type: string
+    required: false
+    label:
+      en_US: Sum Fields
+      zh_Hans: 求和字段
+    human_description:
+      en_US: 'Comma-separated numeric fields to sum, e.g. "amount,quantity".'
+      zh_Hans: 需要求和的数值字段，逗号分隔，如 amount,quantity。
+    llm_description: Comma-separated numeric field names to aggregate (sum and avg).
+    form: llm
+  - name: top_n_field
+    type: string
+    required: false
+    label:
+      en_US: Top-N Field
+      zh_Hans: TopN字段
+    human_description:
+      en_US: Return top 5 records by this numeric field (descending).
+      zh_Hans: 按此数值字段降序取Top5条记录。
+    llm_description: Numeric field to sort by for top-5 records.
+    form: llm
+  - name: data_path
+    type: string
+    required: false
+    label:
+      en_US: Data Path
+      zh_Hans: 数据路径
+    human_description:
+      en_US: Dot path to array in JSON. Leave empty if root is array.
+      zh_Hans: 记录数组在JSON中的路径，根节点是数组留空。
+    llm_description: Dot-path to array within nested JSON.
+    form: llm
+extra:
+  python:
+    source: smart_summary.py

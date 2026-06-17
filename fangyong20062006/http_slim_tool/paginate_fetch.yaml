@@ -1,0 +1,116 @@
+identity:
+  name: paginate_fetch
+  author: fangyong
+  label:
+    en_US: Paginate Fetch
+    zh_Hans: 分页拉取
+description:
+  human:
+    en_US: Fetch paginated API data page by page and merge results, supporting offset/page/cursor pagination modes.
+    zh_Hans: 分页拉取接口数据并合并，支持 offset/page/cursor 三种分页模式，自动停止并返回合并结果。
+  llm: Fetches multiple pages from a paginated HTTP API and merges results into a single array. Supports offset-based, page-based, and cursor-based pagination.
+parameters:
+  - name: base_url
+    type: string
+    required: true
+    label:
+      en_US: Base URL
+      zh_Hans: 接口地址
+    human_description:
+      en_US: The API endpoint URL (without pagination params).
+      zh_Hans: 接口URL（不含分页参数）。
+    llm_description: API endpoint URL without pagination parameters.
+    form: llm
+  - name: pagination_mode
+    type: select
+    required: true
+    label:
+      en_US: Pagination Mode
+      zh_Hans: 分页模式
+    human_description:
+      en_US: 'offset: use offset+limit. page: use page+pageSize. cursor: use cursor/nextToken.'
+      zh_Hans: 'offset: 用offset+limit分页。page: 用page+pageSize分页。cursor: 用cursor/nextToken分页。'
+    llm_description: 'Pagination style: offset, page, or cursor.'
+    options:
+      - value: offset
+        label:
+          en_US: Offset (offset + limit)
+          zh_Hans: Offset分页
+      - value: page
+        label:
+          en_US: Page (page + pageSize)
+          zh_Hans: 页码分页
+      - value: cursor
+        label:
+          en_US: Cursor / nextToken
+          zh_Hans: 游标分页
+    form: llm
+  - name: page_size
+    type: number
+    required: false
+    label:
+      en_US: Page Size
+      zh_Hans: 每页条数
+    human_description:
+      en_US: Records per page (default 20).
+      zh_Hans: 每页记录数，默认20。
+    llm_description: Number of records per page. Default 20.
+    form: llm
+  - name: max_pages
+    type: number
+    required: false
+    label:
+      en_US: Max Pages
+      zh_Hans: 最大页数
+    human_description:
+      en_US: Stop after this many pages (default 5, max 20).
+      zh_Hans: 最多拉取多少页，默认5页，最多20页，防止失控。
+    llm_description: Maximum pages to fetch. Default 5.
+    form: llm
+  - name: data_path
+    type: string
+    required: false
+    label:
+      en_US: Data Path
+      zh_Hans: 数据路径
+    human_description:
+      en_US: 'Dot path to the records array, e.g. "data.list". Leave empty if root is array.'
+      zh_Hans: 记录数组在JSON中的路径，如 data.list，根节点是数组则留空。
+    llm_description: Dot-separated path to records array within response JSON.
+    form: llm
+  - name: next_cursor_path
+    type: string
+    required: false
+    label:
+      en_US: Next Cursor Path
+      zh_Hans: 下页游标路径
+    human_description:
+      en_US: 'For cursor mode only. Dot path to nextToken/cursor in response, e.g. "data.nextCursor".'
+      zh_Hans: 仅游标模式使用。下一页游标在JSON中的路径，如 data.nextCursor。
+    llm_description: Dot-path to next page cursor/token in response. For cursor mode only.
+    form: llm
+  - name: extra_params
+    type: string
+    required: false
+    label:
+      en_US: Extra Params (JSON)
+      zh_Hans: 额外参数(JSON)
+    human_description:
+      en_US: 'Extra query params as JSON object, e.g. {"token":"abc","type":"1"}'
+      zh_Hans: '额外固定查询参数，JSON格式，如 {"token":"abc","type":"1"}'
+    llm_description: 'Additional fixed query parameters as JSON object string, e.g. {"token":"abc"}'
+    form: llm
+  - name: keep_fields
+    type: string
+    required: false
+    label:
+      en_US: Fields to Keep
+      zh_Hans: 保留字段
+    human_description:
+      en_US: Comma-separated fields to keep from each record (optional, keeps all if empty).
+      zh_Hans: 每条记录保留的字段，逗号分隔，留空保留全部字段。
+    llm_description: Comma-separated field names to retain. Optional.
+    form: llm
+extra:
+  python:
+    source: paginate_fetch.py

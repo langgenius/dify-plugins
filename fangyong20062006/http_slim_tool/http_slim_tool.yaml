@@ -1,0 +1,19 @@
+identity:
+  author: fangyong
+  name: http_slim_tool
+  label:
+    en_US: HTTP Big-Data Slimmer for LLM (Online)
+    zh_Hans: HTTP 大数据精简工具（防 Token 超限·在线版）
+  description:
+    en_US: '[Online build] Slim large HTTP API responses via field filtering, pagination, and summarization to avoid LLM token overflow.'
+    zh_Hans: 【在线版】对 HTTP 接口大响应做字段精简、分页与摘要，规避大模型 Token 超限。
+  icon: icon.svg
+  tags:
+    - utilities
+extra:
+  python:
+    source: http_slim_tool.py
+tools:
+  - slim_fields.yaml
+  - paginate_fetch.yaml
+  - smart_summary.yaml

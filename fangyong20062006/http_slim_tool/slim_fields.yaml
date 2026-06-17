@@ -1,0 +1,59 @@
+identity:
+  name: slim_fields
+  author: fangyong
+  label:
+    en_US: Field Slim
+    zh_Hans: 字段精简
+description:
+  human:
+    en_US: Filter a JSON array to keep only specified fields, reducing token usage.
+    zh_Hans: 从JSON数组中只保留指定字段，大幅减少Token消耗。
+  llm: Given a JSON array string and a comma-separated list of fields to keep, returns a slimmed JSON with only those fields. Use this when HTTP response is too large for LLM context.
+parameters:
+  - name: json_data
+    type: string
+    required: true
+    label:
+      en_US: JSON Data
+      zh_Hans: JSON数据
+    human_description:
+      en_US: The raw JSON string from HTTP response (array of objects).
+      zh_Hans: HTTP接口返回的原始JSON字符串（对象数组）。
+    llm_description: Raw JSON string, typically an array of objects from HTTP API response.
+    form: llm
+  - name: keep_fields
+    type: string
+    required: true
+    label:
+      en_US: Fields to Keep
+      zh_Hans: 保留字段
+    human_description:
+      en_US: 'Comma-separated field names to keep, e.g. "id,name,status,amount"'
+      zh_Hans: 逗号分隔的字段名，例如 id,name,status,amount
+    llm_description: Comma-separated field names to retain from each record.
+    form: llm
+  - name: max_records
+    type: number
+    required: false
+    label:
+      en_US: Max Records
+      zh_Hans: 最大记录数
+    human_description:
+      en_US: Maximum number of records to return (default 50, max 200).
+      zh_Hans: 最多返回多少条记录，默认50，最多200。
+    llm_description: Maximum records to return. Default 50.
+    form: llm
+  - name: data_path
+    type: string
+    required: false
+    label:
+      en_US: Data Path
+      zh_Hans: 数据路径
+    human_description:
+      en_US: 'Dot-separated path to the array in JSON, e.g. "data.list" or "result.records". Leave empty if root is array.'
+      zh_Hans: JSON中数组所在路径，用点号分隔，如 data.list 或 result.records，根节点是数组时留空。
+    llm_description: Dot-path to locate the array within nested JSON. Empty if root is array.
+    form: llm
+extra:
+  python:
+    source: slim_fields.py
