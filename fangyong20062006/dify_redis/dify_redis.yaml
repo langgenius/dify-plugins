@@ -1,0 +1,20 @@
+identity:
+  author: fangyong
+  name: dify_redis
+  label:
+    en_US: Lightweight Cache (Redis-style · Online)
+    zh_Hans: 轻量键值缓存（类 Redis·在线版）
+  description:
+    en_US: '[Online build] In-process key-value cache with Redis-style SET/GET/DEL/EXISTS and TTL, no real Redis server required.'
+    zh_Hans: 【在线版】进程内键值缓存，提供类 Redis 的 SET/GET/DEL/EXISTS 与 TTL 过期，无需外部 Redis 服务器。
+  icon: icon.svg
+  tags:
+    - utilities
+extra:
+  python:
+    source: dify_redis.py
+tools:
+  - redis_set.yaml
+  - redis_get.yaml
+  - redis_delete.yaml
+  - redis_exists.yaml

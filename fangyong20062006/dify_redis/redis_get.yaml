@@ -1,0 +1,26 @@
+identity:
+  name: redis_get
+  author: fangyong
+  label:
+    en_US: Redis GET
+    zh_Hans: 读取缓存
+description:
+  human:
+    en_US: Read a value from the built-in cache by key. Returns the value and remaining TTL. Returns empty if key does not exist or has expired.
+    zh_Hans: 按键名从内置缓存读取值，同时返回剩余过期时间。键不存在或已过期时返回空。
+  llm: Retrieve cached value by key. Returns value, TTL status, and hit/miss result. Use this before expensive LLM calls to check if result is already cached.
+parameters:
+  - name: key
+    type: string
+    required: true
+    label:
+      en_US: Key
+      zh_Hans: 键
+    human_description:
+      en_US: Cache key to look up.
+      zh_Hans: 要查询的缓存键名。
+    llm_description: Cache key to retrieve.
+    form: llm
+extra:
+  python:
+    source: redis_get.py

@@ -1,0 +1,26 @@
+identity:
+  name: redis_exists
+  author: fangyong
+  label:
+    en_US: Redis EXISTS
+    zh_Hans: 检查键是否存在
+description:
+  human:
+    en_US: Check whether a key exists in the cache and has not expired. Also returns remaining TTL and cache statistics.
+    zh_Hans: 检查键是否存在且未过期，同时返回剩余过期时间和缓存整体统计信息。
+  llm: Check if a key exists and is not expired. Returns hit/miss, TTL, and cache stats. Use this for conditional logic before SET or GET.
+parameters:
+  - name: key
+    type: string
+    required: true
+    label:
+      en_US: Key
+      zh_Hans: 键
+    human_description:
+      en_US: Cache key to check.
+      zh_Hans: 要检查的缓存键名。
+    llm_description: Cache key to check for existence.
+    form: llm
+extra:
+  python:
+    source: redis_exists.py

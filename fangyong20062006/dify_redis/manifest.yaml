@@ -1,0 +1,51 @@
+version: 0.0.2
+type: plugin
+author: fangyong20062006
+name: dify_redis
+label:
+  en_US: Lightweight Cache (Redis-style)
+  zh_Hans: 轻量键值缓存（类 Redis）
+description:
+  en_US: 'An in-process key-value cache with Redis-style SET / GET / DEL / EXISTS and TTL expiry — no real Redis server required, ideal for air-gapped intranets. Data is persisted to disk and survives container restarts.'
+  zh_Hans: '进程内键值缓存，提供类 Redis 的 SET / GET / DEL / EXISTS 与 TTL 过期，无需部署真实 Redis 服务器，适合内网隔离环境；数据持久化到磁盘，容器重启后自动恢复。'
+icon: icon.svg
+tags:
+  - utilities
+  - productivity
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+    model:
+      enabled: false
+      llm: false
+      text_embedding: false
+      rerank: false
+      tts: false
+      speech2text: false
+      moderation: false
+    node:
+      enabled: false
+    endpoint:
+      enabled: false
+    app:
+      enabled: false
+    storage:
+      enabled: false
+      size: 1024
+plugins:
+  tools:
+    - dify_redis.yaml
+meta:
+  version: 0.0.2
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: 1.0.0
+created_at: 2026-06-17T00:00:00+08:00
+privacy: PRIVACY.md

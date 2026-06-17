@@ -1,0 +1,26 @@
+identity:
+  name: redis_delete
+  author: fangyong
+  label:
+    en_US: Redis DEL
+    zh_Hans: 删除缓存
+description:
+  human:
+    en_US: Delete a key from the cache. Useful for invalidating stale data when the source has been updated.
+    zh_Hans: 从缓存中删除指定键，适合在数据源更新后主动使缓存失效。
+  llm: Delete a cached key. Returns whether the key existed. Use this to invalidate cache entries after data updates.
+parameters:
+  - name: key
+    type: string
+    required: true
+    label:
+      en_US: Key
+      zh_Hans: 键
+    human_description:
+      en_US: Cache key to delete.
+      zh_Hans: 要删除的缓存键名。
+    llm_description: Cache key to delete.
+    form: llm
+extra:
+  python:
+    source: redis_delete.py

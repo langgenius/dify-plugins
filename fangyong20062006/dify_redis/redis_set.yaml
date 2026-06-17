@@ -1,0 +1,48 @@
+identity:
+  name: redis_set
+  author: fangyong
+  label:
+    en_US: Redis SET
+    zh_Hans: 写入缓存
+description:
+  human:
+    en_US: Write a key-value pair to the built-in cache. Optionally set a TTL in seconds after which the key expires automatically.
+    zh_Hans: 向内置缓存写入键值对，可设置过期时间（秒），到期后自动失效。
+  llm: Store a string value under a key. Use ttl_seconds to set expiry. Returns confirmation with key, value preview and TTL info.
+parameters:
+  - name: key
+    type: string
+    required: true
+    label:
+      en_US: Key
+      zh_Hans: 键
+    human_description:
+      en_US: Cache key string. Use namespaced keys to avoid collision, e.g. user:123:profile
+      zh_Hans: 缓存键名，建议用冒号分层命名避免冲突，如 user:123:profile
+    llm_description: Cache key. Use namespaced format like entity:id:field.
+    form: llm
+  - name: value
+    type: string
+    required: true
+    label:
+      en_US: Value
+      zh_Hans: 值
+    human_description:
+      en_US: String value to store. JSON strings are fine.
+      zh_Hans: 要存储的字符串值，JSON 字符串也可以直接存入。
+    llm_description: String value to cache. Can be plain text or JSON string.
+    form: llm
+  - name: ttl_seconds
+    type: number
+    required: false
+    label:
+      en_US: TTL (seconds)
+      zh_Hans: 过期时间（秒）
+    human_description:
+      en_US: Expiry time in seconds. Leave empty or set to 0 for no expiry.
+      zh_Hans: 过期时间，单位秒。留空或填 0 表示永不过期。
+    llm_description: Time-to-live in seconds. 0 or empty means no expiry.
+    form: llm
+extra:
+  python:
+    source: redis_set.py
