@@ -1,0 +1,17 @@
+identity:
+  author: fangyong
+  name: html_render
+  label:
+    en_US: HTML Preview Renderer (Online)
+    zh_Hans: HTML 预览渲染器（在线版）
+  description:
+    en_US: '[Online build] Wrap any HTML fragment into a self-contained, previewable page in Dify.'
+    zh_Hans: 【在线版】将任意 HTML 片段包装为自包含、可在 Dify 中直接预览的完整页面。
+  icon: icon.svg
+  tags:
+    - utilities
+extra:
+  python:
+    source: html_render.py
+tools:
+  - render_html.yaml

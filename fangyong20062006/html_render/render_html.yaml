@@ -1,0 +1,38 @@
+identity:
+  name: render_html
+  author: fangyong
+  label:
+    en_US: Render HTML
+    zh_Hans: 渲染HTML
+description:
+  human:
+    en_US: Accepts a raw HTML string (e.g. from the ECharts plugin) and returns it as a self-contained HTML page that can be previewed directly in Dify.
+    zh_Hans: 接收原始 HTML 字符串（例如 ECharts 插件输出），返回可在 Dify 中直接预览的完整 HTML 页面。
+  llm: 'Wraps a raw HTML string into a complete self-contained HTML page. Use this to render chart outputs like those from the bar_chart or line_chart tools. Input: html_content (string). Output: a full HTML document.'
+parameters:
+  - name: html_content
+    type: string
+    required: true
+    label:
+      en_US: HTML Content
+      zh_Hans: HTML内容
+    human_description:
+      en_US: The raw HTML string to render. Typically the output of a chart plugin (e.g. ECharts bar_chart tool output).
+      zh_Hans: 要渲染的原始 HTML 字符串，通常是图表插件（如 ECharts 柱状图工具）的输出内容。
+    llm_description: The raw HTML string to wrap and render. Pass the full HTML output from the chart generation tool here.
+    form: llm
+  - name: title
+    type: string
+    required: false
+    label:
+      en_US: Page Title
+      zh_Hans: 页面标题
+    human_description:
+      en_US: Optional title shown in the page tab. Defaults to "Chart Preview" if not provided.
+      zh_Hans: 可选的页面标签标题，不填则默认为"图表预览"。
+    llm_description: Optional page title. If the HTML already has a <title> tag this is ignored.
+    form: form
+    default: 图表预览
+extra:
+  python:
+    source: render_html.py
