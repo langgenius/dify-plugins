@@ -1,0 +1,107 @@
+identity:
+  name: list_chapters
+  author: gaohaoyv
+  label:
+    en_US: List Chapters
+    zh_Hans: 列出章节
+description:
+  human:
+    en_US: List accessible BookStack chapters and return normalized chapter metadata.
+    zh_Hans: 列出可访问的 BookStack 章节并返回标准化章节元数据。
+  llm: List accessible BookStack chapters and return normalized chapter metadata.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether listing chapters succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when listing chapters fails.
+    chapters:
+      type: array
+      description: Normalized BookStack chapters.
+      items:
+        type: object
+        properties:
+          chapter_id:
+            type: string
+            nullable: true
+            description: BookStack chapter identifier.
+          name:
+            type: string
+            nullable: true
+            description: Chapter name.
+          slug:
+            type: string
+            nullable: true
+            description: Chapter slug.
+          book_id:
+            type: string
+            nullable: true
+            description: Parent book identifier.
+          description:
+            type: string
+            nullable: true
+            description: Chapter description.
+          url:
+            type: string
+            nullable: true
+            description: Chapter URL.
+          created_at:
+            type: string
+            nullable: true
+            description: Chapter creation timestamp.
+          updated_at:
+            type: string
+            nullable: true
+            description: Chapter update timestamp.
+          raw:
+            type: object
+            nullable: true
+            description: Original BookStack chapter object.
+    count:
+      type: integer
+      description: Number of returned chapters.
+    total:
+      type: integer
+      nullable: true
+      description: Total available chapters when provided by BookStack.
+parameters:
+  - name: book_id
+    type: string
+    required: false
+    label:
+      en_US: Book ID
+      zh_Hans: Book ID
+    human_description:
+      en_US: Optional BookStack book ID to filter chapters.
+      zh_Hans: 可选，按 BookStack 书籍 ID 过滤章节。
+    llm_description: Optional BookStack book ID to filter chapters.
+    form: llm
+  - name: count
+    type: number
+    required: false
+    label:
+      en_US: Count
+      zh_Hans: 数量
+    human_description:
+      en_US: Optional maximum number of chapters to return.
+      zh_Hans: 可选，限制返回的章节数量。
+    llm_description: Optional maximum number of chapters to return.
+    form: llm
+  - name: offset
+    type: number
+    required: false
+    label:
+      en_US: Offset
+      zh_Hans: 偏移量
+    human_description:
+      en_US: Optional offset for paginated BookStack chapter results.
+      zh_Hans: 可选，BookStack 章节分页结果的偏移量。
+    llm_description: Optional offset for paginated BookStack chapter results.
+    form: llm
+extra:
+  python:
+    source: tools/list_chapters.py

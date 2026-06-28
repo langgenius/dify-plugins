@@ -1,0 +1,96 @@
+identity:
+  name: list_pages
+  author: gaohaoyv
+  label:
+    en_US: List Pages
+    zh_Hans: 列出页面
+description:
+  human:
+    en_US: List accessible BookStack pages and return normalized page metadata.
+    zh_Hans: 列出可访问的 BookStack 页面并返回标准化页面元数据。
+  llm: List accessible BookStack pages and return normalized page metadata.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether listing pages succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when listing pages fails.
+    pages:
+      type: array
+      description: Normalized BookStack pages.
+      items:
+        type: object
+        properties:
+          page_id:
+            type: string
+            nullable: true
+            description: BookStack page identifier.
+          title:
+            type: string
+            nullable: true
+            description: Page title.
+          slug:
+            type: string
+            nullable: true
+            description: Page slug.
+          book_id:
+            type: string
+            nullable: true
+            description: Parent book identifier.
+          chapter_id:
+            type: string
+            nullable: true
+            description: Parent chapter identifier.
+          url:
+            type: string
+            nullable: true
+            description: Page URL.
+          created_at:
+            type: string
+            nullable: true
+            description: Page creation timestamp.
+          updated_at:
+            type: string
+            nullable: true
+            description: Page update timestamp.
+          raw:
+            type: object
+            nullable: true
+            description: Original BookStack page object.
+    count:
+      type: integer
+      description: Number of returned pages.
+    total:
+      type: integer
+      nullable: true
+      description: Total available pages when provided by BookStack.
+parameters:
+  - name: count
+    type: number
+    required: false
+    label:
+      en_US: Count
+      zh_Hans: 数量
+    human_description:
+      en_US: Optional maximum number of pages to return.
+      zh_Hans: 可选，限制返回的页面数量。
+    llm_description: Optional maximum number of pages to return.
+    form: llm
+  - name: offset
+    type: number
+    required: false
+    label:
+      en_US: Offset
+      zh_Hans: 偏移量
+    human_description:
+      en_US: Optional offset for paginated BookStack page results.
+      zh_Hans: 可选，BookStack 页面分页结果的偏移量。
+    llm_description: Optional offset for paginated BookStack page results.
+    form: llm
+extra:
+  python:
+    source: tools/list_pages.py
