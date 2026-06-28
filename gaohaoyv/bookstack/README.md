@@ -32,8 +32,8 @@ Current repository direction:
 
 See the consolidated guides:
 
-- [English usage guide](docs/user/en/usage.md)
-- [Chinese usage guide](docs/user/zh/usage.md)
+- [English usage guide](https://github.com/pandaria75/dify-plugin-bookstack/blob/main/docs/user/en/usage.md)
+- [Chinese usage guide](https://github.com/pandaria75/dify-plugin-bookstack/blob/main/docs/user/zh/usage.md)
 
 ## Usage
 
@@ -54,7 +54,7 @@ The plugin uses credentials provided by the user and connects only to the config
 
 - Repository: <https://github.com/pandaria75/dify-plugin-bookstack>
 - Issues / support: <https://github.com/pandaria75/dify-plugin-bookstack/issues>
-- Architecture intent: [docs/target/architecture-intent.md](docs/target/architecture-intent.md)
+- Architecture intent: [docs/target/architecture-intent.md](https://github.com/pandaria75/dify-plugin-bookstack/blob/main/docs/target/architecture-intent.md)
 
 ## License
 
