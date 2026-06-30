@@ -1,0 +1,94 @@
+identity:
+  name: get_chapter
+  author: gaohaoyv
+  label:
+    en_US: Get Chapter
+    zh_Hans: 获取章节
+description:
+  human:
+    en_US: Read a BookStack chapter by ID and return normalized metadata.
+    zh_Hans: 根据 ID 读取 BookStack 章节并返回标准化元数据。
+  llm: Read a BookStack chapter by ID and return normalized metadata.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether reading the chapter succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when reading the chapter fails.
+    chapter_id:
+      type: string
+      nullable: true
+      description: BookStack chapter identifier.
+    name:
+      type: string
+      nullable: true
+      description: Chapter name.
+    slug:
+      type: string
+      nullable: true
+      description: Chapter slug.
+    book_id:
+      type: string
+      nullable: true
+      description: Parent book identifier.
+    description:
+      type: string
+      nullable: true
+      description: Chapter description.
+    description_html:
+      type: string
+      nullable: true
+      description: Chapter description HTML.
+    priority:
+      type: number
+      nullable: true
+      description: Chapter priority value.
+    url:
+      type: string
+      nullable: true
+      description: Chapter URL.
+    tags:
+      type: array
+      nullable: true
+      description: Raw tag objects when available.
+      items:
+        type: object
+    created_at:
+      type: string
+      nullable: true
+      description: Chapter creation timestamp.
+    updated_at:
+      type: string
+      nullable: true
+      description: Chapter update timestamp.
+    created_by:
+      type: object
+      nullable: true
+      description: Raw creator metadata when available.
+    updated_by:
+      type: object
+      nullable: true
+      description: Raw updater metadata when available.
+    raw:
+      type: object
+      nullable: true
+      description: Original BookStack chapter object.
+parameters:
+  - name: chapter_id
+    type: string
+    required: true
+    label:
+      en_US: Chapter ID
+      zh_Hans: 章节 ID
+    human_description:
+      en_US: The BookStack chapter ID to read.
+      zh_Hans: 要读取的 BookStack 章节 ID。
+    llm_description: The BookStack chapter ID to read.
+    form: llm
+extra:
+  python:
+    source: tools/get_chapter.py

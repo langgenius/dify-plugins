@@ -5,8 +5,8 @@ identity:
     en_US: BookStack
     zh_Hans: BookStack
   description:
-    en_US: A Dify plugin for publishing, reading, and syncing BookStack pages.
-    zh_Hans: 用于发布、读取和同步 BookStack 页面的 Dify 插件。
+    en_US: A Dify plugin for reading, searching, and publishing BookStack content.
+    zh_Hans: 用于读取、搜索和发布 BookStack 内容的 Dify 插件。
   icon: icon.svg
   tags:
     - productivity
@@ -65,11 +65,30 @@ credentials_for_provider:
 tools:
   - tools/validate_credentials.yaml
   - tools/search_pages.yaml
+  - tools/search_content.yaml
   - tools/list_books.yaml
+  - tools/find_books.yaml
   - tools/list_shelves.yaml
+  - tools/find_shelves.yaml
   - tools/list_pages.yaml
+  - tools/find_pages.yaml
   - tools/list_chapters.yaml
+  - tools/find_chapters.yaml
+  - tools/list_tag_names.yaml
+  - tools/list_tag_values.yaml
+  - tools/get_book.yaml
+  - tools/get_chapter.yaml
+  - tools/get_shelf.yaml
   - tools/get_page.yaml
+  - tools/create_book.yaml
+  - tools/create_chapter.yaml
+  - tools/create_shelf.yaml
+  - tools/export_page_markdown.yaml
+  - tools/export_chapter_markdown.yaml
+  - tools/export_book_markdown.yaml
+  - tools/update_book.yaml
+  - tools/update_chapter.yaml
+  - tools/update_shelf.yaml
   - tools/create_page.yaml
   - tools/update_page.yaml
   - tools/publish_page.yaml

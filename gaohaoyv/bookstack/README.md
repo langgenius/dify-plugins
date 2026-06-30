@@ -1,6 +1,6 @@
 # BookStack Plugin for Dify
 
-BookStack Plugin for Dify connects Dify workflows and agents to self-hosted BookStack knowledge bases. Dify handles AI content generation, approval, and orchestration; BookStack stores the published documentation as a source of truth. This plugin bridges the two, enabling automated document publishing, reading, and synchronization from within Dify AI applications.
+BookStack Plugin for Dify connects Dify workflows and agents to self-hosted BookStack knowledge bases. The plugin provides BookStack foundation capabilities inside Dify; higher-level business composition, approval, and orchestration belong to your workflow or adapter layer. Today this plugin covers content lookup, search, export, non-destructive CRUD support, publishing, and related support flows.
 
 ## Current implemented features
 
@@ -8,14 +8,45 @@ Implemented Dify Tool plugin features:
 
 - `validate_credentials`
 - `search_pages`
+- `search_content`
 - `get_page`
+- `export_page_markdown`
+- `export_chapter_markdown`
+- `export_book_markdown`
 - `create_page`
 - `update_page`
 - `publish_page`
 - `list_books`
+- `find_books`
+- `get_book`
+- `create_book`
+- `update_book`
 - `list_chapters`
+- `find_chapters`
+- `get_chapter`
+- `create_chapter`
+- `update_chapter`
 - `list_shelves`
+- `find_shelves`
+- `get_shelf`
+- `create_shelf`
+- `update_shelf`
 - `list_pages`
+- `find_pages`
+- `list_tag_names`
+- `list_tag_values`
+
+Current tool-surface notes:
+
+- No delete or archive tools are implemented.
+- Tag support in this slice is discovery-only via `list_tag_names` and `list_tag_values`.
+- `search_pages` is page-only search.
+- `search_content` is broader global search with optional supported type filtering.
+- `export_page_markdown` exports one page; `export_chapter_markdown` and `export_book_markdown` return both aggregate Markdown and a structured `pages` list for the exported hierarchy.
+- `find_*` tools are structured name lookups; `list_*` tools support destination and content discovery.
+- `list_books`, `list_chapters`, `list_pages`, and `list_shelves` support optional bounded `sort` and JSON `filters`; `list_pages` also keeps optional `book_id` and `chapter_id` filtering.
+- `publish_page` is the writing/publishing path after you choose or confirm the destination with search, find, or list tools.
+- Tool plugin remains the primary path; Datasource work is separate and still broader follow-up scope.
 
 Current repository direction:
 
@@ -42,7 +73,7 @@ Recommended first step:
 1. Save provider credentials.
 2. Run `validate_credentials`.
 3. Confirm the provider can reach the target BookStack instance.
-4. Use the implemented page and listing tools as needed, and refer to the linked user docs for details.
+4. Use search, find, and list tools to inspect or choose destinations, then use export or non-delete create/update/publish tools as needed.
 
 More information is covered in the usage guides above.
 

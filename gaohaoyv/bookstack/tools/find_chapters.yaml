@@ -1,24 +1,24 @@
 identity:
-  name: list_chapters
+  name: find_chapters
   author: gaohaoyv
   label:
-    en_US: List Chapters
-    zh_Hans: 列出章节
+    en_US: Find Chapters
+    zh_Hans: 查找章节
 description:
   human:
-    en_US: List accessible BookStack chapters and return normalized chapter metadata.
-    zh_Hans: 列出可访问的 BookStack 章节并返回标准化章节元数据。
-  llm: List accessible BookStack chapters and return normalized chapter metadata.
+    en_US: Find accessible BookStack chapters by name using exact or like matching, optionally scoped to a book.
+    zh_Hans: 使用精确或模糊名称匹配查找可访问的 BookStack 章节，并可选择限制到指定书籍。
+  llm: Find accessible BookStack chapters by name using exact or like matching, optionally scoped to a book.
 output_schema:
   type: object
   properties:
     success:
       type: boolean
-      description: Whether listing chapters succeeded.
+      description: Whether finding chapters succeeded.
     error:
       type: string
       nullable: true
-      description: Error message when listing chapters fails.
+      description: Error message when finding chapters fails.
     chapters:
       type: array
       description: Normalized BookStack chapters.
@@ -67,8 +67,30 @@ output_schema:
     total:
       type: integer
       nullable: true
-      description: Total available chapters when provided by BookStack.
+      description: Total matching chapters when provided by BookStack.
 parameters:
+  - name: name
+    type: string
+    required: true
+    label:
+      en_US: Name
+      zh_Hans: 名称
+    human_description:
+      en_US: Chapter name to match.
+      zh_Hans: 要匹配的章节名称。
+    llm_description: Chapter name to match.
+    form: llm
+  - name: match
+    type: string
+    required: true
+    label:
+      en_US: Match
+      zh_Hans: 匹配方式
+    human_description:
+      en_US: Match mode, either exact or like.
+      zh_Hans: 匹配模式，可选 exact 或 like。
+    llm_description: Match mode, either exact or like.
+    form: llm
   - name: book_id
     type: string
     required: false
@@ -76,9 +98,9 @@ parameters:
       en_US: Book ID
       zh_Hans: Book ID
     human_description:
-      en_US: Optional BookStack book ID to filter chapters.
-      zh_Hans: 可选，按 BookStack 书籍 ID 过滤章节。
-    llm_description: Optional BookStack book ID to filter chapters.
+      en_US: Optional BookStack book ID to scope chapter matching.
+      zh_Hans: 可选，按 BookStack 书籍 ID 限定章节匹配范围。
+    llm_description: Optional BookStack book ID to scope chapter matching.
     form: llm
   - name: count
     type: number
@@ -98,32 +120,10 @@ parameters:
       en_US: Offset
       zh_Hans: 偏移量
     human_description:
-      en_US: Optional offset for paginated BookStack chapter results.
-      zh_Hans: 可选，BookStack 章节分页结果的偏移量。
-    llm_description: Optional offset for paginated BookStack chapter results.
-    form: llm
-  - name: sort
-    type: string
-    required: false
-    label:
-      en_US: Sort
-      zh_Hans: 排序
-    human_description:
-      en_US: "Optional sort string using +field, -field, or field. Allowed fields: name, created_at, updated_at, priority."
-      zh_Hans: 可选，使用 +field、-field 或 field 的排序字符串。允许字段：name、created_at、updated_at、priority。
-    llm_description: "Optional sort string using +field, -field, or field. Allowed fields: name, created_at, updated_at, priority."
-    form: llm
-  - name: filters
-    type: string
-    required: false
-    label:
-      en_US: Filters
-      zh_Hans: 过滤条件
-    human_description:
-      en_US: "Optional JSON object string of field:operator filters. Allowed fields: name, created_at, updated_at, book_id. Allowed operators: eq, like."
-      zh_Hans: 可选，field:operator 过滤条件的 JSON 对象字符串。允许字段：name、created_at、updated_at、book_id。允许操作符：eq、like。
-    llm_description: "Optional JSON object string of field:operator filters. Allowed fields: name, created_at, updated_at, book_id. Allowed operators: eq, like."
+      en_US: Optional offset for paginated matching BookStack chapter results.
+      zh_Hans: 可选，匹配到的 BookStack 章节分页结果偏移量。
+    llm_description: Optional offset for paginated matching BookStack chapter results.
     form: llm
 extra:
   python:
-    source: tools/list_chapters.py
+    source: tools/find_chapters.py

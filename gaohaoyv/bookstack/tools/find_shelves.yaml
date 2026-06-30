@@ -1,24 +1,24 @@
 identity:
-  name: list_shelves
+  name: find_shelves
   author: gaohaoyv
   label:
-    en_US: List Shelves
-    zh_Hans: 列出书架
+    en_US: Find Shelves
+    zh_Hans: 查找书架
 description:
   human:
-    en_US: List accessible BookStack shelves and return normalized shelf metadata.
-    zh_Hans: 列出可访问的 BookStack 书架并返回标准化书架元数据。
-  llm: List accessible BookStack shelves and return normalized shelf metadata.
+    en_US: Find accessible BookStack shelves by name using exact or like matching.
+    zh_Hans: 使用精确或模糊名称匹配查找可访问的 BookStack 书架。
+  llm: Find accessible BookStack shelves by name using exact or like matching.
 output_schema:
   type: object
   properties:
     success:
       type: boolean
-      description: Whether listing shelves succeeded.
+      description: Whether finding shelves succeeded.
     error:
       type: string
       nullable: true
-      description: Error message when listing shelves fails.
+      description: Error message when finding shelves fails.
     shelves:
       type: array
       description: Normalized BookStack shelves.
@@ -63,8 +63,30 @@ output_schema:
     total:
       type: integer
       nullable: true
-      description: Total available shelves when provided by BookStack.
+      description: Total matching shelves when provided by BookStack.
 parameters:
+  - name: name
+    type: string
+    required: true
+    label:
+      en_US: Name
+      zh_Hans: 名称
+    human_description:
+      en_US: Shelf name to match.
+      zh_Hans: 要匹配的书架名称。
+    llm_description: Shelf name to match.
+    form: llm
+  - name: match
+    type: string
+    required: true
+    label:
+      en_US: Match
+      zh_Hans: 匹配方式
+    human_description:
+      en_US: Match mode, either exact or like.
+      zh_Hans: 匹配模式，可选 exact 或 like。
+    llm_description: Match mode, either exact or like.
+    form: llm
   - name: count
     type: number
     required: false
@@ -83,32 +105,10 @@ parameters:
       en_US: Offset
       zh_Hans: 偏移量
     human_description:
-      en_US: Optional offset for paginated BookStack shelf results.
-      zh_Hans: 可选，BookStack 书架分页结果的偏移量。
-    llm_description: Optional offset for paginated BookStack shelf results.
-    form: llm
-  - name: sort
-    type: string
-    required: false
-    label:
-      en_US: Sort
-      zh_Hans: 排序
-    human_description:
-      en_US: "Optional sort string using +field, -field, or field. Allowed fields: name, created_at, updated_at."
-      zh_Hans: 可选，使用 +field、-field 或 field 的排序字符串。允许字段：name、created_at、updated_at。
-    llm_description: "Optional sort string using +field, -field, or field. Allowed fields: name, created_at, updated_at."
-    form: llm
-  - name: filters
-    type: string
-    required: false
-    label:
-      en_US: Filters
-      zh_Hans: 过滤条件
-    human_description:
-      en_US: "Optional JSON object string of field:operator filters. Allowed fields: name, created_at, updated_at. Allowed operators: eq, like."
-      zh_Hans: 可选，field:operator 过滤条件的 JSON 对象字符串。允许字段：name、created_at、updated_at。允许操作符：eq、like。
-    llm_description: "Optional JSON object string of field:operator filters. Allowed fields: name, created_at, updated_at. Allowed operators: eq, like."
+      en_US: Optional offset for paginated matching BookStack shelf results.
+      zh_Hans: 可选，匹配到的 BookStack 书架分页结果偏移量。
+    llm_description: Optional offset for paginated matching BookStack shelf results.
     form: llm
 extra:
   python:
-    source: tools/list_shelves.py
+    source: tools/find_shelves.py

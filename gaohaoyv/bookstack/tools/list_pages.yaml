@@ -69,6 +69,28 @@ output_schema:
       nullable: true
       description: Total available pages when provided by BookStack.
 parameters:
+  - name: book_id
+    type: string
+    required: false
+    label:
+      en_US: Book ID
+      zh_Hans: Book ID
+    human_description:
+      en_US: Optional BookStack book ID to filter pages.
+      zh_Hans: 可选，按 BookStack 书籍 ID 过滤页面。
+    llm_description: Optional BookStack book ID to filter pages.
+    form: llm
+  - name: chapter_id
+    type: string
+    required: false
+    label:
+      en_US: Chapter ID
+      zh_Hans: Chapter ID
+    human_description:
+      en_US: Optional BookStack chapter ID to filter pages.
+      zh_Hans: 可选，按 BookStack 章节 ID 过滤页面。
+    llm_description: Optional BookStack chapter ID to filter pages.
+    form: llm
   - name: count
     type: number
     required: false
@@ -90,6 +112,28 @@ parameters:
       en_US: Optional offset for paginated BookStack page results.
       zh_Hans: 可选，BookStack 页面分页结果的偏移量。
     llm_description: Optional offset for paginated BookStack page results.
+    form: llm
+  - name: sort
+    type: string
+    required: false
+    label:
+      en_US: Sort
+      zh_Hans: 排序
+    human_description:
+      en_US: "Optional sort string using +field, -field, or field. Allowed fields: name, created_at, updated_at, priority."
+      zh_Hans: 可选，使用 +field、-field 或 field 的排序字符串。允许字段：name、created_at、updated_at、priority。
+    llm_description: "Optional sort string using +field, -field, or field. Allowed fields: name, created_at, updated_at, priority."
+    form: llm
+  - name: filters
+    type: string
+    required: false
+    label:
+      en_US: Filters
+      zh_Hans: 过滤条件
+    human_description:
+      en_US: "Optional JSON object string of field:operator filters. Allowed fields: name, created_at, updated_at, book_id, chapter_id. Allowed operators: eq, like."
+      zh_Hans: 可选，field:operator 过滤条件的 JSON 对象字符串。允许字段：name、created_at、updated_at、book_id、chapter_id。允许操作符：eq、like。
+    llm_description: "Optional JSON object string of field:operator filters. Allowed fields: name, created_at, updated_at, book_id, chapter_id. Allowed operators: eq, like."
     form: llm
 extra:
   python:

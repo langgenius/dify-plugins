@@ -31,10 +31,12 @@ class ListBooksTool(Tool):
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:
         count = tool_parameters.get("count")
         offset = tool_parameters.get("offset")
+        sort = tool_parameters.get("sort")
+        filters = tool_parameters.get("filters")
 
         try:
             client = BookStackClient.from_credentials(self.runtime.credentials)
-            payload = client.list_books(count=count, offset=offset)
+            payload = client.list_books(count=count, offset=offset, sort=sort, filters=filters)
         except BookStackError as exc:
             error_payload = collection_error("books", str(exc), include_total=True)
             for field_name in ("success", "error", "books", "count", "total"):
