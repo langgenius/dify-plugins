@@ -1,0 +1,153 @@
+identity:
+  name: create_chapter
+  author: gaohaoyv
+  label:
+    en_US: Create Chapter
+    zh_Hans: 创建章节
+description:
+  human:
+    en_US: Create a BookStack chapter and return normalized metadata.
+    zh_Hans: 创建 BookStack 章节并返回标准化元数据。
+  llm: Create a BookStack chapter and return normalized metadata.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether creating the chapter succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when creating the chapter fails.
+    chapter_id:
+      type: string
+      nullable: true
+      description: Created BookStack chapter identifier.
+    name:
+      type: string
+      nullable: true
+      description: Created chapter name.
+    slug:
+      type: string
+      nullable: true
+      description: Created chapter slug.
+    book_id:
+      type: string
+      nullable: true
+      description: Parent book identifier.
+    description:
+      type: string
+      nullable: true
+      description: Created chapter description.
+    description_html:
+      type: string
+      nullable: true
+      description: Created chapter description HTML.
+    priority:
+      type: number
+      nullable: true
+      description: Created chapter priority value.
+    url:
+      type: string
+      nullable: true
+      description: Created chapter URL.
+    tags:
+      type: array
+      nullable: true
+      description: Raw tag objects when available.
+      items:
+        type: object
+    created_at:
+      type: string
+      nullable: true
+      description: Created chapter timestamp.
+    updated_at:
+      type: string
+      nullable: true
+      description: Updated chapter timestamp.
+    created_by:
+      type: object
+      nullable: true
+      description: Raw creator metadata when available.
+    updated_by:
+      type: object
+      nullable: true
+      description: Raw updater metadata when available.
+    action:
+      type: string
+      nullable: true
+      description: Action label for the chapter result.
+    raw:
+      type: object
+      nullable: true
+      description: Original BookStack chapter object.
+parameters:
+  - name: book_id
+    type: string
+    required: true
+    label:
+      en_US: Book ID
+      zh_Hans: 书籍 ID
+    human_description:
+      en_US: The BookStack book ID that will own the new chapter.
+      zh_Hans: 新章节所属的 BookStack 书籍 ID。
+    llm_description: The BookStack book ID that will own the new chapter.
+    form: llm
+  - name: name
+    type: string
+    required: true
+    label:
+      en_US: Name
+      zh_Hans: 名称
+    human_description:
+      en_US: The name of the chapter to create.
+      zh_Hans: 要创建章节的名称。
+    llm_description: The name of the chapter to create.
+    form: llm
+  - name: description
+    type: string
+    required: false
+    label:
+      en_US: Description
+      zh_Hans: 描述
+    human_description:
+      en_US: Optional plain-text description for the new chapter.
+      zh_Hans: 新章节的可选纯文本描述。
+    llm_description: Optional plain-text description for the new chapter.
+    form: llm
+  - name: description_html
+    type: string
+    required: false
+    label:
+      en_US: Description HTML
+      zh_Hans: 描述 HTML
+    human_description:
+      en_US: Optional HTML description for the new chapter.
+      zh_Hans: 新章节的可选 HTML 描述。
+    llm_description: Optional HTML description for the new chapter.
+    form: llm
+  - name: tags
+    type: string
+    required: false
+    label:
+      en_US: Tags
+      zh_Hans: 标签
+    human_description:
+      en_US: Optional tag text or list-like value forwarded as simple tags.
+      zh_Hans: 可选标签文本或列表式值，将作为简单标签传递。
+    llm_description: Optional tags for the new chapter.
+    form: llm
+  - name: priority
+    type: number
+    required: false
+    label:
+      en_US: Priority
+      zh_Hans: 优先级
+    human_description:
+      en_US: Optional numeric priority for the new chapter.
+      zh_Hans: 新章节的可选数字优先级。
+    llm_description: Optional numeric priority for the new chapter.
+    form: llm
+extra:
+  python:
+    source: tools/create_chapter.py
