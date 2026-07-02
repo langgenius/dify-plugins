@@ -1,0 +1,86 @@
+identity:
+  name: get_book
+  author: gaohaoyv
+  label:
+    en_US: Get Book
+    zh_Hans: 获取书籍
+description:
+  human:
+    en_US: Read a BookStack book by ID and return normalized metadata.
+    zh_Hans: 根据 ID 读取 BookStack 书籍并返回标准化元数据。
+  llm: Read a BookStack book by ID and return normalized metadata.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether reading the book succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when reading the book fails.
+    book_id:
+      type: string
+      nullable: true
+      description: BookStack book identifier.
+    name:
+      type: string
+      nullable: true
+      description: Book name.
+    slug:
+      type: string
+      nullable: true
+      description: Book slug.
+    description:
+      type: string
+      nullable: true
+      description: Book description.
+    description_html:
+      type: string
+      nullable: true
+      description: Book description HTML.
+    url:
+      type: string
+      nullable: true
+      description: Book URL.
+    tags:
+      type: array
+      nullable: true
+      description: Raw tag objects when available.
+      items:
+        type: object
+    created_at:
+      type: string
+      nullable: true
+      description: Book creation timestamp.
+    updated_at:
+      type: string
+      nullable: true
+      description: Book update timestamp.
+    created_by:
+      type: object
+      nullable: true
+      description: Raw creator metadata when available.
+    updated_by:
+      type: object
+      nullable: true
+      description: Raw updater metadata when available.
+    raw:
+      type: object
+      nullable: true
+      description: Original BookStack book object.
+parameters:
+  - name: book_id
+    type: string
+    required: true
+    label:
+      en_US: Book ID
+      zh_Hans: 书籍 ID
+    human_description:
+      en_US: The BookStack book ID to read.
+      zh_Hans: 要读取的 BookStack 书籍 ID。
+    llm_description: The BookStack book ID to read.
+    form: llm
+extra:
+  python:
+    source: tools/get_book.py

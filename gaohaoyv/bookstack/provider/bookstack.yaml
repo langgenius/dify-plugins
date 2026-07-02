@@ -1,0 +1,97 @@
+identity:
+  author: gaohaoyv
+  name: bookstack
+  label:
+    en_US: BookStack
+    zh_Hans: BookStack
+  description:
+    en_US: A Dify plugin for reading, searching, and publishing BookStack content.
+    zh_Hans: 用于读取、搜索和发布 BookStack 内容的 Dify 插件。
+  icon: icon.svg
+  tags:
+    - productivity
+credentials_for_provider:
+  base_url:
+    type: text-input
+    required: true
+    label:
+      en_US: Base URL
+      zh_Hans: 基础地址
+    placeholder:
+      en_US: https://docs.example.com
+      zh_Hans: https://docs.example.com
+  token_id:
+    type: secret-input
+    required: true
+    label:
+      en_US: Token ID
+      zh_Hans: Token ID
+    placeholder:
+      en_US: BookStack API token id
+      zh_Hans: BookStack API token id
+  token_secret:
+    type: secret-input
+    required: true
+    label:
+      en_US: Token Secret
+      zh_Hans: Token Secret
+    placeholder:
+      en_US: BookStack API token secret
+      zh_Hans: BookStack API token secret
+  default_book_id:
+    type: text-input
+    required: false
+    label:
+      en_US: Default Book ID
+      zh_Hans: 默认 Book ID
+  default_chapter_id:
+    type: text-input
+    required: false
+    label:
+      en_US: Default Chapter ID
+      zh_Hans: 默认 Chapter ID
+  timeout_seconds:
+    type: text-input
+    required: false
+    label:
+      en_US: Timeout Seconds
+      zh_Hans: 超时时间（秒）
+  verify_ssl:
+    type: boolean
+    required: false
+    label:
+      en_US: Verify SSL
+      zh_Hans: 验证 SSL
+tools:
+  - tools/validate_credentials.yaml
+  - tools/search_pages.yaml
+  - tools/search_content.yaml
+  - tools/list_books.yaml
+  - tools/find_books.yaml
+  - tools/list_shelves.yaml
+  - tools/find_shelves.yaml
+  - tools/list_pages.yaml
+  - tools/find_pages.yaml
+  - tools/list_chapters.yaml
+  - tools/find_chapters.yaml
+  - tools/list_tag_names.yaml
+  - tools/list_tag_values.yaml
+  - tools/get_book.yaml
+  - tools/get_chapter.yaml
+  - tools/get_shelf.yaml
+  - tools/get_page.yaml
+  - tools/create_book.yaml
+  - tools/create_chapter.yaml
+  - tools/create_shelf.yaml
+  - tools/export_page_markdown.yaml
+  - tools/export_chapter_markdown.yaml
+  - tools/export_book_markdown.yaml
+  - tools/update_book.yaml
+  - tools/update_chapter.yaml
+  - tools/update_shelf.yaml
+  - tools/create_page.yaml
+  - tools/update_page.yaml
+  - tools/publish_page.yaml
+extra:
+  python:
+    source: provider/bookstack.py
