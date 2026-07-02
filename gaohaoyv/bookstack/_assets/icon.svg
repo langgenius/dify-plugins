@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="BookStack">
+  <rect width="128" height="128" rx="24" fill="#1f2937"/>
+  <path d="M30 28h54c8.8 0 16 7.2 16 16v56H46c-8.8 0-16 7.2-16 16V28Z" fill="#f59e0b"/>
+  <path d="M30 28h12v88H30c-6.6 0-12-5.4-12-12V40c0-6.6 5.4-12 12-12Z" fill="#fbbf24"/>
+  <path d="M54 44h38v8H54zm0 20h38v8H54zm0 20h24v8H54z" fill="#111827" opacity="0.8"/>
+</svg>
