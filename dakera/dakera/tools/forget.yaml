@@ -1,0 +1,91 @@
+identity:
+  name: forget
+  author: dakera
+  label:
+    en_US: Forget Memory
+    zh_Hans: 删除记忆
+    pt_BR: Esquecer Memória
+description:
+  human:
+    en_US: >-
+      Delete memories from Dakera. Target specific memory IDs, or delete everything matching a
+      session, tags, or an importance threshold. Deletion is permanent.
+    zh_Hans: >-
+      从 Dakera 删除记忆。可指定具体的记忆 ID，或删除匹配某会话、标签或重要性阈值的全部记忆。删除是永久性的。
+    pt_BR: >-
+      Exclui memórias do Dakera. Segmente IDs específicos ou exclua tudo que corresponda a uma
+      sessão, tags ou um limite de importância. A exclusão é permanente.
+  llm: >-
+    Delete memories. Provide memory_ids to delete specific ones, or use session_id, tags, or
+    below_importance to delete everything matching. At least one selector is required. Deletion is
+    permanent — returns the number of memories deleted.
+parameters:
+  - name: agent_id
+    type: string
+    required: false
+    default: dify-agent
+    label:
+      en_US: Agent ID
+      zh_Hans: 代理 ID
+      pt_BR: ID do Agente
+    human_description:
+      en_US: Namespace to delete from. Use the same agent ID the memories were stored under.
+      zh_Hans: 要删除的命名空间。使用记忆存储时的代理 ID。
+      pt_BR: Namespace de onde excluir. Use o mesmo ID de agente do armazenamento.
+    llm_description: Agent namespace to delete memories from.
+    form: llm
+  - name: memory_ids
+    type: string
+    required: false
+    label:
+      en_US: Memory IDs
+      zh_Hans: 记忆 ID 列表
+      pt_BR: IDs de Memória
+    human_description:
+      en_US: Comma-separated memory IDs to delete (e.g. "mem_a,mem_b").
+      zh_Hans: 用逗号分隔的要删除的记忆 ID（例如 "mem_a,mem_b"）。
+      pt_BR: IDs de memória separados por vírgula para excluir (ex. "mem_a,mem_b").
+    llm_description: Comma-separated memory IDs to delete. Use for targeted deletion.
+    form: llm
+  - name: session_id
+    type: string
+    required: false
+    label:
+      en_US: Session ID
+      zh_Hans: 会话 ID
+      pt_BR: ID da Sessão
+    human_description:
+      en_US: Delete all memories tagged with this session ID.
+      zh_Hans: 删除标记有此会话 ID 的所有记忆。
+      pt_BR: Exclui todas as memórias marcadas com este ID de sessão.
+    llm_description: Delete all memories in this session.
+    form: llm
+  - name: tags
+    type: string
+    required: false
+    label:
+      en_US: Tags
+      zh_Hans: 标签
+      pt_BR: Tags
+    human_description:
+      en_US: Delete memories that have all of these comma-separated tags.
+      zh_Hans: 删除具有全部这些逗号分隔标签的记忆。
+      pt_BR: Exclui memórias que tenham todas estas tags separadas por vírgula.
+    llm_description: Delete memories matching all of these comma-separated tags.
+    form: llm
+  - name: below_importance
+    type: number
+    required: false
+    label:
+      en_US: Below Importance
+      zh_Hans: 低于重要性
+      pt_BR: Abaixo da Importância
+    human_description:
+      en_US: Delete memories whose importance is below this value (0.0–1.0). Use to prune low-value memories.
+      zh_Hans: 删除重要性低于该值的记忆（0.0–1.0）。用于清理低价值记忆。
+      pt_BR: Exclui memórias cuja importância esteja abaixo deste valor (0.0–1.0).
+    llm_description: Delete memories with importance strictly below this threshold, 0.0–1.0.
+    form: llm
+extra:
+  python:
+    source: tools/forget.py
