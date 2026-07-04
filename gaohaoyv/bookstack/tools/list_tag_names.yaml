@@ -1,0 +1,67 @@
+identity:
+  name: list_tag_names
+  author: gaohaoyv
+  label:
+    en_US: List Tag Names
+    zh_Hans: 列出标签名称
+description:
+  human:
+    en_US: List BookStack tag names for discovery without changing tags.
+    zh_Hans: 仅用于发现，列出 BookStack 标签名称，不修改标签。
+  llm: List BookStack tag names for discovery without changing tags.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether listing tag names succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when listing tag names fails.
+    tag_names:
+      type: array
+      description: Tag name discovery results.
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            nullable: true
+            description: Tag name.
+          raw:
+            nullable: true
+            description: Original BookStack tag-name item.
+    count:
+      type: integer
+      description: Number of returned tag names.
+    total:
+      type: integer
+      nullable: true
+      description: Total available tag names when provided by BookStack.
+parameters:
+  - name: count
+    type: number
+    required: false
+    label:
+      en_US: Count
+      zh_Hans: 数量
+    human_description:
+      en_US: Optional maximum number of tag names to return.
+      zh_Hans: 可选，限制返回的标签名称数量。
+    llm_description: Optional maximum number of tag names to return.
+    form: llm
+  - name: offset
+    type: number
+    required: false
+    label:
+      en_US: Offset
+      zh_Hans: 偏移量
+    human_description:
+      en_US: Optional offset for paginated BookStack tag-name results.
+      zh_Hans: 可选，BookStack 标签名称分页结果的偏移量。
+    llm_description: Optional offset for paginated BookStack tag-name results.
+    form: llm
+extra:
+  python:
+    source: tools/list_tag_names.py

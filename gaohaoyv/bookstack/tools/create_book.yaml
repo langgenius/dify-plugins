@@ -1,0 +1,123 @@
+identity:
+  name: create_book
+  author: gaohaoyv
+  label:
+    en_US: Create Book
+    zh_Hans: 创建书籍
+description:
+  human:
+    en_US: Create a BookStack book and return normalized metadata.
+    zh_Hans: 创建 BookStack 书籍并返回标准化元数据。
+  llm: Create a BookStack book and return normalized metadata.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether creating the book succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when creating the book fails.
+    book_id:
+      type: string
+      nullable: true
+      description: Created BookStack book identifier.
+    name:
+      type: string
+      nullable: true
+      description: Created book name.
+    slug:
+      type: string
+      nullable: true
+      description: Created book slug.
+    description:
+      type: string
+      nullable: true
+      description: Created book description.
+    description_html:
+      type: string
+      nullable: true
+      description: Created book description HTML.
+    url:
+      type: string
+      nullable: true
+      description: Created book URL.
+    tags:
+      type: array
+      nullable: true
+      description: Raw tag objects when available.
+      items:
+        type: object
+    created_at:
+      type: string
+      nullable: true
+      description: Created book timestamp.
+    updated_at:
+      type: string
+      nullable: true
+      description: Updated book timestamp.
+    created_by:
+      type: object
+      nullable: true
+      description: Raw creator metadata when available.
+    updated_by:
+      type: object
+      nullable: true
+      description: Raw updater metadata when available.
+    action:
+      type: string
+      nullable: true
+      description: Action label for the book result.
+    raw:
+      type: object
+      nullable: true
+      description: Original BookStack book object.
+parameters:
+  - name: name
+    type: string
+    required: true
+    label:
+      en_US: Name
+      zh_Hans: 名称
+    human_description:
+      en_US: The name of the book to create.
+      zh_Hans: 要创建书籍的名称。
+    llm_description: The name of the book to create.
+    form: llm
+  - name: description
+    type: string
+    required: false
+    label:
+      en_US: Description
+      zh_Hans: 描述
+    human_description:
+      en_US: Optional plain-text description for the new book.
+      zh_Hans: 新书籍的可选纯文本描述。
+    llm_description: Optional plain-text description for the new book.
+    form: llm
+  - name: description_html
+    type: string
+    required: false
+    label:
+      en_US: Description HTML
+      zh_Hans: 描述 HTML
+    human_description:
+      en_US: Optional HTML description for the new book.
+      zh_Hans: 新书籍的可选 HTML 描述。
+    llm_description: Optional HTML description for the new book.
+    form: llm
+  - name: tags
+    type: string
+    required: false
+    label:
+      en_US: Tags
+      zh_Hans: 标签
+    human_description:
+      en_US: Optional tag text or list-like value forwarded as simple tags.
+      zh_Hans: 可选标签文本或列表式值，将作为简单标签传递。
+    llm_description: Optional tags for the new book.
+    form: llm
+extra:
+  python:
+    source: tools/create_book.py
