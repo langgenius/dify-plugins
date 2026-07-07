@@ -2,10 +2,10 @@ name: PR Risk Label
 
 on:
   pull_request_target:
-    types: [opened, edited, reopened, ready_for_review]
+    types: [opened, edited, reopened, synchronize, ready_for_review]
 
 permissions:
-  pull-requests: read
+  pull-requests: write
   issues: write
 
 jobs:
