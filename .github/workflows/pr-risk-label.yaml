@@ -67,8 +67,13 @@ jobs:
 
             for (const label of Object.values(riskLabels)) {
               try {
-                await github.rest.issues.getLabel({ owner, repo, name: label.name });
-                await updateLabel(label);
+                const { data: existing } = await github.rest.issues.getLabel({ owner, repo, name: label.name });
+                if (
+                  existing.color?.toUpperCase() !== label.color ||
+                  (existing.description ?? '') !== (label.description ?? '')
+                ) {
+                  await updateLabel(label);
+                }
               } catch (error) {
                 if (error.status !== 404) {
                   throw error;
