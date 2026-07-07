@@ -119,7 +119,7 @@ jobs:
               per_page: 100,
             });
             const managedComments = comments.filter(
-              (comment) => comment.user?.type === 'Bot' && comment.body?.includes(marker)
+              (comment) => comment.user?.login === 'github-actions[bot]' && comment.body?.includes(marker)
             );
 
             if (selected.length === 1) {
