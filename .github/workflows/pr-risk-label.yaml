@@ -43,8 +43,7 @@ jobs:
             };
 
             const marker = '<!-- dify-plugins-risk-label-bot -->';
-            const warningBody = `${marker}
-            Please select exactly one risk level in the PR template: Low risk, Medium risk, or High risk. This helps Marketplace reviewers route the submission correctly.`;
+            const warningBody = `${marker}\nPlease select exactly one risk level in the PR template: Low risk, Medium risk, or High risk. This helps Marketplace reviewers route the submission correctly.`;
 
             const { owner, repo } = context.repo;
             const pr = context.payload.pull_request;
