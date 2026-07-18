@@ -1,0 +1,63 @@
+identity:
+  name: get_page_source
+  author: scrapeunblocker
+  label:
+    en_US: Get Page Source
+description:
+  human:
+    en_US: Fetch a web page rendered in a real browser, bypassing anti-bot protections such as Cloudflare, DataDome, PerimeterX and Akamai.
+  llm: Fetch the fully rendered content of a web page that ordinary HTTP requests cannot reach because it is protected by anti-bot systems. Returns HTML, or AI-parsed structured JSON when parsed_data is true.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether the page was fetched successfully.
+    error:
+      type: string
+      nullable: true
+      description: Error message when the fetch fails.
+    url:
+      type: string
+      nullable: true
+      description: The URL that was fetched.
+    parsed_data:
+      type: boolean
+      nullable: true
+      description: Whether AI-parsed JSON was requested instead of raw HTML.
+    content_length:
+      type: integer
+      nullable: true
+      description: Length in characters of the returned content.
+parameters:
+  - name: url
+    type: string
+    required: true
+    label:
+      en_US: URL
+    human_description:
+      en_US: The full URL of the page to fetch, including the scheme.
+    llm_description: The full URL of the page to fetch, including the scheme, for example https://example.com/product/123
+    form: llm
+  - name: parsed_data
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: Parsed Data
+    human_description:
+      en_US: Return AI-parsed structured JSON instead of raw HTML.
+    llm_description: Set to true to receive AI-parsed structured JSON instead of raw HTML.
+    form: llm
+  - name: proxy_country
+    type: string
+    required: false
+    label:
+      en_US: Proxy Country
+    human_description:
+      en_US: Two-letter country code for the exit IP, for geo-restricted or localised content.
+    llm_description: Two-letter country code for the exit IP, for example us or de. Leave empty unless the page is geo-restricted.
+    form: llm
+extra:
+  python:
+    source: tools/get_page_source.py

@@ -1,0 +1,81 @@
+identity:
+  name: search_google
+  author: scrapeunblocker
+  label:
+    en_US: Search Google
+description:
+  human:
+    en_US: Scrape a Google search results page and return the organic results.
+  llm: Search Google for a keyword and return the organic results, each with a title, url and description.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether the search succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when the search fails.
+    keyword:
+      type: string
+      nullable: true
+      description: The keyword that was searched.
+    results:
+      type: array
+      description: Organic search results.
+      items:
+        type: object
+        properties:
+          title:
+            type: string
+            nullable: true
+            description: Result title.
+          url:
+            type: string
+            nullable: true
+            description: Result URL.
+          description:
+            type: string
+            nullable: true
+            description: Result snippet.
+          position:
+            type: string
+            nullable: true
+            description: Position in the results list.
+    count:
+      type: integer
+      nullable: true
+      description: Number of organic results returned.
+parameters:
+  - name: keyword
+    type: string
+    required: true
+    label:
+      en_US: Keyword
+    human_description:
+      en_US: The search term to look up on Google.
+    llm_description: The search term to look up on Google, for example best running shoes
+    form: llm
+  - name: pages_to_check
+    type: number
+    required: false
+    default: 1
+    label:
+      en_US: Pages To Check
+    human_description:
+      en_US: How many result pages to scrape.
+    llm_description: How many Google result pages to scrape. Defaults to 1.
+    form: llm
+  - name: proxy_country
+    type: string
+    required: false
+    label:
+      en_US: Proxy Country
+    human_description:
+      en_US: Two-letter country code for the exit IP, to get country-specific results.
+    llm_description: Two-letter country code for the exit IP, for example us or de, to get country-specific results.
+    form: llm
+extra:
+  python:
+    source: tools/search_google.py

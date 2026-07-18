@@ -1,0 +1,42 @@
+identity:
+  author: scrapeunblocker
+  name: scrapeunblocker
+  label:
+    en_US: ScrapeUnblocker
+  description:
+    en_US: Scrape pages behind anti-bot protections and read Google search results.
+  icon: icon.png
+  tags:
+    - search
+    - utilities
+credentials_for_provider:
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: ScrapeUnblocker API Key
+    placeholder:
+      en_US: Please input your ScrapeUnblocker API key
+    help:
+      en_US: Get your API key from your ScrapeUnblocker account.
+    url: https://www.scrapeunblocker.com
+  base_url:
+    type: text-input
+    required: false
+    label:
+      en_US: API Base URL
+    placeholder:
+      en_US: https://api.scrapeunblocker.com
+  timeout_seconds:
+    type: text-input
+    required: false
+    label:
+      en_US: Timeout Seconds
+    placeholder:
+      en_US: "180"
+tools:
+  - tools/get_page_source.yaml
+  - tools/search_google.yaml
+extra:
+  python:
+    source: provider/scrapeunblocker.py
