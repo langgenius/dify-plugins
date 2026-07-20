@@ -1,7 +1,0 @@
-.git/
-tests/
-__pycache__/
-**/__pycache__/
-*.pyc
-*.difypkg
-dist/
