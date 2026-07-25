@@ -1,0 +1,37 @@
+identity:
+  author: dieudonneAwa
+  name: mailtrap
+  label:
+    en_US: Mailtrap
+  description:
+    en_US: Mailtrap Email API provider for sending transactional emails and sandbox testing.
+  icon: icon.png
+credentials_for_provider:
+  api_token:
+    type: secret-input
+    required: true
+    label:
+      en_US: API Token
+    placeholder:
+      en_US: Enter your Mailtrap API token
+    help:
+      en_US: Get your API token from https://mailtrap.io/api-tokens
+    url: https://mailtrap.io/api-tokens
+  account_id:
+    type: text-input
+    required: true
+    label:
+      en_US: Account ID
+    placeholder:
+      en_US: Enter your Mailtrap Account ID
+    help:
+      en_US: Get your Account ID from https://mailtrap.io/account-management
+  inbox_id:
+    type: text-input
+    required: false
+    label:
+      en_US: Sandbox Inbox ID
+    placeholder:
+      en_US: Enter your sandbox inbox ID (optional, for testing)
+    help:
+      en_US: Only needed if you want to use Mailtrap Sandbox for testing
