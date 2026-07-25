@@ -1,0 +1,27 @@
+version: 0.0.1
+type: plugin
+author: dieudonneAwa
+name: mailtrap
+label:
+  en_US: Mailtrap
+description:
+  en_US: Send transactional emails, test in sandbox, and manage email infrastructure via Mailtrap Email API.
+icon: icon.png
+resource:
+  memory: 67108864
+permission:
+  storage:
+    enabled: false
+plugins:
+  tools:
+    - tools/mailtrap.yaml
+privacy: PRIVACY.md
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
