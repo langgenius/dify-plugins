@@ -1,0 +1,56 @@
+identity:
+  name: send_email
+  author: dieudonneAwa
+  label:
+    en_US: Send Email
+description:
+  human:
+    en_US: Send a transactional email via Mailtrap Email API or test in Mailtrap Sandbox.
+  llm: Send an email using Mailtrap Email API. Use sandbox=true for testing without real delivery.
+parameters:
+  - name: to_email
+    type: string
+    required: true
+    label:
+      en_US: Recipient Email
+    human_description:
+      en_US: The recipient's email address.
+    llm_description: The email address of the recipient.
+    form: llm
+  - name: subject
+    type: string
+    required: true
+    label:
+      en_US: Subject
+    human_description:
+      en_US: The email subject line.
+    llm_description: The subject line of the email.
+    form: llm
+  - name: body
+    type: string
+    required: true
+    label:
+      en_US: Body
+    human_description:
+      en_US: The email body content (HTML or plain text).
+    llm_description: The body content of the email, can be HTML or plain text.
+    form: llm
+  - name: from_email
+    type: string
+    required: false
+    label:
+      en_US: From Email
+    human_description:
+      en_US: The sender email address (must be from a verified Mailtrap domain).
+    llm_description: Optional sender email address from a verified Mailtrap sending domain.
+    form: llm
+  - name: sandbox
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: Use Sandbox
+    human_description:
+      en_US: Set to true to send to Mailtrap Sandbox for testing without real delivery.
+    llm_description: If true, sends to Mailtrap Sandbox for safe testing.
+    form: form
