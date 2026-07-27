@@ -34,14 +34,20 @@ def _process_single_image(
         timeout=DEFAULT_TIMEOUT,
     )
     data = resp.json()
-    return {
-        "status": "success",
+    steps = data.get("steps", {})
+    user_tip = data.get("user_tip")
+    status = "success" if steps.get("background_removal") != "failed" else "warning"
+    result = {
+        "status": status,
         "processed_image_base64": data.get("processed_image_base64", ""),
         "reduction_percent": data.get("reduction_percent", 0),
         "original_size_kb": data.get("original_size_kb", 0),
         "processed_size_kb": data.get("processed_size_kb", 0),
         "elapsed_ms": data.get("elapsed_ms", 0),
     }
+    if user_tip:
+        result["user_tip"] = user_tip
+    return result
 
 
 class BatchProcessImagesTool(Tool):
@@ -137,7 +143,8 @@ class BatchProcessImagesTool(Tool):
                     result_entry["index"] = idx + 1
                     result_entry["url"] = source
                     results[idx] = result_entry
-                    success_count += 1
+                    if result_entry.get("status") == "success":
+                        success_count += 1
                 except Exception as e:
                     results[idx] = {
                         "index": idx + 1,

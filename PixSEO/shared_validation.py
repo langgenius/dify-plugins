@@ -41,12 +41,25 @@ def check_image_magic(data: bytes) -> bool:
     return False
 
 
+def _strip_data_uri_prefix(value: str) -> str:
+    """Strip optional Data URI prefix such as data:image/png;base64,."""
+    value = value.strip()
+    if value.lower().startswith("data:"):
+        comma_index = value.find(",")
+        if comma_index != -1:
+            return value[comma_index + 1 :].strip()
+    return value
+
+
 def validate_image_base64(image_base64: str) -> Optional[str]:
     """Validate a base64-encoded image: size and format."""
     if not image_base64:
         return None
+    payload = _strip_data_uri_prefix(image_base64)
+    if not payload:
+        return "Invalid base64 image data."
     try:
-        data = base64.b64decode(image_base64, validate=True)
+        data = base64.b64decode(payload, validate=True)
     except binascii.Error:
         return "Invalid base64 image data."
     except Exception:

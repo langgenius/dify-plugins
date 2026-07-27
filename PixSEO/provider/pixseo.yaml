@@ -32,6 +32,7 @@ tools:
   - tools/process_image.yaml
   - tools/batch_process_images.yaml
   - tools/get_usage.yaml
+  - tools/score_alt_text.yaml
 extra:
   python:
     source: provider/pixseo.py
