@@ -1,0 +1,130 @@
+identity:
+  name: video_to_music
+  author: sonilo-ai
+  label:
+    en_US: Video to Music
+    zh_Hans: 视频生成音乐
+description:
+  human:
+    en_US: >-
+      Generate a licensed soundtrack aligned to a video, using the Sonilo
+      API. Use this for a music bed matched to a video's pacing and mood,
+      not for isolated sound effects.
+    zh_Hans: >-
+      使用 Sonilo API 生成与视频对齐的有版权授权原声带。适用于匹配视频节奏与情绪的背景音乐，不适用于独立音效。
+  llm: >-
+    Generate a soundtrack for a video, matched to its pacing, motion, and
+    mood, from a public/signed HTTPS video URL. Use this instead of
+    text_to_music when the music should be derived from an actual video, and
+    instead of video_to_sfx when the goal is background music rather than
+    discrete sound effects. Returns a downloadable audio URL, or polls until
+    the async job finishes.
+extra:
+  python:
+    source: tools/video_to_music.py
+parameters:
+  - name: video_url
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Video URL
+      zh_Hans: 视频 URL
+    human_description:
+      en_US: >-
+        A public or signed HTTPS URL that Sonilo's servers can fetch. This
+        tool submits the JSON video_url request variant; it does not
+        support uploading a raw video file.
+      zh_Hans: >-
+        Sonilo 服务器可访问的公开或带签名的 HTTPS URL。本工具使用 JSON 的 video_url
+        请求方式，不支持直接上传原始视频文件。
+    llm_description: Public or signed HTTPS URL of the source video to generate a soundtrack for.
+  - name: prompt
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: Style prompt
+      zh_Hans: 风格提示词
+    human_description:
+      en_US: Optional creative direction for the soundtrack (genre, mood, instrumentation).
+      zh_Hans: 可选的原声带创作方向（风格、情绪、乐器）。
+    llm_description: Optional style/mood direction for the generated soundtrack, e.g. "tense, minimal synth".
+  - name: mode
+    type: select
+    required: false
+    form: form
+    default: sync
+    options:
+      - value: sync
+        label:
+          en_US: Sync (wait for the result in one request)
+          zh_Hans: 同步（在一次请求中等待结果）
+      - value: async
+        label:
+          en_US: Async (submit and poll a task)
+          zh_Hans: 异步（提交后轮询任务）
+    label:
+      en_US: Generation mode
+      zh_Hans: 生成模式
+    human_description:
+      en_US: >-
+        "sync" waits for the result inline; "async" submits a background
+        task that this tool polls via GET /v1/tasks/{task_id} until it
+        finishes. Video jobs can take longer, so "async" is recommended for
+        longer clips.
+      zh_Hans: “sync” 会在请求中直接等待结果；“async” 会提交后台任务，本工具通过轮询 GET /v1/tasks/{task_id} 直至完成。视频任务耗时可能较长，建议较长视频使用 “async”。
+  - name: output_format
+    type: select
+    required: false
+    form: form
+    default: aac
+    options:
+      - value: wav
+        label:
+          en_US: WAV
+          zh_Hans: WAV
+      - value: mp3
+        label:
+          en_US: MP3
+          zh_Hans: MP3
+      - value: aac
+        label:
+          en_US: AAC
+          zh_Hans: AAC
+      - value: flac
+        label:
+          en_US: FLAC
+          zh_Hans: FLAC
+    label:
+      en_US: Output format
+      zh_Hans: 输出格式
+    human_description:
+      en_US: Audio container/codec for the generated file.
+      zh_Hans: 生成音频文件的容器/编码格式。
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether an audio URL was successfully resolved.
+    audio_url:
+      type: string
+      nullable: true
+      description: URL of the generated soundtrack, when available.
+    task_id:
+      type: string
+      nullable: true
+      description: Sonilo task id, present when the request went through the async path.
+    status:
+      type: string
+      nullable: true
+      description: Final Sonilo status for this request (e.g. completed).
+    duration:
+      type: number
+      nullable: true
+      description: Duration of the generated audio in seconds, when reported.
+    raw:
+      type: object
+      nullable: true
+      description: The full, unmodified response body from the Sonilo API.

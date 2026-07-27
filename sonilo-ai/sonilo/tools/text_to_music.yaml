@@ -1,0 +1,126 @@
+identity:
+  name: text_to_music
+  author: sonilo-ai
+  label:
+    en_US: Text to Music
+    zh_Hans: 文本生成音乐
+description:
+  human:
+    en_US: >-
+      Generate licensed, original music from a text prompt using the Sonilo
+      API. Use this for standalone background music, not sound effects and
+      not music tied to a specific video.
+    zh_Hans: >-
+      使用 Sonilo API 根据文本提示生成有版权授权的原创音乐。适用于独立的背景音乐，不适用于音效，也不适用于与特定视频绑定的音乐。
+  llm: >-
+    Generate original, licensed music from a text description (genre, mood,
+    instrumentation, tempo, etc.). Use for background music / soundtracks
+    that are not tied to a specific video and are not sound effects. Returns
+    a downloadable audio URL, or polls until the async job finishes.
+extra:
+  python:
+    source: tools/text_to_music.py
+parameters:
+  - name: prompt
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Prompt
+      zh_Hans: 提示词
+    human_description:
+      en_US: Description of the music to generate (genre, mood, instruments, tempo, etc.).
+      zh_Hans: 要生成音乐的描述（风格、情绪、乐器、节奏等）。
+    llm_description: >-
+      Natural-language description of the music to generate, e.g. "warm
+      lo-fi piano with soft rain ambience, 80 BPM" or "upbeat corporate
+      background track with light percussion".
+  - name: duration
+    type: number
+    required: false
+    form: llm
+    label:
+      en_US: Duration (seconds)
+      zh_Hans: 时长（秒）
+    human_description:
+      en_US: Desired output duration in seconds. Leave empty to use the Sonilo API's default.
+      zh_Hans: 期望的输出时长（秒）。留空则使用 Sonilo API 的默认值。
+    llm_description: Desired duration of the generated music, in seconds.
+  - name: mode
+    type: select
+    required: false
+    form: form
+    default: sync
+    options:
+      - value: sync
+        label:
+          en_US: Sync (wait for the result in one request)
+          zh_Hans: 同步（在一次请求中等待结果）
+      - value: async
+        label:
+          en_US: Async (submit and poll a task)
+          zh_Hans: 异步（提交后轮询任务）
+    label:
+      en_US: Generation mode
+      zh_Hans: 生成模式
+    human_description:
+      en_US: >-
+        "sync" waits for the result inline; "async" submits a background
+        task that this tool polls via GET /v1/tasks/{task_id} until it
+        finishes. Either way you get one result back -- this only affects
+        how Sonilo processes the request server-side.
+      zh_Hans: “sync” 会在请求中直接等待结果；“async” 会提交后台任务，本工具通过轮询 GET /v1/tasks/{task_id} 直至完成。两种方式最终都会返回一个结果，区别仅在于 Sonilo 服务端的处理方式。
+  - name: output_format
+    type: select
+    required: false
+    form: form
+    default: aac
+    options:
+      - value: wav
+        label:
+          en_US: WAV
+          zh_Hans: WAV
+      - value: mp3
+        label:
+          en_US: MP3
+          zh_Hans: MP3
+      - value: aac
+        label:
+          en_US: AAC
+          zh_Hans: AAC
+      - value: flac
+        label:
+          en_US: FLAC
+          zh_Hans: FLAC
+    label:
+      en_US: Output format
+      zh_Hans: 输出格式
+    human_description:
+      en_US: Audio container/codec for the generated file.
+      zh_Hans: 生成音频文件的容器/编码格式。
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether an audio URL was successfully resolved.
+    audio_url:
+      type: string
+      nullable: true
+      description: URL of the generated music, when available.
+    task_id:
+      type: string
+      nullable: true
+      description: Sonilo task id, present when the request went through the async path.
+    status:
+      type: string
+      nullable: true
+      description: Final Sonilo status for this request (e.g. completed).
+    duration:
+      type: number
+      nullable: true
+      description: Duration of the generated audio in seconds, when reported.
+    raw:
+      type: object
+      nullable: true
+      description: The full, unmodified response body from the Sonilo API.

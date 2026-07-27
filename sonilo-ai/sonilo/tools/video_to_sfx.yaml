@@ -1,0 +1,131 @@
+identity:
+  name: video_to_sfx
+  author: sonilo-ai
+  label:
+    en_US: Video to Sound Effects
+    zh_Hans: 视频生成音效
+description:
+  human:
+    en_US: >-
+      Generate realistic, frame-accurate sound effects for a video, aligned
+      to visual moments, cuts, motion, objects, UI actions, product
+      reveals, game moments, and transitions, using the Sonilo API. Use
+      this for SFX, not background music.
+    zh_Hans: >-
+      使用 Sonilo API 为视频生成逼真的、逐帧对齐的音效，对齐画面中的关键时刻、镜头切换、运动、物体、UI 操作、产品展示、游戏时刻与转场。适用于音效，不适用于背景音乐。
+  llm: >-
+    Generate frame-accurate sound effects for a video from a public/signed
+    HTTPS video URL -- e.g. impacts, whooshes, UI sounds, product-reveal
+    stingers, footsteps, timed to what's happening on screen. Use this
+    instead of video_to_music when the goal is discrete SFX rather than a
+    music bed. Returns a downloadable audio URL, or polls until the async
+    job finishes.
+extra:
+  python:
+    source: tools/video_to_sfx.py
+parameters:
+  - name: video_url
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Video URL
+      zh_Hans: 视频 URL
+    human_description:
+      en_US: >-
+        A public or signed HTTPS URL that Sonilo's servers can fetch. This
+        tool submits the JSON video_url request variant; it does not
+        support uploading a raw video file.
+      zh_Hans: >-
+        Sonilo 服务器可访问的公开或带签名的 HTTPS URL。本工具使用 JSON 的 video_url
+        请求方式，不支持直接上传原始视频文件。
+    llm_description: Public or signed HTTPS URL of the source video to generate frame-accurate sound effects for.
+  - name: prompt
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: Style prompt
+      zh_Hans: 风格提示词
+    human_description:
+      en_US: Optional creative direction for the sound effects (e.g. tone, intensity).
+      zh_Hans: 可选的音效创作方向（如音色、强度）。
+    llm_description: Optional style direction for the generated sound effects, e.g. "punchy, cinematic impacts".
+  - name: mode
+    type: select
+    required: false
+    form: form
+    default: sync
+    options:
+      - value: sync
+        label:
+          en_US: Sync (wait for the result in one request)
+          zh_Hans: 同步（在一次请求中等待结果）
+      - value: async
+        label:
+          en_US: Async (submit and poll a task)
+          zh_Hans: 异步（提交后轮询任务）
+    label:
+      en_US: Generation mode
+      zh_Hans: 生成模式
+    human_description:
+      en_US: >-
+        "sync" waits for the result inline; "async" submits a background
+        task that this tool polls via GET /v1/tasks/{task_id} until it
+        finishes. Video jobs can take longer, so "async" is recommended for
+        longer clips.
+      zh_Hans: “sync” 会在请求中直接等待结果；“async” 会提交后台任务，本工具通过轮询 GET /v1/tasks/{task_id} 直至完成。视频任务耗时可能较长，建议较长视频使用 “async”。
+  - name: output_format
+    type: select
+    required: false
+    form: form
+    default: aac
+    options:
+      - value: wav
+        label:
+          en_US: WAV
+          zh_Hans: WAV
+      - value: mp3
+        label:
+          en_US: MP3
+          zh_Hans: MP3
+      - value: aac
+        label:
+          en_US: AAC
+          zh_Hans: AAC
+      - value: flac
+        label:
+          en_US: FLAC
+          zh_Hans: FLAC
+    label:
+      en_US: Output format
+      zh_Hans: 输出格式
+    human_description:
+      en_US: Audio container/codec for the generated file.
+      zh_Hans: 生成音频文件的容器/编码格式。
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether an audio URL was successfully resolved.
+    audio_url:
+      type: string
+      nullable: true
+      description: URL of the generated sound effects track, when available.
+    task_id:
+      type: string
+      nullable: true
+      description: Sonilo task id, present when the request went through the async path.
+    status:
+      type: string
+      nullable: true
+      description: Final Sonilo status for this request (e.g. completed).
+    duration:
+      type: number
+      nullable: true
+      description: Duration of the generated audio in seconds, when reported.
+    raw:
+      type: object
+      nullable: true
+      description: The full, unmodified response body from the Sonilo API.
