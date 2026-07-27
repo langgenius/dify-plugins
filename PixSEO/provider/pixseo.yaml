@@ -1,0 +1,37 @@
+identity:
+  author: pixseo
+  name: pixseo
+  label:
+    en_US: PixSEO
+    zh_Hans: PixSEO
+  description:
+    en_US: AI-powered product image SEO optimization engine
+    zh_Hans: AI驱动的商品图片SEO优化引擎
+  icon: icon.svg
+  tags:
+    - image
+    - search
+    - productivity
+    - business
+    - utilities
+credentials_for_provider:
+  pixseo_api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: PixSEO API Key
+      zh_Hans: PixSEO API Key
+    placeholder:
+      en_US: Please input your PixSEO API Key
+      zh_Hans: 请输入 PixSEO API Key
+    help:
+      en_US: Register at PixSEO to get your API Key
+      zh_Hans: 在 PixSEO 注册获取 API Key
+    url: https://api.hzhdmn.icu/api-docs
+tools:
+  - tools/process_image.yaml
+  - tools/batch_process_images.yaml
+  - tools/get_usage.yaml
+extra:
+  python:
+    source: provider/pixseo.py

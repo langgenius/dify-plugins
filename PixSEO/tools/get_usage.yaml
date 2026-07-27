@@ -1,0 +1,15 @@
+identity:
+  name: get_usage
+  author: pixseo
+  label:
+    en_US: Query API Usage
+    zh_Hans: 查询API用量
+description:
+  human:
+    en_US: Query current API Key usage statistics - plan name, monthly quota, used count, and remaining quota.
+    zh_Hans: 查询当前API Key的使用统计 - 方案名称、月度配额、已用数量、剩余配额。
+  llm: Use this tool when the user asks about their API usage, remaining quota, current plan, or account status. Returns plan name, monthly limit, used count, and remaining quota.
+parameters: []
+extra:
+  python:
+    source: tools/get_usage.py
