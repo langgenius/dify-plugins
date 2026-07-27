@@ -16,8 +16,8 @@ description:
     Generate an isolated sound effect (Foley, impact, ambience, UI sound,
     transition, etc.) from a text description. Use this instead of
     text_to_music when the user wants a discrete sound effect rather than
-    music. Returns a downloadable audio URL, or polls until the async job
-    finishes.
+    music. Submits the job and polls until it finishes, then returns a
+    downloadable audio URL.
 extra:
   python:
     source: tools/text_to_sfx.py
@@ -38,44 +38,21 @@ parameters:
       thunder rolling over rain".
   - name: duration
     type: number
-    required: false
+    required: true
     form: llm
+    min: 1
+    max: 180
     label:
       en_US: Duration (seconds)
       zh_Hans: 时长（秒）
     human_description:
-      en_US: Desired output duration in seconds. Leave empty to use the Sonilo API's default.
-      zh_Hans: 期望的输出时长（秒）。留空则使用 Sonilo API 的默认值。
-    llm_description: Desired duration of the generated sound effect, in seconds.
-  - name: mode
+      en_US: Output duration in whole seconds, from 1 to 180.
+      zh_Hans: 输出时长（整数秒），范围 1 到 180。
+    llm_description: Desired duration of the generated sound effect, in whole seconds, between 1 and 180.
+  - name: audio_format
     type: select
     required: false
     form: form
-    default: sync
-    options:
-      - value: sync
-        label:
-          en_US: Sync (wait for the result in one request)
-          zh_Hans: 同步（在一次请求中等待结果）
-      - value: async
-        label:
-          en_US: Async (submit and poll a task)
-          zh_Hans: 异步（提交后轮询任务）
-    label:
-      en_US: Generation mode
-      zh_Hans: 生成模式
-    human_description:
-      en_US: >-
-        "sync" waits for the result inline; "async" submits a background
-        task that this tool polls via GET /v1/tasks/{task_id} until it
-        finishes. Either way you get one result back -- this only affects
-        how Sonilo processes the request server-side.
-      zh_Hans: “sync” 会在请求中直接等待结果；“async” 会提交后台任务，本工具通过轮询 GET /v1/tasks/{task_id} 直至完成。两种方式最终都会返回一个结果，区别仅在于 Sonilo 服务端的处理方式。
-  - name: output_format
-    type: select
-    required: false
-    form: form
-    default: aac
     options:
       - value: wav
         label:
@@ -94,11 +71,11 @@ parameters:
           en_US: FLAC
           zh_Hans: FLAC
     label:
-      en_US: Output format
-      zh_Hans: 输出格式
+      en_US: Audio format
+      zh_Hans: 音频格式
     human_description:
-      en_US: Audio container/codec for the generated file.
-      zh_Hans: 生成音频文件的容器/编码格式。
+      en_US: Audio container/codec for the generated file. Leave unset to use Sonilo's default.
+      zh_Hans: 生成音频文件的容器/编码格式。留空则使用 Sonilo 的默认值。
 output_schema:
   type: object
   properties:
@@ -109,19 +86,27 @@ output_schema:
       type: string
       nullable: true
       description: URL of the generated sound effect, when available.
+    content_type:
+      type: string
+      nullable: true
+      description: Content type of the generated audio file, when reported.
     task_id:
       type: string
       nullable: true
-      description: Sonilo task id, present when the request went through the async path.
+      description: Sonilo task id for this request.
     status:
       type: string
       nullable: true
-      description: Final Sonilo status for this request (e.g. completed).
-    duration:
+      description: Final Sonilo task status (e.g. succeeded).
+    duration_seconds:
       type: number
       nullable: true
       description: Duration of the generated audio in seconds, when reported.
+    cost:
+      type: number
+      nullable: true
+      description: Cost of this generation, when reported.
     raw:
       type: object
       nullable: true
-      description: The full, unmodified response body from the Sonilo API.
+      description: The full, unmodified terminal task body from the Sonilo API.

@@ -1,27 +1,40 @@
 """Shared HTTP client for all four Sonilo generation tools.
 
-Built directly against Sonilo's published OpenAPI spec
-(https://sonilo.com/openapi.json), not against a third-party SDK, so this
-intentionally does not import the ``sonilo`` PyPI package. Every request
-carries the user's own API key as a Bearer token; the key is never logged
-or included in any error message or return value.
+Built directly against Sonilo's backend route contract (confirmed against
+the backend source and the official JS/Python SDKs), not against a
+third-party SDK -- this intentionally does not import the ``sonilo`` PyPI
+package. Every request carries the user's own API key as a Bearer token;
+the key is never logged or included in any error message or return value.
+
+Request encoding
+-----------------
+All five Sonilo POST endpoints
+(``/v1/text-to-music``, ``/v1/video-to-music``, ``/v1/audio-ducking``,
+``/v1/text-to-sfx``, ``/v1/video-to-sfx``) bind their fields with FastAPI
+``Form(...)`` parameters, so they accept **multipart/form-data only** --
+a JSON body will not bind. :func:`submit_generation` always sends
+``multipart/form-data`` (via ``requests``' ``files={name: (None, value)}``
+trick, which multipart-encodes plain form fields with no attached file).
 
 Async handling
 ---------------
-``POST /v1/text-to-music``, ``/v1/video-to-music``, ``/v1/text-to-sfx``, and
-``/v1/video-to-sfx`` all share one response envelope: either a resolved
-``GenerationResponse`` (the job finished before the request returned) or a
-``TaskCreatedResponse`` acknowledging an async job that must be polled via
-``GET /v1/tasks/{task_id}``. :func:`resolve_generation` submits the request
-and transparently polls when needed, so tool implementations never have to
-branch on that themselves.
+- ``/v1/text-to-sfx`` and ``/v1/video-to-sfx`` are unconditionally async:
+  every call returns a 202-style ack, always exactly
+  ``{"task_id": ..., "status": "processing"}``. They accept no ``mode``
+  field at all.
+- ``/v1/text-to-music`` and ``/v1/video-to-music`` accept ``mode`` =
+  ``"stream"`` (default) or ``"async"``. The default ``"stream"`` mode
+  returns an NDJSON event stream (``audio_chunk``/``title``/``complete``/
+  ``error`` events) rather than a single JSON body. This plugin does not
+  implement that streaming protocol; instead it always submits
+  ``mode="async"`` for both music endpoints and polls the task API below,
+  so every tool in this plugin follows the same submit-then-poll path.
 
-Per the OpenAPI spec, a task's ``status`` is one of:
-``queued | running | completed | failed | canceled`` -- ``completed`` is the
-only success terminal state. (Note: this differs from the status naming used
-internally by some Sonilo client SDKs, which is why polling here is written
-directly against the documented wire contract rather than ported from any
-SDK's task-waiting code.)
+Either way, :func:`resolve_generation` submits the request and polls
+``GET /v1/tasks/{task_id}`` until the task reaches a terminal status.
+Per the real backend contract, a task's ``status`` is one of
+``processing | succeeded | failed`` -- ``succeeded`` is the only success
+terminal state, and there is no ``canceled`` state.
 """
 
 from __future__ import annotations
@@ -36,8 +49,11 @@ DEFAULT_REQUEST_TIMEOUT = 60.0
 DEFAULT_POLL_INTERVAL = 3.0
 DEFAULT_POLL_TIMEOUT = 600.0
 
-# Per GET /v1/tasks/{task_id} in the Sonilo OpenAPI spec.
-_TERMINAL_STATUSES = {"completed", "failed", "canceled"}
+# Per GET /v1/tasks/{task_id} on the real backend: processing | succeeded | failed.
+_TERMINAL_STATUSES = {"succeeded", "failed"}
+
+# Terminal task result media fields to look for, per endpoint family.
+_MEDIA_KEYS = ("audio", "sfx", "music", "music_processed", "video")
 
 
 class SoniloAPIError(Exception):
@@ -49,13 +65,21 @@ class SoniloAPIError(Exception):
 
 
 class SoniloTaskError(Exception):
-    """Raised when an async Sonilo task ends in ``failed``/``canceled``, or
-    when polling gives up before a terminal status is reached."""
+    """Raised when an async Sonilo task ends in ``failed``, or when polling
+    gives up before a terminal status is reached."""
 
-    def __init__(self, message: str, *, task_id: str, status: str):
+    def __init__(
+        self,
+        message: str,
+        *,
+        task_id: str,
+        status: str,
+        refunded: Optional[bool] = None,
+    ):
         super().__init__(message)
         self.task_id = task_id
         self.status = status
+        self.refunded = refunded
 
 
 def _headers(api_key: str) -> dict[str, str]:
@@ -89,7 +113,8 @@ def validate_api_key(api_key: str, *, timeout: float = 15.0) -> None:
     """Cheap, read-only credential check used by the provider.
 
     Hits ``GET /v1/account/usage``, which needs no request body and does not
-    consume generation credits.
+    consume generation credits. (This is a plain GET, unrelated to the
+    multipart-only POST endpoints above.)
     """
     response = requests.get(
         f"{API_BASE_URL}/v1/account/usage", headers=_headers(api_key), timeout=timeout
@@ -100,17 +125,26 @@ def validate_api_key(api_key: str, *, timeout: float = 15.0) -> None:
 def submit_generation(
     api_key: str,
     path: str,
-    payload: dict[str, Any],
+    fields: dict[str, Any],
     *,
     timeout: float = DEFAULT_REQUEST_TIMEOUT,
 ) -> dict[str, Any]:
-    """POST a generation request to one of the four Sonilo generation
-    endpoints and return the raw JSON body (a ``GenerationResponse`` or a
-    ``TaskCreatedResponse``)."""
+    """POST a generation request as ``multipart/form-data``.
+
+    ``fields`` values of ``None`` are dropped. Every remaining value is
+    stringified and sent as a plain multipart form field (no attached
+    file) using the ``files={name: (None, value)}`` trick, which is the
+    standard way to force ``requests`` to emit ``multipart/form-data``
+    without an actual file upload -- required here because the backend
+    binds these fields with FastAPI ``Form(...)``, not a JSON body.
+    """
+    multipart_fields = {
+        key: (None, str(value)) for key, value in fields.items() if value is not None
+    }
     response = requests.post(
         f"{API_BASE_URL}{path}",
-        headers={**_headers(api_key), "Content-Type": "application/json"},
-        json=payload,
+        headers=_headers(api_key),
+        files=multipart_fields,
         timeout=timeout,
     )
     _raise_for_status(response)
@@ -138,30 +172,32 @@ def wait_for_task(
 ) -> dict[str, Any]:
     """Poll ``GET /v1/tasks/{task_id}`` until it reaches a terminal status.
 
-    Returns the task body on ``completed``. Raises :class:`SoniloTaskError`
-    on ``failed``/``canceled`` or if ``timeout`` elapses first (the task may
-    still complete later server-side; the caller can resume polling with the
+    Returns the task body on ``succeeded``. Raises :class:`SoniloTaskError`
+    on ``failed`` or if ``timeout`` elapses first (the task may still
+    complete later server-side; the caller can resume polling with the
     same ``task_id``).
     """
     deadline = time.monotonic() + timeout
-    status = "unknown"
+    status = "processing"
     while True:
         task = get_task(api_key, task_id, timeout=15.0)
         status = task.get("status", status)
         if status in _TERMINAL_STATUSES:
-            if status != "completed":
+            if status != "succeeded":
                 error = task.get("error")
                 message = None
                 if isinstance(error, dict):
                     message = error.get("message")
                 message = message or f"Sonilo task {task_id} ended with status '{status}'."
-                raise SoniloTaskError(message, task_id=task_id, status=status)
+                raise SoniloTaskError(
+                    message, task_id=task_id, status=status, refunded=task.get("refunded")
+                )
             return task
         remaining = deadline - time.monotonic()
         if remaining <= 0:
             raise SoniloTaskError(
                 f"Timed out after {timeout:.0f}s waiting for Sonilo task {task_id} "
-                f"(last status: '{status}'). It may finish later; check "
+                f"(last status: '{status}'). It may finish later; poll "
                 "GET /v1/tasks/{task_id} again with this task_id.",
                 task_id=task_id,
                 status=status,
@@ -169,57 +205,65 @@ def wait_for_task(
         time.sleep(min(poll_interval, remaining))
 
 
-def _has_audio_reference(body: dict[str, Any]) -> bool:
-    return bool(body.get("audio_url") or body.get("download_url"))
-
-
 def resolve_generation(
     api_key: str,
     path: str,
-    payload: dict[str, Any],
+    fields: dict[str, Any],
     *,
     poll_interval: float = DEFAULT_POLL_INTERVAL,
     poll_timeout: float = DEFAULT_POLL_TIMEOUT,
 ) -> dict[str, Any]:
-    """Submit a generation request and return the resolved result body,
-    transparently polling ``GET /v1/tasks/{task_id}`` if the API answered
-    with an async task instead of a finished result."""
-    body = submit_generation(api_key, path, payload)
-    if "task_id" in body and not _has_audio_reference(body):
-        return wait_for_task(
-            api_key, body["task_id"], poll_interval=poll_interval, timeout=poll_timeout
-        )
-    return body
-
-
-def extract_audio_url(payload: dict[str, Any], *, _depth: int = 0) -> Optional[str]:
-    """Best-effort extraction of a playable/downloadable audio URL.
-
-    The OpenAPI spec leaves both ``GenerationResponse`` and (especially)
-    ``Task.result`` as open objects (``additionalProperties: true``), so
-    this checks the documented field names first and then falls back to a
-    shallow scan for any nested ``url``-shaped field, rather than assuming
-    one fixed response shape.
+    """Submit a generation request and return the resolved (terminal) task
+    body. Every endpoint this plugin calls always acks with
+    ``{"task_id": ..., "status": "processing"}`` -- the SFX endpoints are
+    unconditionally async, and this plugin always passes ``mode="async"``
+    for the two music endpoints -- so this always polls to a terminal
+    status.
     """
-    if _depth > 3 or not isinstance(payload, dict):
-        return None
-    for key in ("audio_url", "download_url", "url"):
+    ack = submit_generation(api_key, path, fields)
+    task_id = ack.get("task_id")
+    if not task_id:
+        raise SoniloAPIError(f"Sonilo API did not return a task_id. Response: {ack!r}")
+    return wait_for_task(
+        api_key, task_id, poll_interval=poll_interval, timeout=poll_timeout
+    )
+
+
+def _media_candidates(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    """Collect every media-object dict found under the known result keys
+    (``audio``/``sfx``/``music``/``music_processed``/``video``), each of
+    which may be a single object or a list of objects."""
+    candidates: list[dict[str, Any]] = []
+    for key in _MEDIA_KEYS:
         value = payload.get(key)
-        if isinstance(value, str) and value:
+        if isinstance(value, dict):
+            candidates.append(value)
+        elif isinstance(value, list):
+            candidates.extend(item for item in value if isinstance(item, dict))
+    return candidates
+
+
+def extract_audio_media(payload: dict[str, Any]) -> Optional[dict[str, Any]]:
+    """Return the first media object (``{url, content_type, file_size,
+    stream_index}``-shaped) found in a resolved (``succeeded``) task body.
+
+    Falls back to a shallow generic scan for any dict carrying a ``url``
+    string, since the exact set of populated fields can vary by endpoint
+    and this should stay resilient to fields this plugin doesn't know
+    about yet.
+    """
+    for media in _media_candidates(payload):
+        if isinstance(media.get("url"), str) and media["url"]:
+            return media
+    for value in payload.values():
+        if isinstance(value, dict) and isinstance(value.get("url"), str) and value["url"]:
             return value
-    for key in ("result", "audio", "output"):
-        nested = payload.get(key)
-        if isinstance(nested, dict):
-            found = extract_audio_url(nested, _depth=_depth + 1)
-            if found:
-                return found
-        elif isinstance(nested, list):
-            for item in nested:
-                if isinstance(item, dict):
-                    found = extract_audio_url(item, _depth=_depth + 1)
-                    if found:
-                        return found
     return None
+
+
+def extract_audio_url(payload: dict[str, Any]) -> Optional[str]:
+    media = extract_audio_media(payload)
+    return media.get("url") if media else None
 
 
 def download_bytes(url: str, *, timeout: float = 120.0) -> tuple[bytes, Optional[str]]:

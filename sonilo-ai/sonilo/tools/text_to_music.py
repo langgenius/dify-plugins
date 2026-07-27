@@ -5,17 +5,14 @@ from typing import Any, Generator
 from dify_plugin import Tool
 from dify_plugin.entities.tool import ToolInvokeMessage
 
-from tools._client import (
-    SoniloAPIError,
-    SoniloTaskError,
-    download_bytes,
-    extract_audio_url,
-    resolve_generation,
-)
-from tools._payloads import build_text_payload, guess_mime_type, result_summary
+from tools._client import SoniloAPIError, SoniloTaskError, resolve_generation
+from tools._payloads import build_music_text_fields, coerce_duration
+from tools._result import emit_success, emit_task_error
 
 PATH = "/v1/text-to-music"
 TOOL_LABEL = "Sonilo text-to-music"
+MIN_DURATION_SECONDS = 5
+MAX_DURATION_SECONDS = 360
 
 
 class TextToMusicTool(Tool):
@@ -34,42 +31,32 @@ class TextToMusicTool(Tool):
             yield self.create_text_message("A music prompt is required.")
             return
 
-        duration = tool_parameters.get("duration")
-        mode = (tool_parameters.get("mode") or "").strip() or None
+        duration, duration_error = coerce_duration(
+            tool_parameters.get("duration"),
+            min_seconds=MIN_DURATION_SECONDS,
+            max_seconds=MAX_DURATION_SECONDS,
+        )
+        if duration_error:
+            yield self.create_text_message(f"Invalid duration: {duration_error}")
+            return
+
         output_format = (tool_parameters.get("output_format") or "").strip() or None
 
-        payload = build_text_payload(
-            prompt=prompt, duration=duration, mode=mode, output_format=output_format
-        )
+        fields = build_music_text_fields(prompt=prompt, duration=duration, output_format=output_format)
 
         try:
-            result = resolve_generation(api_key, PATH, payload)
-        except (SoniloAPIError, SoniloTaskError) as exc:
+            result = resolve_generation(api_key, PATH, fields)
+        except SoniloTaskError as exc:
+            yield from emit_task_error(self, exc)
+            return
+        except SoniloAPIError as exc:
             yield self.create_text_message(str(exc))
             return
 
-        audio_url = extract_audio_url(result)
-        task_id = result.get("task_id") or result.get("id")
-        status = result.get("status")
-
-        json_payload = {
-            "success": bool(audio_url),
-            "audio_url": audio_url,
-            "task_id": task_id,
-            "status": status,
-            "duration": result.get("duration") or result.get("duration_seconds"),
-            "raw": result,
-        }
-        yield self.create_json_message(json_payload)
-        yield self.create_text_message(
-            result_summary(tool_label=TOOL_LABEL, audio_url=audio_url, task_id=task_id, status=status)
+        yield from emit_success(
+            self,
+            tool_label=TOOL_LABEL,
+            result=result,
+            output_format=output_format,
+            filename="sonilo_music",
         )
-
-        if audio_url:
-            try:
-                content, content_type = download_bytes(audio_url)
-            except SoniloAPIError as exc:
-                yield self.create_text_message(f"Generated audio URL is ready, but downloading it failed: {exc}")
-            else:
-                mime = guess_mime_type(output_format, content_type)
-                yield self.create_blob_message(blob=content, meta={"mime_type": mime, "filename": "sonilo_music"})

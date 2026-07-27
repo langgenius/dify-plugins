@@ -8,20 +8,21 @@ an API key you configure yourself in the Dify provider credentials.
 When you invoke one of this plugin's four tools, the following leaves your
 Dify deployment and is sent to `api.sonilo.com` over HTTPS:
 
-- **Text to Music / Text to Sound Effects**: the `prompt` text you (or the
-  calling LLM) supply, plus any `duration`, `mode`, and `output_format`
-  values you set.
+- **Text to Music**: the `prompt` text you (or the calling LLM) supply,
+  plus `duration` and, if set, `output_format`.
+- **Text to Sound Effects**: the `prompt` text, plus `duration` and, if
+  set, `audio_format`.
 - **Video to Music / Video to Sound Effects**: the `video_url` you supply
   (Sonilo's servers fetch the video content from that URL directly), plus
-  any optional style `prompt`, `mode`, and `output_format` values. This
-  plugin does not upload raw video bytes itself; it only sends the URL.
+  any optional style `prompt` and format field. This plugin does not
+  upload raw video bytes itself; it only sends the URL.
 - **Your Sonilo API key**, sent as a `Bearer` token on every request. Used
   for authentication and billing only.
 
-This is exactly what each API call requires per Sonilo's published
-[OpenAPI spec](https://sonilo.com/openapi.json) — the plugin does not send
-anything beyond the prompt/video URL/generation options and the API key
-needed to make the request.
+Requests are sent as `multipart/form-data` (required by Sonilo's backend
+for these endpoints) — the plugin does not send anything beyond the
+prompt/video URL/generation options and the API key needed to make the
+request.
 
 ## Data the plugin itself stores
 
