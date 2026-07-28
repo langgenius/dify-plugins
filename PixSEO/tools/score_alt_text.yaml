@@ -8,7 +8,7 @@ description:
   human:
     en_US: Score an Alt text against Google image SEO best practices. Pure local computation, no external API call.
     zh_Hans: 根据 Google 图片搜索最佳实践对 Alt 文本进行 SEO 评分。纯本地计算，不调用外部 API。
-  llm: Use this tool to evaluate the SEO quality of an Alt text. Provide the alt_text and optionally the product title to check keyword coverage. Returns a 0-100 score, dimension breakdown, and improvement suggestions.
+  llm: Use this tool to evaluate the SEO quality of an Alt text. Provide the alt_text and optionally the product type to check keyword coverage. Returns a 0-100 score, dimension breakdown, and improvement suggestions.
 parameters:
   - name: alt_text
     type: string
@@ -21,28 +21,16 @@ parameters:
       zh_Hans: 待评分的 Alt 文本
     llm_description: The Alt text string you want to score. Must not be empty.
     form: llm
-  - name: title
+  - name: product_type
     type: string
     required: false
     label:
-      en_US: Product Title
-      zh_Hans: 商品标题
+      en_US: Product Type
+      zh_Hans: 商品品类
     human_description:
-      en_US: Product title for keyword coverage comparison
-      zh_Hans: 商品标题，用于对比关键词覆盖
-    llm_description: Optional product title. If provided, the tool checks whether important keywords from the title appear in the Alt text.
-    form: llm
-  - name: lang
-    type: string
-    required: false
-    default: en
-    label:
-      en_US: Language
-      zh_Hans: 语言
-    human_description:
-      en_US: Language hint for scoring adjustments (en/zh/jp/de/fr)
-      zh_Hans: 语言提示，用于评分微调（en/zh/jp/de/fr）
-    llm_description: Language code hint. Currently scoring logic works for English and Chinese out of the box.
+      en_US: Product type/category for keyword coverage comparison
+      zh_Hans: 商品品类，用于对比关键词覆盖
+    llm_description: Optional product type or category. If provided, the tool checks whether important keywords from the product type appear in the Alt text.
     form: llm
 extra:
   python:

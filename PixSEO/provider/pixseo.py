@@ -1,32 +1,37 @@
-import json
 from typing import Any
 
 import requests
 from dify_plugin import ToolProvider
 from dify_plugin.errors.tool import ToolProviderCredentialValidationError
-from tools.get_usage import GetUsageTool
+
+from _config import API_BASE
 
 
 class PixseoProvider(ToolProvider):
     def _validate_credentials(self, credentials: dict[str, Any]) -> None:
+        api_key = credentials.get("pixseo_api_key", "")
+        headers = {"X-API-Key": api_key}
+
         try:
-            for msg in GetUsageTool.from_credentials(credentials).invoke(
-                tool_parameters={},
-            ):
-                # Dify SDK stores JSON data in the 'message' attribute as a string
-                raw = getattr(msg, "message", None) or getattr(msg, "data", None)
-                if raw is None:
-                    continue
-                if isinstance(raw, str):
-                    try:
-                        raw = json.loads(raw)
-                    except (json.JSONDecodeError, TypeError):
-                        pass
-                if isinstance(raw, dict) and "error" in raw:
-                    raise ToolProviderCredentialValidationError(
-                        raw.get("error", "Invalid API key")
-                    )
-                break
+            resp = requests.request(
+                "GET",
+                f"{API_BASE}/api/v1/usage",
+                headers=headers,
+                timeout=10,
+            )
+            if resp.status_code in (401, 403):
+                raise ToolProviderCredentialValidationError("Invalid API key")
+            resp.raise_for_status()
+            try:
+                body = resp.json()
+            except Exception:
+                body = {}
+            # 后端统一错误格式: {"error": {"code": ..., "message": ..., "user_tip": ...}}
+            err = body.get("error") if isinstance(body, dict) else None
+            if isinstance(err, dict):
+                raise ToolProviderCredentialValidationError(
+                    err.get("user_tip", "Invalid API key")
+                )
         except ToolProviderCredentialValidationError:
             raise
         except requests.exceptions.Timeout:
@@ -44,9 +49,6 @@ class PixseoProvider(ToolProvider):
                 f"Network error while validating the API key: {e}"
             )
         except Exception as e:
-            # Avoid mapping all exceptions to "Invalid API key".
-            # If the response explicitly indicated an authentication error,
-            # it would have been raised above.
             raise ToolProviderCredentialValidationError(
                 f"Failed to validate API key: {e}"
             )

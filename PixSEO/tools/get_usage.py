@@ -26,10 +26,10 @@ class GetUsageTool(Tool):
         data = resp.json()
         yield self.create_json_message(data)
         warning = data.get("warning")
-        warning_text = f"\nWarning: {warning}" if warning else ""
+        warning_text = f"\n警告：{warning}" if warning else ""
         yield self.create_text_message(
-            f"Plan: {data.get('plan', 'N/A')}. "
-            f"Used: {data.get('used', 0)}/{data.get('limit', 0)}. "
-            f"Remaining: {data.get('remaining', 0)}"
+            f"套餐：{data.get('plan', 'N/A')}。"
+            f"已用：{data.get('used', 0)}/{data.get('limit', 0)}。"
+            f"剩余：{data.get('remaining', 0)}"
             f"{warning_text}"
         )
