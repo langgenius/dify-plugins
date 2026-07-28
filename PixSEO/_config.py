@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from dify_plugin import Tool
     from dify_plugin.entities.tool import ToolInvokeMessage
 
-API_BASE = os.environ.get("PIXSEO_API_BASE", "https://api.hzhdmn.icu")
+API_BASE = os.environ.get("PIXSEO_API_BASE", "https://api.pixseo.cc")
 MAX_BATCH = int(os.environ.get("PIXSEO_MAX_BATCH", "10"))
 DEFAULT_TIMEOUT = int(os.environ.get("PIXSEO_TIMEOUT", "30"))
 MAX_WORKERS = int(os.environ.get("PIXSEO_MAX_WORKERS", "5"))
@@ -49,24 +49,28 @@ def safe_api_call(
         return resp
     except requests.exceptions.Timeout:
         raise ValueError(
-            "Request to PixSEO API timed out. Please try again later."
+            "请求 PixSEO API 超时，请稍后重试。"
         )
     except requests.exceptions.ConnectionError:
         raise ValueError(
-            "Unable to connect to PixSEO API. Please check your network."
+            "无法连接到 PixSEO API，请检查网络。"
         )
     except requests.exceptions.HTTPError as e:
         detail = str(e)
-        user_tip = detail
+        user_tip = None
         try:
             body = e.response.json()
-            detail = body.get("detail", detail)
-            user_tip = body.get("user_tip", detail)
+            # 后端统一错误格式: {"error": {"code": ..., "message": ..., "user_tip": ...}}
+            err = body.get("error") if isinstance(body, dict) else None
+            if isinstance(err, dict):
+                user_tip = err.get("user_tip")
         except Exception:
             pass
-        raise ValueError(user_tip or detail)
+        raise ValueError(user_tip or "请求处理失败，请稍后重试")
+    except requests.exceptions.RequestException as e:
+        raise ValueError(f"请求失败: {e}")
 
 
 def yield_error(tool: "Tool", message: str) -> Generator["ToolInvokeMessage"]:
     """Yield a consistent error message."""
-    yield tool.create_text_message(f"Error: {message}")
+    yield tool.create_text_message(f"错误：{message}")
