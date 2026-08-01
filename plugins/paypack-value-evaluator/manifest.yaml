@@ -1,0 +1,21 @@
+version: 1.0.0
+type: plugin
+name: paypack-value-evaluator
+author: PayPack Authors
+description:
+  en_US: >
+    AI service value evaluator — fetches and evaluates AI service metadata
+    BEFORE payment. This tool does NOT execute any payment or money transfer.
+    It only provides a recommendation (APPROVE/REJECT) based on service quality,
+    trust score, and budget. Actual payment should be handled by a separate
+    payment tool.
+  zh_Hans: >
+    AI服务价值评估工具 — 在支付前获取并评估AI服务的元数据。
+    本工具不执行任何支付或资金转账操作，仅基于服务质量、信誉分和预算
+    提供决策建议（通过/拒绝）。实际支付请使用独立的支付工具完成。
+icon: icon.svg
+tags:
+  - utility
+  - evaluation
+  - decision-support
+  - ai-agent
