@@ -1,0 +1,26 @@
+identity:
+  name: iflow_web_fetch
+  author: zhengyanglsun
+  label:
+    en_US: iFlow Web Fetch
+    zh_Hans: iFlow 网页抓取
+description:
+  human:
+    en_US: Fetch a URL via iFlow and return the cleaned main-content text. Useful for reading articles, docs, and product pages.
+    zh_Hans: 通过 iFlow 抓取指定 URL，返回清洗后的正文文本。适合用于阅读文章、文档、产品页。
+  llm: Fetch and parse the main content of a URL via iFlow. Use this when the agent needs the actual text of a web page rather than just a search snippet.
+extra:
+  python:
+    source: tools/iflow_web_fetch.py
+parameters:
+  - name: url
+    form: llm
+    type: string
+    required: true
+    label:
+      en_US: URL
+      zh_Hans: URL
+    human_description:
+      en_US: The page URL to fetch (http or https).
+      zh_Hans: 要抓取的页面 URL（http 或 https）。
+    llm_description: The absolute HTTP(S) URL of the web page to fetch and parse.

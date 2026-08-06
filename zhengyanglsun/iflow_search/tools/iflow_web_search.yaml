@@ -1,0 +1,40 @@
+identity:
+  name: iflow_web_search
+  author: zhengyanglsun
+  label:
+    en_US: iFlow Web Search
+    zh_Hans: iFlow 网页搜索
+description:
+  human:
+    en_US: AI-native web search backed by iFlow. Returns ranked organic results with title, URL, and snippet.
+    zh_Hans: 由 iFlow 提供的 AI 原生网页搜索，返回带有标题、URL、摘要的有序结果。
+  llm: Perform an AI-optimized web search via iFlow. Use this when the agent needs fresh web information. Returns a list of organic results.
+extra:
+  python:
+    source: tools/iflow_web_search.py
+parameters:
+  - name: query
+    form: llm
+    type: string
+    required: true
+    label:
+      en_US: Query
+      zh_Hans: 查询关键词
+    human_description:
+      en_US: The natural-language search query.
+      zh_Hans: 自然语言搜索查询。
+    llm_description: The user's search question, expressed in natural language.
+  - name: count
+    form: form
+    type: number
+    required: false
+    default: 5
+    min: 1
+    max: 20
+    label:
+      en_US: Max results
+      zh_Hans: 结果数量上限
+    human_description:
+      en_US: Maximum number of organic results to return (1-20). Server may return fewer.
+      zh_Hans: 返回的结果条数上限（1-20）。服务端可能返回更少。
+    llm_description: Maximum number of organic results to return, between 1 and 20.

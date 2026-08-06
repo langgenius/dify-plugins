@@ -1,0 +1,35 @@
+version: 0.0.1
+type: plugin
+author: zhengyanglsun
+name: iflow_search
+label:
+  en_US: iFlow Search
+  zh_Hans: iFlow 搜索
+description:
+  en_US: iFlow Search tools — AI-native web search, image search, and web page fetch / extraction.
+  zh_Hans: iFlow Search 工具 —— 面向 AI 的网页搜索、图片搜索、网页抓取与正文提取。
+created_at: "2026-06-07T00:00:00Z"
+icon: icon.svg
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+    model:
+      enabled: false
+plugins:
+  tools:
+    - provider/iflow_search.yaml
+privacy: PRIVACY.md
+tags:
+  - search
+  - productivity
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main

@@ -1,0 +1,84 @@
+identity:
+  name: search_content
+  author: gaohaoyv
+  label:
+    en_US: Search Content
+    zh_Hans: 搜索内容
+description:
+  human:
+    en_US: Search BookStack content globally and optionally filter result types.
+    zh_Hans: 全局搜索 BookStack 内容，并可按结果类型过滤。
+  llm: Search BookStack content globally and optionally filter result types.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether the content search succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when the content search fails.
+    results:
+      type: array
+      description: Normalized BookStack search results.
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            nullable: true
+            description: BookStack content identifier.
+          type:
+            type: string
+            nullable: true
+            description: BookStack content type.
+          title:
+            type: string
+            nullable: true
+            description: Result title.
+          url:
+            type: string
+            nullable: true
+            description: Result URL.
+          preview:
+            type: string
+            nullable: true
+            description: Search preview text when provided by BookStack.
+          raw:
+            type: object
+            nullable: true
+            description: Original BookStack search result object.
+    count:
+      type: integer
+      description: Number of returned search results.
+    total:
+      type: integer
+      nullable: true
+      description: Total available search results when provided by BookStack.
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Query
+      zh_Hans: 查询
+    human_description:
+      en_US: Search text used to find matching BookStack content.
+      zh_Hans: 用于查找匹配 BookStack 内容的搜索文本。
+    llm_description: Search text used to find matching BookStack content.
+    form: llm
+  - name: types
+    type: string
+    required: false
+    label:
+      en_US: Types
+      zh_Hans: 类型
+    human_description:
+      en_US: Optional comma-separated types filter. Canonical values are book,page,chapter,bookshelf. The compatibility alias shelf is also accepted.
+      zh_Hans: 可选的逗号分隔类型过滤。规范值为 book、page、chapter、bookshelf，也接受兼容别名 shelf。
+    llm_description: Optional comma-separated types filter. Canonical values are book,page,chapter,bookshelf. The compatibility alias shelf is also accepted.
+    form: llm
+extra:
+  python:
+    source: tools/search_content.py

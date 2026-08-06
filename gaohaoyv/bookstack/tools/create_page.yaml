@@ -1,0 +1,100 @@
+identity:
+  name: create_page
+  author: gaohaoyv
+  label:
+    en_US: Create Page
+    zh_Hans: 创建页面
+description:
+  human:
+    en_US: Create a BookStack page in a book root or chapter and return normalized metadata.
+    zh_Hans: 在 BookStack 书籍根目录或章节中创建页面并返回标准化元数据。
+  llm: Create a BookStack page in a book root or chapter and return normalized metadata.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether creating the page succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when creating the page fails.
+    page_id:
+      type: string
+      nullable: true
+      description: Created BookStack page identifier.
+    title:
+      type: string
+      nullable: true
+      description: Created page title.
+    url:
+      type: string
+      nullable: true
+      description: Created page URL.
+    action:
+      type: string
+      nullable: true
+      description: Action label for the page result.
+    raw:
+      type: object
+      nullable: true
+      description: Original BookStack page object.
+parameters:
+  - name: title
+    type: string
+    required: true
+    label:
+      en_US: Title
+      zh_Hans: 标题
+    human_description:
+      en_US: The title of the page to create.
+      zh_Hans: 要创建页面的标题。
+    llm_description: The title of the page to create.
+    form: llm
+  - name: markdown
+    type: string
+    required: true
+    label:
+      en_US: Markdown
+      zh_Hans: Markdown 内容
+    human_description:
+      en_US: Markdown content for the new page.
+      zh_Hans: 新页面的 Markdown 内容。
+    llm_description: Markdown content for the new page.
+    form: llm
+  - name: tags
+    type: string
+    required: false
+    label:
+      en_US: Tags
+      zh_Hans: 标签
+    human_description:
+      en_US: Optional tag text or list-like value forwarded as simple tags.
+      zh_Hans: 可选标签文本或列表式值，将作为简单标签传递。
+    llm_description: Optional tags for the new page.
+    form: llm
+  - name: book_id
+    type: string
+    required: false
+    label:
+      en_US: Book ID
+      zh_Hans: 书籍 ID
+    human_description:
+      en_US: Optional BookStack book ID for a root page target.
+      zh_Hans: 可选的 BookStack 书籍 ID，用于根页面目标。
+    llm_description: Optional BookStack book ID for a root page target.
+    form: llm
+  - name: chapter_id
+    type: string
+    required: false
+    label:
+      en_US: Chapter ID
+      zh_Hans: 章节 ID
+    human_description:
+      en_US: Optional BookStack chapter ID for a chapter target.
+      zh_Hans: 可选的 BookStack 章节 ID，用于章节目标。
+    llm_description: Optional BookStack chapter ID for a chapter target.
+    form: llm
+extra:
+  python:
+    source: tools/create_page.py
