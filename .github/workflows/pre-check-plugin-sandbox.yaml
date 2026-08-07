@@ -1,11 +1,10 @@
-name: Pre Check Plugin
+name: Pre Check Plugin Sandbox
 
 on:
   pull_request:
     types: [opened, synchronize, ready_for_review]
     branches:
-      - main
-      - dev
+      - precheck-sandbox
     paths-ignore:
       - ".github/**"
       - ".gitignore"
@@ -15,7 +14,7 @@ on:
       - "LICENSE"
 
 concurrency:
-  group: pre-check-plugin-${{ github.event.pull_request.number }}
+  group: pre-check-plugin-sandbox-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 env:
@@ -25,7 +24,7 @@ env:
   GH_TOKEN: ${{ github.token }}
 
 jobs:
-  pre-check-plugin:
+  pre-check-plugin-sandbox:
     runs-on: depot-ubuntu-24.04
     steps:
       - name: Checkout
