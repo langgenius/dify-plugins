@@ -395,7 +395,7 @@ jobs:
           fi
 
           # Run the packaging check with a timeout
-          timeout 300 python3 .scripts/uploader/upload-package.py -d "$PLUGIN_PATH" -t "$MARKETPLACE_TOKEN" --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u "$MARKETPLACE_BASE_URL" -f --test || {
+          timeout 300 python3 .scripts/uploader -d "$PLUGIN_PATH" -t "$MARKETPLACE_TOKEN" --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u "$MARKETPLACE_BASE_URL" -f --test || {
             ERROR_MSG="Packaging check failed or timed out"
             echo "$ERROR_MSG" >> $ERROR_FILE
             echo "$ERROR_MSG"
