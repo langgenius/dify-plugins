@@ -184,6 +184,36 @@ def test_reply_uses_the_message_subresource_to_preserve_threading() -> None:
     }
 
 
+@pytest.mark.parametrize(
+    ("status", "successful"),
+    [
+        ("sent", True),
+        ("scheduled", True),
+        ("review_approved", True),
+        ("failed", False),
+        ("future_status", None),
+        (None, None),
+        ({"unexpected": "shape"}, None),
+    ],
+)
+def test_send_result_does_not_guess_unknown_open_set_statuses(
+    status: Any, successful: bool | None
+) -> None:
+    payload = {"message_id": "msg_result_example"}
+    if status is not None:
+        payload["status"] = status
+    session = FakeSession(FakeResponse(200, account_payload()), FakeResponse(202, payload))
+
+    result = E2AClient(API_KEY, session=session).send_message(
+        to=["reviewer@example.test"],
+        subject="Synthetic status check",
+        text="Exercise the open status contract.",
+        idempotency_key="dify_example_status_1",
+    )
+
+    assert result["successful"] is successful
+
+
 def test_api_errors_never_echo_server_content_or_credentials() -> None:
     response = FakeResponse(
         400,

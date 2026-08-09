@@ -14,6 +14,13 @@ REQUEST_TIMEOUT = (5.0, 20.0)
 MAX_LIST_LIMIT = 50
 MAX_RECIPIENTS = 50
 MAX_BODY_CHARS = 1_048_576
+SUCCESSFUL_SEND_STATUSES = {
+    "accepted",
+    "scheduled",
+    "sent",
+    "pending_review",
+    "review_approved",
+}
 
 _SAFE_ERROR_CODE = re.compile(r"^[a-z][a-z0-9_]{0,79}$")
 _SAFE_REQUEST_ID = re.compile(r"^[A-Za-z0-9_-]{1,128}$")
@@ -177,9 +184,17 @@ class E2AClient:
             idempotency_key=_idempotency_key(idempotency_key),
         )
         status = result.get("status")
+        known_status = status if isinstance(status, str) else None
         enriched = dict(result)
-        enriched["held"] = status == "pending_review"
-        enriched["successful"] = status != "failed"
+        enriched["held"] = known_status == "pending_review"
+        # The API deliberately treats status as an open set. Preserve an
+        # unknown future value without guessing that it succeeded or failed;
+        # callers must branch on the original status string.
+        enriched["successful"] = (
+            known_status in SUCCESSFUL_SEND_STATUSES
+            if known_status in SUCCESSFUL_SEND_STATUSES or known_status == "failed"
+            else None
+        )
         return enriched
 
     def _agent_email(self) -> str:
