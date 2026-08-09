@@ -1,0 +1,13 @@
+identity:
+  name: whoami
+  author: tokencanopy
+  label:
+    en_US: Who Am I
+description:
+  human:
+    en_US: Show the authenticated E2A agent mailbox, credential scope, plan, usage, and limits.
+  llm: Get the mailbox identity and account limits bound to the configured agent-scoped E2A key.
+parameters: []
+extra:
+  python:
+    source: tools/whoami.py

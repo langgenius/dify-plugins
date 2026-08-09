@@ -1,0 +1,36 @@
+version: 0.0.1
+type: plugin
+author: tokencanopy
+name: e2a
+label:
+  en_US: E2A Email
+description:
+  en_US: Read and send authenticated agent email through E2A using an agent-scoped API key.
+created_at: "2026-08-08T00:00:00Z"
+icon: icon.svg
+plugin_type: tool
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+    model:
+      enabled: false
+plugins:
+  tools:
+    - provider/e2a.yaml
+privacy: PRIVACY.md
+repo: https://github.com/langgenius/dify-plugins/tree/main/tokencanopy/e2a
+contact: josh@tokencanopy.com
+tags:
+  - productivity
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: "0.5.0"

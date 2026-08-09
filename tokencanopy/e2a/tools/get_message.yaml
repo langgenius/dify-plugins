@@ -1,0 +1,22 @@
+identity:
+  name: get_message
+  author: tokencanopy
+  label:
+    en_US: Get Message
+description:
+  human:
+    en_US: Fetch one E2A message by ID. Reading an unread inbound message marks it read.
+  llm: Fetch the structured body, headers, authentication evidence, and attachment metadata for one message ID. Raw MIME is omitted to keep the result bounded.
+parameters:
+  - name: message_id
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Message ID
+    human_description:
+      en_US: The E2A message ID returned by list_messages.
+    llm_description: Exact message id from list_messages, such as msg_example123.
+extra:
+  python:
+    source: tools/get_message.py

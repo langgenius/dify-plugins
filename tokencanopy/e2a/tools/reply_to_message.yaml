@@ -1,0 +1,50 @@
+identity:
+  name: reply_to_message
+  author: tokencanopy
+  label:
+    en_US: Reply to Message
+description:
+  human:
+    en_US: Reply to an E2A message by ID while preserving email threading.
+  llm: Reply through the source message subresource so E2A derives recipients and preserves RFC reply threading. A pending_review result is a successful hold.
+parameters:
+  - name: message_id
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Message ID
+    human_description:
+      en_US: Message ID to reply to.
+    llm_description: Exact source message ID returned by list_messages or get_message.
+  - name: text
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Plain-text reply
+    human_description:
+      en_US: Plain-text reply body.
+    llm_description: Complete plain-text reply body.
+  - name: reply_all
+    type: boolean
+    required: false
+    default: false
+    form: form
+    label:
+      en_US: Reply all
+    human_description:
+      en_US: Include the original Cc recipients when applicable.
+    llm_description: Whether to reply to all original recipients.
+  - name: idempotency_key
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: Idempotency key
+    human_description:
+      en_US: Optional stable key for safely retrying the exact same reply request.
+    llm_description: Reuse only when retrying this byte-identical logical reply; use a new key for a new reply.
+extra:
+  python:
+    source: tools/reply_to_message.py
