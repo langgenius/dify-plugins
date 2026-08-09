@@ -1,0 +1,147 @@
+identity:
+  name: search_jobs
+  author: tianhua-yuan
+  label:
+    en_US: Search Jobs
+    zh_Hans: 搜索职位
+description:
+  human:
+    en_US: >-
+      Search remote job listings from the Jobicy or Remotive free APIs by
+      keyword, location, category, and job type. Returns a structured list of
+      jobs with company, location, salary (when available) and the apply URL.
+    zh_Hans: >-
+      通过关键词、地点、类别和职位类型，从 Jobicy 或 Remotive 免费 API 搜索远程职位。
+      返回包含公司、地点、薪资（如有）和申请链接的结构化职位列表。
+  llm: >-
+    Search for remote jobs using the Jobicy or Remotive free APIs. The user
+    describes the job they want (e.g. keyword, category such as python or
+    design, a location, or a job type such as full-time or contract). Returns
+    a JSON list of matching jobs and a human-readable summary with links.
+    Choose the source based on the user's context: jobicy is the default and
+    supports a category tag; remotive exposes salary and structured categories.
+extra:
+  python:
+    source: tools/search_jobs.py
+parameters:
+  - name: query
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: Query
+      zh_Hans: 关键词
+    human_description:
+      en_US: Keyword to search for in job titles and company names.
+      zh_Hans: 在职位名称和公司名称中搜索的关键词。
+    llm_description: >-
+      Keyword matched against job titles and company names, e.g. "python" or
+      "machine learning".
+  - name: source
+    type: select
+    required: false
+    form: llm
+    default: jobicy
+    options:
+      - value: jobicy
+        label:
+          en_US: Jobicy (default)
+          zh_Hans: Jobicy（默认）
+      - value: remotive
+        label:
+          en_US: Remotive
+          zh_Hans: Remotive
+    label:
+      en_US: Source
+      zh_Hans: 数据源
+    human_description:
+      en_US: Which job board API to query. Jobicy is the default; Remotive returns salary and structured categories when available.
+      zh_Hans: 查询哪个职位网站 API。默认 Jobicy；Remotive 在可用时返回薪资和结构化类别。
+    llm_description: 'Which job board to query: "jobicy" (default) or "remotive".'
+  - name: location
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: Location
+      zh_Hans: 地点
+    human_description:
+      en_US: Filter by location text (e.g. country or region).
+      zh_Hans: 按地点文本过滤（例如国家或地区）。
+    llm_description: >-
+      Filter jobs by location (country, region or timezone). Leave empty for
+      any remote location.
+  - name: category
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: Category
+      zh_Hans: 类别
+    human_description:
+      en_US: Filter by job category. On Jobicy this maps to the tag parameter (e.g. python, design, marketing).
+      zh_Hans: 按职位类别过滤。在 Jobicy 上对应 tag 参数（如 python、design、marketing）。
+    llm_description: >-
+      Job category or tag, e.g. "python", "design", "marketing" on Jobicy, or
+      a Remotive category such as "Software Development".
+  - name: job_type
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: Job type
+      zh_Hans: 职位类型
+    human_description:
+      en_US: Filter by employment type, e.g. full-time, part-time, contract, internship.
+      zh_Hans: 按雇佣类型过滤，例如 full-time、part-time、contract、internship。
+    llm_description: >-
+      Employment type keyword, e.g. "full-time", "part-time", "contract" or
+      "internship".
+  - name: count
+    type: number
+    required: false
+    form: llm
+    default: 10
+    min: 1
+    max: 50
+    label:
+      en_US: Count
+      zh_Hans: 数量
+    human_description:
+      en_US: Maximum number of jobs to return (1-50, default 10).
+      zh_Hans: 返回的最大职位数（1-50，默认 10）。
+    llm_description: Maximum number of job results to return, between 1 and 50. Default 10.
+output_schema:
+  type: object
+  properties:
+    source:
+      type: string
+      description: The job board queried ("jobicy" or "remotive").
+    count:
+      type: number
+      description: Number of jobs returned.
+    jobs:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: [string, "null"]
+          title:
+            type: string
+          company:
+            type: string
+          location:
+            type: string
+          job_type:
+            type: string
+          salary:
+            type: [string, "null"]
+          url:
+            type: [string, "null"]
+          source:
+            type: string
+          category:
+            type: [string, "null"]
+          description_excerpt:
+            type: [string, "null"]
