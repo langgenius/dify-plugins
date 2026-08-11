@@ -24,4 +24,4 @@ The plugin requires **no credentials**. The `provider/_validate_credentials` met
 
 ## Contact
 
-For privacy questions about this plugin, open an issue at https://github.com/tanzhangjia/dify-plugins
+For privacy questions about this plugin, open an issue at https://github.com/tanzhangjia/prompt-template
