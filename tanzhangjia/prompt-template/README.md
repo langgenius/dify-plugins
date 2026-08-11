@@ -4,7 +4,7 @@
 
 就像大模型节点的 prompt 编辑框一样，2 个输入框（系统提示词模板 + 用户提示词模板），里面写 `{{变量名}}`，插件把它们替换成真实值输出。
 
-- **源码仓库**: [github.com/tanzhangjia/dify-plugins](https://github.com/tanzhangjia/prompt-template)
+- **源码仓库**: [github.com/tanzhangjia/prompt-template](https://github.com/tanzhangjia/prompt-template)
 - **License**: MIT
 
 ## 和 PrePrompt Bridge 的区别
