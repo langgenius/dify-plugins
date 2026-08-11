@@ -123,10 +123,9 @@ jobs:
         run: |
           python3 .scripts/uploader -p ${{ env.PLUGIN_PATH }} -t ${{ secrets.MARKETPLACE_TOKEN }} --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u ${{ secrets.MARKETPLACE_BASE_URL }}
 
-      # Staging cannot be tested without receiving uploads: the backend's
-      # latest/recommended rebuilds only run when an upload signals them.
-      # It must never block a release though -- a red merge workflow invites a
-      # re-run, which uploads the package again. -f keeps that re-run idempotent.
+      # Staging only becomes testable once uploads reach it: the backend rebuilds
+      # latest/recommended on an upload signal. Never blocking, though -- a red run
+      # invites a re-run, which re-uploads; -f keeps that idempotent.
       - name: Upload Plugin (staging)
         id: upload-staging
         continue-on-error: true
@@ -143,17 +142,19 @@ jobs:
 
       - name: Report a failed staging upload
         if: steps.upload-staging.outcome == 'failure'
+        # Summary needs no token; the comment is best-effort. Neither may redden
+        # a production publish that already succeeded.
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           PLUGIN: ${{ env.PLUGIN_PATH }}
         run: |
-          gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" \
-            -f body="$(printf '%s\n' \
-              "**Staging upload failed** for \`$PLUGIN\`." \
-              "" \
-              "The plugin **is** published to production -- only <https://marketplace-staging.dify.dev> is missing it, so nothing needs re-merging or re-reviewing." \
-              "" \
-              "Reason: [workflow run]($RUN_URL). The next push of this plugin, or a backfill run, will bring staging back in line." \
-              "" \
-              "_This comment exists because the staging leg is deliberately non-blocking._")"
+          report=$(printf '%s\n' \
+            "**Staging upload failed** for \`$PLUGIN\`." \
+            "" \
+            "The plugin **is** published to production -- only <https://marketplace-staging.dify.dev> is missing it, so nothing needs re-merging or re-reviewing." \
+            "" \
+            "Reason: [workflow run]($RUN_URL). The next push of this plugin, or a backfill run, will bring staging back in line.")
+          printf '%s\n' "$report" >> "$GITHUB_STEP_SUMMARY"
+          gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" -f body="$report"
