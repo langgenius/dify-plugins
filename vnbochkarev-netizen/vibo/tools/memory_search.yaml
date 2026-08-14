@@ -1,0 +1,43 @@
+identity:
+  name: memory_search
+  author: vnbochkarev-netizen
+  label:
+    en_US: Search memory
+    zh_Hans: 搜索记忆
+description:
+  human:
+    en_US: >-
+      Search persistent memory. Returns only relevant facts — 97.5% fewer
+      tokens than sending full history to the model.
+    zh_Hans: >-
+      搜索持久化记忆。只返回相关事实 — 比向模型发送完整历史节省 97.5% 的 token。
+  llm: >-
+    Search the agent's persistent memory for relevant facts about the user,
+    previous decisions, projects. Returns concise facts. Use BEFORE answering
+    questions about the user's history or preferences.
+extra:
+  python:
+    source: tools/memory_search.py
+parameters:
+  - name: query
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Query
+      zh_Hans: 查询
+    human_description:
+      en_US: What to find in memory.
+      zh_Hans: 要在记忆中查找什么。
+    llm_description: What to search for in memory (topic, person, decision).
+  - name: limit
+    type: number
+    required: false
+    form: form
+    label:
+      en_US: Limit
+      zh_Hans: 数量
+    human_description:
+      en_US: Max facts to return (default 5).
+      zh_Hans: 返回的最大事实数（默认 5）。
+    llm_description: Maximum number of facts to return (default 5).

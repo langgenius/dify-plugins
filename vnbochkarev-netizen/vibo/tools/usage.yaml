@@ -1,0 +1,18 @@
+identity:
+  name: usage
+  author: vnbochkarev-netizen
+  label:
+    en_US: Token savings report
+    zh_Hans: Token 节省报告
+description:
+  human:
+    en_US: >-
+      Get the token savings report for this key (how much ViBo saved).
+    zh_Hans: >-
+      获取此密钥的 token 节省报告（ViBo 节省了多少）。
+  llm: >-
+    Get the token and dollar savings report for this ViBo key.
+extra:
+  python:
+    source: tools/usage.py
+parameters: []

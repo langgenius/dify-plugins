@@ -1,0 +1,41 @@
+identity:
+  author: vnbochkarev-netizen
+  name: vibo
+  label:
+    en_US: ViBo Memory
+    zh_Hans: ViBo 记忆
+  description:
+    en_US: >-
+      Persistent encrypted memory (L1/L2/L3) for Dify agents. 97.5% fewer
+      tokens on measured workloads. Secrets never reach the LLM.
+    zh_Hans: >-
+      Dify 代理的持久化加密记忆（L1/L2/L3）。实测节省 97.5% 的 token。
+      秘密永远不会到达 LLM。
+  icon: icon.png
+  tags:
+    - memory
+    - productivity
+credentials_for_provider:
+  vibo_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: ViBo license key
+      zh_Hans: ViBo 许可证密钥
+    placeholder:
+      en_US: VIBO-XXXX-XXXX-XXXX-XXXX
+      zh_Hans: VIBO-XXXX-XXXX-XXXX-XXXX
+    help:
+      en_US: >-
+        Get a free 2-day trial key at https://wwwvibo.com. Plans from $2.5/mo.
+      zh_Hans: >-
+        在 https://wwwvibo.com 获取 2 天免费试用密钥。每月 $2.5 起。
+    url: https://wwwvibo.com
+tools:
+  - tools/memory_search.yaml
+  - tools/memory_add.yaml
+  - tools/thread_memory.yaml
+  - tools/usage.yaml
+extra:
+  python:
+    source: provider/vibo.py
