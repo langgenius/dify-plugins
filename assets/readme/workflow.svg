@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="100%">
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .text-title { font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; font-size: 20px; font-weight: 700; fill: #0f172a; }
+      .text-desc { font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; font-size: 16px; font-weight: 400; fill: #64748b; }
+      
+      .box { fill: #ffffff; stroke: #e2e8f0; stroke-width: 2; rx: 12; }
+      .arrow { stroke: #155EEF; stroke-width: 3; stroke-dasharray: 6 4; fill: none; }
+      .arrow-head { fill: #155EEF; }
+      
+      .step-num { fill: #155EEF; }
+      .step-num-text { font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 800; fill: #ffffff; text-anchor: middle; dominant-baseline: central; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="300" class="bg" rx="16"/>
+
+  <!-- Arrows -->
+  <path d="M 280 150 L 380 150" class="arrow" />
+  <polygon points="380,145 390,150 380,155" class="arrow-head" />
+
+  <path d="M 580 150 L 680 150" class="arrow" />
+  <polygon points="680,145 690,150 680,155" class="arrow-head" />
+
+  <path d="M 880 150 L 980 150" class="arrow" />
+  <polygon points="980,145 990,150 980,155" class="arrow-head" />
+
+  <!-- Step 1 -->
+  <g transform="translate(80, 70)">
+    <rect width="200" height="160" class="box" />
+    <circle cx="20" cy="20" r="14" class="step-num" />
+    <text x="20" y="20" class="step-num-text">1</text>
+    <text x="100" y="70" class="text-title" text-anchor="middle">Develop</text>
+    <text x="100" y="100" class="text-desc" text-anchor="middle">Write plugin code</text>
+    <text x="100" y="125" class="text-desc" text-anchor="middle">Test locally</text>
+  </g>
+
+  <!-- Step 2 -->
+  <g transform="translate(380, 70)">
+    <rect width="200" height="160" class="box" />
+    <circle cx="20" cy="20" r="14" class="step-num" />
+    <text x="20" y="20" class="step-num-text">2</text>
+    <text x="100" y="70" class="text-title" text-anchor="middle">Package</text>
+    <text x="100" y="100" class="text-desc" text-anchor="middle">Generate</text>
+    <text x="100" y="125" class="text-title" fill="#12B76A" text-anchor="middle">.difypkg</text>
+  </g>
+
+  <!-- Step 3 -->
+  <g transform="translate(680, 70)">
+    <rect width="200" height="160" class="box" />
+    <circle cx="20" cy="20" r="14" class="step-num" />
+    <text x="20" y="20" class="step-num-text">3</text>
+    <text x="100" y="70" class="text-title" text-anchor="middle">Pull Request</text>
+    <text x="100" y="100" class="text-desc" text-anchor="middle">Submit to this repo</text>
+    <text x="100" y="125" class="text-desc" text-anchor="middle">Automated CI tests</text>
+  </g>
+
+  <!-- Step 4 -->
+  <g transform="translate(980, 70)">
+    <rect width="180" height="160" class="box" stroke="#155EEF" />
+    <circle cx="20" cy="20" r="14" class="step-num" />
+    <text x="20" y="20" class="step-num-text">4</text>
+    <text x="90" y="70" class="text-title" text-anchor="middle" fill="#155EEF">Marketplace</text>
+    <text x="90" y="100" class="text-desc" text-anchor="middle">Global discoverability</text>
+    <text x="90" y="125" class="text-desc" text-anchor="middle">Ready to install</text>
+  </g>
+</svg>

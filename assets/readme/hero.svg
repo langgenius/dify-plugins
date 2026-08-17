@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="100%">
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .grid { stroke: #e2e8f0; stroke-width: 1; }
+      .title { font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif; font-size: 72px; font-weight: 800; fill: #0f172a; letter-spacing: -2px; }
+      .subtitle { font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif; font-size: 28px; font-weight: 400; fill: #64748b; }
+      
+      .node-core { fill: #155EEF; stroke: #eff4ff; stroke-width: 8; }
+      
+      .link { stroke: #cbd5e1; stroke-width: 1.5; stroke-dasharray: 4 4; }
+      .node-model { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1; rx: 8; }
+      
+      .pulse { animation: pulse 3s infinite; }
+      @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+    </style>
+    
+    <!-- Grid Pattern -->
+    <pattern id="gridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" class="grid"/>
+    </pattern>
+
+    <!-- Node Group Symbol (represents a plugin) -->
+    <g id="plugin-node">
+      <rect width="40" height="40" rx="8" class="node-model" />
+      <circle cx="20" cy="20" r="4" fill="#155EEF" opacity="0.5"/>
+    </g>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="600" class="bg"/>
+  <rect width="1200" height="600" fill="url(#gridPattern)"/>
+
+  <!-- Network Lines -->
+  <!-- Left Side -->
+  <path d="M 200 150 Q 400 150 600 350" fill="none" class="link"/>
+  <path d="M 150 250 Q 300 250 600 350" fill="none" class="link"/>
+  <path d="M 220 350 L 600 350" fill="none" class="link"/>
+  <path d="M 180 450 Q 400 450 600 350" fill="none" class="link"/>
+  <path d="M 250 520 Q 500 520 600 350" fill="none" class="link"/>
+
+  <!-- Right Side -->
+  <path d="M 1000 150 Q 800 150 600 350" fill="none" class="link"/>
+  <path d="M 1050 250 Q 900 250 600 350" fill="none" class="link"/>
+  <path d="M 980 350 L 600 350" fill="none" class="link"/>
+  <path d="M 1020 450 Q 800 450 600 350" fill="none" class="link"/>
+  <path d="M 950 520 Q 700 520 600 350" fill="none" class="link"/>
+
+  <!-- Decorative Plugin Nodes around the center -->
+  <use href="#plugin-node" x="180" y="130" />
+  <use href="#plugin-node" x="130" y="230" />
+  <use href="#plugin-node" x="200" y="330" />
+  <use href="#plugin-node" x="160" y="430" />
+  <use href="#plugin-node" x="230" y="500" />
+  
+  <use href="#plugin-node" x="980" y="130" />
+  <use href="#plugin-node" x="1030" y="230" />
+  <use href="#plugin-node" x="960" y="330" />
+  <use href="#plugin-node" x="1000" y="430" />
+  <use href="#plugin-node" x="930" y="500" />
+
+  <!-- Dify Central Core Hub -->
+  <g transform="translate(540, 290)">
+    <rect width="120" height="120" rx="24" class="node-core pulse"/>
+    <path d="M40 30 L80 60 L40 90 Z" fill="#ffffff" />
+  </g>
+
+  <!-- Typography Header -->
+  <g text-anchor="middle">
+    <text x="600" y="140" class="title">Dify Plugins</text>
+    <text x="600" y="190" class="subtitle">Models · Tools · Agent Strategies · Extensions · Bundles</text>
+  </g>
+
+  <!-- Extra small dense dots to represent 400+ plugins -->
+  <g fill="#94a3b8" opacity="0.3">
+    <!-- Left scatter -->
+    <circle cx="80" cy="180" r="3"/>
+    <circle cx="120" cy="380" r="2.5"/>
+    <circle cx="90" cy="480" r="3"/>
+    <circle cx="280" cy="120" r="2"/>
+    <circle cx="340" cy="220" r="3.5"/>
+    <circle cx="380" cy="420" r="2"/>
+    <circle cx="440" cy="180" r="3"/>
+    <circle cx="480" cy="480" r="2.5"/>
+
+    <!-- Right scatter -->
+    <circle cx="1120" cy="180" r="3"/>
+    <circle cx="1080" cy="380" r="2.5"/>
+    <circle cx="1110" cy="480" r="3"/>
+    <circle cx="920" cy="120" r="2"/>
+    <circle cx="860" cy="220" r="3.5"/>
+    <circle cx="820" cy="420" r="2"/>
+    <circle cx="760" cy="180" r="3"/>
+    <circle cx="720" cy="480" r="2.5"/>
+  </g>
+</svg>
