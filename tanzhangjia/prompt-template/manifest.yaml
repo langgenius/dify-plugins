@@ -3,7 +3,7 @@ created_at: '2026-07-30T09:00:00Z'
 description:
   en_US: Render prompt templates with workflow variables — just like the LLM node prompt editor, but outputs a string.
   zh_Hans: 用工作流变量渲染提示词模板，就像大模型节点的 prompt 编辑器一样，但输出字符串。
-icon: _assets/icon.svg
+icon: icon.svg
 label:
   en_US: Prompt Template
   zh_Hans: 提示词模板
