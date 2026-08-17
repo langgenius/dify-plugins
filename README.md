@@ -1,108 +1,57 @@
-![Dify Logo](.assets/bar.jpeg)
+<div align="center">
 
-<p align="center">
-  <a href="https://cloud.dify.ai">Dify Cloud</a> ·
-  <a href="https://docs.dify.ai/self-host/quick-start/docker-compose">Self-hosting</a> ·
-  <a href="https://docs.dify.ai">Documentation</a> ·
-  <a href="https://udify.app/chat/22L1zSxg6yW1cWQg">Enterprise inquiry</a>
-</p>
+<img src="assets/readme/hero.svg" alt="Dify Plugins Ecosystem" width="100%" />
 
-<p align="center">
-    <a href="https://dify.ai" target="_blank">
-        <img alt="Static Badge" src="https://img.shields.io/badge/Product-F04438"></a>
-    <a href="https://cloud.dify.ai" target="_blank">
-        <img alt="Dify Cloud" src="https://img.shields.io/badge/Dify-Cloud?logo=cloud&color=%20%23155EEF&label=Cloud&labelColor=%20%23528bff"></a>
-    <a href="https://discord.gg/FngNHpbcY7" target="_blank">
-        <img src="https://img.shields.io/discord/1082486657678311454?logo=discord&labelColor=%20%235462eb&logoColor=%20%23f5f5f5&color=%20%235462eb"
-            alt="chat on Discord"></a>
-    <a href="https://reddit.com/r/difyai" target="_blank">  
-        <img src="https://img.shields.io/reddit/subreddit-subscribers/difyai?style=plastic&logo=reddit&label=r%2Fdifyai&labelColor=white"
-            alt="join Reddit"></a>
-    <a href="https://twitter.com/intent/follow?screen_name=dify_ai" target="_blank">
-        <img src="https://img.shields.io/twitter/follow/dify_ai?logo=X&color=%20%23f5f5f5"
-            alt="follow on X(Twitter)"></a>
-    <a href="https://www.linkedin.com/company/langgenius/" target="_blank">
-        <img src="https://custom-icon-badges.demolab.com/badge/LinkedIn-0A66C2?logo=linkedin-white&logoColor=fff"
-            alt="follow on LinkedIn"></a>
-    <a href="https://hub.docker.com/u/langgenius" target="_blank">
-        <img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/langgenius/dify-web?labelColor=%20%23FDB062&color=%20%23f79009"></a>
-    <a href="https://github.com/langgenius/dify/graphs/commit-activity" target="_blank">
-        <img alt="Commits last month" src="https://img.shields.io/github/commit-activity/m/langgenius/dify?labelColor=%20%2332b583&color=%20%2312b76a"></a>
-    <a href="https://github.com/langgenius/dify/" target="_blank">
-        <img alt="Issues closed" src="https://img.shields.io/github/issues-search?query=repo%3Alanggenius%2Fdify%20is%3Aclosed&label=issues%20closed&labelColor=%20%237d89b0&color=%20%235d6b98"></a>
-    <a href="https://github.com/langgenius/dify/discussions/" target="_blank">
-        <img alt="Discussion posts" src="https://img.shields.io/github/discussions/langgenius/dify?labelColor=%20%239b8afb&color=%20%237a5af8"></a>
-</p>
+[![Product](https://img.shields.io/badge/Product-F04438?style=flat-square)](https://dify.ai)
+[![Dify Cloud](https://img.shields.io/badge/Dify_Cloud-%23155EEF?logo=cloud&style=flat-square)](https://cloud.dify.ai)
+[![Discord](https://img.shields.io/discord/1082486657678311454?logo=discord&labelColor=%20%235462eb&logoColor=%20%23f5f5f5&color=%20%235462eb&style=flat-square)](https://discord.gg/FngNHpbcY7)
+[![Docker Pulls](https://img.shields.io/docker/pulls/langgenius/dify-web?labelColor=%20%23FDB062&color=%20%23f79009&style=flat-square)](https://hub.docker.com/u/langgenius)
+[![Commits](https://img.shields.io/github/commit-activity/m/langgenius/dify?labelColor=%20%2332b583&color=%20%2312b76a&style=flat-square)](https://github.com/langgenius/dify/graphs/commit-activity)
 
-### Introducing Dify Plugins
+**An open-source ecosystem of models, tools, and extensions that supercharge your [Dify](https://dify.ai) applications.**
 
-[Dify](https://dify.ai/) is an open-source platform for developing LLM-powered AI applications, designed to help developers and businesses efficiently build, deploy, and manage AI-driven solutions. With Dify, users can easily create and test complex AI workflows, integrate a wide range of advanced models and tools, and optimize their performance in real-world applications. The platform offers an intuitive interface, supporting RAG (Retrieval-Augmented Generation) pipelines, intelligent agent capabilities, and robust model management, enabling developers to seamlessly transition from prototype to production.
+[Dify Marketplace](https://marketplace.dify.ai/) · [Documentation](https://docs.dify.ai) · [Plugin Development](https://docs.dify.ai/en/develop-plugin/getting-started/getting-started-dify-plugin)
 
-[Dify Marketplace](https://marketplace.dify.ai/) is a vibrant center that allows developers, businesses, and AI enthusiasts to explore, share, and deploy plugins designed to enhance Dify Apps' capabilities. It serves as a platform where users can discover a wide range of models, tools, agent strategies, extensions, and bundles, all of which can be seamlessly integrated into their AI applications. By providing a collaborative space for both official and community-contributed plugins, the Dify Marketplace encourages innovation and resource sharing. 
+</div>
 
-### Plugin Development
+---
 
-#### Types of Plugin
+## 🧩 What are Dify Plugins?
 
-##### Models
+[Dify](https://dify.ai/) is an open-source platform for developing LLM-powered AI applications. **Dify Plugins** (hosted in this repository and showcased on the [Dify Marketplace](https://marketplace.dify.ai/)) are community and official extensions that seamlessly integrate into your AI workflows. 
 
-These plugins integrate various AI models, including mainstream LLM providers and custom models, to handle configuration and requests for model APIs. For more on creating a model plugin, refer to the [Dify Plugin documentation](https://docs.dify.ai/en/develop-plugin/getting-started/getting-started-dify-plugin).
+> **Note on Repository Structure:** 
+> You might notice hundreds of directories at the root of this repository (e.g., `google`, `aws`, `langgenius`). These are **Organization Folders** where developers store their plugin packages. Do not alter their structure, as the automated marketplace indexer relies on them.
 
-##### Tools
+## 📦 Plugin Categories
 
-Tools are third-party services that can be invoked by Chatflow, Workflow, or Agent applications. They provide API-backed capabilities for Dify applications. For plugin type guidance, refer to [Choose a Plugin Type](https://docs.dify.ai/en/develop-plugin/getting-started/choose-plugin-type).
+| Category | Description |
+| :--- | :--- |
+| **🧠 Models** | Integrate LLM providers, vision models, and custom self-hosted inferences. |
+| **🛠️ Tools** | Third-party API services (search, web scraping, internal databases) callable by Agents. |
+| **🤖 Agent Strategies** | Custom reasoning loops (ReAct, Plan-and-Solve) determining how LLMs select tools. |
+| **🔌 Extensions** | Lightweight endpoints for fast custom integrations via HTTP services. |
+| **🗂️ Bundles** | Curated collections of multiple plugins installed as a single unit. |
 
-##### Agent Strategies
+---
 
-The Agent Strategy plugin defines the reasoning and decision-making logic within an Agent node, including tool selection, invocation, and result processing.
+## 🚀 Publishing to the Marketplace
 
-Agent strategy plugins define the internal reasoning and decision-making logic within agent nodes. They encompass the logic for tool selection, invocation, and handling of returned results by the LLM. For further development guidance, please refer to the [Quick Start: Agent Strategy Plugin](https://docs.dify.ai/en/develop-plugin/dev-guides-and-walkthroughs/agent-strategy-plugin).
+Share your custom plugins with the global Dify community. All merged PRs containing valid plugins are automatically synchronized to the official Marketplace.
 
-##### Extensions
+<div align="center">
+  <img src="assets/readme/workflow.svg" alt="Plugin Publishing Workflow" width="100%" />
+</div>
 
-Lightweight plugins that only provide endpoint capabilities for simpler scenarios, enabling fast expansions via HTTP services. This approach is ideal for straightforward integrations requiring basic API invoking. For more details, refer to [Quick Start: Extension Plugin](https://docs.dify.ai/en/develop-plugin/dev-guides-and-walkthroughs/endpoint).
+### Quick Start
+1. **Develop**: Follow the [Plugin Development Guidelines](https://docs.dify.ai/en/develop-plugin/publishing/standards/contributor-covenant-code-of-conduct) and write your `README.md` and Privacy Policy.
+2. **Package**: Build your plugin into a `.difypkg` distribution file.
+3. **Fork & Organize**: Fork this repository. Create a directory named after your organization (e.g., `your-github-name/my-awesome-plugin/`), and place your source code and `.difypkg` file inside.
+4. **Pull Request**: Open a PR. Ensure your PR changes **only one** `.difypkg` file. Our CI will automatically validate your package.
+5. **Merge**: Once approved, your plugin goes live on the [Dify Marketplace](https://marketplace.dify.ai/).
 
-##### Bundles
+*Tip: Want automated updates? Check out the [Plugin Auto-PR guide](https://docs.dify.ai/en/develop-plugin/publishing/marketplace-listing/plugin-auto-publish-pr) to set up CI/CD workflows for your plugins.*
 
-A "plugin bundle" is a collection of multiple plugins. Bundles allow you to install a curated set of plugins all at once—no more adding them one by one. For more information on creating plugin bundles, see [Plugin Development: Bundle Plugin](https://docs.dify.ai/en/develop-plugin/features-and-specs/advanced-development/bundle).
+## 🛡️ Security
 
-#### Plugin Docs
-
-Check the [Plugins documentation](https://docs.dify.ai/en/develop-plugin/getting-started/getting-started-dify-plugin) to learn how to develop and publish plugins.
-
-### Publishing to Dify Marketplace
-
-To publish your plugin on the Dify Marketplace, follow these steps:
-
-#### Development
-1. Develop and test your plugin according to the [Plugin Development Guidelines](https://docs.dify.ai/en/develop-plugin/publishing/standards/contributor-covenant-code-of-conduct) and this repository's [Plugin Submission Requirements](docs/plugin-submission-requirements.md).
-
-2. Write a [Plugin Privacy Policy](https://docs.dify.ai/en/develop-plugin/publishing/standards/privacy-protection-guidelines) for your plugin in line with Dify's privacy requirements. In your plugin's manifest, include the file path or URL for this privacy policy.
-
-3. Include your contact information and source repository URL in the plugin `README.md`.
-
-#### Publishing
-
-1. Package your plugin into `.difypkg` file for distribution.
-
-2. [Fork this repository](https://github.com/langgenius/dify-plugins/fork).
-
-3. Create an organization directory under the repository's main structure, then create a subdirectory named after your plugin. Place your plugin source code and the packaged `.difypkg` file in that subdirectory, for example `langgenius/dify-plugin/dify-plugin-0.0.1.difypkg`. You can place different versions in the same subdirectory.
-
-4. [Submit a Pull Request (PR)](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request) following the required PR template format, then wait for review.
-
-5. Once approved, your plugin code will merge into the main branch, and the plugin will be automatically listed on the [Dify Marketplace](https://marketplace.dify.ai/).
-
-#### Updating/Bump
-
-1. When updating your plugin, increment the version in your plugin's `manifest.yaml` file.
-
-2. Each PR for plugin updates must contain only one file change - the new `.difypkg` file. Check that the version hasn't been published before.
-
-3. If your update includes breaking changes, document them clearly in your plugin's README.md to prevent user issues.
-
-4. For faster plugin updates, you can set up automated PR workflows using the [Plugin Auto-PR guide](https://docs.dify.ai/en/develop-plugin/publishing/marketplace-listing/plugin-auto-publish-pr). This automates packaging and PR creation when you release new versions.
-
-### Security disclosure
-
-To protect your privacy, please avoid posting security issues on GitHub. Instead, send your questions to [security@dify.ai](mailto:security@dify.ai) and we will provide you with a more detailed answer.
+To protect your privacy and ensure safe resolution, please do **not** post security vulnerabilities on public GitHub issues. Email [security@dify.ai](mailto:security@dify.ai) instead.
