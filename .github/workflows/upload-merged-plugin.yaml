@@ -119,9 +119,25 @@ jobs:
             -d unpacked_plugin \
             --warning-file /tmp/prohibited_financial_activity_warnings.txt
 
+      - name: Extract Release Notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          LAST_SHA=$(git log -1 --format=%H -- "$PLUGIN_PATH")
+          PR_NUMBER=$(gh api "repos/${{ env.REPO_NAME }}/commits/$LAST_SHA/pulls" --jq '.[0].number // empty' || true)
+          if [ -n "$PR_NUMBER" ]; then
+            gh pr view "$PR_NUMBER" -R "${{ env.REPO_NAME }}" --json body --jq .body > /tmp/pr_body.md
+          else
+            echo "No associated PR found for $LAST_SHA; uploading without release notes."
+            : > /tmp/pr_body.md
+          fi
+          python3 .scripts/tools/extract-changelog.py --pr-body-file /tmp/pr_body.md > /tmp/changelog.md
+          echo "--- extracted release notes ---"
+          cat /tmp/changelog.md
+
       - name: Upload Plugin (production)
         run: |
-          python3 .scripts/uploader -p ${{ env.PLUGIN_PATH }} -t ${{ secrets.MARKETPLACE_TOKEN }} --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u ${{ secrets.MARKETPLACE_BASE_URL }}
+          python3 .scripts/uploader -p ${{ env.PLUGIN_PATH }} -t ${{ secrets.MARKETPLACE_TOKEN }} --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u ${{ secrets.MARKETPLACE_BASE_URL }} --with-changelog < /tmp/changelog.md
 
       # Staging only becomes testable once uploads reach it: the backend rebuilds
       # latest/recommended on an upload signal. Never blocking, though -- a red run
@@ -138,7 +154,7 @@ jobs:
             exit 0
           fi
           python3 .scripts/uploader -p "$PLUGIN_PATH" -t "$STAGING_TOKEN" \
-            --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u "$STAGING_BASE_URL" -f
+            --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u "$STAGING_BASE_URL" -f --with-changelog < /tmp/changelog.md
 
       - name: Report a failed staging upload
         if: steps.upload-staging.outcome == 'failure'
