@@ -51,25 +51,31 @@ jobs:
         run: |
           echo "Installing Python dependencies..."
           pip install requests
-          
-          echo "Ensuring required build tools system dependencies are available..."
-          sudo apt-get update -q
-          sudo apt-get install -y \
-            ffmpeg \
-            build-essential git \
-            cmake pkg-config \
-            libcairo2-dev libjpeg-dev libgif-dev
-          
-          echo "Ensuring required system dependencies are available..."
-          if ! command -v jq &> /dev/null; then
-            echo "Installing jq..."
-            sudo apt-get install -y jq
-          fi
 
-      - name: yq - portable yaml processor
-        uses: mikefarah/yq@v4.44.5
-        with:
-          cmd: yq --version
+          # Remaining packages are only needed by "Check Plugin Deps";
+          # install in the background (the rest is preinstalled on the image).
+          echo "Installing system dependencies in the background..."
+          sudo rm -f /var/lib/man-db/auto-update  # skip slow man-db trigger
+          sudo bash -c '
+            set -e
+            export DEBIAN_FRONTEND=noninteractive
+            # default EC2 apt mirror stalls; use the main archive
+            if [ -f /etc/apt/apt-mirrors.txt ]; then
+              echo "http://archive.ubuntu.com/ubuntu/" > /etc/apt/apt-mirrors.txt
+            fi
+            APT_OPTS="-o Acquire::Retries=3 -o Acquire::http::Timeout=15 -o Acquire::https::Timeout=15"
+            apt-get update -q $APT_OPTS
+            apt-get install -y -q --no-install-recommends $APT_OPTS \
+              ffmpeg \
+              libcairo2-dev libjpeg-dev libgif-dev
+            touch /tmp/apt-deps-ok
+          ' </dev/null >/tmp/apt-deps.log 2>&1 &
+          echo "APT_DEPS_PID=$!" >> "$GITHUB_ENV"
+
+      - name: Verify Preinstalled Tools
+        run: |
+          jq --version
+          yq --version
 
       - name: Get PR Path
         run: |
@@ -290,6 +296,20 @@ jobs:
           else
             echo "Version check passed: $VERSION is available for use."
           fi
+
+      - name: Wait for System Dependencies
+        timeout-minutes: 10
+        run: |
+          echo "Waiting for background apt install (pid ${APT_DEPS_PID:-unknown})..."
+          if [ -n "${APT_DEPS_PID:-}" ]; then
+            tail --pid="$APT_DEPS_PID" -f /dev/null || true
+          fi
+          if [ ! -f /tmp/apt-deps-ok ]; then
+            echo "System dependency installation failed:"
+            cat /tmp/apt-deps.log
+            exit 1
+          fi
+          echo "System dependencies ready."
 
       - name: Check Plugin Deps
         continue-on-error: true
