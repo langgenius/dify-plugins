@@ -1,0 +1,23 @@
+identity:
+  name: quote
+  author: hanjialeGit
+  label:
+    en_US: Stock Quote
+    zh_Hans: 股票行情
+  description:
+    en_US: Get real-time stock quote data including price, volume, and market cap
+    zh_Hans: 获取实时股票行情数据，包括价格、成交量和市值
+parameters:
+  - name: symbol
+    type: string
+    required: true
+    label:
+      en_US: Stock Symbol
+      zh_Hans: 股票代码
+    human_description:
+      en_US: Stock symbol, e.g. 000001, 600519
+      zh_Hans: 股票代码，如 000001、600519
+    form: llm
+extra:
+  python:
+    source: tools/quote.py

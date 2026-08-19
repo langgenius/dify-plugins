@@ -1,0 +1,23 @@
+identity:
+  name: stock
+  author: hanjialeGit
+  label:
+    en_US: Stock Detail
+    zh_Hans: 股票详情
+  description:
+    en_US: Get detailed stock information including PE, PB, market cap
+    zh_Hans: 获取股票详细信息，包括市盈率、市净率、市值等
+parameters:
+  - name: symbol
+    type: string
+    required: true
+    label:
+      en_US: Stock Symbol
+      zh_Hans: 股票代码
+    human_description:
+      en_US: Stock symbol, e.g. 600519
+      zh_Hans: 股票代码，如 600519
+    form: llm
+extra:
+  python:
+    source: tools/stock.py

@@ -1,0 +1,23 @@
+identity:
+  name: macro
+  author: hanjialeGit
+  label:
+    en_US: Macro Indicators
+    zh_Hans: 宏观指标
+  description:
+    en_US: Get latest macroeconomic indicators like CPI, GDP, PMI
+    zh_Hans: 获取最新宏观经济指标，如 CPI、GDP、PMI
+parameters:
+  - name: indicator
+    type: string
+    required: true
+    label:
+      en_US: Indicator Type
+      zh_Hans: 指标类型
+    human_description:
+      en_US: "Indicator type: CPI, GDP, PMI, M2, etc."
+      zh_Hans: "指标类型：CPI、GDP、PMI、M2 等"
+    form: llm
+extra:
+  python:
+    source: tools/macro.py

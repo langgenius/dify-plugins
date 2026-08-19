@@ -1,0 +1,33 @@
+identity:
+  name: limit
+  author: hanjialeGit
+  label:
+    en_US: Limit Up/Down List
+    zh_Hans: 涨跌停列表
+  description:
+    en_US: Get list of stocks hitting daily price limits
+    zh_Hans: 获取涨跌停股票列表
+parameters:
+  - name: trade_date
+    type: string
+    required: false
+    label:
+      en_US: Trade Date
+      zh_Hans: 交易日期
+    human_description:
+      en_US: "Trade date in YYYYMMDD format (default: latest trading day)"
+      zh_Hans: "交易日期，格式 YYYYMMDD（默认最新交易日）"
+    form: llm
+  - name: kind
+    type: string
+    required: false
+    label:
+      en_US: Limit Kind
+      zh_Hans: 涨跌类型
+    human_description:
+      en_US: "U for limit-up, D for limit-down (default: U)"
+      zh_Hans: "U 涨停，D 跌停（默认 U）"
+    form: llm
+extra:
+  python:
+    source: tools/limit.py
