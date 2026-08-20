@@ -1,0 +1,50 @@
+background: '#F6821F'
+configurate_methods:
+- predefined-model
+description:
+  en_US: Cloudflare Workers AI provides serverless inference across a broad catalog of open models, with a free tier for getting started.
+  zh_Hans: Cloudflare Workers AI 提供跨开放模型目录的无服务器推理，并提供入门免费额度。
+extra:
+  python:
+    model_sources:
+    - models/llm/llm.py
+    provider_source: provider/cloudflare.py
+help:
+  title:
+    en_US: Get your API Token from Cloudflare
+    zh_Hans: 从 Cloudflare 获取 API Token
+  url:
+    en_US: https://dash.cloudflare.com/profile/api-tokens
+icon_large:
+  en_US: icon_l_en.svg
+icon_small:
+  en_US: icon_s_en.svg
+label:
+  en_US: Cloudflare Workers AI
+  zh_Hans: Cloudflare Workers AI
+models:
+  llm:
+    position: models/llm/_position.yaml
+    predefined:
+    - models/llm/*.yaml
+provider: cloudflare
+provider_credential_schema:
+  credential_form_schemas:
+  - label:
+      en_US: Account ID
+    placeholder:
+      en_US: Found on the right sidebar of your Cloudflare dashboard
+      zh_Hans: 可在 Cloudflare 控制台右侧边栏找到
+    required: true
+    type: text-input
+    variable: account_id
+  - label:
+      en_US: API Token
+    placeholder:
+      en_US: Enter your API Token (needs Workers AI permission)
+      zh_Hans: 输入您的 API Token（需要 Workers AI 权限）
+    required: true
+    type: secret-input
+    variable: api_key
+supported_model_types:
+- llm
