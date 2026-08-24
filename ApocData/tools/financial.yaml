@@ -1,0 +1,33 @@
+identity:
+  name: financial
+  author: hanjialeGit
+  label:
+    en_US: Financial Report
+    zh_Hans: 财务报告
+  description:
+    en_US: Get financial report data including income, balance sheet, cash flow
+    zh_Hans: 获取财务报告数据，包括利润表、资产负债表、现金流量表
+parameters:
+  - name: symbol
+    type: string
+    required: true
+    label:
+      en_US: Stock Symbol
+      zh_Hans: 股票代码
+    human_description:
+      en_US: Stock symbol, e.g. 600519
+      zh_Hans: 股票代码，如 600519
+    form: llm
+  - name: report_type
+    type: string
+    required: false
+    label:
+      en_US: Report Type
+      zh_Hans: 报告类型
+    human_description:
+      en_US: "Report type: income, balance, cashflow (default: income)"
+      zh_Hans: "报告类型：income(利润表), balance(资产负债表), cashflow(现金流量表)"
+    form: llm
+extra:
+  python:
+    source: tools/financial.py

@@ -1,0 +1,13 @@
+identity:
+  name: sector
+  author: hanjialeGit
+  label:
+    en_US: Sector List
+    zh_Hans: 板块列表
+  description:
+    en_US: Get list of industry sectors with performance data
+    zh_Hans: 获取行业板块列表及表现数据
+parameters: []
+extra:
+  python:
+    source: tools/sector.py

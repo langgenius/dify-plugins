@@ -1,0 +1,33 @@
+identity:
+  name: announcement
+  author: hanjialeGit
+  label:
+    en_US: Announcements
+    zh_Hans: 公告查询
+  description:
+    en_US: Search and retrieve company announcements
+    zh_Hans: 搜索和获取公司公告
+parameters:
+  - name: symbol
+    type: string
+    required: false
+    label:
+      en_US: Stock Symbol
+      zh_Hans: 股票代码
+    human_description:
+      en_US: Stock symbol (optional)
+      zh_Hans: 股票代码（可选）
+    form: llm
+  - name: keyword
+    type: string
+    required: false
+    label:
+      en_US: Keyword
+      zh_Hans: 关键词
+    human_description:
+      en_US: Search keyword (optional)
+      zh_Hans: 搜索关键词（可选）
+    form: llm
+extra:
+  python:
+    source: tools/announcement.py

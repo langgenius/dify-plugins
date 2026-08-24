@@ -1,0 +1,33 @@
+identity:
+  name: trade_days
+  author: hanjialeGit
+  label:
+    en_US: Trade Days
+    zh_Hans: 交易日历
+  description:
+    en_US: Get trading calendar and check if a date is a trading day
+    zh_Hans: 获取交易日历，查询某日期是否为交易日
+parameters:
+  - name: start_date
+    type: string
+    required: false
+    label:
+      en_US: Start Date
+      zh_Hans: 开始日期
+    human_description:
+      en_US: "Start date in YYYYMMDD format"
+      zh_Hans: "开始日期，格式 YYYYMMDD"
+    form: llm
+  - name: end_date
+    type: string
+    required: false
+    label:
+      en_US: End Date
+      zh_Hans: 结束日期
+    human_description:
+      en_US: "End date in YYYYMMDD format"
+      zh_Hans: "结束日期，格式 YYYYMMDD"
+    form: llm
+extra:
+  python:
+    source: tools/trade_days.py

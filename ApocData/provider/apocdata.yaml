@@ -1,0 +1,23 @@
+identity:
+  author: hanjialeGit
+  name: apocdata
+  label:
+    en_US: ApocData
+    zh_Hans: 天启至数
+  description:
+    en_US: Zero-auth A-share market data - 46 tools, no API key required
+    zh_Hans: 免鉴权 A 股数据查询 - 46 个工具，无需 API Key
+  icon: icon.png
+tools:
+  - tools/quote.yaml
+  - tools/stock.yaml
+  - tools/financial.yaml
+  - tools/moneyflow.yaml
+  - tools/limit.yaml
+  - tools/sector.yaml
+  - tools/announcement.yaml
+  - tools/macro.yaml
+  - tools/trade_days.yaml
+extra:
+  python:
+    source: provider/apocdata.py

@@ -1,0 +1,23 @@
+identity:
+  name: moneyflow
+  author: hanjialeGit
+  label:
+    en_US: Money Flow
+    zh_Hans: 资金流向
+  description:
+    en_US: Get stock money flow data showing capital inflows and outflows
+    zh_Hans: 获取股票资金流向数据，显示资金流入流出情况
+parameters:
+  - name: symbol
+    type: string
+    required: true
+    label:
+      en_US: Stock Symbol
+      zh_Hans: 股票代码
+    human_description:
+      en_US: Stock symbol, e.g. 000001
+      zh_Hans: 股票代码，如 000001
+    form: llm
+extra:
+  python:
+    source: tools/moneyflow.py
