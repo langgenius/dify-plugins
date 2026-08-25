@@ -1,0 +1,16 @@
+identity:
+  author: hashgraph-online
+  name: hol_guard
+  label:
+    en_US: HOL Guard
+  description:
+    en_US: Side-effect-free command risk inspection using HOL Guard.
+  icon: icon.svg
+  tags:
+    - utilities
+credentials_for_provider: {}
+tools:
+  - tools/inspect_command.yaml
+extra:
+  python:
+    source: provider/hol_guard.py

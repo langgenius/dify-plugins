@@ -1,0 +1,28 @@
+identity:
+  author: hashgraph-online
+  name: inspect_command
+  label:
+    en_US: Inspect command with HOL Guard
+description:
+  human:
+    en_US: Inspect shell command text with HOL Guard without executing it.
+  llm: >-
+    Use HOL Guard's built-in command safety extensions to classify shell command
+    text before execution. This tool does not execute the command and does not
+    persist Guard state. Returns structured risk classes, minimum action,
+    matching rules, extensions, signals, and parser trace.
+parameters:
+  - name: command
+    type: string
+    required: true
+    label:
+      en_US: Command
+    human_description:
+      en_US: Shell command text to inspect. The command is not executed.
+    llm_description: Shell command text to inspect for risk before deciding whether to continue.
+    form: llm
+output_schema:
+  type: object
+extra:
+  python:
+    source: tools/inspect_command.py

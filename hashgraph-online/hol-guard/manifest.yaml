@@ -1,0 +1,40 @@
+version: 0.1.0
+type: plugin
+author: hashgraph-online
+name: hol-guard
+label:
+  en_US: HOL Guard
+description:
+  en_US: >-
+    Side-effect-free command risk inspection using HOL Guard's built-in command
+    safety extensions. Classifies command text without executing it or
+    persisting Guard state.
+icon: icon.svg
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+    endpoint:
+      enabled: false
+    model:
+      enabled: false
+    node:
+      enabled: false
+    storage:
+      enabled: false
+      size: 1048576
+plugins:
+  tools:
+    - "provider/hol_guard.yaml"
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+created_at: 2026-08-25T02:00:00Z
+privacy: PRIVACY.md
