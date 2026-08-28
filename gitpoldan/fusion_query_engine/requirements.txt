@@ -1,0 +1,2 @@
+dify_plugin>=0.9.1,<1.0.0
+llama-index-core>=0.12.0,<0.13.0

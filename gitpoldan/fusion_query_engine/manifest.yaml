@@ -1,0 +1,38 @@
+version: 1.1.1
+type: plugin
+author: gitpoldan
+name: fusion_query_engine
+label:
+  en_US: Fusion Query Engine
+  ru_RU: Fusion Query Engine
+description:
+  en_US: LlamaIndex COMPACT query engine with query expansion and answer modes over pre-fetched context.
+  ru_RU: LlamaIndex COMPACT-движок с режимами расширения запроса и ответа по предзагруженному контексту.
+icon: icon.svg
+resource:
+  memory: 536870912
+  permission:
+    model:
+      enabled: true
+      llm: true
+      text_embedding: false
+      rerank: false
+      tts: false
+      speech2text: false
+      moderation: false
+plugins:
+  tools:
+    - provider/fusion_query_engine.yaml
+meta:
+  version: 1.1.1
+  minimum_dify_version: "1.14.0"
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+created_at: 2025-06-19T12:00:00+00:00
+privacy: PRIVACY.md
+verified: false

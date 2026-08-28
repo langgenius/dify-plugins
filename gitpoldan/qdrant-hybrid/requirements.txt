@@ -1,0 +1,3 @@
+dify_plugin>=0.9.1,<1.0.0
+qdrant-client>=1.15,<2.0
+fastembed>=0.3.6
