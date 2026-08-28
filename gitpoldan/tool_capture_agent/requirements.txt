@@ -1,2 +1,0 @@
-dify_plugin>=0.9.1,<1.0.0
-PyYAML>=6.0.1
