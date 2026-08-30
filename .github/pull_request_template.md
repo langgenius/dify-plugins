@@ -27,7 +27,7 @@
 
 ## Required checks
 
-- [ ] I have read and followed the [Marketplace submission requirements](docs/plugin-submission-requirements.md).
+- [ ] I have read and followed the [Marketplace submission requirements](https://github.com/langgenius/dify-plugins/blob/main/docs/plugin-submission-requirements.md).
 - [ ] I have read and comply with the Plugin Developer Agreement.
 - [ ] I tested this plugin on Dify Community Edition and Dify Cloud, or documented any limitation below.
 - [ ] The package contains only files needed at runtime.

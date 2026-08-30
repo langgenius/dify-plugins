@@ -1,0 +1,106 @@
+identity:
+  name: video_to_music
+  author: sonilo-ai
+  label:
+    en_US: Video to Music
+    zh_Hans: 视频生成音乐
+description:
+  human:
+    en_US: >-
+      Generate a licensed soundtrack aligned to a video, using the Sonilo
+      API. Use this for a music bed matched to a video's pacing and mood,
+      not for isolated sound effects.
+    zh_Hans: >-
+      使用 Sonilo API 生成与视频对齐的有版权授权原声带。适用于匹配视频节奏与情绪的背景音乐，不适用于独立音效。
+  llm: >-
+    Generate a soundtrack for a video, matched to its pacing, motion, and
+    mood, from a public/signed HTTPS video URL. Use this instead of
+    text_to_music when the music should be derived from an actual video, and
+    instead of video_to_sfx when the goal is background music rather than
+    discrete sound effects. Submits the job and polls until it finishes,
+    then returns a downloadable audio URL.
+extra:
+  python:
+    source: tools/video_to_music.py
+parameters:
+  - name: video_url
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Video URL
+      zh_Hans: 视频 URL
+    human_description:
+      en_US: >-
+        A public or signed HTTPS URL that Sonilo's servers can fetch. This
+        tool submits it as a multipart/form-data field; it does not support
+        uploading a raw video file.
+      zh_Hans: >-
+        Sonilo 服务器可访问的公开或带签名的 HTTPS URL。本工具以 multipart/form-data
+        字段方式提交；不支持直接上传原始视频文件。
+    llm_description: Public or signed HTTPS URL of the source video to generate a soundtrack for.
+  - name: prompt
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: Style prompt
+      zh_Hans: 风格提示词
+    human_description:
+      en_US: Optional creative direction for the soundtrack (genre, mood, instrumentation).
+      zh_Hans: 可选的原声带创作方向（风格、情绪、乐器）。
+    llm_description: Optional style/mood direction for the generated soundtrack, e.g. "tense, minimal synth".
+  - name: output_format
+    type: select
+    required: false
+    form: form
+    default: m4a
+    options:
+      - value: m4a
+        label:
+          en_US: M4A (default)
+          zh_Hans: M4A（默认）
+      - value: wav
+        label:
+          en_US: WAV
+          zh_Hans: WAV
+    label:
+      en_US: Output format
+      zh_Hans: 输出格式
+    human_description:
+      en_US: Audio container/codec for the generated file. Only m4a or wav are supported here.
+      zh_Hans: 生成音频文件的容器/编码格式。此处仅支持 m4a 或 wav。
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether an audio URL was successfully resolved.
+    audio_url:
+      type: string
+      nullable: true
+      description: URL of the generated soundtrack, when available.
+    content_type:
+      type: string
+      nullable: true
+      description: Content type of the generated audio file, when reported.
+    task_id:
+      type: string
+      nullable: true
+      description: Sonilo task id for this request.
+    status:
+      type: string
+      nullable: true
+      description: Final Sonilo task status (e.g. succeeded).
+    duration_seconds:
+      type: number
+      nullable: true
+      description: Duration of the generated audio in seconds, when reported.
+    cost:
+      type: number
+      nullable: true
+      description: Cost of this generation, when reported.
+    raw:
+      type: object
+      nullable: true
+      description: The full, unmodified terminal task body from the Sonilo API.

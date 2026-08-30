@@ -1,0 +1,114 @@
+identity:
+  name: find_shelves
+  author: gaohaoyv
+  label:
+    en_US: Find Shelves
+    zh_Hans: 查找书架
+description:
+  human:
+    en_US: Find accessible BookStack shelves by name using exact or like matching.
+    zh_Hans: 使用精确或模糊名称匹配查找可访问的 BookStack 书架。
+  llm: Find accessible BookStack shelves by name using exact or like matching.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether finding shelves succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when finding shelves fails.
+    shelves:
+      type: array
+      description: Normalized BookStack shelves.
+      items:
+        type: object
+        properties:
+          shelf_id:
+            type: string
+            nullable: true
+            description: BookStack shelf identifier.
+          name:
+            type: string
+            nullable: true
+            description: Shelf name.
+          slug:
+            type: string
+            nullable: true
+            description: Shelf slug.
+          description:
+            type: string
+            nullable: true
+            description: Shelf description.
+          url:
+            type: string
+            nullable: true
+            description: Shelf URL.
+          created_at:
+            type: string
+            nullable: true
+            description: Shelf creation timestamp.
+          updated_at:
+            type: string
+            nullable: true
+            description: Shelf update timestamp.
+          raw:
+            type: object
+            nullable: true
+            description: Original BookStack shelf object.
+    count:
+      type: integer
+      description: Number of returned shelves.
+    total:
+      type: integer
+      nullable: true
+      description: Total matching shelves when provided by BookStack.
+parameters:
+  - name: name
+    type: string
+    required: true
+    label:
+      en_US: Name
+      zh_Hans: 名称
+    human_description:
+      en_US: Shelf name to match.
+      zh_Hans: 要匹配的书架名称。
+    llm_description: Shelf name to match.
+    form: llm
+  - name: match
+    type: string
+    required: true
+    label:
+      en_US: Match
+      zh_Hans: 匹配方式
+    human_description:
+      en_US: Match mode, either exact or like.
+      zh_Hans: 匹配模式，可选 exact 或 like。
+    llm_description: Match mode, either exact or like.
+    form: llm
+  - name: count
+    type: number
+    required: false
+    label:
+      en_US: Count
+      zh_Hans: 数量
+    human_description:
+      en_US: Optional maximum number of shelves to return.
+      zh_Hans: 可选，限制返回的书架数量。
+    llm_description: Optional maximum number of shelves to return.
+    form: llm
+  - name: offset
+    type: number
+    required: false
+    label:
+      en_US: Offset
+      zh_Hans: 偏移量
+    human_description:
+      en_US: Optional offset for paginated matching BookStack shelf results.
+      zh_Hans: 可选，匹配到的 BookStack 书架分页结果偏移量。
+    llm_description: Optional offset for paginated matching BookStack shelf results.
+    form: llm
+extra:
+  python:
+    source: tools/find_shelves.py

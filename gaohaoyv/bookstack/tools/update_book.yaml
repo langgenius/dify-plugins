@@ -1,0 +1,134 @@
+identity:
+  name: update_book
+  author: gaohaoyv
+  label:
+    en_US: Update Book
+    zh_Hans: 更新书籍
+description:
+  human:
+    en_US: Update a BookStack book by ID and return normalized metadata.
+    zh_Hans: 根据 ID 更新 BookStack 书籍并返回标准化元数据。
+  llm: Update a BookStack book by ID and return normalized metadata.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether updating the book succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when updating the book fails.
+    book_id:
+      type: string
+      nullable: true
+      description: Updated BookStack book identifier.
+    name:
+      type: string
+      nullable: true
+      description: Updated book name.
+    slug:
+      type: string
+      nullable: true
+      description: Updated book slug.
+    description:
+      type: string
+      nullable: true
+      description: Updated book description.
+    description_html:
+      type: string
+      nullable: true
+      description: Updated book description HTML.
+    url:
+      type: string
+      nullable: true
+      description: Updated book URL.
+    tags:
+      type: array
+      nullable: true
+      description: Raw tag objects when available.
+      items:
+        type: object
+    created_at:
+      type: string
+      nullable: true
+      description: Book creation timestamp.
+    updated_at:
+      type: string
+      nullable: true
+      description: Book update timestamp.
+    created_by:
+      type: object
+      nullable: true
+      description: Raw creator metadata when available.
+    updated_by:
+      type: object
+      nullable: true
+      description: Raw updater metadata when available.
+    action:
+      type: string
+      nullable: true
+      description: Action label for the book result.
+    raw:
+      type: object
+      nullable: true
+      description: Original BookStack book object.
+parameters:
+  - name: book_id
+    type: string
+    required: true
+    label:
+      en_US: Book ID
+      zh_Hans: 书籍 ID
+    human_description:
+      en_US: The BookStack book ID to update.
+      zh_Hans: 要更新的 BookStack 书籍 ID。
+    llm_description: The BookStack book ID to update.
+    form: llm
+  - name: name
+    type: string
+    required: false
+    label:
+      en_US: Name
+      zh_Hans: 名称
+    human_description:
+      en_US: Optional updated book name.
+      zh_Hans: 可选的更新书籍名称。
+    llm_description: Optional updated book name.
+    form: llm
+  - name: description
+    type: string
+    required: false
+    label:
+      en_US: Description
+      zh_Hans: 描述
+    human_description:
+      en_US: Optional updated plain-text description.
+      zh_Hans: 可选的更新纯文本描述。
+    llm_description: Optional updated plain-text description.
+    form: llm
+  - name: description_html
+    type: string
+    required: false
+    label:
+      en_US: Description HTML
+      zh_Hans: 描述 HTML
+    human_description:
+      en_US: Optional updated HTML description.
+      zh_Hans: 可选的更新 HTML 描述。
+    llm_description: Optional updated HTML description.
+    form: llm
+  - name: tags
+    type: string
+    required: false
+    label:
+      en_US: Tags
+      zh_Hans: 标签
+    human_description:
+      en_US: Optional tag text or list-like value forwarded as simple tags.
+      zh_Hans: 可选标签文本或列表式值，将作为简单标签传递。
+    llm_description: Optional updated tags.
+    form: llm
+extra:
+  python:
+    source: tools/update_book.py
