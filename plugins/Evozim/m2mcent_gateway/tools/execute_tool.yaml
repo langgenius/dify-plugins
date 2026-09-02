@@ -1,0 +1,37 @@
+identity:
+  name: "execute_tool"
+  author: "Evozim"
+  label:
+    en_US: "Execute M2MCent Tool"
+    zh_Hans: "执行 M2MCent 工具"
+description:
+  human:
+    en_US: "Execute a specific M2MCent AI micro-service with custom input data."
+    zh_Hans: "使用自定义输入数据执行特定的 M2MCent AI 微服务。"
+  llm: "Execute a specific tool from the M2MCent gateway by passing tool_id and input payload."
+parameters:
+  - name: tool_id
+    type: string
+    required: true
+    label:
+      en_US: "Tool ID"
+      zh_Hans: "工具 ID"
+    human_description:
+      en_US: "ID of the tool to execute (e.g., 'credit-risk-mcp', '3d-meshweaver-mcp')"
+      zh_Hans: "要执行的工具 ID（例如 'credit-risk-mcp'）"
+    llm_description: "The identifier of the M2MCent micro-service"
+    form: llm
+  - name: payload
+    type: string
+    required: true
+    label:
+      en_US: "Input Payload"
+      zh_Hans: "输入数据"
+    human_description:
+      en_US: "Input prompt or JSON data for the tool"
+      zh_Hans: "工具的输入提示词或 JSON 数据"
+    llm_description: "Input payload to process"
+    form: llm
+extra:
+  python:
+    source: tools/execute_tool.py
