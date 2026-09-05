@@ -1,0 +1,37 @@
+﻿version: 0.0.1
+type: plugin
+author: Evozim
+name: m2mcent_gateway
+label:
+  en_US: M2MCent Universal MCP Gateway
+  zh_Hans: M2MCent 通用 MCP 智能体网关
+description:
+  en_US: Connect your Dify agents to 1,005 specialized AI micro-services across security, biotech, and 3D. Features automated routing and authentication.
+  zh_Hans: 将您的 Dify 智能体连接到 1,005 个涵盖安全、生物医疗和 3D 的专业 MCP 微服务，支持自动路由和认证。
+icon: icon.svg
+icon_dark: icon_dark.svg
+repo: https://github.com/Evozim/m2mcent
+contact: support@m2mcent.com
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+    model:
+      enabled: false
+plugins:
+  tools:
+    - provider/m2mcent.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: 0.8.0
+created_at: 2026-08-19T20:00:00.000000Z
+privacy: PRIVACY.md
+verified: false

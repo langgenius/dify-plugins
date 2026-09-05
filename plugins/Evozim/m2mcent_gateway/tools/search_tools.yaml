@@ -1,0 +1,26 @@
+identity:
+  name: "search_tools"
+  author: "Evozim"
+  label:
+    en_US: "Search M2MCent Tools"
+    zh_Hans: "搜索 M2MCent 工具"
+description:
+  human:
+    en_US: "Search across 1,005 specialized AI micro-services by keyword or capability."
+    zh_Hans: "按关键词或功能在 1,005 个专业 AI 微服务中进行语义搜索。"
+  llm: "Search the M2MCent catalog for specialized AI tools (e.g. 'credit risk', '3d mesh', 'smart contract audit'). Returns tool IDs, descriptions, and price in USDC."
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: "Search Query"
+      zh_Hans: "搜索词"
+    human_description:
+      en_US: "Capability or domain keyword to search (e.g., 'credit risk', 'smart contract')"
+      zh_Hans: "要搜索的功能或领域关键词（如 'credit risk', 'smart contract'）"
+    llm_description: "Search keyword describing the capability needed"
+    form: llm
+extra:
+  python:
+    source: tools/search_tools.py

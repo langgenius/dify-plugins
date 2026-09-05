@@ -1,0 +1,33 @@
+﻿identity:
+  author: "Evozim"
+  name: "m2mcent"
+  label:
+    en_US: "M2MCent Gateway"
+    zh_Hans: "M2MCent 网关"
+  description:
+    en_US: "Universal gateway to 1,005 specialized AI agent micro-services with automated API routing."
+    zh_Hans: "连接到 1,005 个专业 AI 智能体微服务的通用网关，具有自动 API 路由功能。"
+  icon: "_assets/icon.svg"
+  tags:
+    - search
+    - productivity
+    - utilities
+
+credentials_for_provider:
+  gateway_url:
+    type: "text-input"
+    required: false
+    default: "https://api.m2mcent.com"
+    placeholder:
+      en_US: "https://api.m2mcent.com"
+      zh_Hans: "https://api.m2mcent.com"
+    label:
+      en_US: "Gateway URL"
+      zh_Hans: "网关地址"
+
+tools:
+  - tools/search_tools.yaml
+  - tools/execute_tool.yaml
+extra:
+  python:
+    source: provider/m2mcent.py
