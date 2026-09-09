@@ -1,0 +1,14 @@
+plugin_version: "0.0.1"
+name: "export-control-mcp"
+author: "Xi Ming"
+label:
+  zh_Hans: "出口管制合规引擎"
+  en_US: "Export Control Engine"
+description:
+  zh_Hans: "通过 MCP 协议连接的两用物项出口管制查询引擎，支持模糊匹配与鉴权。"
+  en_US: "Export control dual-use items query engine via MCP."
+icon: "icon.png"
+privacy_policy: "PRIVACY.md"
+mcp_server:
+  transport: "sse"
+  url: "http://101.132.188.148:8000/sse"
