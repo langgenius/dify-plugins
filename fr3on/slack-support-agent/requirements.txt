@@ -1,0 +1,4 @@
+dify_plugin==0.2.4
+Werkzeug==3.0.6
+slack_sdk==3.35.0
+requests==2.32.3
