@@ -56,9 +56,11 @@ jobs:
           # Remaining packages are only needed by "Check Plugin Deps";
           # install in the background (the rest is preinstalled on the image).
           echo "Installing system dependencies in the background..."
+          rm -f /tmp/apt-deps-ok /tmp/apt-deps-done
           sudo rm -f /var/lib/man-db/auto-update  # skip slow man-db trigger
           sudo bash -c '
             set -e
+            trap "touch /tmp/apt-deps-done" EXIT
             export DEBIAN_FRONTEND=noninteractive
             # default EC2 apt mirror stalls; use the main archive
             if [ -f /etc/apt/apt-mirrors.txt ]; then
@@ -301,10 +303,24 @@ jobs:
       - name: Wait for System Dependencies
         timeout-minutes: 10
         run: |
-          echo "Waiting for background apt install (pid ${APT_DEPS_PID:-unknown})..."
-          if [ -n "${APT_DEPS_PID:-}" ]; then
-            tail --pid="$APT_DEPS_PID" -f /dev/null || true
+          if [ -f "$PLUGIN_PATH/requirements.txt" ]; then
+            echo "Waiting for background apt install to support requirements.txt checks..."
+            for _ in $(seq 1 270); do
+              [ -f /tmp/apt-deps-done ] && break
+              sleep 2
+            done
+          else
+            echo "No requirements.txt found, skipping apt dependency wait."
+            exit 0
           fi
+
+          if [ ! -f /tmp/apt-deps-done ]; then
+            echo "Timed out waiting for background apt install to complete."
+            echo "Last apt logs:"
+            tail -n 200 /tmp/apt-deps.log || true
+            exit 1
+          fi
+
           if [ ! -f /tmp/apt-deps-ok ]; then
             echo "System dependency installation failed:"
             cat /tmp/apt-deps.log
