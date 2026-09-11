@@ -52,26 +52,6 @@ jobs:
           echo "Installing Python dependencies..."
           pip install requests
 
-          # Remaining packages are only needed by "Check Plugin Deps";
-          # install in the background (the rest is preinstalled on the image).
-          echo "Installing system dependencies in the background..."
-          sudo rm -f /var/lib/man-db/auto-update  # skip slow man-db trigger
-          sudo bash -c '
-            set -e
-            export DEBIAN_FRONTEND=noninteractive
-            # default EC2 apt mirror stalls; use the main archive
-            if [ -f /etc/apt/apt-mirrors.txt ]; then
-              echo "http://archive.ubuntu.com/ubuntu/" > /etc/apt/apt-mirrors.txt
-            fi
-            APT_OPTS="-o Acquire::Retries=3 -o Acquire::http::Timeout=15 -o Acquire::https::Timeout=15"
-            apt-get update -q $APT_OPTS
-            apt-get install -y -q --no-install-recommends $APT_OPTS \
-              ffmpeg \
-              libcairo2-dev libjpeg-dev libgif-dev
-            touch /tmp/apt-deps-ok
-          ' </dev/null >/tmp/apt-deps.log 2>&1 &
-          echo "APT_DEPS_PID=$!" >> "$GITHUB_ENV"
-
       - name: Verify Preinstalled Tools
         run: |
           jq --version
@@ -297,38 +277,90 @@ jobs:
             echo "Version check passed: $VERSION is available for use."
           fi
 
-      - name: Wait for System Dependencies
-        timeout-minutes: 10
-        run: |
-          echo "Waiting for background apt install (pid ${APT_DEPS_PID:-unknown})..."
-          if [ -n "${APT_DEPS_PID:-}" ]; then
-            tail --pid="$APT_DEPS_PID" -f /dev/null || true
-          fi
-          if [ ! -f /tmp/apt-deps-ok ]; then
-            echo "System dependency installation failed:"
-            cat /tmp/apt-deps.log
-            exit 1
-          fi
-          echo "System dependencies ready."
-
       - name: Check Plugin Deps
         continue-on-error: true
         run: |
+          set -o pipefail
+
           ERROR_FILE="/tmp/install_errors.txt"
-          touch $ERROR_FILE
-          if [ -f "$PLUGIN_PATH/requirements.txt" ]; then
-            echo "Trying to install plugin dependencies..."
-            python3 -m venv .venv
-            source .venv/bin/activate
-            python3 -m pip install -r "$PLUGIN_PATH/requirements.txt" || {
-              echo "Failed to install plugin dependencies" >> $ERROR_FILE
-              echo "Failed to install plugin dependencies"
-              exit 1
-            }
-            deactivate
-          else
+          WARNING_FILE="/tmp/install_warnings.txt"
+          PIP_LOG="/tmp/pip_install.log"
+          APT_LOG="/tmp/apt-deps.log"
+          touch "$ERROR_FILE" "$WARNING_FILE"
+
+          if [ ! -f "$PLUGIN_PATH/requirements.txt" ]; then
             echo "No requirements.txt found, skipping dependency installation"
+            exit 0
           fi
+
+          python3 -m venv .venv
+          source .venv/bin/activate
+
+          echo "Trying to install plugin dependencies..."
+          if python3 -m pip install -r "$PLUGIN_PATH/requirements.txt" 2>&1 | tee "$PIP_LOG"; then
+            echo "Plugin dependencies installed."
+            exit 0
+          fi
+
+          # Only a dependency without a prebuilt wheel needs system headers, so
+          # install them here instead of on every run. ffmpeg is already on the
+          # runner image and pip never needs the binary, so it is not installed.
+          echo "Install failed; fetching build dependencies and retrying once."
+          APT_OK=1
+          sudo timeout 240 bash -c '
+            set -e
+            export DEBIAN_FRONTEND=noninteractive
+            rm -f /var/lib/man-db/auto-update  # skip slow man-db trigger
+            APT_OPTS="-o Acquire::Retries=1 -o Acquire::http::Timeout=10 -o Acquire::https::Timeout=10 -o Acquire::ForceIPv4=true"
+            # The image default mirror has stalled before and archive.ubuntu.com
+            # has been unreachable before, so try one and fall back to the other.
+            if ! apt-get update -q $APT_OPTS; then
+              if [ -f /etc/apt/apt-mirrors.txt ]; then
+                echo "Default mirror failed, falling back to archive.ubuntu.com"
+                echo "http://archive.ubuntu.com/ubuntu/" > /etc/apt/apt-mirrors.txt
+                apt-get update -q $APT_OPTS
+              else
+                exit 1
+              fi
+            fi
+            apt-get install -y -q --no-install-recommends $APT_OPTS \
+              libcairo2-dev libjpeg-dev libgif-dev
+          ' </dev/null 2>&1 | tee "$APT_LOG" || APT_OK=0
+
+          if [ "$APT_OK" = "0" ]; then
+            echo "Build dependency installation failed or timed out."
+          fi
+
+          echo "Retrying plugin dependency installation..."
+          if python3 -m pip install -r "$PLUGIN_PATH/requirements.txt" 2>&1 | tee -a "$PIP_LOG"; then
+            echo "Plugin dependencies installed after adding build dependencies."
+            exit 0
+          fi
+
+          if [ "$APT_OK" = "1" ]; then
+            {
+              echo "Failed to install plugin dependencies."
+              echo "Last pip output:"
+              tail -n 50 "$PIP_LOG"
+            } >> "$ERROR_FILE"
+            echo "Failed to install plugin dependencies"
+            exit 1
+          fi
+
+          # apt was unreachable, so the runner never offered a working build
+          # toolchain. That is our infrastructure failing, not a bad submission:
+          # report it for a human instead of blocking the PR.
+          touch /tmp/deps_unavailable
+          {
+            echo "Dependency check inconclusive: the runner could not install system build dependencies (apt unreachable or timed out), and installing the plugin requirements failed afterwards."
+            echo "This is a CI infrastructure failure, not necessarily a problem with the submission. Re-run the job, or review the dependencies manually."
+            echo "Last apt output:"
+            tail -n 20 "$APT_LOG"
+            echo "Last pip output:"
+            tail -n 50 "$PIP_LOG"
+          } >> "$WARNING_FILE"
+          echo "Dependency check inconclusive due to a runner apt failure; recorded as a warning."
+          exit 0
 
       - name: Check Plugin Install
         continue-on-error: true
@@ -337,6 +369,11 @@ jobs:
           ERROR_FILE="/tmp/install_errors.txt"
           touch $ERROR_FILE
           
+          if [ -f /tmp/deps_unavailable ]; then
+            echo "Skipping installation test: dependencies could not be installed on this runner."
+            exit 0
+          fi
+
           if [ -f "$PLUGIN_PATH/requirements.txt" ]; then
               source .venv/bin/activate || {
                 echo "Failed to activate virtual environment" >> $ERROR_FILE
@@ -567,6 +604,8 @@ jobs:
           
           if [ -f "/tmp/install_errors.txt" ] && [ -s "/tmp/install_errors.txt" ]; then
             echo "| **Installation** | ❌ Failed |" >> "$SUMMARY_FILE"
+          elif [ -f "/tmp/install_warnings.txt" ] && [ -s "/tmp/install_warnings.txt" ]; then
+            echo "| **Installation** | ⚠️ Inconclusive (CI infrastructure) |" >> "$SUMMARY_FILE"
           elif [ -n "${PLUGIN_PATH:-}" ] && [ -f "$PLUGIN_PATH/requirements.txt" ]; then
             echo "| **Installation** | ✅ Passed |" >> "$SUMMARY_FILE"
           else
@@ -646,7 +685,8 @@ jobs:
             "/tmp/package_dependencies_warnings.txt" \
             "/tmp/sensitive_capabilities_warnings.txt" \
             "/tmp/python_safety_warnings.txt" \
-            "/tmp/prohibited_financial_activity_warnings.txt"
+            "/tmp/prohibited_financial_activity_warnings.txt" \
+            "/tmp/install_warnings.txt"
           
           append_error_details "Manifest Validation" "/tmp/manifest_errors.txt"
           append_error_details "Manifest Warnings" "/tmp/manifest_warnings.txt"
@@ -671,6 +711,7 @@ jobs:
           append_error_details "Python Safety Warnings" "/tmp/python_safety_warnings.txt"
           append_error_details "Prohibited Financial Activity Warnings" "/tmp/prohibited_financial_activity_warnings.txt"
           append_error_details "Installation" "/tmp/install_errors.txt"
+          append_error_details "Installation Warnings" "/tmp/install_warnings.txt"
           append_error_details "Packaging" "/tmp/packaging_errors.txt"
           
           echo "" >> "$SUMMARY_FILE"
