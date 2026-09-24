@@ -1,0 +1,18 @@
+identity:
+  name: x402_pay_per_call
+  author: Souravrajvi0
+  label:
+    en_US: x402 Pay-Per-Call
+    zh_Hans: x402 按次付费调用
+  description:
+    en_US: Call HTTP endpoints that use the x402 pay-per-call scheme, settled in Nano (XNO). No account or API key required — you supply a settled payment proof per call.
+    zh_Hans: 调用采用 x402 按次付费方案（以 Nano/XNO 结算）的 HTTP 接口。无需账号或 API Key —— 每次调用由你提供已结算的支付凭证。
+  icon: icon.svg
+  tags:
+    - utilities
+    - finance
+extra:
+  python:
+    source: provider/x402_pay_per_call.py
+tools:
+  - tools/x402_call.yaml

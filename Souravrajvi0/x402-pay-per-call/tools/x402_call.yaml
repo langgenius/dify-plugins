@@ -1,0 +1,99 @@
+description:
+  human:
+    en_US: Call an HTTP endpoint that may require x402 pay-per-call settlement in Nano (XNO). Returns the response on success, or relays the payment challenge (price, pay-to address, accepted networks) on HTTP 402 so you can settle and retry.
+    zh_Hans: 调用一个可能需要以 Nano (XNO) 进行 x402 按次付费结算的 HTTP 接口。成功时返回响应内容；如果返回 HTTP 402，则转发支付挑战信息（价格、收款地址、可接受的网络），以便结算后重试。
+  llm: Call a URL that may be gated by the x402 HTTP 402 pay-per-call payment scheme. On a fresh call (no payment proof), a 402 response is parsed and its payment challenge (price, pay-to account, accepted networks) is returned as structured data so the price can be quoted to the user. Once the user has settled the payment in Nano (XNO) in their own wallet, call this tool again with the resulting settled block hash as `payment_header` (or a pre-funded balance account as `balance_account`) to retrieve the paid content.
+extra:
+  python:
+    source: tools/x402_call.py
+identity:
+  author: Souravrajvi0
+  label:
+    en_US: x402 Call
+    zh_Hans: x402 调用
+  name: x402_call
+parameters:
+- form: llm
+  human_description:
+    en_US: The full URL of the x402-gated endpoint to call.
+    zh_Hans: 要调用的、受 x402 保护的完整接口 URL。
+  label:
+    en_US: URL
+    zh_Hans: URL
+  llm_description: The full https:// or http:// URL of the endpoint to call.
+  name: url
+  required: true
+  type: string
+- default: GET
+  form: form
+  human_description:
+    en_US: HTTP method to use for the call.
+    zh_Hans: 调用使用的 HTTP 方法。
+  label:
+    en_US: Method
+    zh_Hans: 方法
+  name: method
+  options:
+  - label:
+      en_US: GET
+      zh_Hans: GET
+    value: GET
+  - label:
+      en_US: POST
+      zh_Hans: POST
+    value: POST
+  required: false
+  type: select
+- form: llm
+  human_description:
+    en_US: 'Optional query parameters as a flat JSON object, e.g. {"url": "https://example.com"}. Sent as URL query parameters.'
+    zh_Hans: '可选的查询参数，使用扁平 JSON 对象表示，例如 {"url": "https://example.com"}。将作为 URL 查询参数发送。'
+  label:
+    en_US: Query Parameters (JSON)
+    zh_Hans: 查询参数（JSON）
+  name: query_params
+  required: false
+  type: string
+- form: llm
+  human_description:
+    en_US: Optional JSON request body, sent only when Method is POST.
+    zh_Hans: 可选的 JSON 请求体，仅在方法为 POST 时发送。
+  label:
+    en_US: JSON Body
+    zh_Hans: JSON 请求体
+  name: json_body
+  required: false
+  type: string
+- form: llm
+  human_description:
+    en_US: A settled Nano (XNO) payment block hash proving you already paid for this call. Leave empty on the first call — the tool will return the exact price and pay-to address to settle if the endpoint requires payment. Sent as the X-PAYMENT header.
+    zh_Hans: 证明本次调用已完成付款的、已结算的 Nano (XNO) 区块哈希。首次调用可留空 —— 如果接口需要付款，工具会返回准确的价格与收款地址。该值将作为 X-PAYMENT 请求头发送。
+  label:
+    en_US: Payment Proof (Nano block hash)
+    zh_Hans: 支付凭证（Nano 区块哈希）
+  name: payment_header
+  required: false
+  type: string
+- form: llm
+  human_description:
+    en_US: Optional nano_... account holding a prepaid balance on the target server. Sent as the X-BALANCE header; the server deducts the call cost from it. Never send a private key or seed here — only a public Nano account address.
+    zh_Hans: 可选的、在目标服务器上持有预付余额的 nano_... 账户地址。将作为 X-BALANCE 请求头发送，服务器会从中扣除本次调用费用。此处切勿填写私钥或助记词，只能填写公开的 Nano 账户地址。
+  label:
+    en_US: Prepaid Balance Account
+    zh_Hans: 预付余额账户
+  name: balance_account
+  required: false
+  type: string
+- default: 30
+  form: form
+  human_description:
+    en_US: Request timeout in seconds.
+    zh_Hans: 请求超时时间（秒）。
+  label:
+    en_US: Timeout (seconds)
+    zh_Hans: 超时时间（秒）
+  max: 120
+  min: 1
+  name: timeout
+  required: false
+  type: number
