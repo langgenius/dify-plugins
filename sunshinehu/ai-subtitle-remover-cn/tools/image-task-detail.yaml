@@ -1,0 +1,22 @@
+identity:
+  name: image_task_detail
+  author: sunshinehu
+  label:
+    en_US: Check image removal task
+    zh_Hans: 查询图片去水印任务
+description:
+  human:
+    en_US: Check the status and result of an image watermark removal task.
+    zh_Hans: 查询图片去水印任务状态和结果。
+  llm: Use the task ID from the image upload result. Only report completion when the service returns a successful status and result URL.
+parameters:
+  - name: taskId
+    type: string
+    required: true
+    label: {en_US: Task ID, zh_Hans: 任务 ID}
+    human_description: {en_US: ID returned by image upload, zh_Hans: 图片上传返回的任务 ID}
+    llm_description: Exact returned image task ID.
+    form: llm
+extra:
+  python:
+    source: tools/image-task-detail.py

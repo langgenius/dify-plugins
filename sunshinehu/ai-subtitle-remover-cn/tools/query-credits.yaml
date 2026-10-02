@@ -1,0 +1,15 @@
+identity:
+  name: query_credits
+  author: sunshinehu
+  label:
+    en_US: Check credits
+    zh_Hans: 查询积分
+description:
+  human:
+    en_US: Check the current 550W account credit balance.
+    zh_Hans: 查询 550W 账户当前积分余额。
+  llm: Check the current 550W credit balance without creating a task.
+parameters: []
+extra:
+  python:
+    source: tools/query-credits.py

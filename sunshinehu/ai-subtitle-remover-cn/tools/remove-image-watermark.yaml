@@ -1,0 +1,29 @@
+identity:
+  name: remove_image_watermark
+  author: sunshinehu
+  label:
+    en_US: Remove image watermark
+    zh_Hans: 图片去水印
+description:
+  human:
+    en_US: Upload a selected PNG, JPEG or WebP image to remove a watermark or unwanted text.
+    zh_Hans: 上传选中的 PNG、JPEG 或 WebP 图片，去除水印或多余文字。
+  llm: Process only an image explicitly selected by the user. Reuse the same operation ID on an uncertain retry; check a pending task before claiming completion.
+parameters:
+  - name: file
+    type: file
+    required: true
+    label: {en_US: Image, zh_Hans: 图片}
+    human_description: {en_US: Selected image, zh_Hans: 用户选中的图片}
+    llm_description: One user-selected PNG, JPEG or WebP image.
+    form: llm
+  - name: operationId
+    type: string
+    required: true
+    label: {en_US: Operation ID, zh_Hans: 操作编号}
+    human_description: {en_US: Stable 8–64 character ID, zh_Hans: 稳定的 8–64 位编号}
+    llm_description: Reuse this ID only with the identical image on a retry.
+    form: llm
+extra:
+  python:
+    source: tools/remove-image-watermark.py

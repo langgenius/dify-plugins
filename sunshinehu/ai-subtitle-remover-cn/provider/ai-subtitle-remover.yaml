@@ -1,0 +1,49 @@
+identity:
+  author: "sunshinehu"
+  name: "ai-subtitle-remover-cn"
+  label:
+    en_US: "550W AI去字幕去水印"
+    zh_Hans: "550W AI去字幕去水印"
+    pt_BR: "Ferramentas de mídia 550W AI"
+    ja_JP: "550W AI メディアツール"
+  description:
+    en_US: "Upload images or videos for watermark and subtitle removal, or resolve supported video share links."
+    zh_Hans: "上传图片或视频去除水印、字幕，也可处理受支持的视频分享链接。"
+    pt_BR: "Remova marcas d'água de imagens, legendas ou marcas d'água de vídeos e processe links compartilhados."
+    ja_JP: "画像の透かし、動画の字幕や透かし、共有リンクのプラットフォーム透かしを除去します。"
+  icon: "icon.png"
+
+# Native API Key provider; OAuth is not implemented in this adapter.
+credentials_for_provider:
+  userNo:
+    type: text-input
+    required: true
+    label:
+      en_US: User number
+      zh_Hans: 用户编号
+    help:
+      en_US: Find your user number at https://qzm.550wai.cn/api-keys
+      zh_Hans: 请在 https://qzm.550wai.cn/api-keys 查看国内版用户编号
+    url: https://qzm.550wai.cn/api-keys
+  apiKey:
+    type: secret-input
+    required: true
+    label:
+      en_US: API key
+      zh_Hans: API 密钥
+    help:
+      en_US: Create an API key at https://qzm.550wai.cn/api-keys
+      zh_Hans: 请在 https://qzm.550wai.cn/api-keys 创建国内版 API 密钥
+    url: https://qzm.550wai.cn/api-keys
+
+tools:
+  - tools/query-credits.yaml
+  - tools/remove-image-watermark.yaml
+  - tools/image-task-detail.yaml
+  - tools/remove-video-watermark.yaml
+  - tools/submit-local-video.yaml
+  - tools/submit-subtitle-task.yaml
+  - tools/subtitle-task-detail.yaml
+extra:
+  python:
+    source: provider/ai-subtitle-remover.py

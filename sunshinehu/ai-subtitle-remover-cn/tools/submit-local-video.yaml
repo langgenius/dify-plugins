@@ -1,0 +1,57 @@
+identity:
+  name: submit_local_video
+  author: sunshinehu
+  label:
+    en_US: Remove local video subtitles or watermark
+    zh_Hans: 本地视频去字幕或画面水印
+description:
+  human:
+    en_US: Upload a selected MP4/MOV video and erase subtitles or visual watermarks. Full-frame by default.
+    zh_Hans: 上传选中的 MP4/MOV 视频，去除硬字幕或画面水印，默认整帧处理。
+  llm: Upload only a user-selected video. Submit with a stable idempotency key. Use a rectangle only if the user supplies all coordinates. Processing may take time; report the returned task ID.
+parameters:
+  - name: file
+    type: file
+    required: true
+    label: {en_US: Video, zh_Hans: 视频}
+    human_description: {en_US: Selected MP4/MOV video, zh_Hans: 用户选中的 MP4/MOV 视频}
+    llm_description: One user-selected local video file.
+    form: llm
+  - name: idempotencyKey
+    type: string
+    required: true
+    label: {en_US: Idempotency key, zh_Hans: 幂等键}
+    human_description: {en_US: Stable 8–128 character key, zh_Hans: 稳定的 8–128 位幂等键}
+    llm_description: Keep the same key for the same video and options when retrying an uncertain submission.
+    form: llm
+  - name: x1
+    type: number
+    required: false
+    label: {en_US: Left, zh_Hans: 左边界}
+    human_description: {en_US: Only when user supplies a rectangle, zh_Hans: 仅用户提供区域时填写}
+    llm_description: Optional user-supplied left pixel coordinate; provide all four coordinates together.
+    form: llm
+  - name: y1
+    type: number
+    required: false
+    label: {en_US: Top, zh_Hans: 上边界}
+    human_description: {en_US: Only when user supplies a rectangle, zh_Hans: 仅用户提供区域时填写}
+    llm_description: Optional user-supplied top pixel coordinate; provide all four coordinates together.
+    form: llm
+  - name: x2
+    type: number
+    required: false
+    label: {en_US: Right, zh_Hans: 右边界}
+    human_description: {en_US: Only when user supplies a rectangle, zh_Hans: 仅用户提供区域时填写}
+    llm_description: Optional user-supplied right pixel coordinate; provide all four coordinates together.
+    form: llm
+  - name: y2
+    type: number
+    required: false
+    label: {en_US: Bottom, zh_Hans: 下边界}
+    human_description: {en_US: Only when user supplies a rectangle, zh_Hans: 仅用户提供区域时填写}
+    llm_description: Optional user-supplied bottom pixel coordinate; provide all four coordinates together.
+    form: llm
+extra:
+  python:
+    source: tools/submit-local-video.py

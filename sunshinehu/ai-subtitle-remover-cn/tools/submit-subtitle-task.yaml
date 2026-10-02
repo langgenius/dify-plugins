@@ -1,0 +1,50 @@
+identity:
+  name: submit_subtitle_task
+  author: sunshinehu
+  label:
+    en_US: Submit subtitle-removal task
+    zh_Hans: 提交视频去字幕任务
+description:
+  human:
+    en_US: Submit a direct MP4/MOV video URL with its actual dimensions and duration. This creates a billable full-frame processing task.
+    zh_Hans: 使用 MP4/MOV 直链和真实宽高时长提交全画面去字幕任务；该操作可能计费。
+  llm: Creates a billable video subtitle-removal task. Only call after the user supplies a direct video URL and actual metadata. Prefer a stable idempotency key; never guess dimensions or duration.
+parameters:
+  - name: videoUrl
+    type: string
+    required: true
+    label: {en_US: Direct video URL, zh_Hans: 视频直链}
+    human_description: {en_US: Public MP4/MOV direct URL, zh_Hans: 公开 MP4/MOV 视频直链}
+    llm_description: Direct HTTP(S) URL to the video file, not a social share page.
+    form: llm
+  - name: width
+    type: number
+    required: true
+    label: {en_US: Width in pixels, zh_Hans: 宽度（像素）}
+    human_description: {en_US: Actual video width, zh_Hans: 视频真实宽度}
+    llm_description: Actual video width in pixels; do not guess.
+    form: llm
+  - name: height
+    type: number
+    required: true
+    label: {en_US: Height in pixels, zh_Hans: 高度（像素）}
+    human_description: {en_US: Actual video height, zh_Hans: 视频真实高度}
+    llm_description: Actual video height in pixels; do not guess.
+    form: llm
+  - name: duration
+    type: number
+    required: true
+    label: {en_US: Duration in seconds, zh_Hans: 时长（秒）}
+    human_description: {en_US: Actual duration, 1–600 seconds, zh_Hans: 真实时长，1–600 秒}
+    llm_description: Actual video duration in seconds, 1–600; do not guess.
+    form: llm
+  - name: idempotencyKey
+    type: string
+    required: false
+    label: {en_US: Idempotency key, zh_Hans: 幂等键}
+    human_description: {en_US: Reuse only with identical inputs, zh_Hans: 仅与完全相同的参数复用}
+    llm_description: Optional stable 8–128 character key to prevent duplicate billable submissions.
+    form: form
+extra:
+  python:
+    source: tools/submit-subtitle-task.py

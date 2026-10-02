@@ -1,0 +1,18 @@
+identity:
+  name: subtitle_task_detail
+  author: sunshinehu
+  label: {en_US: Check subtitle task, zh_Hans: 查询去字幕任务}
+description:
+  human: {en_US: Check subtitle-removal task status and result URL., zh_Hans: 查询去字幕任务状态和结果链接。}
+  llm: Check a previously submitted subtitle-removal task by task ID; no new processing task is created.
+parameters:
+  - name: taskId
+    type: string
+    required: true
+    label: {en_US: Task ID, zh_Hans: 任务编号}
+    human_description: {en_US: ID returned by task submission, zh_Hans: 提交任务时返回的编号}
+    llm_description: Existing subtitle-removal task ID.
+    form: llm
+extra:
+  python:
+    source: tools/subtitle-task-detail.py
