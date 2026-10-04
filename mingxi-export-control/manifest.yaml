@@ -1,0 +1,37 @@
+version: 0.0.1
+type: "plugin"
+author: "mingxi888888-cyber"
+name: "mingxi-export-control"
+label:
+  en_US: "MingXi Export Control"
+  zh_Hans: "明悉出口管制"
+description:
+  en_US: "Query China's export control lists, including dual-use items (MOFCOM control catalogs) and restricted entities (controlled/unreliable entity/watch list/countermeasure lists)."
+  zh_Hans: "查询中国出口管制清单，包括两用物项（商务部管控清单）和受限实体名单（管控/不可靠/关注/反制清单）。"
+created_at: "2026-09-23T15:00:00Z"
+icon: "icon.svg"
+repo: "https://github.com/mingxi888888-cyber/dify-mcp-export-control-CN"
+contact: "Mingxi888888@gmail.com"
+resource:
+  memory: 10485760
+permission:
+  tool:
+    enabled: true
+plugins:
+  tools:
+    - "provider/mingxi.yaml"
+meta:
+  version: 0.0.1
+  minimum_dify_version: "1.0.0"
+  arch:
+    - "amd64"
+    - "arm64"
+  runner:
+    language: "python"
+    version: "3.12"
+    entrypoint: "main"
+privacy: "./PRIVACY.md"
+tags:
+  - "security"
+  - "legal"
+  - "search"

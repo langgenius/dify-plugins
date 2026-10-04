@@ -1,0 +1,57 @@
+identity:
+  name: "item_query"
+  author: "mingxi888888-cyber"
+  label:
+    en_US: "Query Export Control Items"
+    zh_Hans: "查询出口管制物项"
+description:
+  en_US: "Query China's dual-use item export control list. Search by ECCN/HS code, item name, or keyword. Returns controlled items with their control measures."
+  zh_Hans: "查询中国两用物项出口管制清单。可按 ECCN/HS 编码、物项名称或关键词搜索，返回受管物项及其管控措施。"
+parameters:
+  - name: keyword
+    type: string
+    required: true
+    label:
+      en_US: "Keyword"
+      zh_Hans: "关键词"
+    human_description:
+      en_US: "ECCN code, HS code, item name, or description to search for."
+      zh_Hans: "ECCN 编码、HS 编码、物项名称或描述关键词。"
+    llm_description: "ECCN code, HS code, item name, or keyword to search in China's dual-use export control list."
+    form: llm
+  - name: top_k
+    type: number
+    required: false
+    default: 5
+    label:
+      en_US: "Max Results"
+      zh_Hans: "最大结果数"
+    human_description:
+      en_US: "Maximum number of matching items to return (1-20)."
+      zh_Hans: "返回的最大匹配物项数量（1-20）。"
+    llm_description: "Maximum number of matching items to return, between 1 and 20."
+    form: llm
+  - name: format
+    type: select
+    required: false
+    default: "json"
+    label:
+      en_US: "Output Format"
+      zh_Hans: "输出格式"
+    human_description:
+      en_US: "json returns structured data; text returns human-readable summary."
+      zh_Hans: "json 返回结构化数据；text 返回可读性摘要。"
+    llm_description: "Output format: json for structured data, text for human-readable summary."
+    form: llm
+    options:
+      - value: "json"
+        label:
+          en_US: "JSON"
+          zh_Hans: "JSON"
+      - value: "text"
+        label:
+          en_US: "Text"
+          zh_Hans: "文本"
+extra:
+  python:
+    source: "tools/item_query.py"

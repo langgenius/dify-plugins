@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e3a5f"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="12" fill="url(#bg)"/>
+  <!-- Shield -->
+  <path d="M32 10 L52 18 V34 C52 44 43 52 32 56 C21 52 12 44 12 34 V18 Z"
+        fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Lock body -->
+  <rect x="25" y="30" width="14" height="12" rx="2" fill="#fbbf24"/>
+  <!-- Lock shackle -->
+  <path d="M27 30 V25 A5 5 0 0 1 37 25 V30" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Keyhole -->
+  <circle cx="32" cy="35" r="1.8" fill="#1e3a5f"/>
+  <rect x="31" y="36" width="2" height="4" rx="1" fill="#1e3a5f"/>
+  <!-- Checkmark on shield bottom -->
+  <path d="M26 47 L30 51 L38 43" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
