@@ -1,0 +1,52 @@
+identity:
+  author: serpkite
+  name: search
+  label:
+    en_US: Web Search
+description:
+  human:
+    en_US: Search Google web and return structured results plus Markdown.
+  llm: Search Google web using a query. Returns JSON with results and metadata, plus Markdown with titles, links, and snippets.
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Search Query
+    human_description:
+      en_US: The query to search for.
+    llm_description: Search query, for example latest renewable energy research.
+    form: llm
+  - name: country
+    type: string
+    required: false
+    label:
+      en_US: Country
+    human_description:
+      en_US: Two-letter country code, such as us or gb.
+    llm_description: Optional two-letter country code for localized results.
+    form: llm
+  - name: language
+    type: string
+    required: false
+    label:
+      en_US: Language
+    human_description:
+      en_US: Language code, such as en or de.
+    llm_description: Optional language code for results.
+    form: llm
+  - name: num
+    type: number
+    required: false
+    default: 10
+    min: 1
+    max: 100
+    label:
+      en_US: Number of Results
+    human_description:
+      en_US: Requested results (1-100), rounded up to whole pages. Depth costs up to 7 credits.
+    llm_description: Requested results from 1 to 100. Counts round up to pages and depth costs up to 7 credits.
+    form: llm
+extra:
+  python:
+    source: tools/search.py
