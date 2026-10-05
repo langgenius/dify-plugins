@@ -34,4 +34,4 @@ python -m venv .venv
 dify plugin package .
 ```
 
-Tests mock HTTP requests, consuming no credits. Live Dify Cloud/Community Edition installation has not yet been verified; the Marketplace PR documents this limitation.
+Tests mock HTTP requests, consuming no credits. Live installation was verified on Dify Community Edition 1.17.1 with plugin daemon 0.6.10: package upload/install completed, both tools appeared, an invalid credential was rejected, and an authorized credential passed the non-billable account check. See [verification evidence](qa/community-edition.json). Dify Cloud installation remains unverified; the Marketplace PR documents this limitation.
