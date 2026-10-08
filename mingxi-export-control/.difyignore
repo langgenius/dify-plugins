@@ -1,0 +1,11 @@
+.git/
+.gitignore
+.github/
+.venv/
+.venv*/
+venv/
+__pycache__/
+.vscode/
+*.difypkg
+tests/
+scripts/
