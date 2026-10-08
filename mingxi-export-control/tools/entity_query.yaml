@@ -1,0 +1,45 @@
+identity:
+  name: "entity_query"
+  author: "mingxi888888-cyber"
+  label:
+    en_US: "Query Restricted Entities"
+    zh_Hans: "查询受限实体名单"
+description:
+  en_US: "Query China's restricted entity lists (controlled entity list / unreliable entity list / watch list / countermeasure list). Search by company name (Chinese or English), aliases, or country. Returns entity status, control measures, and official announcement source."
+  zh_Hans: "查询中国受限实体名单（管控名单/不可靠实体清单/关注清单/反制清单）。可按公司名称（中英文）、别名或国家搜索，返回实体状态、管控措施及官方公告来源。"
+parameters:
+  - name: keyword
+    type: string
+    required: true
+    label:
+      en_US: "Entity Name"
+      zh_Hans: "实体名称"
+    human_description:
+      en_US: "Company or organization name in Chinese or English (e.g. Anduril, 安杜里尔, Lockheed Martin)."
+      zh_Hans: "公司或机构名称，中英文均可（如 Anduril、安杜里尔、洛克希德·马丁）。"
+    llm_description: "Company or organization name in Chinese or English to search in China's restricted entity lists."
+    form: llm
+  - name: format
+    type: select
+    required: false
+    default: "json"
+    label:
+      en_US: "Output Format"
+      zh_Hans: "输出格式"
+    human_description:
+      en_US: "json returns structured data; text returns human-readable summary."
+      zh_Hans: "json 返回结构化数据；text 返回可读性摘要。"
+    llm_description: "Output format: json for structured data, text for human-readable summary."
+    form: llm
+    options:
+      - value: "json"
+        label:
+          en_US: "JSON"
+          zh_Hans: "JSON"
+      - value: "text"
+        label:
+          en_US: "Text"
+          zh_Hans: "文本"
+extra:
+  python:
+    source: "tools/entity_query.py"

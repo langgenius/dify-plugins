@@ -1,0 +1,28 @@
+identity:
+  author: mingxi888888-cyber
+  name: mingxi
+  label:
+    en_US: "MingXi Export Control API"
+    zh_Hans: "明悉出口管制 API"
+description:
+  en_US: "Provider for MingXi Export Control API. Provides tools to query China's export control lists."
+  zh_Hans: "明悉出口管制 API 的 Provider，提供查询中国出口管制清单的工具。"
+credentials_for_provider:
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: "API Key"
+      zh_Hans: "API 密钥"
+    help:
+      en_US: "Your MingXi API key. Apply at https://mingxiapi.cn"
+      zh_Hans: "你的明悉 API 密钥，在 https://mingxiapi.cn 申请"
+    placeholder:
+      en_US: "sk-xxxxxxxxxxxxxxxx"
+      zh_Hans: "sk-xxxxxxxxxxxxxxxx"
+tools:
+  - "tools/item_query.yaml"
+  - "tools/entity_query.yaml"
+extra:
+  python:
+    source: "provider/mingxi.py"
