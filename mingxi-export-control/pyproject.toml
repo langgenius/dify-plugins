@@ -1,0 +1,9 @@
+[project]
+name = "mingxi-export-control"
+version = "0.0.1"
+description = "Dify tool plugin for China export control lists (dual-use items and restricted entities)."
+requires-python = ">=3.12"
+dependencies = [
+    "dify_plugin==0.9.1",
+    "requests>=2.31.0",
+]
