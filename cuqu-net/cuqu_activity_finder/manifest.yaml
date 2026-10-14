@@ -1,0 +1,44 @@
+version: 0.0.4
+type: plugin
+author: cuqu-net
+contact: liqi.cuhk@gmail.com
+name: cuqu_activity_finder
+label:
+  en_US: "CUQU Activity Finder"
+  zh_Hans: "CUQU找搭子"
+  ja_JP: "CUQU アクティビティ検索"
+description:
+  en_US: "Search real-time offline meetups from the CUQU platform (board games, frisbee, hiking, badminton, fishing and 100+ interest categories) across Shenzhen and 10+ cities in China, including Hong Kong SAR. Read-only, no API key required."
+  zh_Hans: "查询 CUQU 找搭子平台的实时线下活动（桌游、飞盘、徒步、羽毛球、钓鱼等 100+ 兴趣品类），覆盖深圳及中国 10+ 城市，含中国香港。只读工具，无需 API Key。"
+  ja_JP: "CUQU プラットフォームのリアルタイムなオフライン交流会を検索します（ボードゲーム、フリスビー、ハイキング、バドミントン、釣りなど 100 以上のジャンル）。読み取り専用で API キーは不要です。"
+icon: "icon.svg"
+tags:
+  - social
+  - search
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+    endpoint:
+      enabled: false
+    storage:
+      enabled: false
+      size: 1048576
+plugins:
+  tools:
+    - "provider/cuqu.yaml"
+meta:
+  version: 0.0.4
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: 1.0.0
+created_at: 2026-09-29T12:00:00+08:00
+privacy: PRIVACY.md
+repo: "https://github.com/cuqu-net/cuqu-dify-plugin"
+verified: false
