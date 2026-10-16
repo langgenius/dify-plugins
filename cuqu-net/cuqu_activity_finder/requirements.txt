@@ -1,9 +1,0 @@
-# 依赖必须 pin（Dify Marketplace 硬性要求）。
-dify_plugin==0.9.1
-# 2026-10-14：dify_plugin 0.9.1 声明 requests>=2.33.1，旧 pin 2.32.3 会让 CI 依赖解析直接
-# ResolutionImpossible（PR #3186 因此被关）。2.34.2 = 当前最新，满足下限且仍为 pin。
-requests==2.34.2
-urllib3==2.2.3
-certifi==2024.8.30
-charset-normalizer==3.4.0
-idna==3.10
