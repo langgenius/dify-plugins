@@ -1,0 +1,38 @@
+identity:
+  name: deepseek_web_fetch
+  author: Jay0130-a
+  label:
+    en_US: DeepSeek Web Fetch
+    zh_Hans: DeepSeek 网页抓取
+description:
+  human:
+    en_US: >-
+      Fetch a single web page through the DeepSeek Tools API and get its title
+      and body as clean Markdown. The page is retrieved and extracted by
+      DeepSeek's infrastructure — this plugin only forwards the URL.
+    zh_Hans: >-
+      通过 DeepSeek Tools API 抓取单个网页，返回标题与 Markdown 正文。
+      页面由 DeepSeek 基础设施抓取与提取，本插件仅转发 URL。
+  llm: >-
+    Fetch a single web page and return its title and body as Markdown via the
+    DeepSeek Tools API. Use this to read the content of a specific URL, for
+    example a result returned by web search.
+extra:
+  python:
+    source: tools/deepseek_web_fetch.py
+parameters:
+  - name: url
+    form: llm
+    type: string
+    required: true
+    label:
+      en_US: URL
+      zh_Hans: 网页地址
+    human_description:
+      en_US: >-
+        The HTTP/HTTPS URL to fetch (max 8192 characters, must include a host,
+        no username/password).
+      zh_Hans: 要抓取的 HTTP/HTTPS URL（最长 8192 字符，必须包含 host，不能带用户名密码）。
+    llm_description: >-
+      The HTTP or HTTPS URL of the page to fetch, at most 8192 characters,
+      including a host, without embedded credentials.

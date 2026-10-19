@@ -1,0 +1,92 @@
+identity:
+  name: deepseek_web_search
+  author: Jay0130-a
+  label:
+    en_US: DeepSeek Web Search
+    zh_Hans: DeepSeek 网页搜索
+description:
+  human:
+    en_US: >-
+      AI-native web search backed by the DeepSeek Tools API. Returns ranked
+      results with title, URL, snippet, long-form summary, rerank score, and
+      authority rating. Supports search operators (site:, -site:, "exact
+      phrase", -exclusion, lang:, after:, before:) passed through as-is.
+    zh_Hans: >-
+      由 DeepSeek Tools API 提供的 AI 原生网页搜索。返回带标题、URL、摘要、长摘要、
+      重排序分数与权威度评级的有序结果。支持搜索语法（site:、-site:、"精确短语"、
+      -排除、lang:、after:、before:），原样透传。
+  llm: >-
+    Perform a web search via the DeepSeek Tools API. Use this when the agent
+    needs fresh web information. Supports operators such as site:, -site:,
+    "exact phrase", -exclusion, lang:, after:, before:. Returns a list of
+    ranked results with title, URL, snippet, and quality scores.
+extra:
+  python:
+    source: tools/deepseek_web_search.py
+parameters:
+  - name: query
+    form: llm
+    type: string
+    required: true
+    label:
+      en_US: Query
+      zh_Hans: 查询关键词
+    human_description:
+      en_US: >-
+        The search query (1-128 characters). Operators are supported:
+        site:, -site:, -"excluded phrase", "exact phrase", lang:, after:, before:.
+      zh_Hans: >-
+        搜索关键词（1-128 个字符）。支持语法：site:、-site:、-"排除短语"、
+        "精确短语"、lang:、after:、before:。
+    llm_description: >-
+      The search query, 1-128 characters. Operators are supported and passed
+      through: site:, -site:, "exact phrase", -exclusion, lang:, after:, before:.
+  - name: ori_question
+    form: llm
+    type: string
+    required: false
+    label:
+      en_US: Original user question
+      zh_Hans: 用户原始问题
+    human_description:
+      en_US: >-
+        Optional. The user's original question (1-128 characters) that triggered
+        the search; helps DeepSeek localize and rank results.
+      zh_Hans: >-
+        可选。触发本次搜索的用户原始问题（1-128 字符），有助于 DeepSeek
+        本地化与排序结果。
+    llm_description: >-
+      Optional: the user's original question that led to this search, 1-128
+      characters. Helps improve result relevance.
+  - name: count
+    form: form
+    type: number
+    required: false
+    default: 10
+    min: 1
+    max: 50
+    label:
+      en_US: Max results
+      zh_Hans: 结果数量上限
+    human_description:
+      en_US: Maximum number of results to return (1-50). Server may return fewer.
+      zh_Hans: 返回的结果条数上限（1-50）。服务端可能返回更少。
+    llm_description: Maximum number of results to return, between 1 and 50.
+  - name: need_content
+    form: form
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: Include full page content
+      zh_Hans: 返回完整正文
+    human_description:
+      en_US: >-
+        Include the full extracted page content per result. Increases payload
+        size and latency; enable only when page bodies are needed.
+      zh_Hans: >-
+        每条结果附带完整提取的页面正文。会显著增加返回体积与延迟；
+        仅在需要正文时开启。
+    llm_description: >-
+      Set true to include each result's full page content. Keep false unless
+      page bodies are explicitly needed.

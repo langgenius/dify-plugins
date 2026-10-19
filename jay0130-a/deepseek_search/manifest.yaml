@@ -1,0 +1,35 @@
+version: 0.0.1
+type: plugin
+author: jay0130-a
+name: deepseek_search
+label:
+  en_US: DeepSeek Search
+  zh_Hans: DeepSeek 搜索
+description:
+  en_US: DeepSeek Search & Fetch tools — AI-native web search with ranked, scored results, and clean Markdown extraction of any web page. Bring your own DeepSeek API key.
+  zh_Hans: DeepSeek 搜索与抓取工具 —— AI 原生网页搜索（带相关性评分）与任意网页的 Markdown 正文提取。需要您自己的 DeepSeek API Key。
+created_at: "2026-10-18T00:00:00Z"
+icon: icon.svg
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+    model:
+      enabled: false
+plugins:
+  tools:
+    - provider/deepseek_search.yaml
+privacy: PRIVACY.md
+tags:
+  - search
+  - productivity
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main

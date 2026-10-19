@@ -1,0 +1,33 @@
+identity:
+  name: deepseek_search
+  author: jay0130-a
+  label:
+    en_US: DeepSeek Search
+    zh_Hans: DeepSeek 搜索
+  description:
+    en_US: DeepSeek Search & Fetch tools — AI-native web search and web page extraction, powered by the DeepSeek Tools API. Bring your own DeepSeek API key.
+    zh_Hans: DeepSeek 搜索与抓取工具 —— 由 DeepSeek Tools API 提供的 AI 原生网页搜索与网页正文提取。需要您自己的 DeepSeek API Key。
+  icon: icon.svg
+  tags:
+    - search
+    - productivity
+credentials_for_provider:
+  deepseek_api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: DeepSeek API Key
+      zh_Hans: DeepSeek API Key
+    placeholder:
+      en_US: Paste your DeepSeek API key (starts with sk-...)
+      zh_Hans: 粘贴你的 DeepSeek API Key（以 sk- 开头）
+    help:
+      en_US: Use the same API key as the DeepSeek model platform. Each user must provide their own key; this plugin never ships with a default.
+      zh_Hans: 使用与 DeepSeek 模型平台相同的 API Key。每位用户需要使用自己的 Key，本插件不附带默认 Key。
+    url: https://platform.deepseek.com/
+extra:
+  python:
+    source: provider/deepseek_search.py
+tools:
+  - tools/deepseek_web_search.yaml
+  - tools/deepseek_web_fetch.yaml
