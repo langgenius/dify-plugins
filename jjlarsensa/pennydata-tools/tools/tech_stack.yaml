@@ -1,0 +1,22 @@
+identity:
+  name: detect_tech_stack
+  author: jjlarsensa
+  label:
+    en_US: "Detect Website Tech Stack"
+description:
+  human:
+    en_US: "Detect CMS, e-commerce platform, analytics, CDN and JavaScript frameworks of websites. Charged by Apify per analyzed URL (about $0.0015)."
+  llm: "Detects the technologies (CMS, Shopify/WooCommerce, analytics, CDN, JS frameworks) a website uses, with evidence. Input: up to 100 URLs or domains separated by commas or newlines."
+parameters:
+  - name: urls
+    type: string
+    required: true
+    label:
+      en_US: "URLs"
+    human_description:
+      en_US: "Up to 100 public website URLs or bare domains, separated by commas or newlines."
+    llm_description: "Up to 100 public website URLs or bare domains, separated by commas or newlines."
+    form: llm
+extra:
+  python:
+    source: tools/tech_stack.py

@@ -1,0 +1,29 @@
+identity:
+  author: jjlarsensa
+  name: pennydata
+  label:
+    en_US: PennyData Tools
+  description:
+    en_US: Website tech-stack detector, bulk email validator and bulk domain WHOIS/DNS lookup, powered by the PennyData actors on Apify.
+  icon: icon.svg
+  tags:
+    - utilities
+    - business
+credentials_for_provider:
+  apify_api_token:
+    type: secret-input
+    required: true
+    label:
+      en_US: Apify API token
+    placeholder:
+      en_US: apify_api_...
+    help:
+      en_US: Your own Apify API token. Runs are billed to your Apify account (pay-per-event, see README).
+    url: https://console.apify.com/settings/integrations
+tools:
+  - tools/tech_stack.yaml
+  - tools/email_validate.yaml
+  - tools/domain_lookup.yaml
+extra:
+  python:
+    source: provider/pennydata.py

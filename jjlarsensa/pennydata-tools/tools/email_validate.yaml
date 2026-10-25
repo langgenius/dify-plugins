@@ -1,0 +1,22 @@
+identity:
+  name: validate_emails
+  author: jjlarsensa
+  label:
+    en_US: "Validate Emails in Bulk"
+description:
+  human:
+    en_US: "Check email addresses for syntax, MX records, disposable domains, role accounts and free providers, without SMTP probing. Charged by Apify per email (about $0.0004)."
+  llm: "Validates email addresses (syntax, DNS/MX, disposable domain, role account, free provider). Does not confirm a mailbox exists. Input: up to 100 addresses separated by commas or newlines."
+parameters:
+  - name: emails
+    type: string
+    required: true
+    label:
+      en_US: "Email addresses"
+    human_description:
+      en_US: "Up to 100 email addresses, separated by commas, spaces or newlines."
+    llm_description: "Up to 100 email addresses, separated by commas, spaces or newlines."
+    form: llm
+extra:
+  python:
+    source: tools/email_validate.py

@@ -1,0 +1,22 @@
+identity:
+  name: lookup_domains
+  author: jjlarsensa
+  label:
+    en_US: "Domain WHOIS and DNS Lookup"
+description:
+  human:
+    en_US: "Look up availability, registrar, creation and expiry dates, nameservers, MX and TXT records for domains via public RDAP. Charged by Apify per domain (about $0.001)."
+  llm: "Returns domain availability, registrar, created/expiry dates, domain age, nameservers, MX and TXT records. Input: up to 100 domain names separated by commas or newlines."
+parameters:
+  - name: domains
+    type: string
+    required: true
+    label:
+      en_US: "Domains"
+    human_description:
+      en_US: "Up to 100 domain names such as example.com, separated by commas or newlines."
+    llm_description: "Up to 100 domain names such as example.com, separated by commas or newlines."
+    form: llm
+extra:
+  python:
+    source: tools/domain_lookup.py
