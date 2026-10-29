@@ -1,0 +1,86 @@
+name: Notify Upload Failure
+
+on:
+  workflow_run:
+    workflows: [Upload Merged Plugin]
+    types: [completed]
+    branches: [main, dev]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  notify-feishu:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      # Use the default-branch workflow without checking out the failed commit.
+      # This also handles re-runs of uploads from before notifications existed.
+      - name: Send failure notification to Feishu
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        env:
+          FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
+        with:
+          script: |
+            const webhook = process.env.FEISHU_WEBHOOK;
+            if (!webhook) {
+              core.setFailed('FEISHU_WEBHOOK is not configured.');
+              return;
+            }
+            core.setSecret(webhook);
+
+            const run = context.payload.workflow_run;
+            const repository = `${context.repo.owner}/${context.repo.repo}`;
+            const serverUrl = process.env.GITHUB_SERVER_URL;
+            const commitUrl = `${serverUrl}/${repository}/commit/${run.head_sha}`;
+            const actionsUrl = `${run.html_url}/attempts/${run.run_attempt}`;
+            let prLinks = [];
+
+            try {
+              const pulls = await github.paginate(
+                github.rest.repos.listPullRequestsAssociatedWithCommit,
+                {
+                  ...context.repo,
+                  commit_sha: run.head_sha,
+                  per_page: 100,
+                  request: { timeout: 10000 },
+                },
+              );
+              prLinks = pulls
+                .filter(pr => pr.merged_at && pr.base.ref === run.head_branch)
+                .map(pr => pr.html_url);
+            } catch {
+              core.warning('Could not resolve the merged PR; sending the commit link instead.');
+            }
+
+            const text = [
+              '❌ Upload Merged Plugin',
+              `状态：${run.conclusion}`,
+              `仓库：${repository} (${run.head_branch})`,
+              prLinks.length ? `PR：${prLinks.join(' ')}` : `PR：未找到关联 PR；提交：${commitUrl}`,
+              `Actions：${actionsUrl}`,
+            ].join('\n');
+
+            try {
+              const response = await fetch(webhook, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ msg_type: 'text', content: { text } }),
+                signal: AbortSignal.timeout(15000),
+              });
+              if (!response.ok) {
+                core.setFailed(`Feishu webhook returned HTTP ${response.status}.`);
+                return;
+              }
+              const result = await response.json();
+              if (result.code !== 0) {
+                core.setFailed(`Feishu rejected the notification (code: ${result.code ?? 'unknown'}).`);
+                return;
+              }
+              core.info('Feishu failure notification sent.');
+            } catch {
+              // Avoid logging request errors that may contain the webhook URL.
+              core.setFailed('Feishu notification failed: network error, timeout, or invalid response.');
+            }
