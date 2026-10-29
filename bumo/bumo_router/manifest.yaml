@@ -1,0 +1,31 @@
+version: 0.0.3
+type: plugin
+author: bumo
+name: bumo_router
+label:
+  en_US: Bumo Router
+  zh_Hans: 不墨 Router
+description:
+  en_US: One API key for DeepSeek, Kimi, Qwen, GLM, MiniMax, Claude, GPT, Gemini and more. China and international keys are detected automatically.
+  zh_Hans: 一个 Key 用上 DeepSeek、Kimi、通义千问、GLM、MiniMax，以及 Claude、GPT、Gemini 等模型；国内站 / 国际站 Key 自动识别。
+icon: icon.png
+resource:
+  memory: 268435456
+  permission:
+    model:
+      enabled: false
+plugins:
+  models:
+    - provider/bumo_router.yaml
+meta:
+  version: 0.0.3
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+created_at: 2026-10-21T19:47:43Z
+privacy: PRIVACY.md
+verified: false
