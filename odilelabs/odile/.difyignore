@@ -1,0 +1,12 @@
+.git/
+.venv/
+__pycache__/
+*.pyc
+*.difypkg
+SPEC.md
+RESULT.md
+codex.log
+direct-tools.json
+tests/
+.env*
+.DS_Store

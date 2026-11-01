@@ -1,0 +1,60 @@
+{
+  "identity": {
+    "name": "answer_call_question",
+    "author": "odilelabs",
+    "label": {
+      "en_US": "Answer Call Question",
+      "zh_Hans": "Answer Call Question",
+      "pt_BR": "Answer Call Question"
+    }
+  },
+  "description": {
+    "human": {
+      "en_US": "Give the calling assistant your answer to a question the business asked during a call placed with call_business, so the call can continue. Use it only when get_call_result shows state input_required (its pending_question holds the question); reply within 45 seconds or the assistant tells the business the person will follow up and carries on. The assistant uses the answer on the live call and it cannot be taken back, so keep it short and factual (up to 300 characters). It is refused if it contains a number of four to eight digits, a card-length number, or words such as password, PIN or code; never include payment card numbers, passwords or one-time codes. Requires direct:tasks and ownership of the call. Returns the call state; read get_call_result for the outcome. Example: task_id='dv_9a3', answer='A 40-gallon gas heater, installed in 2016.'",
+      "zh_Hans": "Give the calling assistant your answer to a question the business asked during a call placed with call_business, so the call can continue. Use it only when get_call_result shows state input_required (its pending_question holds the question); reply within 45 seconds or the assistant tells the business the person will follow up and carries on. The assistant uses the answer on the live call and it cannot be taken back, so keep it short and factual (up to 300 characters). It is refused if it contains a number of four to eight digits, a card-length number, or words such as password, PIN or code; never include payment card numbers, passwords or one-time codes. Requires direct:tasks and ownership of the call. Returns the call state; read get_call_result for the outcome. Example: task_id='dv_9a3', answer='A 40-gallon gas heater, installed in 2016.'",
+      "pt_BR": "Give the calling assistant your answer to a question the business asked during a call placed with call_business, so the call can continue. Use it only when get_call_result shows state input_required (its pending_question holds the question); reply within 45 seconds or the assistant tells the business the person will follow up and carries on. The assistant uses the answer on the live call and it cannot be taken back, so keep it short and factual (up to 300 characters). It is refused if it contains a number of four to eight digits, a card-length number, or words such as password, PIN or code; never include payment card numbers, passwords or one-time codes. Requires direct:tasks and ownership of the call. Returns the call state; read get_call_result for the outcome. Example: task_id='dv_9a3', answer='A 40-gallon gas heater, installed in 2016.'"
+    },
+    "llm": "Give the calling assistant your answer to a question the business asked during a call placed with call_business, so the call can continue. Use it only when get_call_result shows state input_required (its pending_question holds the question); reply within 45 seconds or the assistant tells the business the person will follow up and carries on. The assistant uses the answer on the live call and it cannot be taken back, so keep it short and factual (up to 300 characters). It is refused if it contains a number of four to eight digits, a card-length number, or words such as password, PIN or code; never include payment card numbers, passwords or one-time codes. Requires direct:tasks and ownership of the call. Returns the call state; read get_call_result for the outcome. Example: task_id='dv_9a3', answer='A 40-gallon gas heater, installed in 2016.'"
+  },
+  "parameters": [
+    {
+      "name": "task_id",
+      "type": "string",
+      "required": true,
+      "label": {
+        "en_US": "Task Id",
+        "zh_Hans": "Task Id",
+        "pt_BR": "Task Id"
+      },
+      "human_description": {
+        "en_US": "The task_id returned by call_business.",
+        "zh_Hans": "The task_id returned by call_business.",
+        "pt_BR": "The task_id returned by call_business."
+      },
+      "llm_description": "The task_id returned by call_business.",
+      "form": "llm"
+    },
+    {
+      "name": "answer",
+      "type": "string",
+      "required": true,
+      "label": {
+        "en_US": "Answer",
+        "zh_Hans": "Answer",
+        "pt_BR": "Answer"
+      },
+      "human_description": {
+        "en_US": "The answer to the pending question, in plain words, without card numbers, passwords, one-time codes or any number of four to eight digits.",
+        "zh_Hans": "The answer to the pending question, in plain words, without card numbers, passwords, one-time codes or any number of four to eight digits.",
+        "pt_BR": "The answer to the pending question, in plain words, without card numbers, passwords, one-time codes or any number of four to eight digits."
+      },
+      "llm_description": "The answer to the pending question, in plain words, without card numbers, passwords, one-time codes or any number of four to eight digits.",
+      "form": "llm"
+    }
+  ],
+  "extra": {
+    "python": {
+      "source": "tools/answer_call_question.py"
+    }
+  }
+}

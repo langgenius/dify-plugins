@@ -1,0 +1,50 @@
+{
+  "version": "0.1.0",
+  "type": "plugin",
+  "author": "odilelabs",
+  "name": "odile",
+  "label": {
+    "en_US": "Odile Direct",
+    "zh_Hans": "Odile Direct",
+    "pt_BR": "Odile Direct"
+  },
+  "description": {
+    "en_US": "Reach businesses through Odile Direct.",
+    "zh_Hans": "Reach businesses through Odile Direct.",
+    "pt_BR": "Reach businesses through Odile Direct."
+  },
+  "icon": "icon.svg",
+  "created_at": "2026-11-01T00:00:00Z",
+  "resource": {
+    "memory": 268435456
+  },
+  "plugins": {
+    "tools": [
+      "provider/odile.yaml"
+    ]
+  },
+  "meta": {
+    "version": "0.0.1",
+    "arch": [
+      "amd64",
+      "arm64"
+    ],
+    "runner": {
+      "language": "python",
+      "version": "3.12",
+      "entrypoint": "main"
+    },
+    "minimum_dify_version": "1.14.2"
+  },
+  "tags": [
+    "utilities",
+    "business"
+  ],
+  "privacy": "PRIVACY.md",
+  "repository": "https://github.com/tolga-boop/dify-plugin-odile",
+  "network": {
+    "domains": [
+      "odilelabs.com"
+    ]
+  }
+}

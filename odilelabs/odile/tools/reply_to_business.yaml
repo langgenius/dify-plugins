@@ -1,0 +1,94 @@
+{
+  "identity": {
+    "name": "reply_to_business",
+    "author": "odilelabs",
+    "label": {
+      "en_US": "Reply To Business",
+      "zh_Hans": "Reply To Business",
+      "pt_BR": "Reply To Business"
+    }
+  },
+  "description": {
+    "human": {
+      "en_US": "Send a customer reply in an open Direct conversation and notify the business. Use it after get_replies shows the business answered or asked something; to start a new conversation use send_to_business, and to answer a question during a live phone call use answer_call_question. Pass the thread_id that send_to_business returned and the reply text (1 to 500 characters); sign in as the original requester with direct:tasks, or supply the private thread_token instead. message_id is the retry key: reuse it unchanged when retrying. Returns the A2A {task} for the reply: read its state before telling anyone it was delivered. A delivered reply cannot be recalled and is billed the same way as a take_message task; closed conversations refuse replies. Example: thread_id='th_7c1', text='Thursday after 2pm works, thank you.', message_id='rep-1'.",
+      "zh_Hans": "Send a customer reply in an open Direct conversation and notify the business. Use it after get_replies shows the business answered or asked something; to start a new conversation use send_to_business, and to answer a question during a live phone call use answer_call_question. Pass the thread_id that send_to_business returned and the reply text (1 to 500 characters); sign in as the original requester with direct:tasks, or supply the private thread_token instead. message_id is the retry key: reuse it unchanged when retrying. Returns the A2A {task} for the reply: read its state before telling anyone it was delivered. A delivered reply cannot be recalled and is billed the same way as a take_message task; closed conversations refuse replies. Example: thread_id='th_7c1', text='Thursday after 2pm works, thank you.', message_id='rep-1'.",
+      "pt_BR": "Send a customer reply in an open Direct conversation and notify the business. Use it after get_replies shows the business answered or asked something; to start a new conversation use send_to_business, and to answer a question during a live phone call use answer_call_question. Pass the thread_id that send_to_business returned and the reply text (1 to 500 characters); sign in as the original requester with direct:tasks, or supply the private thread_token instead. message_id is the retry key: reuse it unchanged when retrying. Returns the A2A {task} for the reply: read its state before telling anyone it was delivered. A delivered reply cannot be recalled and is billed the same way as a take_message task; closed conversations refuse replies. Example: thread_id='th_7c1', text='Thursday after 2pm works, thank you.', message_id='rep-1'."
+    },
+    "llm": "Send a customer reply in an open Direct conversation and notify the business. Use it after get_replies shows the business answered or asked something; to start a new conversation use send_to_business, and to answer a question during a live phone call use answer_call_question. Pass the thread_id that send_to_business returned and the reply text (1 to 500 characters); sign in as the original requester with direct:tasks, or supply the private thread_token instead. message_id is the retry key: reuse it unchanged when retrying. Returns the A2A {task} for the reply: read its state before telling anyone it was delivered. A delivered reply cannot be recalled and is billed the same way as a take_message task; closed conversations refuse replies. Example: thread_id='th_7c1', text='Thursday after 2pm works, thank you.', message_id='rep-1'."
+  },
+  "parameters": [
+    {
+      "name": "thread_id",
+      "type": "string",
+      "required": true,
+      "label": {
+        "en_US": "Thread Id",
+        "zh_Hans": "Thread Id",
+        "pt_BR": "Thread Id"
+      },
+      "human_description": {
+        "en_US": "The thread_id returned by send_to_business.",
+        "zh_Hans": "The thread_id returned by send_to_business.",
+        "pt_BR": "The thread_id returned by send_to_business."
+      },
+      "llm_description": "The thread_id returned by send_to_business.",
+      "form": "llm"
+    },
+    {
+      "name": "thread_token",
+      "type": "string",
+      "required": false,
+      "label": {
+        "en_US": "Thread Token",
+        "zh_Hans": "Thread Token",
+        "pt_BR": "Thread Token"
+      },
+      "human_description": {
+        "en_US": "The private thread_token; required unless signed in as the requester who started the thread.",
+        "zh_Hans": "The private thread_token; required unless signed in as the requester who started the thread.",
+        "pt_BR": "The private thread_token; required unless signed in as the requester who started the thread."
+      },
+      "llm_description": "The private thread_token; required unless signed in as the requester who started the thread.",
+      "form": "llm"
+    },
+    {
+      "name": "text",
+      "type": "string",
+      "required": true,
+      "label": {
+        "en_US": "Text",
+        "zh_Hans": "Text",
+        "pt_BR": "Text"
+      },
+      "human_description": {
+        "en_US": "The customer’s reply to the business.",
+        "zh_Hans": "The customer’s reply to the business.",
+        "pt_BR": "The customer’s reply to the business."
+      },
+      "llm_description": "The customer’s reply to the business.",
+      "form": "llm"
+    },
+    {
+      "name": "message_id",
+      "type": "string",
+      "required": false,
+      "label": {
+        "en_US": "Message Id",
+        "zh_Hans": "Message Id",
+        "pt_BR": "Message Id"
+      },
+      "human_description": {
+        "en_US": "Your id for this reply; reuse it unchanged when retrying.",
+        "zh_Hans": "Your id for this reply; reuse it unchanged when retrying.",
+        "pt_BR": "Your id for this reply; reuse it unchanged when retrying."
+      },
+      "llm_description": "Your id for this reply; reuse it unchanged when retrying.",
+      "form": "llm"
+    }
+  ],
+  "extra": {
+    "python": {
+      "source": "tools/reply_to_business.py"
+    }
+  }
+}

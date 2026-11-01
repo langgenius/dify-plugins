@@ -1,0 +1,43 @@
+{
+  "identity": {
+    "name": "find_business_agent",
+    "author": "odilelabs",
+    "label": {
+      "en_US": "Find Business Agent",
+      "zh_Hans": "Find Business Agent",
+      "pt_BR": "Find Business Agent"
+    }
+  },
+  "description": {
+    "human": {
+      "en_US": "Look up a business by its phone number in the Odile Direct directory and get its Direct card. Start here: send_to_business needs the business id (<biz>) from this card. Pass the number as customers dial it, in E.164 with the country code and no spaces or dashes (+15615550123); any other format is rejected. Returns {agent_card, business, trade, town}: agent_card is the A2A card URL (/b/<biz>/ for a business line, /c/<biz>/ for a claimed listing; pass that <biz> to send_to_business), and the card lists the skills the business accepts. A number that is not on Direct returns not_found with claim_url and listings_url; for a US or Canadian number, voice_fallback says whether call_business is available. Capped at 30 lookups per IP per hour without sign-in and 10000 per key per day signed in. Read-only; contacts no business. Example: number='+15615550123' returns the card whose id you pass to send_to_business as biz.",
+      "zh_Hans": "Look up a business by its phone number in the Odile Direct directory and get its Direct card. Start here: send_to_business needs the business id (<biz>) from this card. Pass the number as customers dial it, in E.164 with the country code and no spaces or dashes (+15615550123); any other format is rejected. Returns {agent_card, business, trade, town}: agent_card is the A2A card URL (/b/<biz>/ for a business line, /c/<biz>/ for a claimed listing; pass that <biz> to send_to_business), and the card lists the skills the business accepts. A number that is not on Direct returns not_found with claim_url and listings_url; for a US or Canadian number, voice_fallback says whether call_business is available. Capped at 30 lookups per IP per hour without sign-in and 10000 per key per day signed in. Read-only; contacts no business. Example: number='+15615550123' returns the card whose id you pass to send_to_business as biz.",
+      "pt_BR": "Look up a business by its phone number in the Odile Direct directory and get its Direct card. Start here: send_to_business needs the business id (<biz>) from this card. Pass the number as customers dial it, in E.164 with the country code and no spaces or dashes (+15615550123); any other format is rejected. Returns {agent_card, business, trade, town}: agent_card is the A2A card URL (/b/<biz>/ for a business line, /c/<biz>/ for a claimed listing; pass that <biz> to send_to_business), and the card lists the skills the business accepts. A number that is not on Direct returns not_found with claim_url and listings_url; for a US or Canadian number, voice_fallback says whether call_business is available. Capped at 30 lookups per IP per hour without sign-in and 10000 per key per day signed in. Read-only; contacts no business. Example: number='+15615550123' returns the card whose id you pass to send_to_business as biz."
+    },
+    "llm": "Look up a business by its phone number in the Odile Direct directory and get its Direct card. Start here: send_to_business needs the business id (<biz>) from this card. Pass the number as customers dial it, in E.164 with the country code and no spaces or dashes (+15615550123); any other format is rejected. Returns {agent_card, business, trade, town}: agent_card is the A2A card URL (/b/<biz>/ for a business line, /c/<biz>/ for a claimed listing; pass that <biz> to send_to_business), and the card lists the skills the business accepts. A number that is not on Direct returns not_found with claim_url and listings_url; for a US or Canadian number, voice_fallback says whether call_business is available. Capped at 30 lookups per IP per hour without sign-in and 10000 per key per day signed in. Read-only; contacts no business. Example: number='+15615550123' returns the card whose id you pass to send_to_business as biz."
+  },
+  "parameters": [
+    {
+      "name": "number",
+      "type": "string",
+      "required": true,
+      "label": {
+        "en_US": "Number",
+        "zh_Hans": "Number",
+        "pt_BR": "Number"
+      },
+      "human_description": {
+        "en_US": "The business's phone number in E.164, e.g. +15615550123.",
+        "zh_Hans": "The business's phone number in E.164, e.g. +15615550123.",
+        "pt_BR": "The business's phone number in E.164, e.g. +15615550123."
+      },
+      "llm_description": "The business's phone number in E.164, e.g. +15615550123.",
+      "form": "llm"
+    }
+  ],
+  "extra": {
+    "python": {
+      "source": "tools/find_business_agent.py"
+    }
+  }
+}
