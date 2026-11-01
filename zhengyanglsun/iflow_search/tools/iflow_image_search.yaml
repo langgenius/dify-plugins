@@ -1,0 +1,40 @@
+identity:
+  name: iflow_image_search
+  author: zhengyanglsun
+  label:
+    en_US: iFlow Image Search
+    zh_Hans: iFlow 图片搜索
+description:
+  human:
+    en_US: AI-native image search backed by iFlow. Returns image URLs, source URLs, and titles.
+    zh_Hans: 由 iFlow 提供的 AI 原生图片搜索，返回图片 URL、来源页 URL 与标题。
+  llm: Search for images via iFlow. Use this when the agent needs visual references for a topic. Returns a list of image hits with image_url, source_url, title and (when available) dimensions.
+extra:
+  python:
+    source: tools/iflow_image_search.py
+parameters:
+  - name: query
+    form: llm
+    type: string
+    required: true
+    label:
+      en_US: Query
+      zh_Hans: 查询关键词
+    human_description:
+      en_US: The natural-language image search query.
+      zh_Hans: 自然语言图片搜索查询。
+    llm_description: A natural-language description of the images to search for.
+  - name: count
+    form: form
+    type: number
+    required: false
+    default: 5
+    min: 1
+    max: 20
+    label:
+      en_US: Max images
+      zh_Hans: 图片数量上限
+    human_description:
+      en_US: Maximum number of images to return (1-20). Server may return fewer.
+      zh_Hans: 返回的图片数量上限（1-20）。服务端可能返回更少。
+    llm_description: Maximum number of image hits to return, between 1 and 20.

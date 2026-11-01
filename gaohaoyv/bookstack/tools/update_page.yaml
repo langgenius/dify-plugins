@@ -1,0 +1,111 @@
+identity:
+  name: update_page
+  author: gaohaoyv
+  label:
+    en_US: Update Page
+    zh_Hans: 更新页面
+description:
+  human:
+    en_US: Update a BookStack page by ID, optionally moving it to a different book or chapter.
+    zh_Hans: 根据 ID 更新 BookStack 页面，并可选移动到不同书籍或章节。
+  llm: Update a BookStack page by ID, optionally moving it to a different book or chapter.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether updating the page succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when updating the page fails.
+    page_id:
+      type: string
+      nullable: true
+      description: Updated BookStack page identifier.
+    title:
+      type: string
+      nullable: true
+      description: Updated page title.
+    url:
+      type: string
+      nullable: true
+      description: Updated page URL.
+    action:
+      type: string
+      nullable: true
+      description: Action label for the page result.
+    raw:
+      type: object
+      nullable: true
+      description: Original BookStack page object.
+parameters:
+  - name: page_id
+    type: string
+    required: true
+    label:
+      en_US: Page ID
+      zh_Hans: 页面 ID
+    human_description:
+      en_US: The BookStack page ID to update.
+      zh_Hans: 要更新的 BookStack 页面 ID。
+    llm_description: The BookStack page ID to update.
+    form: llm
+  - name: title
+    type: string
+    required: false
+    label:
+      en_US: Title
+      zh_Hans: 标题
+    human_description:
+      en_US: Optional updated page title.
+      zh_Hans: 可选的更新页面标题。
+    llm_description: Optional updated page title.
+    form: llm
+  - name: markdown
+    type: string
+    required: false
+    label:
+      en_US: Markdown
+      zh_Hans: Markdown 内容
+    human_description:
+      en_US: Optional updated markdown content.
+      zh_Hans: 可选的更新 Markdown 内容。
+    llm_description: Optional updated markdown content.
+    form: llm
+  - name: tags
+    type: string
+    required: false
+    label:
+      en_US: Tags
+      zh_Hans: 标签
+    human_description:
+      en_US: Optional tag text or list-like value forwarded as simple tags.
+      zh_Hans: 可选标签文本或列表式值，将作为简单标签传递。
+    llm_description: Optional updated tags.
+    form: llm
+  - name: book_id
+    type: string
+    required: false
+    label:
+      en_US: Book ID
+      zh_Hans: 书籍 ID
+    human_description:
+      en_US: Optional target book ID when moving the page.
+      zh_Hans: 可选目标书籍 ID，用于移动页面。
+    llm_description: Optional target book ID when moving the page.
+    form: llm
+  - name: chapter_id
+    type: string
+    required: false
+    label:
+      en_US: Chapter ID
+      zh_Hans: 章节 ID
+    human_description:
+      en_US: Optional target chapter ID when moving the page.
+      zh_Hans: 可选目标章节 ID，用于移动页面。
+    llm_description: Optional target chapter ID when moving the page.
+    form: llm
+extra:
+  python:
+    source: tools/update_page.py

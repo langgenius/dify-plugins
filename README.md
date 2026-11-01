@@ -10,8 +10,8 @@
 <p align="center">
     <a href="https://dify.ai" target="_blank">
         <img alt="Static Badge" src="https://img.shields.io/badge/Product-F04438"></a>
-    <a href="https://dify.ai/pricing" target="_blank">
-        <img alt="Static Badge" src="https://img.shields.io/badge/free-pricing?logo=free&color=%20%23155EEF&label=pricing&labelColor=%20%23528bff"></a>
+    <a href="https://cloud.dify.ai" target="_blank">
+        <img alt="Dify Cloud" src="https://img.shields.io/badge/Dify-Cloud?logo=cloud&color=%20%23155EEF&label=Cloud&labelColor=%20%23528bff"></a>
     <a href="https://discord.gg/FngNHpbcY7" target="_blank">
         <img src="https://img.shields.io/discord/1082486657678311454?logo=discord&labelColor=%20%235462eb&logoColor=%20%23f5f5f5&color=%20%235462eb"
             alt="chat on Discord"></a>
@@ -46,11 +46,11 @@
 
 ##### Models
 
-These plugins integrate various AI models (including mainstream LLM providers and custom model) to handle configuration and requests for LLM APIs. For more on creating a model plugin, take refer to [Quick Start: Model Plugin](https://docs.dify.ai/en/develop-plugin/dev-guides-and-walkthroughs/creating-new-model-provider).
+These plugins integrate various AI models, including mainstream LLM providers and custom models, to handle configuration and requests for model APIs. For more on creating a model plugin, refer to the [Dify Plugin documentation](https://docs.dify.ai/en/develop-plugin/getting-started/getting-started-dify-plugin).
 
 ##### Tools
 
-Tools refer to third-party services that can be invoked by Chatflow, Workflow, or Agent-type applications. They provide a complete API implementation to enhance the capabilities of Dify applications. For example, developing a Google Search plugin, please refer to [Quick Start: Tool Plugin](https://docs.dify.ai/en/develop-plugin/dev-guides-and-walkthroughs/tool-plugin).
+Tools are third-party services that can be invoked by Chatflow, Workflow, or Agent applications. They provide API-backed capabilities for Dify applications. For plugin type guidance, refer to [Choose a Plugin Type](https://docs.dify.ai/en/develop-plugin/getting-started/choose-plugin-type).
 
 ##### Agent Strategies
 
@@ -75,33 +75,33 @@ Check the [Plugins documentation](https://docs.dify.ai/en/develop-plugin/getting
 To publish your plugin on the Dify Marketplace, follow these steps:
 
 #### Development
-1. Develop and test your plugin according to the [Plugin Developer Guidelines](https://docs.dify.ai/en/develop-plugin/publishing/standards/contributor-covenant-code-of-conduct).
+1. Develop and test your plugin according to the [Plugin Development Guidelines](https://docs.dify.ai/en/develop-plugin/publishing/standards/contributor-covenant-code-of-conduct) and this repository's [Plugin Submission Requirements](docs/plugin-submission-requirements.md).
 
-2. Write a [Plugin Privacy Policy](https://docs.dify.ai/en/develop-plugin/publishing/standards/privacy-protection-guidelines) for your plugin in line with Dify’s privacy policy requirements. In your plugin’s [Manifest](https://docs.dify.ai/en/develop-plugin/features-and-specs/plugin-types/plugin-info-by-manifest) file, include the file path or URL for this privacy policy.
+2. Write a [Plugin Privacy Policy](https://docs.dify.ai/en/develop-plugin/publishing/standards/privacy-protection-guidelines) for your plugin in line with Dify's privacy requirements. In your plugin's manifest, include the file path or URL for this privacy policy.
 
-3. Leave your contact infomation and repository URL in `README.md`.
+3. Include your contact information and source repository URL in the plugin `README.md`.
 
 #### Publishing
 
 1. Package your plugin into `.difypkg` file for distribution.
 
-2. [Fork the this repository](https://github.com/langgenius/dify-plugins/fork).
+2. [Fork this repository](https://github.com/langgenius/dify-plugins/fork).
 
-3. Create an organization directory under the repository’s main structure, then create a subdirectory named after your plugin. Place your plugin’s source code and the packaged `.difypkg` file in that subdirectory (eg. `langgenius/dify-plugin/dify-plugin-0.0.1.difypkg`). You can place different versions in the same subdirectory. 
+3. Create an organization directory under the repository's main structure, then create a subdirectory named after your plugin. Place your plugin source code and the packaged `.difypkg` file in that subdirectory, for example `langgenius/dify-plugin/dify-plugin-0.0.1.difypkg`. You can place different versions in the same subdirectory.
 
-4. [Submit a Pull Request (PR)](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request) following the required PR template format, then wait for the review;
+4. [Submit a Pull Request (PR)](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request) following the required PR template format, then wait for review.
 
 5. Once approved, your plugin code will merge into the main branch, and the plugin will be automatically listed on the [Dify Marketplace](https://marketplace.dify.ai/).
 
 #### Updating/Bump
 
-1. When updating your plugin, ensure you increment the version in your plugin's `manifest.yaml` file.
+1. When updating your plugin, increment the version in your plugin's `manifest.yaml` file.
 
 2. Each PR for plugin updates must contain only one file change - the new `.difypkg` file. Check that the version hasn't been published before.
 
 3. If your update includes breaking changes, document them clearly in your plugin's README.md to prevent user issues.
 
-4. For faster plugin updates, you can set up automated PR workflows using the [GitHub Actions workflow template](https://docs.dify.ai/en/develop-plugin/publishing/marketplace-listing/plugin-auto-publish-pr). This will automate the PR creation process when you release new versions.
+4. For faster plugin updates, you can set up automated PR workflows using the [Plugin Auto-PR guide](https://docs.dify.ai/en/develop-plugin/publishing/marketplace-listing/plugin-auto-publish-pr). This automates packaging and PR creation when you release new versions.
 
 ### Security disclosure
 

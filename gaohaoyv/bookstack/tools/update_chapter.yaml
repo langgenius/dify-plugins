@@ -1,0 +1,153 @@
+identity:
+  name: update_chapter
+  author: gaohaoyv
+  label:
+    en_US: Update Chapter
+    zh_Hans: 更新章节
+description:
+  human:
+    en_US: Update a BookStack chapter by ID and return normalized metadata.
+    zh_Hans: 根据 ID 更新 BookStack 章节并返回标准化元数据。
+  llm: Update a BookStack chapter by ID and return normalized metadata.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether updating the chapter succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when updating the chapter fails.
+    chapter_id:
+      type: string
+      nullable: true
+      description: Updated BookStack chapter identifier.
+    name:
+      type: string
+      nullable: true
+      description: Updated chapter name.
+    slug:
+      type: string
+      nullable: true
+      description: Updated chapter slug.
+    book_id:
+      type: string
+      nullable: true
+      description: Parent book identifier.
+    description:
+      type: string
+      nullable: true
+      description: Updated chapter description.
+    description_html:
+      type: string
+      nullable: true
+      description: Updated chapter description HTML.
+    priority:
+      type: number
+      nullable: true
+      description: Updated chapter priority value.
+    url:
+      type: string
+      nullable: true
+      description: Updated chapter URL.
+    tags:
+      type: array
+      nullable: true
+      description: Raw tag objects when available.
+      items:
+        type: object
+    created_at:
+      type: string
+      nullable: true
+      description: Chapter creation timestamp.
+    updated_at:
+      type: string
+      nullable: true
+      description: Chapter update timestamp.
+    created_by:
+      type: object
+      nullable: true
+      description: Raw creator metadata when available.
+    updated_by:
+      type: object
+      nullable: true
+      description: Raw updater metadata when available.
+    action:
+      type: string
+      nullable: true
+      description: Action label for the chapter result.
+    raw:
+      type: object
+      nullable: true
+      description: Original BookStack chapter object.
+parameters:
+  - name: chapter_id
+    type: string
+    required: true
+    label:
+      en_US: Chapter ID
+      zh_Hans: 章节 ID
+    human_description:
+      en_US: The BookStack chapter ID to update.
+      zh_Hans: 要更新的 BookStack 章节 ID。
+    llm_description: The BookStack chapter ID to update.
+    form: llm
+  - name: name
+    type: string
+    required: false
+    label:
+      en_US: Name
+      zh_Hans: 名称
+    human_description:
+      en_US: Optional updated chapter name.
+      zh_Hans: 可选的更新章节名称。
+    llm_description: Optional updated chapter name.
+    form: llm
+  - name: description
+    type: string
+    required: false
+    label:
+      en_US: Description
+      zh_Hans: 描述
+    human_description:
+      en_US: Optional updated plain-text description.
+      zh_Hans: 可选的更新纯文本描述。
+    llm_description: Optional updated plain-text description.
+    form: llm
+  - name: description_html
+    type: string
+    required: false
+    label:
+      en_US: Description HTML
+      zh_Hans: 描述 HTML
+    human_description:
+      en_US: Optional updated HTML description.
+      zh_Hans: 可选的更新 HTML 描述。
+    llm_description: Optional updated HTML description.
+    form: llm
+  - name: tags
+    type: string
+    required: false
+    label:
+      en_US: Tags
+      zh_Hans: 标签
+    human_description:
+      en_US: Optional tag text or list-like value forwarded as simple tags.
+      zh_Hans: 可选标签文本或列表式值，将作为简单标签传递。
+    llm_description: Optional updated tags.
+    form: llm
+  - name: priority
+    type: number
+    required: false
+    label:
+      en_US: Priority
+      zh_Hans: 优先级
+    human_description:
+      en_US: Optional updated numeric priority.
+      zh_Hans: 可选的更新数字优先级。
+    llm_description: Optional updated numeric priority.
+    form: llm
+extra:
+  python:
+    source: tools/update_chapter.py

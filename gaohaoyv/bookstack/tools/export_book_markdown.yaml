@@ -1,0 +1,103 @@
+identity:
+  name: export_book_markdown
+  author: gaohaoyv
+  label:
+    en_US: Export Book Markdown
+    zh_Hans: 导出书籍 Markdown
+description:
+  human:
+    en_US: Export a BookStack book's markdown content and included pages by book ID.
+    zh_Hans: 根据书籍 ID 导出 BookStack 书籍的 Markdown 内容及其包含的页面。
+  llm: Export a BookStack book's markdown content and included pages by book ID.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether exporting the book markdown succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when exporting the book markdown fails.
+    book_id:
+      type: string
+      nullable: true
+      description: BookStack book identifier.
+    title:
+      type: string
+      nullable: true
+      description: Book title.
+    url:
+      type: string
+      nullable: true
+      description: Book URL.
+    markdown:
+      type: string
+      nullable: true
+      description: Aggregated book markdown exported by BookStack.
+    content_format:
+      type: string
+      nullable: true
+      description: Content format for the exported book content.
+    pages:
+      type: array
+      nullable: true
+      description: Ordered page exports for pages in the book.
+      items:
+        type: object
+        properties:
+          page_id:
+            type: string
+            nullable: true
+            description: BookStack page identifier.
+          title:
+            type: string
+            nullable: true
+            description: Page title.
+          url:
+            type: string
+            nullable: true
+            description: Page URL.
+          markdown:
+            type: string
+            nullable: true
+            description: Page markdown content.
+          content_format:
+            type: string
+            nullable: true
+            description: Content format for the exported page content.
+          book_id:
+            type: string
+            nullable: true
+            description: Parent book identifier.
+          chapter_id:
+            type: string
+            nullable: true
+            description: Parent chapter identifier.
+          slug:
+            type: string
+            nullable: true
+            description: Page slug.
+          raw:
+            type: object
+            nullable: true
+            description: Original BookStack page object.
+    raw:
+      type: object
+      nullable: true
+      description: Original BookStack book object.
+parameters:
+  - name: book_id
+    type: string
+    required: true
+    label:
+      en_US: Book ID
+      zh_Hans: 书籍 ID
+    human_description:
+      en_US: The BookStack book ID to export as markdown.
+      zh_Hans: 要导出为 Markdown 的 BookStack 书籍 ID。
+    llm_description: The BookStack book ID to export as markdown.
+    form: llm
+extra:
+  python:
+    source: tools/export_book_markdown.py

@@ -1,0 +1,30 @@
+version: 0.0.1
+type: plugin
+author: gaohaoyv
+name: bookstack
+description:
+  en_US: A Dify plugin for publishing, reading, and syncing BookStack pages.
+  zh_Hans: 用于发布、读取和同步 BookStack 页面的 Dify 插件。
+label:
+  en_US: BookStack
+  zh_Hans: BookStack
+icon: icon.svg
+created_at: 2026-06-16T00:00:00Z
+plugin_type: tool
+supported_dify_version: ">=0.5.0"
+resource:
+  memory: 268435456
+plugins:
+  tools:
+    - provider/bookstack.yaml
+privacy: PRIVACY.md
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: "0.5.0"

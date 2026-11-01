@@ -1,0 +1,72 @@
+identity:
+  name: export_page_markdown
+  author: gaohaoyv
+  label:
+    en_US: Export Page Markdown
+    zh_Hans: 导出页面 Markdown
+description:
+  human:
+    en_US: Export a BookStack page's markdown content by page ID.
+    zh_Hans: 根据页面 ID 导出 BookStack 页面的 Markdown 内容。
+  llm: Export a BookStack page's markdown content by page ID.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether exporting the page markdown succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when exporting the page markdown fails.
+    page_id:
+      type: string
+      nullable: true
+      description: BookStack page identifier.
+    title:
+      type: string
+      nullable: true
+      description: Page title.
+    url:
+      type: string
+      nullable: true
+      description: Page URL.
+    markdown:
+      type: string
+      nullable: true
+      description: Page markdown content.
+    content_format:
+      type: string
+      nullable: true
+      description: Content format for the exported page content.
+    book_id:
+      type: string
+      nullable: true
+      description: Parent book identifier.
+    chapter_id:
+      type: string
+      nullable: true
+      description: Parent chapter identifier.
+    slug:
+      type: string
+      nullable: true
+      description: Page slug.
+    raw:
+      type: object
+      nullable: true
+      description: Original BookStack page object.
+parameters:
+  - name: page_id
+    type: string
+    required: true
+    label:
+      en_US: Page ID
+      zh_Hans: 页面 ID
+    human_description:
+      en_US: The BookStack page ID to export as markdown.
+      zh_Hans: 要导出为 Markdown 的 BookStack 页面 ID。
+    llm_description: The BookStack page ID to export as markdown.
+    form: llm
+extra:
+  python:
+    source: tools/export_page_markdown.py

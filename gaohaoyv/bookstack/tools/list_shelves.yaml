@@ -1,0 +1,114 @@
+identity:
+  name: list_shelves
+  author: gaohaoyv
+  label:
+    en_US: List Shelves
+    zh_Hans: 列出书架
+description:
+  human:
+    en_US: List accessible BookStack shelves and return normalized shelf metadata.
+    zh_Hans: 列出可访问的 BookStack 书架并返回标准化书架元数据。
+  llm: List accessible BookStack shelves and return normalized shelf metadata.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether listing shelves succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when listing shelves fails.
+    shelves:
+      type: array
+      description: Normalized BookStack shelves.
+      items:
+        type: object
+        properties:
+          shelf_id:
+            type: string
+            nullable: true
+            description: BookStack shelf identifier.
+          name:
+            type: string
+            nullable: true
+            description: Shelf name.
+          slug:
+            type: string
+            nullable: true
+            description: Shelf slug.
+          description:
+            type: string
+            nullable: true
+            description: Shelf description.
+          url:
+            type: string
+            nullable: true
+            description: Shelf URL.
+          created_at:
+            type: string
+            nullable: true
+            description: Shelf creation timestamp.
+          updated_at:
+            type: string
+            nullable: true
+            description: Shelf update timestamp.
+          raw:
+            type: object
+            nullable: true
+            description: Original BookStack shelf object.
+    count:
+      type: integer
+      description: Number of returned shelves.
+    total:
+      type: integer
+      nullable: true
+      description: Total available shelves when provided by BookStack.
+parameters:
+  - name: count
+    type: number
+    required: false
+    label:
+      en_US: Count
+      zh_Hans: 数量
+    human_description:
+      en_US: Optional maximum number of shelves to return.
+      zh_Hans: 可选，限制返回的书架数量。
+    llm_description: Optional maximum number of shelves to return.
+    form: llm
+  - name: offset
+    type: number
+    required: false
+    label:
+      en_US: Offset
+      zh_Hans: 偏移量
+    human_description:
+      en_US: Optional offset for paginated BookStack shelf results.
+      zh_Hans: 可选，BookStack 书架分页结果的偏移量。
+    llm_description: Optional offset for paginated BookStack shelf results.
+    form: llm
+  - name: sort
+    type: string
+    required: false
+    label:
+      en_US: Sort
+      zh_Hans: 排序
+    human_description:
+      en_US: "Optional sort string using +field, -field, or field. Allowed fields: name, created_at, updated_at."
+      zh_Hans: 可选，使用 +field、-field 或 field 的排序字符串。允许字段：name、created_at、updated_at。
+    llm_description: "Optional sort string using +field, -field, or field. Allowed fields: name, created_at, updated_at."
+    form: llm
+  - name: filters
+    type: string
+    required: false
+    label:
+      en_US: Filters
+      zh_Hans: 过滤条件
+    human_description:
+      en_US: "Optional JSON object string of field:operator filters. Allowed fields: name, created_at, updated_at. Allowed operators: eq, like."
+      zh_Hans: 可选，field:operator 过滤条件的 JSON 对象字符串。允许字段：name、created_at、updated_at。允许操作符：eq、like。
+    llm_description: "Optional JSON object string of field:operator filters. Allowed fields: name, created_at, updated_at. Allowed operators: eq, like."
+    form: llm
+extra:
+  python:
+    source: tools/list_shelves.py
