@@ -25,7 +25,34 @@ env:
   GH_TOKEN: ${{ github.token }}
 
 jobs:
+  package-changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      has-package-updates: ${{ steps.changes.outputs.result }}
+    steps:
+      - name: Detect added or updated packages
+        id: changes
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b  # v7
+        with:
+          script: |
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              ...context.repo,
+              pull_number: context.payload.pull_request.number,
+              per_page: 100,
+            });
+            // The API returns at most 3,000 files. Never skip checks on an incomplete list.
+            if (files.length < context.payload.pull_request.changed_files) {
+              throw new Error('Cannot determine package changes: PR file list is incomplete');
+            }
+            return files.some((file) =>
+              file.filename.endsWith('.difypkg') && file.status !== 'removed'
+            );
+
   pre-check-plugin:
+    needs: package-changes
+    if: needs.package-changes.outputs.has-package-updates == 'true'
     runs-on: depot-ubuntu-24.04
     steps:
       - name: Checkout
