@@ -1,0 +1,43 @@
+{
+  "identity": {
+    "name": "get_call_result",
+    "author": "odilelabs",
+    "label": {
+      "en_US": "Get Call Result",
+      "zh_Hans": "Get Call Result",
+      "pt_BR": "Get Call Result"
+    }
+  },
+  "description": {
+    "human": {
+      "en_US": "Read the state and outcome of a business call you placed with call_business (an outbound call; the calls your own answering line took are in get_line_calls), using its task_id. Call it again until the state is final: queued, dialing and in_call are still in progress; completed, no_answer, voicemail, refused and failed are final; input_required means the business asked a question that answer_call_question can answer within 45 seconds. Requires direct:tasks and ownership of the call (another account’s task_id returns Not found). Returns {task_id, state, outcome, duration_seconds, transcript, answers, summary, cost {credits}}, plus pending_question {question, expires_at} while a question waits. Changes nothing, starts no call and is safe to repeat. Example: task_id='dv_9a3' from call_business; stop polling once state is completed, failed or no_answer.",
+      "zh_Hans": "Read the state and outcome of a business call you placed with call_business (an outbound call; the calls your own answering line took are in get_line_calls), using its task_id. Call it again until the state is final: queued, dialing and in_call are still in progress; completed, no_answer, voicemail, refused and failed are final; input_required means the business asked a question that answer_call_question can answer within 45 seconds. Requires direct:tasks and ownership of the call (another account’s task_id returns Not found). Returns {task_id, state, outcome, duration_seconds, transcript, answers, summary, cost {credits}}, plus pending_question {question, expires_at} while a question waits. Changes nothing, starts no call and is safe to repeat. Example: task_id='dv_9a3' from call_business; stop polling once state is completed, failed or no_answer.",
+      "pt_BR": "Read the state and outcome of a business call you placed with call_business (an outbound call; the calls your own answering line took are in get_line_calls), using its task_id. Call it again until the state is final: queued, dialing and in_call are still in progress; completed, no_answer, voicemail, refused and failed are final; input_required means the business asked a question that answer_call_question can answer within 45 seconds. Requires direct:tasks and ownership of the call (another account’s task_id returns Not found). Returns {task_id, state, outcome, duration_seconds, transcript, answers, summary, cost {credits}}, plus pending_question {question, expires_at} while a question waits. Changes nothing, starts no call and is safe to repeat. Example: task_id='dv_9a3' from call_business; stop polling once state is completed, failed or no_answer."
+    },
+    "llm": "Read the state and outcome of a business call you placed with call_business (an outbound call; the calls your own answering line took are in get_line_calls), using its task_id. Call it again until the state is final: queued, dialing and in_call are still in progress; completed, no_answer, voicemail, refused and failed are final; input_required means the business asked a question that answer_call_question can answer within 45 seconds. Requires direct:tasks and ownership of the call (another account’s task_id returns Not found). Returns {task_id, state, outcome, duration_seconds, transcript, answers, summary, cost {credits}}, plus pending_question {question, expires_at} while a question waits. Changes nothing, starts no call and is safe to repeat. Example: task_id='dv_9a3' from call_business; stop polling once state is completed, failed or no_answer."
+  },
+  "parameters": [
+    {
+      "name": "task_id",
+      "type": "string",
+      "required": true,
+      "label": {
+        "en_US": "Task Id",
+        "zh_Hans": "Task Id",
+        "pt_BR": "Task Id"
+      },
+      "human_description": {
+        "en_US": "The task_id returned by call_business.",
+        "zh_Hans": "The task_id returned by call_business.",
+        "pt_BR": "The task_id returned by call_business."
+      },
+      "llm_description": "The task_id returned by call_business.",
+      "form": "llm"
+    }
+  ],
+  "extra": {
+    "python": {
+      "source": "tools/get_call_result.py"
+    }
+  }
+}

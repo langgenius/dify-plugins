@@ -1,0 +1,55 @@
+{
+  "identity": {
+    "author": "odilelabs",
+    "name": "odile",
+    "label": {
+      "en_US": "Odile Direct",
+      "zh_Hans": "Odile Direct",
+      "pt_BR": "Odile Direct"
+    },
+    "description": {
+      "en_US": "Reach businesses through Odile Direct.",
+      "zh_Hans": "Reach businesses through Odile Direct.",
+      "pt_BR": "Reach businesses through Odile Direct."
+    },
+    "icon": "icon.svg",
+    "tags": [
+      "utilities",
+      "business"
+    ]
+  },
+  "credentials_for_provider": {
+    "api_key": {
+      "type": "secret-input",
+      "required": false,
+      "label": {
+        "en_US": "API key",
+        "zh_Hans": "API key",
+        "pt_BR": "API key"
+      },
+      "help": {
+        "en_US": "Lookups need no key; a key from https://odilelabs.com/developers raises the free allowance.",
+        "zh_Hans": "Lookups need no key; a key from https://odilelabs.com/developers raises the free allowance.",
+        "pt_BR": "Lookups need no key; a key from https://odilelabs.com/developers raises the free allowance."
+      },
+      "url": "https://odilelabs.com/developers"
+    }
+  },
+  "tools": [
+    "tools/get_m2m_network.yaml",
+    "tools/find_business_agent.yaml",
+    "tools/send_to_business.yaml",
+    "tools/get_replies.yaml",
+    "tools/reply_to_business.yaml",
+    "tools/call_business.yaml",
+    "tools/get_call_result.yaml",
+    "tools/answer_call_question.yaml",
+    "tools/get_direct_usage.yaml",
+    "tools/get_direct_payment.yaml"
+  ],
+  "extra": {
+    "python": {
+      "source": "provider/odile.py"
+    }
+  }
+}

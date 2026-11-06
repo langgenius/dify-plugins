@@ -1,0 +1,60 @@
+{
+  "identity": {
+    "name": "get_replies",
+    "author": "odilelabs",
+    "label": {
+      "en_US": "Get Replies",
+      "zh_Hans": "Get Replies",
+      "pt_BR": "Get Replies"
+    }
+  },
+  "description": {
+    "human": {
+      "en_US": "Read the replies in a Direct conversation you started with send_to_business: its status and messages, newest last. Use it to find out whether the business has answered; it only reads and does not wait, so call it again later if there is no reply yet. Not for messages callers left on your own answering line (get_line_messages) or the outcome of a phone call (get_call_result). Pass the thread_id that send_to_business returned; sign in as the original requester with direct:tasks, or supply the private thread_token instead. Returns {thread_id, status (received, business_notified, business_replied, booked, waiting_for_you or closed), caller_name, callback_number, messages[{from: customer or business, text, at}]}. An unknown thread or a wrong token returns not_found, and a thread expires 90 days after its last message. Changes nothing and uses no credits. Example: thread_id='th_7c1' (with thread_token unless you started the thread while signed in) returns the status and messages so far.",
+      "zh_Hans": "Read the replies in a Direct conversation you started with send_to_business: its status and messages, newest last. Use it to find out whether the business has answered; it only reads and does not wait, so call it again later if there is no reply yet. Not for messages callers left on your own answering line (get_line_messages) or the outcome of a phone call (get_call_result). Pass the thread_id that send_to_business returned; sign in as the original requester with direct:tasks, or supply the private thread_token instead. Returns {thread_id, status (received, business_notified, business_replied, booked, waiting_for_you or closed), caller_name, callback_number, messages[{from: customer or business, text, at}]}. An unknown thread or a wrong token returns not_found, and a thread expires 90 days after its last message. Changes nothing and uses no credits. Example: thread_id='th_7c1' (with thread_token unless you started the thread while signed in) returns the status and messages so far.",
+      "pt_BR": "Read the replies in a Direct conversation you started with send_to_business: its status and messages, newest last. Use it to find out whether the business has answered; it only reads and does not wait, so call it again later if there is no reply yet. Not for messages callers left on your own answering line (get_line_messages) or the outcome of a phone call (get_call_result). Pass the thread_id that send_to_business returned; sign in as the original requester with direct:tasks, or supply the private thread_token instead. Returns {thread_id, status (received, business_notified, business_replied, booked, waiting_for_you or closed), caller_name, callback_number, messages[{from: customer or business, text, at}]}. An unknown thread or a wrong token returns not_found, and a thread expires 90 days after its last message. Changes nothing and uses no credits. Example: thread_id='th_7c1' (with thread_token unless you started the thread while signed in) returns the status and messages so far."
+    },
+    "llm": "Read the replies in a Direct conversation you started with send_to_business: its status and messages, newest last. Use it to find out whether the business has answered; it only reads and does not wait, so call it again later if there is no reply yet. Not for messages callers left on your own answering line (get_line_messages) or the outcome of a phone call (get_call_result). Pass the thread_id that send_to_business returned; sign in as the original requester with direct:tasks, or supply the private thread_token instead. Returns {thread_id, status (received, business_notified, business_replied, booked, waiting_for_you or closed), caller_name, callback_number, messages[{from: customer or business, text, at}]}. An unknown thread or a wrong token returns not_found, and a thread expires 90 days after its last message. Changes nothing and uses no credits. Example: thread_id='th_7c1' (with thread_token unless you started the thread while signed in) returns the status and messages so far."
+  },
+  "parameters": [
+    {
+      "name": "thread_id",
+      "type": "string",
+      "required": true,
+      "label": {
+        "en_US": "Thread Id",
+        "zh_Hans": "Thread Id",
+        "pt_BR": "Thread Id"
+      },
+      "human_description": {
+        "en_US": "The thread_id returned by send_to_business.",
+        "zh_Hans": "The thread_id returned by send_to_business.",
+        "pt_BR": "The thread_id returned by send_to_business."
+      },
+      "llm_description": "The thread_id returned by send_to_business.",
+      "form": "llm"
+    },
+    {
+      "name": "thread_token",
+      "type": "string",
+      "required": false,
+      "label": {
+        "en_US": "Thread Token",
+        "zh_Hans": "Thread Token",
+        "pt_BR": "Thread Token"
+      },
+      "human_description": {
+        "en_US": "The private thread_token; required unless signed in as the requester who started the thread.",
+        "zh_Hans": "The private thread_token; required unless signed in as the requester who started the thread.",
+        "pt_BR": "The private thread_token; required unless signed in as the requester who started the thread."
+      },
+      "llm_description": "The private thread_token; required unless signed in as the requester who started the thread.",
+      "form": "llm"
+    }
+  ],
+  "extra": {
+    "python": {
+      "source": "tools/get_replies.py"
+    }
+  }
+}
