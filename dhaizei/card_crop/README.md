@@ -1,10 +1,10 @@
-# Moon Village Card Crop
+# Card Crop
 
 Create small, consistently styled card assets from uploaded artwork. This tool combines centered cover cropping, fixed shape masks, and preset inner shadows in one operation. It complements general-purpose crop/resize tools by providing three ready-made card finishes.
 
 ## Setup
 
-Install the plugin in Dify and add **Moon Village Card Crop** as a tool node in a workflow. No API key, model configuration, GPU, or external service is required. Python dependencies are installed by the Dify plugin runtime: the Dify plugin SDK and Pillow. Python 3.12 is required.
+Install the plugin in Dify and add **Card Crop** as a tool node in a workflow. No API key, model configuration, GPU, or external service is required. Python dependencies are installed by the Dify plugin runtime: the Dify plugin SDK and Pillow. Python 3.12 is required.
 
 ## Inputs and outputs
 
@@ -28,7 +28,7 @@ Images are processed in memory inside the Dify plugin environment. This plugin m
 
 ## Source and support
 
-- Source: https://github.com/Dhaizei/dify-plugins/tree/codex/moonvillage-card-crop/dhaizei/moonvillage_card_crop
+- Source: https://github.com/Dhaizei/dify-plugins (directory: `dhaizei/card_crop` on the submission branch)
 - Support: https://github.com/langgenius/dify-plugins/issues — mention `@Dhaizei` and the plugin name; do not attach credentials or private artwork.
 
 ## Validation status

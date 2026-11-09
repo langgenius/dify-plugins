@@ -10,7 +10,7 @@ from typing import Any
 from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageOps
 
 
-PRESETS_PATH = Path(__file__).resolve().parent / "moonvillage_card_crop_presets.json"
+PRESETS_PATH = Path(__file__).resolve().parent / "card_crop_presets.json"
 MAX_FILE_BYTES = 30 * 1024 * 1024
 Image.MAX_IMAGE_PIXELS = 50_000_000
 
