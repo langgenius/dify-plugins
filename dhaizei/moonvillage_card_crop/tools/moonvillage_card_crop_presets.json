@@ -1,0 +1,43 @@
+{
+  "rounded_rectangle_181x234": {
+    "label": "圆角矩形卡牌",
+    "width": 181,
+    "height": 234,
+    "crop": "center",
+    "shape": "rounded_rectangle",
+    "radius": 20,
+    "inner_shadow": {
+      "color": "#838383",
+      "blend_mode": "multiply",
+      "opacity": 98,
+      "angle": 90,
+      "distance": 2,
+      "choke": 0,
+      "size": 2
+    },
+    "format": "png"
+  },
+  "oval_flat_bottom_179x224": {
+    "label": "椭圆专属卡",
+    "width": 179,
+    "height": 224,
+    "crop": "center",
+    "shape": "ellipse_flat_bottom",
+    "inner_shadows": [
+      {"color": "#A3A3A3", "blend_mode": "multiply", "opacity": 100, "angle": 90, "distance": 2, "choke": 0, "size": 2},
+      {"color": "#BEBEBE", "blend_mode": "multiply", "opacity": 100, "angle": -90, "distance": 2, "choke": 0, "size": 16}
+    ],
+    "format": "png"
+  },
+  "circle_193x193": {
+    "label": "圆形封面卡",
+    "width": 193,
+    "height": 193,
+    "crop": "center",
+    "shape": "ellipse",
+    "inner_shadows": [
+      {"color": "#7F7F7F", "blend_mode": "multiply", "opacity": 50, "angle": 90, "distance": 4, "choke": 0, "size": 3}
+    ],
+    "format": "png"
+  }
+}

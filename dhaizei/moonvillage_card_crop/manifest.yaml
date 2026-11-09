@@ -1,0 +1,33 @@
+version: 0.0.1
+type: plugin
+author: dhaizei
+name: moonvillage_card_crop
+label:
+  en_US: Moon Village Card Crop
+  zh_Hans: 月之村卡牌切图
+description:
+  en_US: Crop images into three fixed card presets with masks and inner shadows. No
+    model or external API required.
+  zh_Hans: 使用三套固定预设，居中裁剪、形状蒙版和内阴影，输出透明 PNG；不调用模型或外部 API。
+icon: icon.svg
+resource:
+  memory: 536870912
+  permission:
+    tool:
+      enabled: false
+plugins:
+  tools:
+  - provider/card_crop.yaml
+meta:
+  version: 0.0.1
+  arch:
+  - amd64
+  - arm64
+  runner:
+    language: python
+    version: '3.12'
+    entrypoint: main
+  minimum_dify_version: 1.8.0
+created_at: '2026-11-09T14:00:00+08:00'
+privacy: PRIVACY.md
+repo: https://github.com/Dhaizei/dify-plugins

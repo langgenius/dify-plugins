@@ -1,0 +1,53 @@
+identity:
+  name: card_crop
+  author: dhaizei
+  label:
+    en_US: Moon Village Card Crop
+    zh_Hans: 月之村卡牌切图
+description:
+  human:
+    en_US: Crop images into three fixed card presets with masks and inner shadows.
+      No model or external API required.
+    zh_Hans: 使用三套固定预设，居中裁剪、形状蒙版和内阴影，输出透明 PNG；不调用模型或外部 API。
+  llm: Crop an image into a Moon Village card using a fixed preset; returns a PNG
+    file.
+parameters:
+- name: image
+  type: file
+  required: true
+  label:
+    en_US: Source image
+    zh_Hans: 原始图片
+  human_description:
+    en_US: Image up to 30 MiB and 16 megapixels.
+    zh_Hans: 待处理图片，最大 30 MiB、1600 万像素。
+  llm_description: Source image file, at most 30 MiB and 16 megapixels
+  form: llm
+- name: preset
+  type: select
+  required: true
+  default: rounded_rectangle_181x234
+  label:
+    en_US: Card preset
+    zh_Hans: 卡牌预设
+  human_description:
+    en_US: Fixed shape, dimensions and inner shadows.
+    zh_Hans: 固定尺寸、形状及内阴影。
+  llm_description: Card preset identifier
+  form: llm
+  options:
+  - value: rounded_rectangle_181x234
+    label:
+      en_US: rounded_rectangle_181x234
+      zh_Hans: 圆角矩形卡牌 181×234
+  - value: oval_flat_bottom_179x224
+    label:
+      en_US: oval_flat_bottom_179x224
+      zh_Hans: 椭圆专属卡 179×224
+  - value: circle_193x193
+    label:
+      en_US: circle_193x193
+      zh_Hans: 圆形封面卡 193×193
+extra:
+  python:
+    source: tools/card_crop.py
