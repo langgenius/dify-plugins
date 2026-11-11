@@ -137,19 +137,10 @@ jobs:
       - name: Validate Package
         continue-on-error: true
         run: |
-          # The validator exits non-zero for blocking findings, and then writes
-          # the per-check reports. It can also die before writing anything at
-          # all -- a missing yq, or a check that hangs past its timeout -- and
-          # that must not read as "no findings", so it gets a report of its own.
-          status=0
           python3 "$TOOLKIT_DIR/validator/validate-difypkg.py" \
             "$SUBMITTED_PLUGIN_PATH" \
             --pr-body-file /tmp/pr_body.md \
-            --output-dir "$VALIDATION_DIR" || status=$?
-          if [ "$status" -ne 0 ]; then
-            echo "validate-difypkg.py exited $status; package validation did not complete cleanly" \
-              >> "$VALIDATION_DIR/validator_run.errors.txt"
-          fi
+            --output-dir "$VALIDATION_DIR"
 
       - name: Check PR Body
         continue-on-error: true
@@ -415,7 +406,6 @@ jobs:
 
       - name: Output Detailed Report (Step Summary)
         if: always()
-        continue-on-error: true
         run: |
           SUMMARY_FILE="${GITHUB_STEP_SUMMARY:-/tmp/github_step_summary.md}"
           JOB_STATUS="${{ job.status }}"

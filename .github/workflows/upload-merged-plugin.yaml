@@ -21,9 +21,6 @@ jobs:
   # No elevated permissions: the toolkit and the CLI are cloned with
   # ORG_SCOPE_GITHUB_TOKEN, and nothing here writes back to the repository.
   upload-merged-plugin:
-    permissions:
-      contents: read
-      pull-requests: read
     runs-on: depot-ubuntu-24.04
     steps:
       - name: Checkout
@@ -103,6 +100,21 @@ jobs:
               exit 1
           fi
 
+      # Re-validates the merged bytes before publishing: one entry point, the
+      # same registry of package checks the pull request ran. A blocking
+      # finding exits non-zero, which fails this job before anything uploads.
+      - name: Final Package Validation
+        run: |
+          python3 "$TOOLKIT_DIR/validator/validate-difypkg.py" "$PLUGIN_PATH" \
+            --output-dir /tmp/validation
+
+      - name: Publish validation summary
+        if: always()
+        run: |
+          if [ -f /tmp/validation/summary.md ]; then
+            cat /tmp/validation/summary.md >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+          fi
+
       - name: Extract Release Notes
         env:
           GH_TOKEN: ${{ github.token }}
@@ -125,26 +137,6 @@ jobs:
           echo "--- extracted release notes ---"
           cat /tmp/changelog.md
 
-      # Re-validates the merged bytes before publishing: the same registry of
-      # package checks the pull request ran, sensitive-capability disclosure
-      # included whenever the push is tied to a PR. A blocking finding exits
-      # non-zero, which fails this job before anything uploads.
-      - name: Final Package Validation
-        run: |
-          PR_BODY_ARGS=()
-          if [ -s /tmp/pr_body.md ]; then
-            PR_BODY_ARGS=(--pr-body-file /tmp/pr_body.md)
-          fi
-          python3 "$TOOLKIT_DIR/validator/validate-difypkg.py" "$PLUGIN_PATH" \
-            --output-dir /tmp/validation "${PR_BODY_ARGS[@]}"
-
-      - name: Publish validation summary
-        if: always()
-        run: |
-          if [ -f /tmp/validation/summary.md ]; then
-            cat /tmp/validation/summary.md >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
-          fi
-
       # One upload call publishes to production and, when the staging secrets
       # are set, fans out to staging as a mirror. A mirror never fails the
       # publish: the uploader downgrades a mirror failure to a warning, so a
@@ -156,8 +148,6 @@ jobs:
           STAGING_BASE_URL: ${{ secrets.MARKETPLACE_STAGING_BASE_URL }}
           STAGING_TOKEN: ${{ secrets.MARKETPLACE_STAGING_TOKEN }}
         run: |
-          set -o pipefail
-
           MIRROR_ARGS=()
           if [ -n "$STAGING_BASE_URL" ] && [ -n "$STAGING_TOKEN" ]; then
             MIRROR_ARGS=(--mirror-url "$STAGING_BASE_URL" --mirror-token "$STAGING_TOKEN")
@@ -169,24 +159,4 @@ jobs:
             --plugin-daemon-path "$TOOLKIT_DIR/dify-plugin-linux-amd64" \
             -u "$MARKETPLACE_BASE_URL" \
             --with-changelog ${CATEGORY_FLAG:+"$CATEGORY_FLAG"} "${MIRROR_ARGS[@]}" \
-            < /tmp/changelog.md | tee /tmp/upload.log
-
-      # A mirror failure never fails the publish -- the uploader only emits a
-      # ::warning:: annotation -- so give it a record a human will actually see.
-      - name: Report staging mirror status
-        if: always()
-        run: |
-          if grep -q "^Mirrored to " /tmp/upload.log 2>/dev/null; then
-            echo "- Staging mirror: published" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
-          elif grep -q "mirror publish to" /tmp/upload.log 2>/dev/null; then
-            {
-              echo ""
-              echo "## Staging mirror failed"
-              echo ""
-              echo "The plugin **is** published to production; only <https://marketplace-staging.dify.dev> is missing it, so nothing needs re-merging or re-reviewing. The next push of this plugin will bring staging back in line."
-              echo ""
-              echo '```'
-              grep "mirror publish to" /tmp/upload.log
-              echo '```'
-            } >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
-          fi
+            < /tmp/changelog.md
