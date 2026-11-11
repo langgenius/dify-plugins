@@ -163,7 +163,10 @@ cython_debug/
 
 /logs
 /dify-marketplace-backend
-/.scripts
+
+# Marketplace toolkit: cloned into .github/scripts/toolkit by CI and kept
+# there for local runs (it ships its own .git plus 30MB plugin-daemon binaries).
+/.github/scripts/toolkit
 
 # macOS
 #  can be found at https://github.com/github/gitignore/blob/main/Global/macOS.gitignore
