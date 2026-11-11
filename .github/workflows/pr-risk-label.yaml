@@ -9,12 +9,10 @@ permissions:
   issues: write
 
 jobs:
-  package-changes:
+  # One job: the detection step only reads the PR file list, so it does not
+  # need a runner of its own.
+  apply-risk-label:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
-    outputs:
-      has-package-updates: ${{ steps.changes.outputs.result }}
     steps:
       - name: Detect added or updated packages
         id: changes
@@ -34,12 +32,8 @@ jobs:
               file.filename.endsWith('.difypkg') && file.status !== 'removed'
             );
 
-  apply-risk-label:
-    needs: package-changes
-    if: needs.package-changes.outputs.has-package-updates == 'true'
-    runs-on: ubuntu-latest
-    steps:
       - name: Apply risk label
+        if: steps.changes.outputs.result == 'true'
         uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b  # v7
         with:
           script: |
