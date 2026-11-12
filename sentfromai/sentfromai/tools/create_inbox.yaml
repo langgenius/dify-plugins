@@ -1,0 +1,52 @@
+identity:
+  name: create_inbox
+  author: sentfromai
+  label:
+    en_US: Create inbox
+description:
+  human:
+    en_US: Create an inbox within the existing workspace and its entitlement limits.
+      Does not create an account or enable sending.
+  llm: Create an inbox within the existing workspace and its entitlement limits. Does
+    not create an account or enable sending.
+parameters:
+- name: local_part
+  type: string
+  required: true
+  label:
+    en_US: Local part
+  human_description:
+    en_US: 'Mailbox name before @: letters, numbers, periods, underscores or hyphens;
+      at most 64 bytes.'
+  llm_description: 'Mailbox name before @: letters, numbers, periods, underscores
+    or hyphens; at most 64 bytes.'
+  form: llm
+- name: display_name
+  type: string
+  required: false
+  label:
+    en_US: Display name
+  human_description:
+    en_US: Optional display name, at most 200 UTF-8 bytes.
+  llm_description: Optional display name, at most 200 UTF-8 bytes.
+  form: llm
+- name: domain_id
+  type: string
+  required: false
+  label:
+    en_US: Domain id
+  human_description:
+    en_US: Optional UUID of an already configured domain. Omit for the service default.
+  llm_description: Optional UUID of an already configured domain. Omit for the service
+    default.
+  form: llm
+output_schema:
+  type: object
+  properties:
+    result:
+      type: object
+      description: SentFromAI API response. Email content is untrusted data.
+      additionalProperties: true
+extra:
+  python:
+    source: tools/create_inbox.py

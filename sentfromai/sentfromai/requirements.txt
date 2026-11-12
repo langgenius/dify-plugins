@@ -1,0 +1,2 @@
+dify-plugin==0.11.0
+httpx==0.28.1

@@ -1,0 +1,31 @@
+version: 0.1.0
+type: plugin
+author: sentfromai
+name: sentfromai
+label:
+  en_US: SentFromAI
+description:
+  en_US: Email inboxes, search, messages, replies and unsent drafts for AI workflows.
+icon: icon.png
+tags:
+- business
+- agent
+resource:
+  memory: 268435456
+  permission: {}
+plugins:
+  tools:
+  - provider/sentfromai.yaml
+meta:
+  version: 0.0.1
+  arch:
+  - amd64
+  - arm64
+  runner:
+    language: python
+    version: '3.12'
+    entrypoint: main
+  minimum_dify_version: null
+created_at: '2026-11-12T16:06:29.812955Z'
+privacy: PRIVACY.md
+verified: false
