@@ -28,7 +28,7 @@
 ## Required checks
 
 - [ ] I have read and followed the [Marketplace submission requirements](https://github.com/langgenius/dify-plugins/blob/main/docs/plugin-submission-requirements.md).
-- [ ] I have read and comply with the Plugin Developer Agreement.
+- [ ] I have read and comply with the [Plugin Development Guidelines](https://docs.dify.ai/en/develop-plugin/publishing/standards/contributor-covenant-code-of-conduct).
 - [ ] I tested this plugin on Dify Community Edition and Dify Cloud, or documented any limitation below.
 - [ ] The package contains only files needed at runtime.
 - [ ] The package does not contain secrets, local credentials, `.env` files, `.git` directories, virtual environments, caches, logs, or IDE files.

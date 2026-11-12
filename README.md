@@ -75,7 +75,7 @@ Check the [Plugins documentation](https://docs.dify.ai/en/develop-plugin/getting
 To publish your plugin on the Dify Marketplace, follow these steps:
 
 #### Development
-1. Develop and test your plugin according to the [Plugin Development Guidelines](https://docs.dify.ai/en/develop-plugin/publishing/standards/contributor-covenant-code-of-conduct) and this repository's [Plugin Submission Requirements](docs/plugin-submission-requirements.md).
+1. Develop and test your plugin according to the [Plugin Development Guidelines](https://docs.dify.ai/en/develop-plugin/publishing/standards/contributor-covenant-code-of-conduct) and this repository's [Plugin Submission Requirements](docs/plugin-submission-requirements.md) and [Marketplace Curation Policy](docs/marketplace-curation-policy.md).
 
 2. Write a [Plugin Privacy Policy](https://docs.dify.ai/en/develop-plugin/publishing/standards/privacy-protection-guidelines) for your plugin in line with Dify's privacy requirements. In your plugin's manifest, include the file path or URL for this privacy policy.
 
@@ -87,7 +87,7 @@ To publish your plugin on the Dify Marketplace, follow these steps:
 
 2. [Fork this repository](https://github.com/langgenius/dify-plugins/fork).
 
-3. Create an organization directory under the repository's main structure, then create a subdirectory named after your plugin. Place your plugin source code and the packaged `.difypkg` file in that subdirectory, for example `langgenius/dify-plugin/dify-plugin-0.0.1.difypkg`. You can place different versions in the same subdirectory.
+3. Create an organization directory under the repository's main structure, then create a subdirectory named after your plugin. Place your plugin source code and the packaged `.difypkg` file in that subdirectory, for example `langgenius/dify-plugin/dify-plugin-0.0.1.difypkg`. Keep only the current version in that subdirectory and publish older versions as GitHub Releases, as described in the [Marketplace Curation Policy](docs/marketplace-curation-policy.md).
 
 4. [Submit a Pull Request (PR)](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request) following the required PR template format, then wait for review.
 
