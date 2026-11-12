@@ -1,0 +1,35 @@
+identity:
+  author: sentfromai
+  name: sentfromai
+  label:
+    en_US: SentFromAI
+  description:
+    en_US: Email tools for AI workflows using your SentFromAI workspace.
+  icon: icon.png
+  tags:
+  - business
+credentials_for_provider:
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: SentFromAI API key
+    placeholder:
+      en_US: Enter your workspace API key
+    help:
+      en_US: Create an API key in the SentFromAI console. Validation reads account
+        status only; sending requires an enabled account.
+    url: https://console.sentfrom.ai
+tools:
+- tools/get_account.yaml
+- tools/list_inboxes.yaml
+- tools/create_inbox.yaml
+- tools/list_messages.yaml
+- tools/get_message.yaml
+- tools/send_message.yaml
+- tools/reply_to_message.yaml
+- tools/create_draft.yaml
+- tools/get_draft.yaml
+extra:
+  python:
+    source: provider/sentfromai.py
