@@ -1,0 +1,174 @@
+identity:
+  name: check_permission
+  author: saiarung27
+  label:
+    en_US: Check Permission
+description:
+  human:
+    en_US: Ask Sealgraf before a purchase. Returns allow, deny, or needs_human_approval under the owner's limits.
+  llm: 'Ask Sealgraf whether this exact purchase is permitted under the owner''s limits, BEFORE buying anything. Returns one of three outcomes in the JSON field "outcome": "allow" (buy it, then call complete_purchase with the returned decision_token), "deny" (do not buy), or "needs_human_approval" (do not buy yet; the owner must approve in Sealgraf first — keep the preauth_id, then call claim_decision_token after approval). Amounts are integer minor units (cents).'
+parameters:
+  - name: category
+    type: select
+    form: llm
+    required: true
+    label:
+      en_US: Category
+    human_description:
+      en_US: The kind of spend. Must be one of Sealgraf's canonical categories.
+    llm_description: The purchase category. Must be exactly one of the listed canonical Sealgraf category ids; never invent or rename one.
+    options:
+      - value: groceries
+        label:
+          en_US: Groceries
+      - value: household
+        label:
+          en_US: Household
+      - value: dining
+        label:
+          en_US: Dining out
+      - value: travel
+        label:
+          en_US: Travel
+      - value: software
+        label:
+          en_US: Apps & software
+      - value: office_supplies
+        label:
+          en_US: Office supplies
+      - value: shopping
+        label:
+          en_US: Shopping
+      - value: transport
+        label:
+          en_US: Transport
+      - value: entertainment
+        label:
+          en_US: Entertainment
+      - value: health
+        label:
+          en_US: Health
+      - value: supplies
+        label:
+          en_US: Supplies
+      - value: materials
+        label:
+          en_US: Materials
+      - value: equipment
+        label:
+          en_US: Equipment
+      - value: fuel
+        label:
+          en_US: Fuel
+  - name: amount_minor
+    type: number
+    form: llm
+    required: true
+    label:
+      en_US: Amount (minor units)
+    human_description:
+      en_US: The purchase amount in the currency's minor unit — cents. $42.50 is 4250.
+    llm_description: The exact purchase amount as an integer in minor units (cents). $42.50 must be sent as 4250, never 42.5. Must be greater than 0.
+    min: 1
+  - name: currency
+    type: string
+    form: llm
+    required: false
+    label:
+      en_US: Currency
+    human_description:
+      en_US: Three-letter currency code, e.g. USD. Leave empty to use the currency bound to the API key.
+    llm_description: Optional three-letter ISO currency code such as USD. When omitted, Sealgraf resolves the currency from the API key's binding.
+  - name: counterparty
+    type: string
+    form: llm
+    required: false
+    label:
+      en_US: Counterparty
+    human_description:
+      en_US: Who would be paid — the merchant or service name.
+    llm_description: The merchant or service that would be paid, e.g. "Lowe's". Shown to the owner on the approval ask, so use the name a person would recognize.
+  - name: description
+    type: string
+    form: llm
+    required: false
+    label:
+      en_US: Description
+    human_description:
+      en_US: What the purchase is, in plain words.
+    llm_description: A plain-language description of what is being bought. Shown to the owner on the approval ask.
+  - name: agent_id
+    type: string
+    form: form
+    required: false
+    label:
+      en_US: Agent ID
+    human_description:
+      en_US: Normally leave empty — Sealgraf resolves the agent from the API key's binding.
+    llm_description: Optional agent id. Only set it when the API key is not bound to a single agent; normally resolved server-side from the key.
+  - name: mandate_id
+    type: string
+    form: form
+    required: false
+    label:
+      en_US: Mandate (limits set) ID
+    human_description:
+      en_US: Normally leave empty — the API key is bound to one limits set. Set only to check against a different limits set the key may access.
+    llm_description: Optional mandate (limits set) id. When omitted, Sealgraf uses the limits set bound to the API key.
+  - name: idempotency_key
+    type: string
+    form: llm
+    required: false
+    label:
+      en_US: Idempotency Key
+    human_description:
+      en_US: Optional, at least 8 characters. Repeating a check with the same key and the same purchase returns the original result instead of a duplicate.
+    llm_description: Optional idempotency key (minimum 8 characters). If this exact check might be retried, supply a stable key so a retry returns the original preauthorization instead of minting a second one.
+output_schema:
+  type: object
+  properties:
+    preauth_id:
+      type: string
+      description: The preauthorization id for this check. Pass it to the other Sealgraf tools.
+    state:
+      type: string
+      description: The check's state, e.g. authorized, pending_approval, denied.
+    outcome:
+      type: string
+      description: One of allow, deny, needs_human_approval.
+    reason_code:
+      type: [string, "null"]
+      description: Why the decision came out this way, e.g. ok or over_human_approval_threshold.
+    mandate_id:
+      type: [string, "null"]
+      description: The limits set the check ran against.
+    mandate_version:
+      type: [integer, "null"]
+    receipt_id:
+      type: [string, "null"]
+      description: Set once the purchase has been completed and sealed.
+    token_expires_at:
+      type: [string, "null"]
+      description: When the decision token stops working (ISO 8601).
+    ask_expires_at:
+      type: [string, "null"]
+      description: For needs_human_approval, when the owner's approval window closes (ISO 8601).
+    replayed:
+      type: boolean
+      description: True when this exact check was already made and the original answer is being re-served.
+    amount_minor:
+      type: [integer, "null"]
+      description: The checked amount in minor units (cents).
+    currency:
+      type: [string, "null"]
+    category:
+      type: [string, "null"]
+    decision_token:
+      type: string
+      description: The single-use decision token. Present only on a fresh allow. Pass it to complete_purchase as a variable — never retype it.
+    decision_token_redelivered:
+      type: boolean
+      description: Present on an idempotent replay of an allow; false means the token was not re-served (Sealgraf never re-serves tokens).
+extra:
+  python:
+    source: tools/check_permission.py

@@ -1,0 +1,79 @@
+identity:
+  name: get_receipt
+  author: saiarung27
+  label:
+    en_US: Get Receipt / Check Status
+description:
+  human:
+    en_US: Read a preauthorization's current state, or a sealed receipt, from Sealgraf.
+  llm: 'Read Sealgraf state. Give exactly one of preauth_id or receipt_id. With a preauth_id, returns the check''s current state (authorized, pending_approval, denied, completed, aborted, expired), its decision, and the receipt_id once completed. With a receipt_id, returns the sealed receipt — the completed amount, the sealed completion summary, and the overcharge flag (payment_flag) when the reported charge exceeded the authorized amount.'
+parameters:
+  - name: preauth_id
+    type: string
+    form: llm
+    required: false
+    label:
+      en_US: Preauthorization ID
+    human_description:
+      en_US: The preauth_id from check_permission. Provide this OR a receipt ID, not both.
+    llm_description: The preauth_id returned by check_permission. Provide exactly one of preauth_id and receipt_id.
+  - name: receipt_id
+    type: string
+    form: llm
+    required: false
+    label:
+      en_US: Receipt ID
+    human_description:
+      en_US: The receipt_id returned by complete_purchase. Provide this OR a preauthorization ID, not both.
+    llm_description: The receipt_id returned by complete_purchase. Provide exactly one of preauth_id and receipt_id.
+output_schema:
+  type: object
+  properties:
+    found_via:
+      type: string
+      description: Whether the lookup resolved a preauthorization ("preauth") or a receipt ("receipt").
+    preauth_id:
+      type: [string, "null"]
+    state:
+      type: [string, "null"]
+      description: For a preauth lookup, its state, e.g. authorized, pending_approval, completed.
+    outcome:
+      type: [string, "null"]
+      description: For a preauth lookup, the check's decision outcome.
+    reason_code:
+      type: [string, "null"]
+    receipt_id:
+      type: [string, "null"]
+      description: The sealed receipt's id, once the purchase is completed.
+    mandate_id:
+      type: [string, "null"]
+    mandate_version:
+      type: [integer, "null"]
+    amount_minor:
+      type: [integer, "null"]
+    currency:
+      type: [string, "null"]
+    category:
+      type: [string, "null"]
+    counterparty:
+      type: [string, "null"]
+    was_allowed:
+      type: [boolean, "null"]
+    approved_at:
+      type: [string, "null"]
+    token_expires_at:
+      type: [string, "null"]
+    ask_expires_at:
+      type: [string, "null"]
+    created_at:
+      type: [string, "null"]
+    entry_seq:
+      type: [integer, "null"]
+      description: For a receipt lookup, its position in the owner's tamper-evident ledger.
+    completion:
+      description: For a receipt lookup, the sealed completion evidence as reported by the agent.
+    payment_flag:
+      description: For a receipt lookup, the overcharge flag when the reported charge exceeded the authorized amount; otherwise null.
+extra:
+  python:
+    source: tools/get_receipt.py

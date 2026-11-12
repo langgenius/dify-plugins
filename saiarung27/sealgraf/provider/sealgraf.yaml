@@ -1,0 +1,39 @@
+identity:
+  author: saiarung27
+  name: sealgraf
+  label:
+    en_US: Sealgraf
+  description:
+    en_US: Spend approval for AI agents — check before a purchase, owner approval above a limit, sealed receipts.
+  icon: icon.svg
+  tags:
+    - finance
+credentials_for_provider:
+  sealgraf_api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: Sealgraf API Key
+    placeholder:
+      en_US: Paste an agent-scope Sealgraf API key
+    help:
+      en_US: Create an agent-scope key in Sealgraf, bound to the limits set this agent spends under. The key can check purchases and read its own receipts; it can never change limits or approve a purchase.
+    url: https://sealgraf.com
+  sealgraf_base_url:
+    type: text-input
+    required: false
+    default: https://sealgraf.com
+    label:
+      en_US: Sealgraf Base URL
+    placeholder:
+      en_US: https://sealgraf.com
+    help:
+      en_US: Leave as the default for production. Set a different base URL only for UAT or a self-hosted Sealgraf deployment.
+tools:
+  - tools/check_permission.yaml
+  - tools/claim_decision_token.yaml
+  - tools/complete_purchase.yaml
+  - tools/get_receipt.yaml
+extra:
+  python:
+    source: provider/sealgraf.py
