@@ -1,0 +1,181 @@
+{
+  "identity": {
+    "name": "call_business",
+    "author": "odilelabs",
+    "label": {
+      "en_US": "Call Business",
+      "zh_Hans": "Call Business",
+      "pt_BR": "Call Business"
+    }
+  },
+  "description": {
+    "human": {
+      "en_US": "Place an outbound phone call to a business to ask for information on a named person’s behalf. Use it when find_business_agent returned not_found for a US or Canadian number; when a Direct card exists use send_to_business. It dials a real number and a call cannot be recalled once placed. Requires direct:tasks, human opt-in at https://odilelabs.com/developers#voice and the person’s permission for this call (on_behalf_consent true). Informational calls only: no sales, payments or account access. Calls run Monday to Friday, 9:00 to 17:00 in the business’s local time; outside that window the request is refused and the error includes next_window. A number is not called twice within 24 hours, and each account has a daily call cap. number and callback_number must be callable US or Canadian E.164 numbers, callback_number being the person’s own, never the business’s. message_id is required: reuse it unchanged on every retry so only one call is placed. Returns {task_id, state (queued, completed or failed), status}; read get_call_result for progress and answers. Voice credit costs: get_m2m_network. Example: number='+15615550123', business_name='Harbor Plumbing', caller_name='Ana Diaz', callback_number='+15615550199', need='Do you replace water heaters?', on_behalf_consent=true, message_id='call-8f2'.",
+      "zh_Hans": "Place an outbound phone call to a business to ask for information on a named person’s behalf. Use it when find_business_agent returned not_found for a US or Canadian number; when a Direct card exists use send_to_business. It dials a real number and a call cannot be recalled once placed. Requires direct:tasks, human opt-in at https://odilelabs.com/developers#voice and the person’s permission for this call (on_behalf_consent true). Informational calls only: no sales, payments or account access. Calls run Monday to Friday, 9:00 to 17:00 in the business’s local time; outside that window the request is refused and the error includes next_window. A number is not called twice within 24 hours, and each account has a daily call cap. number and callback_number must be callable US or Canadian E.164 numbers, callback_number being the person’s own, never the business’s. message_id is required: reuse it unchanged on every retry so only one call is placed. Returns {task_id, state (queued, completed or failed), status}; read get_call_result for progress and answers. Voice credit costs: get_m2m_network. Example: number='+15615550123', business_name='Harbor Plumbing', caller_name='Ana Diaz', callback_number='+15615550199', need='Do you replace water heaters?', on_behalf_consent=true, message_id='call-8f2'.",
+      "pt_BR": "Place an outbound phone call to a business to ask for information on a named person’s behalf. Use it when find_business_agent returned not_found for a US or Canadian number; when a Direct card exists use send_to_business. It dials a real number and a call cannot be recalled once placed. Requires direct:tasks, human opt-in at https://odilelabs.com/developers#voice and the person’s permission for this call (on_behalf_consent true). Informational calls only: no sales, payments or account access. Calls run Monday to Friday, 9:00 to 17:00 in the business’s local time; outside that window the request is refused and the error includes next_window. A number is not called twice within 24 hours, and each account has a daily call cap. number and callback_number must be callable US or Canadian E.164 numbers, callback_number being the person’s own, never the business’s. message_id is required: reuse it unchanged on every retry so only one call is placed. Returns {task_id, state (queued, completed or failed), status}; read get_call_result for progress and answers. Voice credit costs: get_m2m_network. Example: number='+15615550123', business_name='Harbor Plumbing', caller_name='Ana Diaz', callback_number='+15615550199', need='Do you replace water heaters?', on_behalf_consent=true, message_id='call-8f2'."
+    },
+    "llm": "Place an outbound phone call to a business to ask for information on a named person’s behalf. Use it when find_business_agent returned not_found for a US or Canadian number; when a Direct card exists use send_to_business. It dials a real number and a call cannot be recalled once placed. Requires direct:tasks, human opt-in at https://odilelabs.com/developers#voice and the person’s permission for this call (on_behalf_consent true). Informational calls only: no sales, payments or account access. Calls run Monday to Friday, 9:00 to 17:00 in the business’s local time; outside that window the request is refused and the error includes next_window. A number is not called twice within 24 hours, and each account has a daily call cap. number and callback_number must be callable US or Canadian E.164 numbers, callback_number being the person’s own, never the business’s. message_id is required: reuse it unchanged on every retry so only one call is placed. Returns {task_id, state (queued, completed or failed), status}; read get_call_result for progress and answers. Voice credit costs: get_m2m_network. Example: number='+15615550123', business_name='Harbor Plumbing', caller_name='Ana Diaz', callback_number='+15615550199', need='Do you replace water heaters?', on_behalf_consent=true, message_id='call-8f2'."
+  },
+  "parameters": [
+    {
+      "name": "number",
+      "type": "string",
+      "required": true,
+      "label": {
+        "en_US": "Number",
+        "zh_Hans": "Number",
+        "pt_BR": "Number"
+      },
+      "human_description": {
+        "en_US": "The business’s E.164 phone number, e.g. +15615550123.",
+        "zh_Hans": "The business’s E.164 phone number, e.g. +15615550123.",
+        "pt_BR": "The business’s E.164 phone number, e.g. +15615550123."
+      },
+      "llm_description": "The business’s E.164 phone number, e.g. +15615550123.",
+      "form": "llm"
+    },
+    {
+      "name": "business_name",
+      "type": "string",
+      "required": true,
+      "label": {
+        "en_US": "Business Name",
+        "zh_Hans": "Business Name",
+        "pt_BR": "Business Name"
+      },
+      "human_description": {
+        "en_US": "The business to call.",
+        "zh_Hans": "The business to call.",
+        "pt_BR": "The business to call."
+      },
+      "llm_description": "The business to call.",
+      "form": "llm"
+    },
+    {
+      "name": "caller_name",
+      "type": "string",
+      "required": true,
+      "label": {
+        "en_US": "Caller Name",
+        "zh_Hans": "Caller Name",
+        "pt_BR": "Caller Name"
+      },
+      "human_description": {
+        "en_US": "The named person who requested this call.",
+        "zh_Hans": "The named person who requested this call.",
+        "pt_BR": "The named person who requested this call."
+      },
+      "llm_description": "The named person who requested this call.",
+      "form": "llm"
+    },
+    {
+      "name": "callback_number",
+      "type": "string",
+      "required": true,
+      "label": {
+        "en_US": "Callback Number",
+        "zh_Hans": "Callback Number",
+        "pt_BR": "Callback Number"
+      },
+      "human_description": {
+        "en_US": "That person’s own callback number in E.164, never the business’s.",
+        "zh_Hans": "That person’s own callback number in E.164, never the business’s.",
+        "pt_BR": "That person’s own callback number in E.164, never the business’s."
+      },
+      "llm_description": "That person’s own callback number in E.164, never the business’s.",
+      "form": "llm"
+    },
+    {
+      "name": "need",
+      "type": "string",
+      "required": true,
+      "label": {
+        "en_US": "Need",
+        "zh_Hans": "Need",
+        "pt_BR": "Need"
+      },
+      "human_description": {
+        "en_US": "The information the person wants from the business.",
+        "zh_Hans": "The information the person wants from the business.",
+        "pt_BR": "The information the person wants from the business."
+      },
+      "llm_description": "The information the person wants from the business.",
+      "form": "llm"
+    },
+    {
+      "name": "on_behalf_consent",
+      "type": "boolean",
+      "required": true,
+      "label": {
+        "en_US": "On Behalf Consent",
+        "zh_Hans": "On Behalf Consent",
+        "pt_BR": "On Behalf Consent"
+      },
+      "human_description": {
+        "en_US": "True only after that person asked for this call.",
+        "zh_Hans": "True only after that person asked for this call.",
+        "pt_BR": "True only after that person asked for this call."
+      },
+      "llm_description": "True only after that person asked for this call.",
+      "form": "llm"
+    },
+    {
+      "name": "questions",
+      "type": "string",
+      "required": false,
+      "label": {
+        "en_US": "Questions",
+        "zh_Hans": "Questions",
+        "pt_BR": "Questions"
+      },
+      "human_description": {
+        "en_US": "Up to five questions to ask the business. Enter a JSON array string. Schema: {\"description\": \"Up to five questions to ask the business.\", \"items\": {\"maxLength\": 200, \"minLength\": 1, \"type\": \"string\"}, \"maxItems\": 5, \"type\": \"array\"}",
+        "zh_Hans": "Up to five questions to ask the business. Enter a JSON array string. Schema: {\"description\": \"Up to five questions to ask the business.\", \"items\": {\"maxLength\": 200, \"minLength\": 1, \"type\": \"string\"}, \"maxItems\": 5, \"type\": \"array\"}",
+        "pt_BR": "Up to five questions to ask the business. Enter a JSON array string. Schema: {\"description\": \"Up to five questions to ask the business.\", \"items\": {\"maxLength\": 200, \"minLength\": 1, \"type\": \"string\"}, \"maxItems\": 5, \"type\": \"array\"}"
+      },
+      "llm_description": "Up to five questions to ask the business. Enter a JSON array string. Schema: {\"description\": \"Up to five questions to ask the business.\", \"items\": {\"maxLength\": 200, \"minLength\": 1, \"type\": \"string\"}, \"maxItems\": 5, \"type\": \"array\"}",
+      "form": "llm"
+    },
+    {
+      "name": "message_id",
+      "type": "string",
+      "required": true,
+      "label": {
+        "en_US": "Message Id",
+        "zh_Hans": "Message Id",
+        "pt_BR": "Message Id"
+      },
+      "human_description": {
+        "en_US": "A stable request id; reuse it unchanged on every retry.",
+        "zh_Hans": "A stable request id; reuse it unchanged on every retry.",
+        "pt_BR": "A stable request id; reuse it unchanged on every retry."
+      },
+      "llm_description": "A stable request id; reuse it unchanged on every retry.",
+      "form": "llm"
+    },
+    {
+      "name": "max_seconds",
+      "type": "number",
+      "required": false,
+      "label": {
+        "en_US": "Max Seconds",
+        "zh_Hans": "Max Seconds",
+        "pt_BR": "Max Seconds"
+      },
+      "human_description": {
+        "en_US": "Maximum call duration, from 60 to 600 seconds, subject to available credits.",
+        "zh_Hans": "Maximum call duration, from 60 to 600 seconds, subject to available credits.",
+        "pt_BR": "Maximum call duration, from 60 to 600 seconds, subject to available credits."
+      },
+      "llm_description": "Maximum call duration, from 60 to 600 seconds, subject to available credits.",
+      "form": "llm",
+      "min": 60,
+      "max": 600
+    }
+  ],
+  "extra": {
+    "python": {
+      "source": "tools/call_business.py"
+    }
+  }
+}

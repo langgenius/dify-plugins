@@ -1,0 +1,188 @@
+{
+  "identity": {
+    "name": "send_to_business",
+    "author": "odilelabs",
+    "label": {
+      "en_US": "Send To Business",
+      "zh_Hans": "Send To Business",
+      "pt_BR": "Send To Business"
+    }
+  },
+  "description": {
+    "human": {
+      "en_US": "Send one request to a business found with find_business_agent, using a skill its card lists: take_message (leave a message), check_availability (read open times), book (book a slot check_availability returned), book_first_available (book the first open slot in up to 5 preferred windows) or cancel_booking (cancel a booking you made). Call find_business_agent first; for a business without a card, use call_business. Say an automated assistant is acting, and get the person's permission before booking. A delivered message cannot be recalled; a booking is undone only with cancel_booking. message_id is the retry key: reuse it unchanged on every retry so the request runs once. If you omit it, an identical request from you counts as a retry only within the same UTC day. Returns the A2A v1.0 {task}: read its state before telling anyone a message was delivered or a booking confirmed. A deposit booking returns INPUT_REQUIRED with a payment_url for the person; it is held 30 minutes and confirmed only after payment, which get_direct_payment checks. Failed, refused and unconfirmed tasks are not charged; costs are in get_m2m_network and your balance in get_direct_usage. Messages and confirmed bookings return thread_id and thread_token: use get_replies to read the business’s replies and reply_to_business to answer in the same conversation. Signed-in requesters may omit callback_number for take_message; anonymous requesters still need their own valid number. Example: biz='harbor-plumbing', skill='take_message', message_id='req-8f2', data={caller_name:'Ana Diaz', callback_number:'+15615550199', need:'Leaking water heater, today if possible'}.",
+      "zh_Hans": "Send one request to a business found with find_business_agent, using a skill its card lists: take_message (leave a message), check_availability (read open times), book (book a slot check_availability returned), book_first_available (book the first open slot in up to 5 preferred windows) or cancel_booking (cancel a booking you made). Call find_business_agent first; for a business without a card, use call_business. Say an automated assistant is acting, and get the person's permission before booking. A delivered message cannot be recalled; a booking is undone only with cancel_booking. message_id is the retry key: reuse it unchanged on every retry so the request runs once. If you omit it, an identical request from you counts as a retry only within the same UTC day. Returns the A2A v1.0 {task}: read its state before telling anyone a message was delivered or a booking confirmed. A deposit booking returns INPUT_REQUIRED with a payment_url for the person; it is held 30 minutes and confirmed only after payment, which get_direct_payment checks. Failed, refused and unconfirmed tasks are not charged; costs are in get_m2m_network and your balance in get_direct_usage. Messages and confirmed bookings return thread_id and thread_token: use get_replies to read the business’s replies and reply_to_business to answer in the same conversation. Signed-in requesters may omit callback_number for take_message; anonymous requesters still need their own valid number. Example: biz='harbor-plumbing', skill='take_message', message_id='req-8f2', data={caller_name:'Ana Diaz', callback_number:'+15615550199', need:'Leaking water heater, today if possible'}.",
+      "pt_BR": "Send one request to a business found with find_business_agent, using a skill its card lists: take_message (leave a message), check_availability (read open times), book (book a slot check_availability returned), book_first_available (book the first open slot in up to 5 preferred windows) or cancel_booking (cancel a booking you made). Call find_business_agent first; for a business without a card, use call_business. Say an automated assistant is acting, and get the person's permission before booking. A delivered message cannot be recalled; a booking is undone only with cancel_booking. message_id is the retry key: reuse it unchanged on every retry so the request runs once. If you omit it, an identical request from you counts as a retry only within the same UTC day. Returns the A2A v1.0 {task}: read its state before telling anyone a message was delivered or a booking confirmed. A deposit booking returns INPUT_REQUIRED with a payment_url for the person; it is held 30 minutes and confirmed only after payment, which get_direct_payment checks. Failed, refused and unconfirmed tasks are not charged; costs are in get_m2m_network and your balance in get_direct_usage. Messages and confirmed bookings return thread_id and thread_token: use get_replies to read the business’s replies and reply_to_business to answer in the same conversation. Signed-in requesters may omit callback_number for take_message; anonymous requesters still need their own valid number. Example: biz='harbor-plumbing', skill='take_message', message_id='req-8f2', data={caller_name:'Ana Diaz', callback_number:'+15615550199', need:'Leaking water heater, today if possible'}."
+    },
+    "llm": "Send one request to a business found with find_business_agent, using a skill its card lists: take_message (leave a message), check_availability (read open times), book (book a slot check_availability returned), book_first_available (book the first open slot in up to 5 preferred windows) or cancel_booking (cancel a booking you made). Call find_business_agent first; for a business without a card, use call_business. Say an automated assistant is acting, and get the person's permission before booking. A delivered message cannot be recalled; a booking is undone only with cancel_booking. message_id is the retry key: reuse it unchanged on every retry so the request runs once. If you omit it, an identical request from you counts as a retry only within the same UTC day. Returns the A2A v1.0 {task}: read its state before telling anyone a message was delivered or a booking confirmed. A deposit booking returns INPUT_REQUIRED with a payment_url for the person; it is held 30 minutes and confirmed only after payment, which get_direct_payment checks. Failed, refused and unconfirmed tasks are not charged; costs are in get_m2m_network and your balance in get_direct_usage. Messages and confirmed bookings return thread_id and thread_token: use get_replies to read the business’s replies and reply_to_business to answer in the same conversation. Signed-in requesters may omit callback_number for take_message; anonymous requesters still need their own valid number. Example: biz='harbor-plumbing', skill='take_message', message_id='req-8f2', data={caller_name:'Ana Diaz', callback_number:'+15615550199', need:'Leaking water heater, today if possible'}."
+  },
+  "parameters": [
+    {
+      "name": "biz",
+      "type": "string",
+      "required": true,
+      "label": {
+        "en_US": "Biz",
+        "zh_Hans": "Biz",
+        "pt_BR": "Biz"
+      },
+      "human_description": {
+        "en_US": "The business id from its card: the <biz> in /b/<biz>/ or /c/<biz>/.",
+        "zh_Hans": "The business id from its card: the <biz> in /b/<biz>/ or /c/<biz>/.",
+        "pt_BR": "The business id from its card: the <biz> in /b/<biz>/ or /c/<biz>/."
+      },
+      "llm_description": "The business id from its card: the <biz> in /b/<biz>/ or /c/<biz>/.",
+      "form": "llm"
+    },
+    {
+      "name": "target",
+      "type": "select",
+      "required": false,
+      "label": {
+        "en_US": "Target",
+        "zh_Hans": "Target",
+        "pt_BR": "Target"
+      },
+      "human_description": {
+        "en_US": "line (default) for a business line (/b/ card); claim for a claimed listing (/c/ card), which takes messages only.",
+        "zh_Hans": "line (default) for a business line (/b/ card); claim for a claimed listing (/c/ card), which takes messages only.",
+        "pt_BR": "line (default) for a business line (/b/ card); claim for a claimed listing (/c/ card), which takes messages only."
+      },
+      "llm_description": "line (default) for a business line (/b/ card); claim for a claimed listing (/c/ card), which takes messages only.",
+      "form": "llm",
+      "options": [
+        {
+          "label": {
+            "en_US": "line",
+            "zh_Hans": "line",
+            "pt_BR": "line"
+          },
+          "value": "line"
+        },
+        {
+          "label": {
+            "en_US": "claim",
+            "zh_Hans": "claim",
+            "pt_BR": "claim"
+          },
+          "value": "claim"
+        }
+      ]
+    },
+    {
+      "name": "message_id",
+      "type": "string",
+      "required": false,
+      "label": {
+        "en_US": "Message Id",
+        "zh_Hans": "Message Id",
+        "pt_BR": "Message Id"
+      },
+      "human_description": {
+        "en_US": "Your id for this request; reuse it unchanged on every retry so the request runs once.",
+        "zh_Hans": "Your id for this request; reuse it unchanged on every retry so the request runs once.",
+        "pt_BR": "Your id for this request; reuse it unchanged on every retry so the request runs once."
+      },
+      "llm_description": "Your id for this request; reuse it unchanged on every retry so the request runs once.",
+      "form": "llm"
+    },
+    {
+      "name": "approval_id",
+      "type": "string",
+      "required": false,
+      "label": {
+        "en_US": "Approval Id",
+        "zh_Hans": "Approval Id",
+        "pt_BR": "Approval Id"
+      },
+      "human_description": {
+        "en_US": "Only when the business approves bookings itself: the action_id (da_...) from its approval_required reply, sent with the same message_id and data once the owner approves.",
+        "zh_Hans": "Only when the business approves bookings itself: the action_id (da_...) from its approval_required reply, sent with the same message_id and data once the owner approves.",
+        "pt_BR": "Only when the business approves bookings itself: the action_id (da_...) from its approval_required reply, sent with the same message_id and data once the owner approves."
+      },
+      "llm_description": "Only when the business approves bookings itself: the action_id (da_...) from its approval_required reply, sent with the same message_id and data once the owner approves.",
+      "form": "llm"
+    },
+    {
+      "name": "skill",
+      "type": "select",
+      "required": true,
+      "label": {
+        "en_US": "Skill",
+        "zh_Hans": "Skill",
+        "pt_BR": "Skill"
+      },
+      "human_description": {
+        "en_US": "One skill the business card lists.",
+        "zh_Hans": "One skill the business card lists.",
+        "pt_BR": "One skill the business card lists."
+      },
+      "llm_description": "One skill the business card lists.",
+      "form": "llm",
+      "options": [
+        {
+          "label": {
+            "en_US": "take_message",
+            "zh_Hans": "take_message",
+            "pt_BR": "take_message"
+          },
+          "value": "take_message"
+        },
+        {
+          "label": {
+            "en_US": "check_availability",
+            "zh_Hans": "check_availability",
+            "pt_BR": "check_availability"
+          },
+          "value": "check_availability"
+        },
+        {
+          "label": {
+            "en_US": "book",
+            "zh_Hans": "book",
+            "pt_BR": "book"
+          },
+          "value": "book"
+        },
+        {
+          "label": {
+            "en_US": "book_first_available",
+            "zh_Hans": "book_first_available",
+            "pt_BR": "book_first_available"
+          },
+          "value": "book_first_available"
+        },
+        {
+          "label": {
+            "en_US": "cancel_booking",
+            "zh_Hans": "cancel_booking",
+            "pt_BR": "cancel_booking"
+          },
+          "value": "cancel_booking"
+        }
+      ]
+    },
+    {
+      "name": "data",
+      "type": "string",
+      "required": true,
+      "label": {
+        "en_US": "Data",
+        "zh_Hans": "Data",
+        "pt_BR": "Data"
+      },
+      "human_description": {
+        "en_US": "The skill's fields; put skill beside data, never inside it. take_message: caller_name, callback_number (the person's own E.164 number, never the business's), need, optional on_behalf_of and urgency (low, normal, high or urgent). check_availability: optional service and date (YYYY-MM-DD in the business's time zone). book: slot exactly as check_availability returned it, caller_name, callback_number, need. book_first_available: options (1 to 5 windows in order, each {date, optional after and before as HH:MM, optional service}), fallback (none or take_message), caller_name, callback_number, need. cancel_booking: booking_id and cancel_token from the confirmed booking, optional reason (up to 300 characters); cancelling is not charged and does not refund a booking fee. For take_message only, a signed-in requester may omit callback_number and receive replies in the thread. Enter a JSON object string. Schema: {\"additionalProperties\": {}, \"description\": \"The skill's fields; put skill beside data, never inside it. take_message: caller_name, callback_number (the person's own E.164 number, never the business's), need, optional on_behalf_of and urgency (low, normal, high or urgent). check_availability: optional service and date (YYYY-MM-DD in the business's time zone). book: slot exactly as check_availability returned it, caller_name, callback_number, need. book_first_available: options (1 to 5 windows in order, each {date, optional after and before as HH:MM, optional service}), fallback (none or take_message), caller_name, callback_number, need. cancel_booking: booking_id and cancel_token from the confirmed booking, optional reason (up to 300 characters); cancelling is not charged and does not refund a booking fee. For take_message only, a signed-in requester may omit callback_number and receive replies in the thread.\", \"propertyNames\": {\"type\": \"string\"}, \"type\": \"object\"}",
+        "zh_Hans": "The skill's fields; put skill beside data, never inside it. take_message: caller_name, callback_number (the person's own E.164 number, never the business's), need, optional on_behalf_of and urgency (low, normal, high or urgent). check_availability: optional service and date (YYYY-MM-DD in the business's time zone). book: slot exactly as check_availability returned it, caller_name, callback_number, need. book_first_available: options (1 to 5 windows in order, each {date, optional after and before as HH:MM, optional service}), fallback (none or take_message), caller_name, callback_number, need. cancel_booking: booking_id and cancel_token from the confirmed booking, optional reason (up to 300 characters); cancelling is not charged and does not refund a booking fee. For take_message only, a signed-in requester may omit callback_number and receive replies in the thread. Enter a JSON object string. Schema: {\"additionalProperties\": {}, \"description\": \"The skill's fields; put skill beside data, never inside it. take_message: caller_name, callback_number (the person's own E.164 number, never the business's), need, optional on_behalf_of and urgency (low, normal, high or urgent). check_availability: optional service and date (YYYY-MM-DD in the business's time zone). book: slot exactly as check_availability returned it, caller_name, callback_number, need. book_first_available: options (1 to 5 windows in order, each {date, optional after and before as HH:MM, optional service}), fallback (none or take_message), caller_name, callback_number, need. cancel_booking: booking_id and cancel_token from the confirmed booking, optional reason (up to 300 characters); cancelling is not charged and does not refund a booking fee. For take_message only, a signed-in requester may omit callback_number and receive replies in the thread.\", \"propertyNames\": {\"type\": \"string\"}, \"type\": \"object\"}",
+        "pt_BR": "The skill's fields; put skill beside data, never inside it. take_message: caller_name, callback_number (the person's own E.164 number, never the business's), need, optional on_behalf_of and urgency (low, normal, high or urgent). check_availability: optional service and date (YYYY-MM-DD in the business's time zone). book: slot exactly as check_availability returned it, caller_name, callback_number, need. book_first_available: options (1 to 5 windows in order, each {date, optional after and before as HH:MM, optional service}), fallback (none or take_message), caller_name, callback_number, need. cancel_booking: booking_id and cancel_token from the confirmed booking, optional reason (up to 300 characters); cancelling is not charged and does not refund a booking fee. For take_message only, a signed-in requester may omit callback_number and receive replies in the thread. Enter a JSON object string. Schema: {\"additionalProperties\": {}, \"description\": \"The skill's fields; put skill beside data, never inside it. take_message: caller_name, callback_number (the person's own E.164 number, never the business's), need, optional on_behalf_of and urgency (low, normal, high or urgent). check_availability: optional service and date (YYYY-MM-DD in the business's time zone). book: slot exactly as check_availability returned it, caller_name, callback_number, need. book_first_available: options (1 to 5 windows in order, each {date, optional after and before as HH:MM, optional service}), fallback (none or take_message), caller_name, callback_number, need. cancel_booking: booking_id and cancel_token from the confirmed booking, optional reason (up to 300 characters); cancelling is not charged and does not refund a booking fee. For take_message only, a signed-in requester may omit callback_number and receive replies in the thread.\", \"propertyNames\": {\"type\": \"string\"}, \"type\": \"object\"}"
+      },
+      "llm_description": "The skill's fields; put skill beside data, never inside it. take_message: caller_name, callback_number (the person's own E.164 number, never the business's), need, optional on_behalf_of and urgency (low, normal, high or urgent). check_availability: optional service and date (YYYY-MM-DD in the business's time zone). book: slot exactly as check_availability returned it, caller_name, callback_number, need. book_first_available: options (1 to 5 windows in order, each {date, optional after and before as HH:MM, optional service}), fallback (none or take_message), caller_name, callback_number, need. cancel_booking: booking_id and cancel_token from the confirmed booking, optional reason (up to 300 characters); cancelling is not charged and does not refund a booking fee. For take_message only, a signed-in requester may omit callback_number and receive replies in the thread. Enter a JSON object string. Schema: {\"additionalProperties\": {}, \"description\": \"The skill's fields; put skill beside data, never inside it. take_message: caller_name, callback_number (the person's own E.164 number, never the business's), need, optional on_behalf_of and urgency (low, normal, high or urgent). check_availability: optional service and date (YYYY-MM-DD in the business's time zone). book: slot exactly as check_availability returned it, caller_name, callback_number, need. book_first_available: options (1 to 5 windows in order, each {date, optional after and before as HH:MM, optional service}), fallback (none or take_message), caller_name, callback_number, need. cancel_booking: booking_id and cancel_token from the confirmed booking, optional reason (up to 300 characters); cancelling is not charged and does not refund a booking fee. For take_message only, a signed-in requester may omit callback_number and receive replies in the thread.\", \"propertyNames\": {\"type\": \"string\"}, \"type\": \"object\"}",
+      "form": "llm"
+    }
+  ],
+  "extra": {
+    "python": {
+      "source": "tools/send_to_business.py"
+    }
+  }
+}
