@@ -1,0 +1,30 @@
+version: 0.0.1
+type: plugin
+author: "keirolabs"
+name: keirolabs
+label:
+  en_US: Keirolabs
+  zh_Hans: Keirolabs
+description:
+  en_US: Web search for AI agents. Titles, links and snippets from the open web at $0.10 per 1,000 searches.
+  zh_Hans: 面向 AI 智能体的网页搜索。返回网页标题、链接和摘要，每 1,000 次搜索 0.10 美元。
+icon: icon.png
+resource:
+  memory: 268435456
+  permission: {}
+plugins:
+  tools:
+    - provider/keirolabs.yaml
+tags:
+  - search
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+created_at: 2026-11-13T00:00:00Z
+privacy: PRIVACY.md
