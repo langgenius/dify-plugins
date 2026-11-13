@@ -7,6 +7,10 @@ label:
 description:
   en_US: Spend approval for AI agents. Check a purchase before buying, let the owner approve above a limit on their own surface, and seal the evidence into a receipt nobody can rewrite.
 icon: icon.svg
+tags:
+  - security
+  - finance
+  - agent
 resource:
   memory: 268435456
   permission:
