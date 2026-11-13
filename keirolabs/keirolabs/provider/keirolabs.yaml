@@ -1,0 +1,29 @@
+identity:
+  author: "keirolabs"
+  name: keirolabs
+  label:
+    en_US: Keirolabs
+    zh_Hans: Keirolabs
+  description:
+    en_US: Web search for AI agents. Titles, links and snippets from the open web.
+    zh_Hans: 面向 AI 智能体的网页搜索，返回网页标题、链接和摘要。
+  icon: icon.png
+credentials_for_provider:
+  keirolabs_api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: Keirolabs API Key
+      zh_Hans: Keirolabs API Key
+    placeholder:
+      en_US: Please input your Keirolabs API key (starts with keiro_)
+      zh_Hans: 请输入你的 Keirolabs API Key（以 keiro_ 开头）
+    help:
+      en_US: Get a free API key at https://platform.keirolabs.cloud/dashboard/keys
+      zh_Hans: 在 https://platform.keirolabs.cloud/dashboard/keys 免费获取 API Key
+    url: https://platform.keirolabs.cloud/dashboard/keys
+tools:
+  - tools/keirolabs_search.yaml
+extra:
+  python:
+    source: provider/keirolabs.py

@@ -1,0 +1,66 @@
+identity:
+  name: keirolabs_search
+  author: "keirolabs"
+  label:
+    en_US: Keirolabs Search
+    zh_Hans: Keirolabs 搜索
+description:
+  human:
+    en_US: Search the web with Keirolabs and get titles, links and snippets.
+    zh_Hans: 使用 Keirolabs 搜索网页，返回标题、链接和摘要。
+  llm: Search the web for current information. Returns a list of results, each with a title, URL and snippet. Use it for facts, news and anything that may have changed recently.
+output_schema:
+  type: object
+  properties:
+    results:
+      type: array
+      description: Search results
+      items:
+        type: object
+        properties:
+          title:
+            type: string
+          url:
+            type: string
+          snippet:
+            type: string
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Search Query
+      zh_Hans: 搜索查询
+    human_description:
+      en_US: What to search the web for.
+      zh_Hans: 要搜索的内容。
+    llm_description: The search query.
+    form: llm
+  - name: max_results
+    type: number
+    required: false
+    default: 10
+    min: 1
+    max: 15
+    label:
+      en_US: Max Results
+      zh_Hans: 最大结果数
+    human_description:
+      en_US: Maximum number of results to return (1-15). The price per search is the same whatever the count.
+      zh_Hans: 返回的最大结果数（1-15）。每次搜索价格相同，与结果数无关。
+    llm_description: Maximum number of results to return, from 1 to 15.
+    form: form
+  - name: include_domains
+    type: string
+    required: false
+    label:
+      en_US: Include Domains
+      zh_Hans: 包含域名
+    human_description:
+      en_US: Comma-separated list of domains to restrict results to.
+      zh_Hans: 只返回这些域名的结果，用逗号分隔。
+    llm_description: Optional comma-separated list of domains to restrict results to, for example "python.org,docs.github.com".
+    form: llm
+extra:
+  python:
+    source: tools/keirolabs_search.py
