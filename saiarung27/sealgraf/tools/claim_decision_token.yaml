@@ -1,0 +1,37 @@
+identity:
+  name: claim_decision_token
+  author: saiarung27
+  label:
+    en_US: Claim Decision Token
+description:
+  human:
+    en_US: After the owner approves a purchase ask in Sealgraf, claim the single-use decision token for it.
+  llm: Claim the single-use decision token for a preauthorization whose check returned "needs_human_approval" and which the owner has since approved in Sealgraf. Only the API key that ran the original check can claim it. If the owner has not decided yet, this tool fails with code "not_approved_yet" — wait and try again rather than buying. The claimed token is spent exactly once, by complete_purchase.
+parameters:
+  - name: preauth_id
+    type: string
+    form: llm
+    required: true
+    label:
+      en_US: Preauthorization ID
+    human_description:
+      en_US: The preauth_id returned by the earlier check_permission call.
+    llm_description: The preauth_id from the check_permission call that returned "needs_human_approval".
+output_schema:
+  type: object
+  properties:
+    preauth_id:
+      type: string
+      description: The preauthorization the token was claimed for.
+    claimed:
+      type: boolean
+      description: True when the token was claimed successfully.
+    decision_token:
+      type: string
+      description: The single-use decision token. Pass it to complete_purchase as a variable — never retype it.
+    token_expires_at:
+      type: [string, "null"]
+      description: When the claimed token stops working (ISO 8601).
+extra:
+  python:
+    source: tools/claim_decision_token.py

@@ -1,0 +1,223 @@
+identity:
+  name: complete_purchase
+  author: saiarung27
+  label:
+    en_US: Complete Purchase
+description:
+  human:
+    en_US: After the purchase is made, submit the completion evidence. Sealgraf seals it into the receipt.
+  llm: Submit completion evidence for an authorized purchase AFTER it has actually been made, using the decision token from check_permission (allow) or claim_decision_token (after owner approval). Sealgraf seals the evidence into a receipt and returns it. The decision token is single-use. If a completion call must be retried, reuse the same completion_nonce — a retry with the same nonce returns the original receipt instead of sealing a duplicate. Never call this for a purchase that did not happen.
+parameters:
+  - name: preauth_id
+    type: string
+    form: llm
+    required: true
+    label:
+      en_US: Preauthorization ID
+    human_description:
+      en_US: The preauth_id of the authorized check.
+    llm_description: The preauth_id returned by check_permission for this purchase.
+  - name: decision_token
+    type: string
+    form: llm
+    required: true
+    label:
+      en_US: Decision Token
+    human_description:
+      en_US: The single-use decision token from the check (allow) or from claim_decision_token.
+    llm_description: The single-use decision token. It is bound to the exact checked purchase and is consumed by this call.
+  - name: completion_nonce
+    type: string
+    form: llm
+    required: true
+    label:
+      en_US: Completion Nonce
+    human_description:
+      en_US: A unique value identifying this completion attempt. Reuse the same value when retrying the same completion.
+    llm_description: A unique nonce for this completion. Generate one per purchase completion and reuse it verbatim on retries so the completion stays idempotent.
+  - name: completed_amount_minor
+    type: number
+    form: llm
+    required: false
+    label:
+      en_US: Completed Amount (minor units)
+    human_description:
+      en_US: What was actually charged, in minor units. Must be between 1 and the authorized amount. Defaults to the authorized amount.
+    llm_description: Optional. The amount actually charged, as an integer in minor units (cents). Must be at least 1 and no more than the authorized amount. Omit to record the full authorized amount.
+    min: 1
+  - name: counterparty_receipt_ref
+    type: string
+    form: llm
+    required: false
+    label:
+      en_US: Merchant Reference
+    human_description:
+      en_US: The merchant's own order or receipt reference for the purchase.
+    llm_description: The merchant's order id or receipt reference for the completed purchase, exactly as the merchant issued it.
+  - name: note
+    type: string
+    form: llm
+    required: false
+    label:
+      en_US: Note
+    human_description:
+      en_US: A short note sealed into the receipt with the completion.
+    llm_description: Optional short note about the completion, sealed into the receipt. Never put card numbers in it — Sealgraf refuses completions whose text contains a card number.
+  - name: payment_rail
+    type: select
+    form: llm
+    required: false
+    label:
+      en_US: Payment Rail
+    human_description:
+      en_US: Optional. How the purchase was paid, reported by the agent and sealed as reported (not proven).
+    llm_description: Optional. The payment rail that carried the purchase, from Sealgraf's closed list. This is agent-reported evidence, sealed as reported.
+    options:
+      - value: link_stripe
+        label:
+          en_US: Stripe Link
+      - value: paypal
+        label:
+          en_US: PayPal
+      - value: stripe_api
+        label:
+          en_US: Stripe API
+      - value: card_on_merchant
+        label:
+          en_US: Card on merchant site
+      - value: other
+        label:
+          en_US: Other (label required)
+  - name: payment_rail_label
+    type: string
+    form: llm
+    required: false
+    label:
+      en_US: Payment Rail Label
+    human_description:
+      en_US: Required only when the payment rail is "other"; refused otherwise.
+    llm_description: A short name for the payment rail. Supply it only when payment_rail is "other" — it is required then and refused for any other rail.
+  - name: payment_instrument_label
+    type: string
+    form: llm
+    required: false
+    label:
+      en_US: Payment Instrument Label
+    human_description:
+      en_US: Optional label for the payment instrument used, e.g. a wallet or card nickname.
+    llm_description: Optional human label for the payment instrument, as reported by the agent.
+  - name: payment_instrument_last4
+    type: string
+    form: llm
+    required: false
+    label:
+      en_US: Instrument Last 4
+    human_description:
+      en_US: Optional. Exactly four digits, as text — the last four digits of the card or instrument charged. Never a full card number.
+    llm_description: Optional. The last four digits of the charged instrument, as a string of exactly four digits. Never send a full card number.
+  - name: payment_virtual_last4
+    type: string
+    form: llm
+    required: false
+    label:
+      en_US: Virtual Card Last 4
+    human_description:
+      en_US: Optional. Exactly four digits, as text — the last four of a virtual card used for the charge, if any.
+    llm_description: Optional. The last four digits of a virtual card used for the charge, as a string of exactly four digits.
+  - name: payment_charged_amount_minor
+    type: number
+    form: llm
+    required: false
+    label:
+      en_US: Charged Amount (minor units)
+    human_description:
+      en_US: Optional. The amount the rail reports charging, in minor units. Requires the payment currency.
+    llm_description: Optional. The charged amount reported by the payment rail, as an integer in minor units. When supplied, payment_currency is required too.
+    min: 0
+  - name: payment_currency
+    type: string
+    form: llm
+    required: false
+    label:
+      en_US: Payment Currency
+    human_description:
+      en_US: Three-letter code for the charged amount, e.g. USD. Required when a charged amount is supplied.
+    llm_description: The three-letter currency code of the charged amount. Required whenever payment_charged_amount_minor is supplied.
+  - name: payment_rail_ref_kind
+    type: select
+    form: llm
+    required: false
+    label:
+      en_US: Rail Reference Kind
+    human_description:
+      en_US: Optional. The kind of the rail's own transaction reference. Must be supplied together with its value.
+    llm_description: Optional. The kind of the payment rail's transaction reference, from Sealgraf's closed list. Supply together with payment_rail_ref_value.
+    options:
+      - value: charge
+        label:
+          en_US: Charge
+      - value: payment_intent
+        label:
+          en_US: Payment intent
+      - value: paypal_transaction
+        label:
+          en_US: PayPal transaction
+      - value: other
+        label:
+          en_US: Other
+  - name: payment_rail_ref_value
+    type: string
+    form: llm
+    required: false
+    label:
+      en_US: Rail Reference Value
+    human_description:
+      en_US: The rail's transaction reference itself. Must be supplied together with its kind.
+    llm_description: The payment rail's transaction reference value. Supply together with payment_rail_ref_kind.
+  - name: payment_provenance
+    type: select
+    form: llm
+    required: false
+    label:
+      en_US: Payment Provenance
+    human_description:
+      en_US: Optional. Where the payment report came from.
+    llm_description: Optional. How the payment facts were obtained, from Sealgraf's closed list.
+    options:
+      - value: browser_checkout
+        label:
+          en_US: Browser checkout
+      - value: rail_api
+        label:
+          en_US: Rail API
+      - value: merchant_confirmation
+        label:
+          en_US: Merchant confirmation
+output_schema:
+  type: object
+  properties:
+    sealed:
+      type: boolean
+      description: True when the completion evidence was sealed into a receipt.
+    receipt_id:
+      type: string
+      description: The sealed receipt's id.
+    preauth_id:
+      type: [string, "null"]
+      description: The preauthorization this completion belongs to.
+    entry_seq:
+      type: [integer, "null"]
+      description: The receipt's position in the owner's tamper-evident ledger.
+    amount_minor:
+      type: [integer, "null"]
+      description: The completed amount in minor units (cents).
+    currency:
+      type: [string, "null"]
+    mandate_id:
+      type: [string, "null"]
+    created_at:
+      type: [string, "null"]
+      description: When the receipt was sealed (ISO 8601).
+extra:
+  python:
+    source: tools/complete_purchase.py

@@ -1,0 +1,33 @@
+version: 0.1.0
+type: plugin
+author: saiarung27
+name: sealgraf
+label:
+  en_US: Sealgraf
+description:
+  en_US: Spend approval for AI agents. Check a purchase before buying, let the owner approve above a limit on their own surface, and seal the evidence into a receipt nobody can rewrite.
+icon: icon.svg
+tags:
+  - security
+  - finance
+  - agent
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+plugins:
+  tools:
+    - provider/sealgraf.yaml
+meta:
+  version: 0.1.0
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: "1.0.0"
+created_at: 2026-11-11T12:00:00-05:00
+privacy: PRIVACY.md
