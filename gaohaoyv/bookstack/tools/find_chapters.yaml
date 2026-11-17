@@ -1,0 +1,129 @@
+identity:
+  name: find_chapters
+  author: gaohaoyv
+  label:
+    en_US: Find Chapters
+    zh_Hans: 查找章节
+description:
+  human:
+    en_US: Find accessible BookStack chapters by name using exact or like matching, optionally scoped to a book.
+    zh_Hans: 使用精确或模糊名称匹配查找可访问的 BookStack 章节，并可选择限制到指定书籍。
+  llm: Find accessible BookStack chapters by name using exact or like matching, optionally scoped to a book.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether finding chapters succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when finding chapters fails.
+    chapters:
+      type: array
+      description: Normalized BookStack chapters.
+      items:
+        type: object
+        properties:
+          chapter_id:
+            type: string
+            nullable: true
+            description: BookStack chapter identifier.
+          name:
+            type: string
+            nullable: true
+            description: Chapter name.
+          slug:
+            type: string
+            nullable: true
+            description: Chapter slug.
+          book_id:
+            type: string
+            nullable: true
+            description: Parent book identifier.
+          description:
+            type: string
+            nullable: true
+            description: Chapter description.
+          url:
+            type: string
+            nullable: true
+            description: Chapter URL.
+          created_at:
+            type: string
+            nullable: true
+            description: Chapter creation timestamp.
+          updated_at:
+            type: string
+            nullable: true
+            description: Chapter update timestamp.
+          raw:
+            type: object
+            nullable: true
+            description: Original BookStack chapter object.
+    count:
+      type: integer
+      description: Number of returned chapters.
+    total:
+      type: integer
+      nullable: true
+      description: Total matching chapters when provided by BookStack.
+parameters:
+  - name: name
+    type: string
+    required: true
+    label:
+      en_US: Name
+      zh_Hans: 名称
+    human_description:
+      en_US: Chapter name to match.
+      zh_Hans: 要匹配的章节名称。
+    llm_description: Chapter name to match.
+    form: llm
+  - name: match
+    type: string
+    required: true
+    label:
+      en_US: Match
+      zh_Hans: 匹配方式
+    human_description:
+      en_US: Match mode, either exact or like.
+      zh_Hans: 匹配模式，可选 exact 或 like。
+    llm_description: Match mode, either exact or like.
+    form: llm
+  - name: book_id
+    type: string
+    required: false
+    label:
+      en_US: Book ID
+      zh_Hans: Book ID
+    human_description:
+      en_US: Optional BookStack book ID to scope chapter matching.
+      zh_Hans: 可选，按 BookStack 书籍 ID 限定章节匹配范围。
+    llm_description: Optional BookStack book ID to scope chapter matching.
+    form: llm
+  - name: count
+    type: number
+    required: false
+    label:
+      en_US: Count
+      zh_Hans: 数量
+    human_description:
+      en_US: Optional maximum number of chapters to return.
+      zh_Hans: 可选，限制返回的章节数量。
+    llm_description: Optional maximum number of chapters to return.
+    form: llm
+  - name: offset
+    type: number
+    required: false
+    label:
+      en_US: Offset
+      zh_Hans: 偏移量
+    human_description:
+      en_US: Optional offset for paginated matching BookStack chapter results.
+      zh_Hans: 可选，匹配到的 BookStack 章节分页结果偏移量。
+    llm_description: Optional offset for paginated matching BookStack chapter results.
+    form: llm
+extra:
+  python:
+    source: tools/find_chapters.py

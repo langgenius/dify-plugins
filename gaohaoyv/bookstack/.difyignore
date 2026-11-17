@@ -1,0 +1,11 @@
+.git/
+.task/
+.agents/
+.aiassistant/
+tests/
+__pycache__/
+**/__pycache__/
+*.pyc
+*.difypkg
+dist/
+bookstack_datasource/

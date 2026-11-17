@@ -1,0 +1,82 @@
+identity:
+  name: list_tag_values
+  author: gaohaoyv
+  label:
+    en_US: List Tag Values
+    zh_Hans: 列出标签值
+description:
+  human:
+    en_US: List BookStack values for one tag name for discovery without changing tags.
+    zh_Hans: 仅用于发现，按单个标签名称列出 BookStack 标签值，不修改标签。
+  llm: List BookStack values for one tag name for discovery without changing tags.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether listing tag values succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when listing tag values fails.
+    tag_values:
+      type: array
+      description: Tag value discovery results.
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            nullable: true
+            description: Tag name used for the value lookup.
+          value:
+            type: string
+            nullable: true
+            description: Tag value.
+          raw:
+            nullable: true
+            description: Original BookStack tag-value item.
+    count:
+      type: integer
+      description: Number of returned tag values.
+    total:
+      type: integer
+      nullable: true
+      description: Total available tag values when provided by BookStack.
+parameters:
+  - name: name
+    type: string
+    required: true
+    label:
+      en_US: Name
+      zh_Hans: 名称
+    human_description:
+      en_US: Tag name whose values should be listed.
+      zh_Hans: 要列出其标签值的标签名称。
+    llm_description: Tag name whose values should be listed.
+    form: llm
+  - name: count
+    type: number
+    required: false
+    label:
+      en_US: Count
+      zh_Hans: 数量
+    human_description:
+      en_US: Optional maximum number of tag values to return.
+      zh_Hans: 可选，限制返回的标签值数量。
+    llm_description: Optional maximum number of tag values to return.
+    form: llm
+  - name: offset
+    type: number
+    required: false
+    label:
+      en_US: Offset
+      zh_Hans: 偏移量
+    human_description:
+      en_US: Optional offset for paginated BookStack tag-value results.
+      zh_Hans: 可选，BookStack 标签值分页结果的偏移量。
+    llm_description: Optional offset for paginated BookStack tag-value results.
+    form: llm
+extra:
+  python:
+    source: tools/list_tag_values.py

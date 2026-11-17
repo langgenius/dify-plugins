@@ -1,0 +1,114 @@
+identity:
+  name: find_books
+  author: gaohaoyv
+  label:
+    en_US: Find Books
+    zh_Hans: 查找书籍
+description:
+  human:
+    en_US: Find accessible BookStack books by name using exact or like matching.
+    zh_Hans: 使用精确或模糊名称匹配查找可访问的 BookStack 书籍。
+  llm: Find accessible BookStack books by name using exact or like matching.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether finding books succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when finding books fails.
+    books:
+      type: array
+      description: Normalized BookStack books.
+      items:
+        type: object
+        properties:
+          book_id:
+            type: string
+            nullable: true
+            description: BookStack book identifier.
+          name:
+            type: string
+            nullable: true
+            description: Book name.
+          slug:
+            type: string
+            nullable: true
+            description: Book slug.
+          description:
+            type: string
+            nullable: true
+            description: Book description.
+          url:
+            type: string
+            nullable: true
+            description: Book URL.
+          created_at:
+            type: string
+            nullable: true
+            description: Book creation timestamp.
+          updated_at:
+            type: string
+            nullable: true
+            description: Book update timestamp.
+          raw:
+            type: object
+            nullable: true
+            description: Original BookStack book object.
+    count:
+      type: integer
+      description: Number of returned books.
+    total:
+      type: integer
+      nullable: true
+      description: Total matching books when provided by BookStack.
+parameters:
+  - name: name
+    type: string
+    required: true
+    label:
+      en_US: Name
+      zh_Hans: 名称
+    human_description:
+      en_US: Book name to match.
+      zh_Hans: 要匹配的书籍名称。
+    llm_description: Book name to match.
+    form: llm
+  - name: match
+    type: string
+    required: true
+    label:
+      en_US: Match
+      zh_Hans: 匹配方式
+    human_description:
+      en_US: Match mode, either exact or like.
+      zh_Hans: 匹配模式，可选 exact 或 like。
+    llm_description: Match mode, either exact or like.
+    form: llm
+  - name: count
+    type: number
+    required: false
+    label:
+      en_US: Count
+      zh_Hans: 数量
+    human_description:
+      en_US: Optional maximum number of books to return.
+      zh_Hans: 可选，限制返回的书籍数量。
+    llm_description: Optional maximum number of books to return.
+    form: llm
+  - name: offset
+    type: number
+    required: false
+    label:
+      en_US: Offset
+      zh_Hans: 偏移量
+    human_description:
+      en_US: Optional offset for paginated matching BookStack book results.
+      zh_Hans: 可选，匹配到的 BookStack 书籍分页结果偏移量。
+    llm_description: Optional offset for paginated matching BookStack book results.
+    form: llm
+extra:
+  python:
+    source: tools/find_books.py

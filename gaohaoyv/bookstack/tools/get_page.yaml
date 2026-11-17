@@ -1,0 +1,92 @@
+identity:
+  name: get_page
+  author: gaohaoyv
+  label:
+    en_US: Get Page
+    zh_Hans: 获取页面
+description:
+  human:
+    en_US: Read a BookStack page by ID and return normalized content and metadata.
+    zh_Hans: 根据 ID 读取 BookStack 页面并返回标准化内容和元数据。
+  llm: Read a BookStack page by ID and return normalized content and metadata.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether reading the page succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when reading the page fails.
+    page_id:
+      type: string
+      nullable: true
+      description: BookStack page identifier.
+    title:
+      type: string
+      nullable: true
+      description: Page title.
+    url:
+      type: string
+      nullable: true
+      description: Page URL.
+    content:
+      type: string
+      nullable: true
+      description: Normalized page content.
+    markdown:
+      type: string
+      nullable: true
+      description: Page markdown content.
+    content_format:
+      type: string
+      nullable: true
+      description: Content format for normalized page content.
+    book_id:
+      type: string
+      nullable: true
+      description: Parent book identifier.
+    chapter_id:
+      type: string
+      nullable: true
+      description: Parent chapter identifier.
+    slug:
+      type: string
+      nullable: true
+      description: Page slug.
+    created_at:
+      type: string
+      nullable: true
+      description: Page creation timestamp.
+    updated_at:
+      type: string
+      nullable: true
+      description: Page update timestamp.
+    created_by:
+      type: object
+      nullable: true
+      description: Raw creator metadata when available.
+    updated_by:
+      type: object
+      nullable: true
+      description: Raw updater metadata when available.
+    raw:
+      type: object
+      nullable: true
+      description: Original BookStack page object.
+parameters:
+  - name: page_id
+    type: string
+    required: true
+    label:
+      en_US: Page ID
+      zh_Hans: 页面 ID
+    human_description:
+      en_US: The BookStack page ID to read.
+      zh_Hans: 要读取的 BookStack 页面 ID。
+    llm_description: The BookStack page ID to read.
+    form: llm
+extra:
+  python:
+    source: tools/get_page.py

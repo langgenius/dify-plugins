@@ -1,0 +1,140 @@
+identity:
+  name: find_pages
+  author: gaohaoyv
+  label:
+    en_US: Find Pages
+    zh_Hans: 查找页面
+description:
+  human:
+    en_US: Find accessible BookStack pages by name using exact or like matching, optionally scoped to a book or chapter.
+    zh_Hans: 使用精确或模糊名称匹配查找可访问的 BookStack 页面，并可选择限制到指定书籍或章节。
+  llm: Find accessible BookStack pages by name using exact or like matching, optionally scoped to a book or chapter.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether finding pages succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when finding pages fails.
+    pages:
+      type: array
+      description: Normalized BookStack pages.
+      items:
+        type: object
+        properties:
+          page_id:
+            type: string
+            nullable: true
+            description: BookStack page identifier.
+          title:
+            type: string
+            nullable: true
+            description: Page title.
+          slug:
+            type: string
+            nullable: true
+            description: Page slug.
+          book_id:
+            type: string
+            nullable: true
+            description: Parent book identifier.
+          chapter_id:
+            type: string
+            nullable: true
+            description: Parent chapter identifier.
+          url:
+            type: string
+            nullable: true
+            description: Page URL.
+          created_at:
+            type: string
+            nullable: true
+            description: Page creation timestamp.
+          updated_at:
+            type: string
+            nullable: true
+            description: Page update timestamp.
+          raw:
+            type: object
+            nullable: true
+            description: Original BookStack page object.
+    count:
+      type: integer
+      description: Number of returned pages.
+    total:
+      type: integer
+      nullable: true
+      description: Total matching pages when provided by BookStack.
+parameters:
+  - name: name
+    type: string
+    required: true
+    label:
+      en_US: Name
+      zh_Hans: 名称
+    human_description:
+      en_US: Page name to match.
+      zh_Hans: 要匹配的页面名称。
+    llm_description: Page name to match.
+    form: llm
+  - name: match
+    type: string
+    required: true
+    label:
+      en_US: Match
+      zh_Hans: 匹配方式
+    human_description:
+      en_US: Match mode, either exact or like.
+      zh_Hans: 匹配模式，可选 exact 或 like。
+    llm_description: Match mode, either exact or like.
+    form: llm
+  - name: book_id
+    type: string
+    required: false
+    label:
+      en_US: Book ID
+      zh_Hans: Book ID
+    human_description:
+      en_US: Optional BookStack book ID to scope page matching.
+      zh_Hans: 可选，按 BookStack 书籍 ID 限定页面匹配范围。
+    llm_description: Optional BookStack book ID to scope page matching.
+    form: llm
+  - name: chapter_id
+    type: string
+    required: false
+    label:
+      en_US: Chapter ID
+      zh_Hans: Chapter ID
+    human_description:
+      en_US: Optional BookStack chapter ID to scope page matching.
+      zh_Hans: 可选，按 BookStack 章节 ID 限定页面匹配范围。
+    llm_description: Optional BookStack chapter ID to scope page matching.
+    form: llm
+  - name: count
+    type: number
+    required: false
+    label:
+      en_US: Count
+      zh_Hans: 数量
+    human_description:
+      en_US: Optional maximum number of pages to return.
+      zh_Hans: 可选，限制返回的页面数量。
+    llm_description: Optional maximum number of pages to return.
+    form: llm
+  - name: offset
+    type: number
+    required: false
+    label:
+      en_US: Offset
+      zh_Hans: 偏移量
+    human_description:
+      en_US: Optional offset for paginated matching BookStack page results.
+      zh_Hans: 可选，匹配到的 BookStack 页面分页结果偏移量。
+    llm_description: Optional offset for paginated matching BookStack page results.
+    form: llm
+extra:
+  python:
+    source: tools/find_pages.py

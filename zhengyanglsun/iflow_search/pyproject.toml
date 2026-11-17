@@ -1,0 +1,17 @@
+[project]
+name = "iflow_search"
+version = "0.0.1"
+description = "Dify Marketplace tool plugin for the iFlow Search API (web search, image search, web fetch)."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+
+dependencies = [
+    "dify_plugin>=0.9.0",
+    "iflow-search>=0.1.0,<0.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+]

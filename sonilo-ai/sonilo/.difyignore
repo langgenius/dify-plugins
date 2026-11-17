@@ -1,0 +1,9 @@
+.git/
+.venv/
+__pycache__/
+**/__pycache__/
+*.pyc
+.pytest_cache/
+tests/
+.DS_Store
+*.difypkg

@@ -1,0 +1,61 @@
+identity:
+  name: search_pages
+  author: gaohaoyv
+  label:
+    en_US: Search Pages
+    zh_Hans: 搜索页面
+description:
+  human:
+    en_US: Search BookStack pages by query and return normalized page metadata.
+    zh_Hans: 根据查询搜索 BookStack 页面并返回标准化页面元数据。
+  llm: Search BookStack pages by query and return normalized page metadata.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether the page search succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when the page search fails.
+    results:
+      type: array
+      description: Normalized search result pages.
+      items:
+        type: object
+        properties:
+          page_id:
+            type: string
+            nullable: true
+            description: BookStack page identifier.
+          title:
+            type: string
+            nullable: true
+            description: Page title.
+          url:
+            type: string
+            nullable: true
+            description: Page URL.
+          raw:
+            type: object
+            nullable: true
+            description: Original BookStack search result object.
+    count:
+      type: integer
+      description: Number of returned search results.
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Query
+      zh_Hans: 查询
+    human_description:
+      en_US: Search text used to find matching BookStack pages.
+      zh_Hans: 用于查找匹配 BookStack 页面的搜索文本。
+    llm_description: Search text used to find matching BookStack pages.
+    form: llm
+extra:
+  python:
+    source: tools/search_pages.py

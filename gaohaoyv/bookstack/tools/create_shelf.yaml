@@ -1,0 +1,140 @@
+identity:
+  name: create_shelf
+  author: gaohaoyv
+  label:
+    en_US: Create Shelf
+    zh_Hans: 创建书架
+description:
+  human:
+    en_US: Create a BookStack shelf and return normalized metadata.
+    zh_Hans: 创建 BookStack 书架并返回标准化元数据。
+  llm: Create a BookStack shelf and return normalized metadata.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether creating the shelf succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when creating the shelf fails.
+    shelf_id:
+      type: string
+      nullable: true
+      description: Created BookStack shelf identifier.
+    name:
+      type: string
+      nullable: true
+      description: Created shelf name.
+    slug:
+      type: string
+      nullable: true
+      description: Created shelf slug.
+    description:
+      type: string
+      nullable: true
+      description: Created shelf description.
+    description_html:
+      type: string
+      nullable: true
+      description: Created shelf description HTML.
+    books:
+      type: array
+      nullable: true
+      description: Raw associated book objects when available.
+      items:
+        type: object
+    tags:
+      type: array
+      nullable: true
+      description: Raw tag objects when available.
+      items:
+        type: object
+    url:
+      type: string
+      nullable: true
+      description: Created shelf URL.
+    created_at:
+      type: string
+      nullable: true
+      description: Created shelf timestamp.
+    updated_at:
+      type: string
+      nullable: true
+      description: Updated shelf timestamp.
+    created_by:
+      type: object
+      nullable: true
+      description: Raw creator metadata when available.
+    updated_by:
+      type: object
+      nullable: true
+      description: Raw updater metadata when available.
+    action:
+      type: string
+      nullable: true
+      description: Action label for the shelf result.
+    raw:
+      type: object
+      nullable: true
+      description: Original BookStack shelf object.
+parameters:
+  - name: name
+    type: string
+    required: true
+    label:
+      en_US: Name
+      zh_Hans: 名称
+    human_description:
+      en_US: The name of the shelf to create.
+      zh_Hans: 要创建书架的名称。
+    llm_description: The name of the shelf to create.
+    form: llm
+  - name: description
+    type: string
+    required: false
+    label:
+      en_US: Description
+      zh_Hans: 描述
+    human_description:
+      en_US: Optional plain-text description for the new shelf.
+      zh_Hans: 新书架的可选纯文本描述。
+    llm_description: Optional plain-text description for the new shelf.
+    form: llm
+  - name: description_html
+    type: string
+    required: false
+    label:
+      en_US: Description HTML
+      zh_Hans: 描述 HTML
+    human_description:
+      en_US: Optional HTML description for the new shelf.
+      zh_Hans: 新书架的可选 HTML 描述。
+    llm_description: Optional HTML description for the new shelf.
+    form: llm
+  - name: books
+    type: string
+    required: false
+    label:
+      en_US: Books
+      zh_Hans: 关联书籍
+    human_description:
+      en_US: Optional book IDs as a single value or list-like value to associate with the new shelf.
+      zh_Hans: 可选，单个值或列表式值的书籍 ID，用于关联到新书架。
+    llm_description: Optional associated book IDs for the new shelf.
+    form: llm
+  - name: tags
+    type: string
+    required: false
+    label:
+      en_US: Tags
+      zh_Hans: 标签
+    human_description:
+      en_US: Optional tag text or list-like value forwarded as simple tags.
+      zh_Hans: 可选标签文本或列表式值，将作为简单标签传递。
+    llm_description: Optional tags for the new shelf.
+    form: llm
+extra:
+  python:
+    source: tools/create_shelf.py

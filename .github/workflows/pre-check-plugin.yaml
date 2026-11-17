@@ -1,0 +1,631 @@
+name: Pre Check Plugin
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+    branches:
+      - main
+      - dev
+      # Test branch for workflow and toolkit changes; it runs the identical
+      # pipeline instead of keeping a second copy of this file in sync.
+      - precheck-sandbox
+    paths-ignore:
+      - ".github/**"
+      - ".gitignore"
+      - "**/.gitignore"
+      - "unpacked_plugin/**"
+      - "**/*.md"
+      - "LICENSE"
+
+concurrency:
+  group: pre-check-plugin-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  REPO_NAME: langgenius/dify-plugins
+  MARKETPLACE_BASE_URL: https://marketplace.dify.ai
+  MARKETPLACE_TOKEN: placeholder
+  GH_TOKEN: ${{ github.token }}
+  # The marketplace toolkit is cloned here at run time (see .gitignore). The
+  # validators, the uploader and the plugin daemon all live under it.
+  TOOLKIT_DIR: .github/scripts/toolkit
+  VALIDATION_DIR: /tmp/validation
+
+jobs:
+  package-changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      has-package-updates: ${{ steps.changes.outputs.result }}
+    steps:
+      - name: Detect added or updated packages
+        id: changes
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b  # v7
+        with:
+          script: |
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              ...context.repo,
+              pull_number: context.payload.pull_request.number,
+              per_page: 100,
+            });
+            // The API returns at most 3,000 files. Never skip checks on an incomplete list.
+            if (files.length < context.payload.pull_request.changed_files) {
+              throw new Error('Cannot determine package changes: PR file list is incomplete');
+            }
+            return files.some((file) =>
+              file.filename.endsWith('.difypkg') && file.status !== 'removed'
+            );
+
+  pre-check-plugin:
+    needs: package-changes
+    if: needs.package-changes.outputs.has-package-updates == 'true'
+    runs-on: depot-ubuntu-24.04
+    steps:
+      # No history is needed: every check reads the working tree, the PR file
+      # list comes from the API, and the default shallow checkout is enough.
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Clone Marketplace Toolkit
+        run: gh repo clone langgenius/dify-marketplace-toolkit -- "$TOOLKIT_DIR"
+
+      - name: Download Plugin Daemon
+        run: |
+          gh release download -R langgenius/dify-plugin-daemon --pattern "dify-plugin-linux-amd64" --dir "$TOOLKIT_DIR"
+          chmod +x "$TOOLKIT_DIR/dify-plugin-linux-amd64"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12.7
+
+      - name: Install Dependencies
+        run: pip install requests
+
+      - name: Ensure jq and yq
+        run: |
+          jq --version
+          if ! command -v yq >/dev/null 2>&1; then
+            echo "yq is not preinstalled on this runner; installing it"
+            sudo curl -fsSL "https://github.com/mikefarah/yq/releases/download/v4.44.5/yq_linux_amd64" \
+              -o /usr/local/bin/yq
+            sudo chmod +x /usr/local/bin/yq
+          fi
+          yq --version
+
+      - name: Get PR Path
+        run: |
+          echo "Retrieving PR files information..."
+          if ! PR_FILES=$(gh pr view -R ${{ env.REPO_NAME }} ${{ github.event.pull_request.number }} --json files --jq .files); then
+            echo "Failed to retrieve PR files. Make sure PR number and repository are correct."
+            exit 1
+          fi
+
+          gh pr view -R ${{ env.REPO_NAME }} ${{ github.event.pull_request.number }} --json body --jq .body > /tmp/pr_body.md
+
+          export PR_FILES
+
+          echo "Checking for plugin package file changes..."
+          # The script prints the package path last, after any informational
+          # lines (e.g. "also removing N older version(s)"), so read the last
+          # line. pipefail keeps a rejected PR from looking like a success.
+          set -o pipefail
+          if PLUGIN_PATH=$(python3 "$TOOLKIT_DIR/validator/check-pkg-paths.py" | tail -n 1); then
+              echo "Found plugin path: $PLUGIN_PATH"
+              echo "PLUGIN_PATH=$PLUGIN_PATH" >> $GITHUB_ENV
+              echo "SUBMITTED_PLUGIN_PATH=$PLUGIN_PATH" >> $GITHUB_ENV
+          else
+              echo "ERROR: Only one .difypkg file change is allowed in a single PR."
+              exit 1
+          fi
+
+      - name: Unpack File
+        run: |
+          echo "Unzipping $SUBMITTED_PLUGIN_PATH"
+          mkdir -p unpacked_plugin
+          unzip -q "$SUBMITTED_PLUGIN_PATH" -d unpacked_plugin
+
+          # The checks below read the unpacked tree; PLUGIN_PATH now points at it.
+          echo "PLUGIN_PATH=unpacked_plugin" >> $GITHUB_ENV
+
+      # One entry point for every package-level check: it unpacks the package
+      # again, runs the toolkit's check registry and writes one errors/warnings
+      # file plus a summary.md per check under VALIDATION_DIR.
+      - name: Validate Package
+        continue-on-error: true
+        run: |
+          # The validator exits non-zero for blocking findings, and then writes
+          # the per-check reports. It can also die before writing anything at
+          # all -- a missing yq, or a check hanging past its timeout -- and that
+          # must not read as "no findings", so that case gets a report too.
+          status=0
+          python3 "$TOOLKIT_DIR/validator/validate-difypkg.py" \
+            "$SUBMITTED_PLUGIN_PATH" \
+            --pr-body-file /tmp/pr_body.md \
+            --output-dir "$VALIDATION_DIR" || status=$?
+          if [ "$status" -ne 0 ]; then
+            if ! grep -qs . "$VALIDATION_DIR"/*.errors.txt; then
+              echo "validate-difypkg.py exited $status without writing any report" \
+                >> "$VALIDATION_DIR/validator_run.errors.txt"
+            fi
+            # continue-on-error keeps the remaining checks and the summary
+            # running, and reports this step as a success, so say it out loud:
+            # the annotation is what a reviewer sees in the checks view.
+            echo "::error::Package validation failed (validate-difypkg.py exited $status); see the Package Validation table in the job summary."
+          fi
+
+      - name: Check PR Body
+        continue-on-error: true
+        run: |
+          python3 "$TOOLKIT_DIR/validator/check-pr-body.py" \
+            --pr-body-file /tmp/pr_body.md \
+            --error-file /tmp/pr_body_errors.txt
+
+      - name: Check PR Review Notes
+        continue-on-error: true
+        run: |
+          python3 "$TOOLKIT_DIR/validator/check-pr-review-notes.py" \
+            --pr-body-file /tmp/pr_body.md \
+            --warning-file /tmp/pr_review_notes_warnings.txt
+
+      - name: Check Version Update
+        continue-on-error: true
+        run: |
+          python3 "$TOOLKIT_DIR/validator/check-version-update.py" \
+            -d "$PLUGIN_PATH" \
+            --package-path "$SUBMITTED_PLUGIN_PATH" \
+            --pr-body-file /tmp/pr_body.md \
+            --error-file /tmp/version_update_errors.txt \
+            --warning-file /tmp/version_update_warnings.txt
+
+      - name: Check Plugin Icon
+        continue-on-error: true
+        run: |
+          ERROR_FILE="/tmp/icon_errors.txt"
+          touch "$ERROR_FILE"
+
+          ICON_NAME=$(yq '.icon' "$PLUGIN_PATH/manifest.yaml")
+          ICON_FILE="$PLUGIN_PATH/_assets/$ICON_NAME"
+          fail_icon() {
+            echo "!!! $1"
+            echo "!!! $1" >> "$ERROR_FILE"
+            exit 1
+          }
+
+          if [ ! -f "$ICON_FILE" ]; then
+            fail_icon "Plugin icon file not found: _assets/$ICON_NAME"
+          fi
+
+          if grep -q "DIFY_MARKETPLACE_TEMPLATE_ICON_DO_NOT_USE" "$ICON_FILE"; then
+            fail_icon "Plugin icon contains template placeholder text 'DIFY_MARKETPLACE_TEMPLATE_ICON_DO_NOT_USE', change default icon before submitting to marketplace."
+          fi
+
+          # The default template icon, compared with all whitespace removed.
+          DEFAULT_ICON='<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M20 20 V80 M20 20 H60 Q80 20 80 40 T60 60 H20" fill="none" stroke="black" stroke-width="5"/></svg>'
+          ICON_CONTENT=$(tr -d '\n\r\t ' < "$ICON_FILE")
+          DEFAULT_ICON_NORMALIZED=$(printf '%s' "$DEFAULT_ICON" | tr -d '\n\r\t ')
+
+          if [ "$ICON_CONTENT" = "$DEFAULT_ICON_NORMALIZED" ]; then
+            fail_icon "Plugin icon is using the default template icon and must be customized"
+          fi
+
+          echo "Icon check passed."
+
+      - name: Check If Version Exists
+        continue-on-error: true
+        run: |
+          ERROR_FILE="/tmp/version_errors.txt"
+          touch "$ERROR_FILE"
+
+          VERSION=$(yq '.version' "$PLUGIN_PATH/manifest.yaml")
+          AUTHOR=$(yq '.author' "$PLUGIN_PATH/manifest.yaml")
+          NAME=$(yq '.name' "$PLUGIN_PATH/manifest.yaml")
+          echo "Plugin: $NAME $VERSION by $AUTHOR"
+
+          # A published plugin answers code 0 on its version endpoint.
+          API_URL="${MARKETPLACE_BASE_URL}/api/v1/plugins/${AUTHOR}/${NAME}/${VERSION}"
+          RESPONSE=$(curl -s --connect-timeout 10 --max-time 30 "$API_URL")
+          if jq -e '.code == 0' <<< "$RESPONSE" > /dev/null 2>&1; then
+            ERROR_MSG="!!! Plugin version $VERSION by $AUTHOR already exists in the marketplace. Please update the version number in manifest.yaml before submitting."
+            echo "$ERROR_MSG"
+            echo "$ERROR_MSG" >> "$ERROR_FILE"
+            exit 1
+          fi
+
+          echo "Version check passed: $VERSION is available for use."
+
+      - name: Check Plugin Deps
+        continue-on-error: true
+        run: |
+          set -o pipefail
+
+          ERROR_FILE="/tmp/install_errors.txt"
+          WARNING_FILE="/tmp/install_warnings.txt"
+          PIP_LOG="/tmp/pip_install.log"
+          APT_LOG="/tmp/apt-deps.log"
+          touch "$ERROR_FILE" "$WARNING_FILE"
+
+          if [ ! -f "$PLUGIN_PATH/requirements.txt" ]; then
+            echo "No requirements.txt found, skipping dependency installation"
+            exit 0
+          fi
+
+          python3 -m venv .venv
+          source .venv/bin/activate
+
+          echo "Trying to install plugin dependencies..."
+          if python3 -m pip install -r "$PLUGIN_PATH/requirements.txt" 2>&1 | tee "$PIP_LOG"; then
+            echo "Plugin dependencies installed."
+            exit 0
+          fi
+
+          # Only a dependency without a prebuilt wheel needs system headers, so
+          # install them here instead of on every run. ffmpeg is already on the
+          # runner image and pip never needs the binary, so it is not installed.
+          echo "Install failed; fetching build dependencies and retrying once."
+          APT_OK=1
+          sudo timeout 240 bash -c '
+            set -e
+            export DEBIAN_FRONTEND=noninteractive
+            rm -f /var/lib/man-db/auto-update  # skip slow man-db trigger
+            APT_OPTS="-o Acquire::Retries=1 -o Acquire::http::Timeout=10 -o Acquire::https::Timeout=10 -o Acquire::ForceIPv4=true"
+            # The image default mirror has stalled before and archive.ubuntu.com
+            # has been unreachable before, so try one and fall back to the other.
+            if ! apt-get update -q $APT_OPTS; then
+              if [ -f /etc/apt/apt-mirrors.txt ]; then
+                echo "Default mirror failed, falling back to archive.ubuntu.com"
+                echo "http://archive.ubuntu.com/ubuntu/" > /etc/apt/apt-mirrors.txt
+                apt-get update -q $APT_OPTS
+              else
+                exit 1
+              fi
+            fi
+            apt-get install -y -q --no-install-recommends $APT_OPTS \
+              libcairo2-dev libjpeg-dev libgif-dev
+          ' </dev/null 2>&1 | tee "$APT_LOG" || APT_OK=0
+
+          if [ "$APT_OK" = "0" ]; then
+            echo "Build dependency installation failed or timed out."
+          fi
+
+          echo "Retrying plugin dependency installation..."
+          if python3 -m pip install -r "$PLUGIN_PATH/requirements.txt" 2>&1 | tee -a "$PIP_LOG"; then
+            echo "Plugin dependencies installed after adding build dependencies."
+            exit 0
+          fi
+
+          if [ "$APT_OK" = "1" ]; then
+            {
+              echo "Failed to install plugin dependencies."
+              echo "Last pip output:"
+              tail -n 50 "$PIP_LOG"
+            } >> "$ERROR_FILE"
+            echo "Failed to install plugin dependencies"
+            exit 1
+          fi
+
+          # apt was unreachable, so the runner never offered a working build
+          # toolchain. That is our infrastructure failing, not a bad submission:
+          # report it for a human instead of blocking the PR.
+          touch /tmp/deps_unavailable
+          {
+            echo "Dependency check inconclusive: the runner could not install system build dependencies (apt unreachable or timed out), and installing the plugin requirements failed afterwards."
+            echo "This is a CI infrastructure failure, not necessarily a problem with the submission. Re-run the job, or review the dependencies manually."
+            echo "Last apt output:"
+            tail -n 20 "$APT_LOG"
+            echo "Last pip output:"
+            tail -n 50 "$PIP_LOG"
+          } >> "$WARNING_FILE"
+          echo "Dependency check inconclusive due to a runner apt failure; recorded as a warning."
+          exit 0
+
+      - name: Check Plugin Install
+        continue-on-error: true
+        run: |
+          ERROR_FILE="/tmp/install_errors.txt"
+          touch "$ERROR_FILE"
+
+          if [ -f /tmp/deps_unavailable ]; then
+            echo "Skipping installation test: dependencies could not be installed on this runner."
+            exit 0
+          fi
+
+          if [ ! -f "$PLUGIN_PATH/requirements.txt" ]; then
+            echo "No requirements.txt found, skipping installation test"
+            exit 0
+          fi
+
+          source .venv/bin/activate || {
+            echo "Failed to activate virtual environment" >> "$ERROR_FILE"
+            echo "Failed to activate virtual environment"
+            exit 1
+          }
+
+          # Install packaging for version comparison
+          echo "Installing packaging module..."
+          pip install packaging || {
+            echo "Failed to install packaging module" >> "$ERROR_FILE"
+            echo "Failed to install packaging module"
+            exit 1
+          }
+
+          # Determine installation method based on dify_plugin version
+          echo "Detecting dify_plugin version..."
+          dify_version=$(pip list | grep -oE 'dify[-_]plugin[[:space:]]+[0-9][0-9.a-zA-Z]*' | awk '{print $2}')
+          if [ -z "$dify_version" ]; then
+            dify_version="not_found"
+          fi
+
+          if [ "$dify_version" = "not_found" ]; then
+            echo "dify_plugin not found in installed packages, using default configuration"
+            export INSTALL_METHOD=aws_lambda
+            export AWS_LAMBDA_PORT=8080
+            export AWS_LAMBDA_HOST=0.0.0.0
+          else
+            target_version="0.0.1b64"
+            echo "Found dify_plugin version: $dify_version"
+            echo "Comparing with target version: $target_version"
+
+            # Set environment variables based on version comparison
+            if python -c "from packaging.version import Version; exit(0 if Version('$dify_version') > Version('$target_version') else 1)"; then
+                echo "Using serverless installation method"
+                export INSTALL_METHOD=serverless
+                export SERVERLESS_PORT=8080
+                export SERVERLESS_HOST=0.0.0.0
+            else
+                echo "Using aws_lambda installation method"
+                export INSTALL_METHOD=aws_lambda
+                export AWS_LAMBDA_PORT=8080
+                export AWS_LAMBDA_HOST=0.0.0.0
+            fi
+          fi
+
+          # Run the plugin installation test with timeout
+          echo "Running plugin installation test..."
+          timeout 300 python3 "$TOOLKIT_DIR/validator/test-plugin-install.py" -d "$PLUGIN_PATH" || {
+            echo "Plugin installation test failed or timed out" >> "$ERROR_FILE"
+            echo "Plugin installation test failed or timed out"
+            exit 1
+          }
+
+          echo "Plugin installation test completed successfully"
+
+      - name: Check Packaging
+        continue-on-error: true
+        run: |
+          ERROR_FILE="/tmp/packaging_errors.txt"
+          touch "$ERROR_FILE"
+
+          # The plugin daemon is downloaded next to the toolkit (see above).
+          if [ ! -x "$TOOLKIT_DIR/dify-plugin-linux-amd64" ]; then
+            ERROR_MSG="Plugin daemon file not found or not executable"
+            echo "$ERROR_MSG" >> "$ERROR_FILE"
+            echo "$ERROR_MSG"
+            exit 1
+          fi
+
+          # --test never talks to the Marketplace; it only packages and checks.
+          timeout 300 python3 "$TOOLKIT_DIR/uploader" -d "$PLUGIN_PATH" -t "$MARKETPLACE_TOKEN" \
+            --plugin-daemon-path "$TOOLKIT_DIR/dify-plugin-linux-amd64" \
+            -u "$MARKETPLACE_BASE_URL" -f --test || {
+            ERROR_MSG="Packaging check failed or timed out"
+            echo "$ERROR_MSG" >> "$ERROR_FILE"
+            echo "$ERROR_MSG"
+            exit 1
+          }
+
+          echo "Packaging check completed successfully"
+
+      - name: Output Detailed Report (Step Summary)
+        if: always()
+        continue-on-error: true
+        run: |
+          SUMMARY_FILE="${GITHUB_STEP_SUMMARY:-/tmp/github_step_summary.md}"
+          JOB_STATUS="${{ job.status }}"
+
+          escape_html() {
+            sed -e 's/&/&amp;/g' -e 's/</&lt;/g' -e 's/>/&gt;/g'
+          }
+
+          # One row per check group: ❌ on a blocking error, ⚠️ on warnings only.
+          row() {
+            local label="$1" error_file="$2" warning_file="$3"
+            if [ -n "$error_file" ] && [ -s "$error_file" ]; then
+              echo "| $label | ❌ Failed |"
+            elif [ -n "$warning_file" ] && [ -s "$warning_file" ]; then
+              echo "| $label | ⚠️ Review required |"
+            else
+              echo "| $label | ✅ Passed |"
+            fi
+          }
+
+          echo "# Plugin Pre-Check Report" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+
+          echo "## Plugin Information" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+          if [ -n "${PLUGIN_PATH:-}" ] && [ -f "$PLUGIN_PATH/manifest.yaml" ]; then
+            echo "- **Name:** $(yq '.name // "Unknown"' "$PLUGIN_PATH/manifest.yaml" 2>/dev/null || echo "Unknown")" >> "$SUMMARY_FILE"
+            echo "- **Version:** $(yq '.version // "Unknown"' "$PLUGIN_PATH/manifest.yaml" 2>/dev/null || echo "Unknown")" >> "$SUMMARY_FILE"
+            echo "- **Author:** $(yq '.author // "Unknown"' "$PLUGIN_PATH/manifest.yaml" 2>/dev/null || echo "Unknown")" >> "$SUMMARY_FILE"
+            echo "- **Description:** $(yq '.description // "No description provided"' "$PLUGIN_PATH/manifest.yaml" 2>/dev/null || echo "No description provided")" >> "$SUMMARY_FILE"
+          elif [ -z "${PLUGIN_PATH:-}" ]; then
+            echo "- ⚠️ \`PLUGIN_PATH\` is not set (plugin package may not have been detected/unpacked)." >> "$SUMMARY_FILE"
+          else
+            echo "- ⚠️ \`manifest.yaml\` not found under \`$PLUGIN_PATH\`." >> "$SUMMARY_FILE"
+          fi
+
+          echo "" >> "$SUMMARY_FILE"
+          echo "## Check Status" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+          echo "| Check | Status |" >> "$SUMMARY_FILE"
+          echo "| ----- | ------ |" >> "$SUMMARY_FILE"
+
+          case "$JOB_STATUS" in
+            success) echo "| **Overall Status** | ✅ **Passed** |" >> "$SUMMARY_FILE" ;;
+            cancelled) echo "| **Overall Status** | ⚠️ **Cancelled** |" >> "$SUMMARY_FILE" ;;
+            *) echo "| **Overall Status** | ❌ **Failed** |" >> "$SUMMARY_FILE" ;;
+          esac
+
+          # Package-level checks report one errors/warnings pair per check.
+          PKG_ERROR=0
+          PKG_WARNING=0
+          for file in "$VALIDATION_DIR"/*.errors.txt; do
+            if [ -e "$file" ] && [ -s "$file" ]; then PKG_ERROR=1; fi
+          done
+          for file in "$VALIDATION_DIR"/*.warnings.txt; do
+            if [ -e "$file" ] && [ -s "$file" ]; then PKG_WARNING=1; fi
+          done
+          if [ "$PKG_ERROR" = "1" ]; then
+            echo "| **Package Validation** | ❌ Failed |" >> "$SUMMARY_FILE"
+          elif [ "$PKG_WARNING" = "1" ]; then
+            echo "| **Package Validation** | ⚠️ Review required |" >> "$SUMMARY_FILE"
+          else
+            echo "| **Package Validation** | ✅ Passed |" >> "$SUMMARY_FILE"
+          fi
+
+          row "PR Body" /tmp/pr_body_errors.txt "" >> "$SUMMARY_FILE"
+          row "PR Review Notes" "" /tmp/pr_review_notes_warnings.txt >> "$SUMMARY_FILE"
+          row "Version Update" /tmp/version_update_errors.txt /tmp/version_update_warnings.txt >> "$SUMMARY_FILE"
+          row "Icon Validation" /tmp/icon_errors.txt "" >> "$SUMMARY_FILE"
+          row "Version Check" /tmp/version_errors.txt "" >> "$SUMMARY_FILE"
+          row "Packaging" /tmp/packaging_errors.txt "" >> "$SUMMARY_FILE"
+
+          if [ -s /tmp/install_errors.txt ]; then
+            row "Installation" /tmp/install_errors.txt "" >> "$SUMMARY_FILE"
+          elif [ -s /tmp/install_warnings.txt ]; then
+            row "Installation" "" /tmp/install_warnings.txt >> "$SUMMARY_FILE"
+          elif [ -f "$PLUGIN_PATH/requirements.txt" ]; then
+            row "Installation" "" "" >> "$SUMMARY_FILE"
+          else
+            echo "| Installation | ⚠️ Skipped (no requirements.txt) |" >> "$SUMMARY_FILE"
+          fi
+
+          # The validator writes its own table of every check it ran.
+          if [ -f "$VALIDATION_DIR/summary.md" ]; then
+            echo "" >> "$SUMMARY_FILE"
+            echo "## Package Validation Detail" >> "$SUMMARY_FILE"
+            echo "" >> "$SUMMARY_FILE"
+            cat "$VALIDATION_DIR/summary.md" >> "$SUMMARY_FILE"
+          fi
+
+          append_details() {
+            local title="$1" file="$2"
+            if [ -f "$file" ] && [ -s "$file" ]; then
+              {
+                echo ""
+                echo "<details>"
+                echo "<summary>${title}</summary>"
+                echo ""
+                echo '<pre><code class="language-text">'
+                escape_html < "$file"
+                echo "</code></pre>"
+                echo ""
+                echo "</details>"
+              } >> "$SUMMARY_FILE"
+            fi
+          }
+
+          append_details "PR Body errors" /tmp/pr_body_errors.txt
+          append_details "PR Review Notes warnings" /tmp/pr_review_notes_warnings.txt
+          append_details "Version Update errors" /tmp/version_update_errors.txt
+          append_details "Version Update warnings" /tmp/version_update_warnings.txt
+          append_details "Icon Validation errors" /tmp/icon_errors.txt
+          append_details "Version Check errors" /tmp/version_errors.txt
+          append_details "Installation errors" /tmp/install_errors.txt
+          append_details "Installation warnings" /tmp/install_warnings.txt
+          append_details "Packaging errors" /tmp/packaging_errors.txt
+
+          # The per-check report files the validator wrote, for anything the
+          # table above flagged.
+          for file in "$VALIDATION_DIR"/*.errors.txt "$VALIDATION_DIR"/*.warnings.txt; do
+            if [ -e "$file" ] && [ -s "$file" ]; then
+              append_details "$(basename "$file")" "$file"
+            fi
+          done
+
+          echo "" >> "$SUMMARY_FILE"
+          echo "## Blocking Errors" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+          FOUND=0
+          for file in "$VALIDATION_DIR"/*.errors.txt /tmp/pr_body_errors.txt /tmp/version_update_errors.txt \
+                      /tmp/icon_errors.txt /tmp/version_errors.txt /tmp/install_errors.txt \
+                      /tmp/packaging_errors.txt; do
+            if [ -f "$file" ] && [ -s "$file" ]; then
+              echo "- \`$file\`" >> "$SUMMARY_FILE"
+              FOUND=1
+            fi
+          done
+          if [ "$FOUND" = "0" ]; then
+            echo "_None._" >> "$SUMMARY_FILE"
+          fi
+
+          echo "" >> "$SUMMARY_FILE"
+          echo "## Plugin Files" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+          if [ -n "${PLUGIN_PATH:-}" ]; then
+            for name in manifest.yaml README.md PRIVACY.md requirements.txt pyproject.toml; do
+              if [ -f "$PLUGIN_PATH/$name" ]; then
+                case "$name" in
+                  *.yaml) language="yaml" ;;
+                  *.md) language="markdown" ;;
+                  *.toml) language="toml" ;;
+                  *) language="text" ;;
+                esac
+                {
+                  echo "<details>"
+                  echo "<summary>${name}</summary>"
+                  echo ""
+                  echo "<pre><code class=\"language-${language}\">"
+                  escape_html < "$PLUGIN_PATH/$name"
+                  echo "</code></pre>"
+                  echo ""
+                  echo "</details>"
+                  echo ""
+                } >> "$SUMMARY_FILE"
+              fi
+            done
+          else
+            echo "_Plugin directory is unavailable (missing \`PLUGIN_PATH\`)._" >> "$SUMMARY_FILE"
+          fi
+
+          echo "" >> "$SUMMARY_FILE"
+          echo "## Workflow Details" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+          echo "- **Run ID:** ${{ github.run_id }}" >> "$SUMMARY_FILE"
+          echo "- **Repository:** ${{ github.repository }}" >> "$SUMMARY_FILE"
+          echo "- **Ref:** ${{ github.ref }}" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+          echo "[View workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> "$SUMMARY_FILE"
+
+      - name: Fail on Blocking Errors
+        if: always()
+        run: |
+          HAS_ERRORS=0
+
+          # Package-level checks: one .errors.txt per check under VALIDATION_DIR.
+          for file in "$VALIDATION_DIR"/*.errors.txt; do
+            if [ -e "$file" ] && [ -s "$file" ]; then
+              echo "Blocking errors found in $file"
+              HAS_ERRORS=1
+            fi
+          done
+
+          # Checks that run outside the validator and write their own file.
+          for file in /tmp/pr_body_errors.txt /tmp/version_update_errors.txt /tmp/icon_errors.txt \
+                      /tmp/version_errors.txt /tmp/install_errors.txt /tmp/packaging_errors.txt; do
+            if [ -f "$file" ] && [ -s "$file" ]; then
+              echo "Blocking errors found in $file"
+              HAS_ERRORS=1
+            fi
+          done
+
+          if [ "$HAS_ERRORS" = "1" ]; then
+            echo "One or more blocking plugin checks failed. See the job summary for details."
+            exit 1
+          fi
+
+          echo "No blocking plugin check errors found."

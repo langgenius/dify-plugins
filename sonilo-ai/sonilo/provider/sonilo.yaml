@@ -1,0 +1,46 @@
+identity:
+  author: sonilo-ai
+  name: sonilo
+  label:
+    en_US: Sonilo
+    zh_Hans: Sonilo
+  description:
+    en_US: >-
+      Licensed AI music, video-to-music soundtracks, and frame-accurate sound
+      effects, backed by the Sonilo API (api.sonilo.com). Bring your own
+      Sonilo API key.
+    zh_Hans: >-
+      基于 Sonilo API（api.sonilo.com）的有版权授权音乐生成、视频原声带生成与逐帧对齐音效生成。需要您自己的 Sonilo
+      API Key。
+  icon: icon.png
+  tags:
+    - videos
+    - entertainment
+    - productivity
+credentials_for_provider:
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: Sonilo API Key
+      zh_Hans: Sonilo API Key
+    placeholder:
+      en_US: Paste your Sonilo API key
+      zh_Hans: 粘贴你的 Sonilo API Key
+    help:
+      en_US: >-
+        Create an API key from your Sonilo account, then paste it here. Each
+        Dify workspace uses its own key; this plugin ships with no default
+        key and the Sonilo team never sees your key.
+      zh_Hans: >-
+        在你的 Sonilo 账户中创建一个 API Key，然后粘贴到此处。每个 Dify 工作区使用自己的 Key；本插件不附带默认
+        Key，Sonilo 团队也不会看到你的 Key。
+    url: https://platform.sonilo.com
+tools:
+  - tools/text_to_music.yaml
+  - tools/video_to_music.yaml
+  - tools/text_to_sfx.yaml
+  - tools/video_to_sfx.yaml
+extra:
+  python:
+    source: provider/sonilo.py
