@@ -1,0 +1,39 @@
+identity:
+  name: "product_trend_new_list"
+  author: "DianLeida"
+  label:
+    en_US: "Trending New Products"
+    zh_Hans: "趋势新品榜"
+description:
+  human:
+    en_US: "Platform-wide feed of trending new products sorted by momentum, with repurchase rate, 7-day growth rate and purchase conversion rate. Keyword and category filters are not supported. Each call consumes 1 credit."
+    zh_Hans: "平台趋势新品信息流，按热度排序，附带复购率、7 天增长率、采购转化率。不支持关键词或类目筛选。每次调用消耗 1 点。"
+  llm: "Return the platform-wide trending new-product feed, sorted by momentum. No keyword or category filter is supported. Each item carries repurchase rate, 7-day growth rate and purchase conversion rate. Each call consumes 1 credit."
+parameters:
+  - name: "pageIndex"
+    type: "number"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Page index"
+      zh_Hans: "页码"
+    human_description:
+      en_US: "Page index"
+      zh_Hans: "页码"
+    llm_description: "Starts from 1."
+    default: 1
+  - name: "pageSize"
+    type: "number"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Page size"
+      zh_Hans: "每页条数"
+    human_description:
+      en_US: "Page size"
+      zh_Hans: "每页条数"
+    llm_description: "Max 100."
+    default: 100
+extra:
+  python:
+    source: "tools/product_trend_new_list.py"

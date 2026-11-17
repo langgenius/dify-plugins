@@ -1,0 +1,43 @@
+identity:
+  name: "product_info"
+  author: "DianLeida"
+  label:
+    en_US: "Product Sales Analysis"
+    zh_Hans: "单品销量分析"
+description:
+  human:
+    en_US: "Get the monthly sales trend (up to one year) and the last-30-day summary for one product. Each call consumes 1 credit."
+    zh_Hans: "查询单个商品的月度销售趋势（最多近一年）与近 30 天汇总。每次调用消耗 1 点。"
+  llm: "Return monthly sales trend and last-30-day summary for a single 1688 product. Requires an offerId. Each call consumes 1 credit."
+parameters:
+  - name: "offerId"
+    type: "string"
+    required: true
+    form: "llm"
+    label:
+      en_US: "Offer ID"
+      zh_Hans: "商品ID"
+    human_description:
+      en_US: "Offer ID"
+      zh_Hans: "商品ID"
+    llm_description: "1688 product ID, for example 621616092695."
+    placeholder:
+      en_US: "621616092695"
+      zh_Hans: "621616092695"
+  - name: "advanced_filters"
+    type: "string"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Advanced filters (JSON)"
+      zh_Hans: "高级筛选（JSON）"
+    human_description:
+      en_US: "Optional JSON object merged into the request, for filters not listed above."
+      zh_Hans: "可选 JSON 对象，直接并入请求体，用于补充上方未列出的筛选参数。"
+    llm_description: "Optional JSON object merged into the request body for advanced filters not exposed as dedicated parameters, for example {\"beginSaleCount\": 500}. Leave empty to use only the parameters above."
+    placeholder:
+      en_US: "{\"beginSaleCount\": 500}"
+      zh_Hans: "{\"beginSaleCount\": 500}"
+extra:
+  python:
+    source: "tools/product_info.py"

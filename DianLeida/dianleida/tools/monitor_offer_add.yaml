@@ -1,0 +1,29 @@
+identity:
+  name: "monitor_offer_add"
+  author: "DianLeida"
+  label:
+    en_US: "Add Product to Watchlist"
+    zh_Hans: "添加监控商品"
+description:
+  human:
+    en_US: "Add a product to the watchlist by product ID or product link. Use only when the user explicitly asks to monitor it. Each call consumes 1 credit."
+    zh_Hans: "把商品加入监控列表，支持商品 ID 或商品链接。仅当用户明确要求监控时调用。每次调用消耗 1 点。"
+  llm: "Add a product to the watchlist. offerId accepts either a numeric 1688 product ID or a full 1688 product link. Only call it when the user explicitly asks to monitor the product. Each call consumes 1 credit."
+parameters:
+  - name: "offerId"
+    type: "string"
+    required: true
+    form: "llm"
+    label:
+      en_US: "Offer ID or link"
+      zh_Hans: "商品ID或链接"
+    human_description:
+      en_US: "Offer ID or link"
+      zh_Hans: "商品ID或链接"
+    llm_description: "1688 product ID or full product link."
+    placeholder:
+      en_US: "621616092695 / https://detail.1688.com/offer/621616092695.html"
+      zh_Hans: "621616092695 / https://detail.1688.com/offer/621616092695.html"
+extra:
+  python:
+    source: "tools/monitor_offer_add.py"

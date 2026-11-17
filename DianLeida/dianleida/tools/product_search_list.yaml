@@ -1,0 +1,374 @@
+identity:
+  name: "product_search_list"
+  author: "DianLeida"
+  label:
+    en_US: "Product Search"
+    zh_Hans: "商品搜索"
+description:
+  human:
+    en_US: "Filter 1688 products by keyword, price, sales, listing time and more. Returns product image, wholesale/dropship price, sales data, shop info and product links. Each call consumes 1 credit."
+    zh_Hans: "按关键词、价格、销量、上架时间等条件筛选 1688 商品，返回商品图、批发价/代发价、销量、店铺信息与商品链接。每次调用消耗 1 点。"
+  llm: "Search products in the DianLeiDa 1688 sourcing database. Supports fuzzy, exact and AI keyword search plus filters on price, sales, listing time, seller type, dropshipping rights, delivery time and category. Always pass pageSize=100 so one call returns a complete page. Each call consumes 1 credit."
+parameters:
+  - name: "keyWord"
+    type: "string"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Keyword"
+      zh_Hans: "商品关键词"
+    human_description:
+      en_US: "Keyword"
+      zh_Hans: "商品关键词"
+    llm_description: "Product keyword, up to 50 characters."
+  - name: "searchType"
+    type: "select"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Search type"
+      zh_Hans: "搜索类型"
+    human_description:
+      en_US: "Search type"
+      zh_Hans: "搜索类型"
+    llm_description: "1 fuzzy match, 3 exact match, 4 AI search (recommended when the user has no precise keyword)."
+    options:
+      - value: "1"
+        label:
+          en_US: "Fuzzy match"
+          zh_Hans: "模糊匹配"
+      - value: "3"
+        label:
+          en_US: "Exact match"
+          zh_Hans: "精准匹配"
+      - value: "4"
+        label:
+          en_US: "AI search"
+          zh_Hans: "AI 搜索"
+    default: "1"
+  - name: "cycle"
+    type: "select"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Statistics cycle"
+      zh_Hans: "统计周期"
+    human_description:
+      en_US: "Statistics cycle"
+      zh_Hans: "统计周期"
+    llm_description: "Only 7 or 30. The sortField time window must match this value."
+    options:
+      - value: "7"
+        label:
+          en_US: "Last 7 days"
+          zh_Hans: "近7天"
+      - value: "30"
+        label:
+          en_US: "Last 30 days"
+          zh_Hans: "近30天"
+    default: "7"
+  - name: "sortField"
+    type: "select"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Sort field"
+      zh_Hans: "排序字段"
+    human_description:
+      en_US: "Sort field"
+      zh_Hans: "排序字段"
+    llm_description: "Sort field. Keep the time window consistent with cycle (cycle=7 -> orderCount7d, cycle=30 -> orderCount30d)."
+    options:
+      - value: "orderCount1d"
+        label:
+          en_US: "Sales orders, last 1 day"
+          zh_Hans: "近1天销售笔数"
+      - value: "orderCount3d"
+        label:
+          en_US: "Sales orders, last 3 days"
+          zh_Hans: "近3天销售笔数"
+      - value: "orderCount7d"
+        label:
+          en_US: "Sales orders, last 7 days"
+          zh_Hans: "近7天销售笔数"
+      - value: "orderCount30d"
+        label:
+          en_US: "Sales orders, last 30 days"
+          zh_Hans: "近30天销售笔数"
+      - value: "saleCount7d"
+        label:
+          en_US: "Units sold, last 7 days"
+          zh_Hans: "近7天销售件数"
+      - value: "saleCount30d"
+        label:
+          en_US: "Units sold, last 30 days"
+          zh_Hans: "近30天销售件数"
+      - value: "saleVolume7d"
+        label:
+          en_US: "Estimated GMV, last 7 days"
+          zh_Hans: "近7天预估销售额"
+      - value: "saleVolume30d"
+        label:
+          en_US: "Estimated GMV, last 30 days"
+          zh_Hans: "近30天预估销售额"
+      - value: "ordersCount"
+        label:
+          en_US: "Total sales orders"
+          zh_Hans: "总销售笔数"
+      - value: "salesCount"
+        label:
+          en_US: "Total units sold"
+          zh_Hans: "总销售件数"
+      - value: "offerCreateTime"
+        label:
+          en_US: "Listing time"
+          zh_Hans: "上架时间"
+      - value: "price"
+        label:
+          en_US: "Wholesale price"
+          zh_Hans: "批发价"
+      - value: "consignPrice"
+        label:
+          en_US: "Dropship price"
+          zh_Hans: "代发价"
+    default: "orderCount7d"
+  - name: "sortType"
+    type: "select"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Sort direction"
+      zh_Hans: "排序方向"
+    human_description:
+      en_US: "Sort direction"
+      zh_Hans: "排序方向"
+    llm_description: "asc or desc."
+    options:
+      - value: "desc"
+        label:
+          en_US: "Descending"
+          zh_Hans: "降序"
+      - value: "asc"
+        label:
+          en_US: "Ascending"
+          zh_Hans: "升序"
+    default: "desc"
+  - name: "beginPrice"
+    type: "number"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Wholesale price min"
+      zh_Hans: "批发价下限"
+    human_description:
+      en_US: "Wholesale price min"
+      zh_Hans: "批发价下限"
+    llm_description: "Minimum wholesale price."
+  - name: "endPrice"
+    type: "number"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Wholesale price max"
+      zh_Hans: "批发价上限"
+    human_description:
+      en_US: "Wholesale price max"
+      zh_Hans: "批发价上限"
+    llm_description: "Maximum wholesale price."
+  - name: "beginConsignPrice"
+    type: "number"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Dropship price min"
+      zh_Hans: "代发价下限"
+    human_description:
+      en_US: "Dropship price min"
+      zh_Hans: "代发价下限"
+    llm_description: "Minimum dropship price."
+  - name: "endConsignPrice"
+    type: "number"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Dropship price max"
+      zh_Hans: "代发价上限"
+    human_description:
+      en_US: "Dropship price max"
+      zh_Hans: "代发价上限"
+    llm_description: "Maximum dropship price."
+  - name: "beginStartQuantity"
+    type: "number"
+    required: false
+    form: "llm"
+    label:
+      en_US: "MOQ min"
+      zh_Hans: "起批量下限"
+    human_description:
+      en_US: "MOQ min"
+      zh_Hans: "起批量下限"
+    llm_description: "Minimum order quantity."
+  - name: "endStartQuantity"
+    type: "number"
+    required: false
+    form: "llm"
+    label:
+      en_US: "MOQ max"
+      zh_Hans: "起批量上限"
+    human_description:
+      en_US: "MOQ max"
+      zh_Hans: "起批量上限"
+    llm_description: "Maximum order quantity."
+  - name: "beginOrderCount"
+    type: "number"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Order count min"
+      zh_Hans: "销售笔数下限"
+    human_description:
+      en_US: "Order count min"
+      zh_Hans: "销售笔数下限"
+    llm_description: "Minimum sales order count within the cycle."
+  - name: "endOrderCount"
+    type: "number"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Order count max"
+      zh_Hans: "销售笔数上限"
+    human_description:
+      en_US: "Order count max"
+      zh_Hans: "销售笔数上限"
+    llm_description: "Maximum sales order count within the cycle."
+  - name: "offerType"
+    type: "select"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Product type"
+      zh_Hans: "商品标识"
+    human_description:
+      en_US: "Product type"
+      zh_Hans: "商品标识"
+    llm_description: "0 any, 2 new, 3 1688 Selected, 4 cross-border, 5 customizable, 6 shop flagship."
+    options:
+      - value: "0"
+        label:
+          en_US: "Any"
+          zh_Hans: "不限"
+      - value: "2"
+        label:
+          en_US: "New product"
+          zh_Hans: "新品"
+      - value: "3"
+        label:
+          en_US: "1688 Selected"
+          zh_Hans: "1688严选"
+      - value: "4"
+        label:
+          en_US: "Cross-border"
+          zh_Hans: "跨境"
+      - value: "5"
+        label:
+          en_US: "Customizable"
+          zh_Hans: "支持定制"
+      - value: "6"
+        label:
+          en_US: "Shop flagship"
+          zh_Hans: "镇店之宝"
+    default: "0"
+  - name: "companyType"
+    type: "select"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Seller type"
+      zh_Hans: "卖家类型"
+    human_description:
+      en_US: "Seller type"
+      zh_Hans: "卖家类型"
+    llm_description: "0 any, 1 shop, 2 factory."
+    options:
+      - value: "0"
+        label:
+          en_US: "Any"
+          zh_Hans: "不限"
+      - value: "1"
+        label:
+          en_US: "Shop"
+          zh_Hans: "店铺"
+      - value: "2"
+        label:
+          en_US: "Factory"
+          zh_Hans: "工厂"
+    default: "0"
+  - name: "sendTime"
+    type: "string"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Delivery time (hours)"
+      zh_Hans: "发货时效(小时)"
+    human_description:
+      en_US: "Delivery time (hours)"
+      zh_Hans: "发货时效(小时)"
+    llm_description: "Comma separated, for example 24,48. Allowed values 24 / 48 / 72."
+    placeholder:
+      en_US: "24,48"
+      zh_Hans: "24,48"
+  - name: "categoryIdList"
+    type: "string"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Category IDs"
+      zh_Hans: "类目ID"
+    human_description:
+      en_US: "Category IDs"
+      zh_Hans: "类目ID"
+    llm_description: "Comma separated category IDs (max 20). Get IDs from the category tree tool."
+    placeholder:
+      en_US: "67,1038378"
+      zh_Hans: "67,1038378"
+  - name: "pageIndex"
+    type: "number"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Page index"
+      zh_Hans: "页码"
+    human_description:
+      en_US: "Page index"
+      zh_Hans: "页码"
+    llm_description: "Starts from 1."
+    default: 1
+  - name: "pageSize"
+    type: "number"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Page size"
+      zh_Hans: "每页条数"
+    human_description:
+      en_US: "Page size"
+      zh_Hans: "每页条数"
+    llm_description: "Max 100. Always pass 100 to get a complete single page."
+    default: 100
+  - name: "advanced_filters"
+    type: "string"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Advanced filters (JSON)"
+      zh_Hans: "高级筛选（JSON）"
+    human_description:
+      en_US: "Optional JSON object merged into the request, for filters not listed above."
+      zh_Hans: "可选 JSON 对象，直接并入请求体，用于补充上方未列出的筛选参数。"
+    llm_description: "Optional JSON object merged into the request body for advanced filters not exposed as dedicated parameters, for example {\"beginSaleCount\": 500}. Leave empty to use only the parameters above."
+    placeholder:
+      en_US: "{\"beginSaleCount\": 500}"
+      zh_Hans: "{\"beginSaleCount\": 500}"
+extra:
+  python:
+    source: "tools/product_search_list.py"

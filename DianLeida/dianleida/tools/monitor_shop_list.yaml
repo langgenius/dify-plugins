@@ -1,0 +1,39 @@
+identity:
+  name: "monitor_shop_list"
+  author: "DianLeida"
+  label:
+    en_US: "Monitored Shops"
+    zh_Hans: "监控店铺列表"
+description:
+  human:
+    en_US: "List the shops on your watchlist with sales, product count and sell-through rate. Each call consumes 1 credit."
+    zh_Hans: "查看已加入监控的店铺及其经营数据（销量、商品数、动销率）。每次调用消耗 1 点。"
+  llm: "List monitored shops with sales, product count and sell-through rate. Convert turnoverRate from 0-1 to a percentage. Null fields mean data is still being collected. Each call consumes 1 credit."
+parameters:
+  - name: "pageIndex"
+    type: "number"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Page index"
+      zh_Hans: "页码"
+    human_description:
+      en_US: "Page index"
+      zh_Hans: "页码"
+    llm_description: "Starts from 1."
+    default: 1
+  - name: "pageSize"
+    type: "number"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Page size"
+      zh_Hans: "每页条数"
+    human_description:
+      en_US: "Page size"
+      zh_Hans: "每页条数"
+    llm_description: "Max 100."
+    default: 20
+extra:
+  python:
+    source: "tools/monitor_shop_list.py"

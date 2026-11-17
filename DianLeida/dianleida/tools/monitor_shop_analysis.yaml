@@ -1,0 +1,29 @@
+identity:
+  name: "monitor_shop_analysis"
+  author: "DianLeida"
+  label:
+    en_US: "Shop Deep Analysis"
+    zh_Hans: "店铺深度分析"
+description:
+  human:
+    en_US: "Full shop analysis: profile, operating metrics, service ratings, qualification tags, factory photos, contacts and business registration. Each call consumes 1 credit."
+    zh_Hans: "对店铺做全方位分析：基础信息、经营数据、服务评分、资质标签、工厂实拍图、联系方式、工商信息。每次调用消耗 1 点。"
+  llm: "Return a full analysis of one 1688 shop: profile, operating metrics, service ratings, qualification tags, factory photos, contacts and business registration. Show every returned module, including factory images. Each call consumes 1 credit."
+parameters:
+  - name: "shopUrl"
+    type: "string"
+    required: true
+    form: "llm"
+    label:
+      en_US: "Shop URL"
+      zh_Hans: "店铺链接"
+    human_description:
+      en_US: "Shop URL"
+      zh_Hans: "店铺链接"
+    llm_description: "1688 shop link."
+    placeholder:
+      en_US: "https://fuminshukele.1688.com"
+      zh_Hans: "https://fuminshukele.1688.com"
+extra:
+  python:
+    source: "tools/monitor_shop_analysis.py"

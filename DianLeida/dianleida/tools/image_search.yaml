@@ -1,0 +1,43 @@
+identity:
+  name: "image_search"
+  author: "DianLeida"
+  label:
+    en_US: "Image Sourcing (1688)"
+    zh_Hans: "1688 图片寻源"
+description:
+  human:
+    en_US: "Submit one image and get matching 1688 candidate products. Use only when the user explicitly asks for 1688-only or batch image sourcing; for cross-platform matching use the global image search tool. Each call consumes 1 credit."
+    zh_Hans: "提交 1 张图片，返回该图的 1688 候选商品。仅当用户明确要求“只用 1688 图搜/批量寻源”时使用；跨平台找同款请用全网图搜。每次调用消耗 1 点。"
+  llm: "Submit exactly one image (HTTP URL, raw base64 or data URI) to source 1688 candidate products. Not the default tool for image search: prefer the global image search tool unless the user explicitly asks for 1688-only or batch sourcing. Each call consumes 1 credit."
+parameters:
+  - name: "imageUrl"
+    type: "string"
+    required: true
+    form: "llm"
+    label:
+      en_US: "Image URL or base64"
+      zh_Hans: "图片地址/Base64"
+    human_description:
+      en_US: "Image URL or base64"
+      zh_Hans: "图片地址/Base64"
+    llm_description: "One HTTP(S) image URL, raw base64 or data:image/...;base64 string."
+    placeholder:
+      en_US: "https://cbu01.alicdn.com/img/ibank/xxx.jpg"
+      zh_Hans: "https://cbu01.alicdn.com/img/ibank/xxx.jpg"
+  - name: "advanced_filters"
+    type: "string"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Advanced filters (JSON)"
+      zh_Hans: "高级筛选（JSON）"
+    human_description:
+      en_US: "Optional JSON object merged into the request, for filters not listed above."
+      zh_Hans: "可选 JSON 对象，直接并入请求体，用于补充上方未列出的筛选参数。"
+    llm_description: "Optional JSON object merged into the request body for advanced filters not exposed as dedicated parameters, for example {\"beginSaleCount\": 500}. Leave empty to use only the parameters above."
+    placeholder:
+      en_US: "{\"beginSaleCount\": 500}"
+      zh_Hans: "{\"beginSaleCount\": 500}"
+extra:
+  python:
+    source: "tools/image_search.py"

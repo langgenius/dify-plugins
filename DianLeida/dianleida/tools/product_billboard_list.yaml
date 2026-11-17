@@ -1,0 +1,228 @@
+identity:
+  name: "product_billboard_list"
+  author: "DianLeida"
+  label:
+    en_US: "Product Rankings"
+    zh_Hans: "商品热销榜单"
+description:
+  human:
+    en_US: "Query the weekly or monthly 1688 product ranking. Sortable by growth, new listings and repurchase rate. Each call consumes 1 credit."
+    zh_Hans: "查询 1688 周榜/月榜商品，可按飙升、上新、复购率排序。每次调用消耗 1 点。"
+  llm: "Query 1688 weekly or monthly product rankings. date is required: the Sunday for a weekly ranking, the first day of the month for a monthly ranking. Ranking-only sort fields: bookedGrowthRate, offerCreateTime, offerRepurchaseRate. Each call consumes 1 credit."
+parameters:
+  - name: "date"
+    type: "string"
+    required: true
+    form: "llm"
+    label:
+      en_US: "Ranking date"
+      zh_Hans: "榜单日期"
+    human_description:
+      en_US: "Ranking date"
+      zh_Hans: "榜单日期"
+    llm_description: "Required. Weekly ranking: the Sunday of that week. Monthly ranking: the first day of that month. Format yyyy-MM-dd."
+    placeholder:
+      en_US: "2026-11-15"
+      zh_Hans: "2026-11-15"
+  - name: "pageType"
+    type: "select"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Ranking period"
+      zh_Hans: "榜单类型"
+    human_description:
+      en_US: "Ranking period"
+      zh_Hans: "榜单类型"
+    llm_description: "2 weekly, 3 monthly."
+    options:
+      - value: "2"
+        label:
+          en_US: "Weekly ranking"
+          zh_Hans: "周榜"
+      - value: "3"
+        label:
+          en_US: "Monthly ranking"
+          zh_Hans: "月榜"
+    default: "2"
+  - name: "keyWord"
+    type: "string"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Keyword"
+      zh_Hans: "商品关键词"
+    human_description:
+      en_US: "Keyword"
+      zh_Hans: "商品关键词"
+    llm_description: "Product keyword, up to 50 characters."
+  - name: "searchType"
+    type: "select"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Search type"
+      zh_Hans: "搜索类型"
+    human_description:
+      en_US: "Search type"
+      zh_Hans: "搜索类型"
+    llm_description: "Only 1 fuzzy or 3 exact. AI search is not supported here."
+    options:
+      - value: "1"
+        label:
+          en_US: "Fuzzy match"
+          zh_Hans: "模糊匹配"
+      - value: "3"
+        label:
+          en_US: "Exact match"
+          zh_Hans: "精准匹配"
+    default: "1"
+  - name: "sortField"
+    type: "select"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Sort field"
+      zh_Hans: "排序字段"
+    human_description:
+      en_US: "Sort field"
+      zh_Hans: "排序字段"
+    llm_description: "Ranking-only fields: bookedGrowthRate (fast growth), offerRepurchaseRate (repurchase rate), plus the common fields."
+    options:
+      - value: "bookedGrowthRate"
+        label:
+          en_US: "Booking growth rate"
+          zh_Hans: "预订量增速（飙升）"
+      - value: "offerRepurchaseRate"
+        label:
+          en_US: "Repurchase rate"
+          zh_Hans: "复购率"
+      - value: "orderCount1d"
+        label:
+          en_US: "Sales orders, last 1 day"
+          zh_Hans: "近1天销售笔数"
+      - value: "orderCount3d"
+        label:
+          en_US: "Sales orders, last 3 days"
+          zh_Hans: "近3天销售笔数"
+      - value: "orderCount7d"
+        label:
+          en_US: "Sales orders, last 7 days"
+          zh_Hans: "近7天销售笔数"
+      - value: "orderCount30d"
+        label:
+          en_US: "Sales orders, last 30 days"
+          zh_Hans: "近30天销售笔数"
+      - value: "saleCount7d"
+        label:
+          en_US: "Units sold, last 7 days"
+          zh_Hans: "近7天销售件数"
+      - value: "saleCount30d"
+        label:
+          en_US: "Units sold, last 30 days"
+          zh_Hans: "近30天销售件数"
+      - value: "saleVolume7d"
+        label:
+          en_US: "Estimated GMV, last 7 days"
+          zh_Hans: "近7天预估销售额"
+      - value: "saleVolume30d"
+        label:
+          en_US: "Estimated GMV, last 30 days"
+          zh_Hans: "近30天预估销售额"
+      - value: "ordersCount"
+        label:
+          en_US: "Total sales orders"
+          zh_Hans: "总销售笔数"
+      - value: "salesCount"
+        label:
+          en_US: "Total units sold"
+          zh_Hans: "总销售件数"
+      - value: "offerCreateTime"
+        label:
+          en_US: "Listing time"
+          zh_Hans: "上架时间"
+      - value: "price"
+        label:
+          en_US: "Wholesale price"
+          zh_Hans: "批发价"
+      - value: "consignPrice"
+        label:
+          en_US: "Dropship price"
+          zh_Hans: "代发价"
+    default: "orderCount7d"
+  - name: "sortType"
+    type: "select"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Sort direction"
+      zh_Hans: "排序方向"
+    human_description:
+      en_US: "Sort direction"
+      zh_Hans: "排序方向"
+    llm_description: "asc or desc."
+    options:
+      - value: "desc"
+        label:
+          en_US: "Descending"
+          zh_Hans: "降序"
+      - value: "asc"
+        label:
+          en_US: "Ascending"
+          zh_Hans: "升序"
+    default: "desc"
+  - name: "categoryIdList"
+    type: "string"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Category IDs"
+      zh_Hans: "类目ID"
+    human_description:
+      en_US: "Category IDs"
+      zh_Hans: "类目ID"
+    llm_description: "Comma separated category IDs (max 20)."
+    placeholder:
+      en_US: "67,1038378"
+      zh_Hans: "67,1038378"
+  - name: "pageIndex"
+    type: "number"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Page index"
+      zh_Hans: "页码"
+    human_description:
+      en_US: "Page index"
+      zh_Hans: "页码"
+    llm_description: "Starts from 1."
+    default: 1
+  - name: "pageSize"
+    type: "number"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Page size"
+      zh_Hans: "每页条数"
+    human_description:
+      en_US: "Page size"
+      zh_Hans: "每页条数"
+    llm_description: "Max 100."
+    default: 100
+  - name: "advanced_filters"
+    type: "string"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Advanced filters (JSON)"
+      zh_Hans: "高级筛选（JSON）"
+    human_description:
+      en_US: "Optional JSON object merged into the request, for filters not listed above."
+      zh_Hans: "可选 JSON 对象，直接并入请求体，用于补充上方未列出的筛选参数。"
+    llm_description: "Optional JSON object merged into the request body for advanced filters not exposed as dedicated parameters, for example {\"beginSaleCount\": 500}. Leave empty to use only the parameters above."
+    placeholder:
+      en_US: "{\"beginSaleCount\": 500}"
+      zh_Hans: "{\"beginSaleCount\": 500}"
+extra:
+  python:
+    source: "tools/product_billboard_list.py"

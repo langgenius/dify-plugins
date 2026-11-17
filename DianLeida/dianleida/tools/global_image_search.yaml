@@ -1,0 +1,208 @@
+identity:
+  name: "global_image_search"
+  author: "DianLeida"
+  label:
+    en_US: "Global Image Search"
+    zh_Hans: "全网图搜"
+description:
+  human:
+    en_US: "Find the same product across 1688, TikTok and Amazon from one image, returning local-currency prices and product links. This is the default image search tool. Each call consumes 1 credit."
+    zh_Hans: "一张图在 1688 / TikTok / Amazon 中找同款，返回原币价格与商品链接。图片找同款默认用本工具。每次调用消耗 1 点。"
+  llm: "Find the same product across platforms from one image. platform is required: 1688, tiktok or amazon. Provide imgUrl or imgBase64 for the first query. For TikTok paging, pass the previous continuation back unchanged. Returns local-currency prices and product links. Each call consumes 1 credit."
+parameters:
+  - name: "platform"
+    type: "select"
+    required: true
+    form: "llm"
+    label:
+      en_US: "Platform"
+      zh_Hans: "查询平台"
+    human_description:
+      en_US: "Platform"
+      zh_Hans: "查询平台"
+    llm_description: "1688, tiktok or amazon. One platform per call. Default to 1688 when the user does not name a platform."
+    options:
+      - value: "1688"
+        label:
+          en_US: "1688"
+          zh_Hans: "1688"
+      - value: "tiktok"
+        label:
+          en_US: "TikTok"
+          zh_Hans: "TikTok"
+      - value: "amazon"
+        label:
+          en_US: "Amazon"
+          zh_Hans: "Amazon"
+    default: "1688"
+  - name: "imgUrl"
+    type: "string"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Image URL"
+      zh_Hans: "图片地址"
+    human_description:
+      en_US: "Image URL"
+      zh_Hans: "图片地址"
+    llm_description: "HTTP(S) image URL. Required for the first query unless imgBase64 is given."
+    placeholder:
+      en_US: "https://cbu01.alicdn.com/img/ibank/xxx.jpg"
+      zh_Hans: "https://cbu01.alicdn.com/img/ibank/xxx.jpg"
+  - name: "imgBase64"
+    type: "string"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Image base64"
+      zh_Hans: "图片 Base64"
+    human_description:
+      en_US: "Image base64"
+      zh_Hans: "图片 Base64"
+    llm_description: "Raw base64 or data:image/jpeg|png|webp;base64 string. Use instead of imgUrl."
+  - name: "amazonSite"
+    type: "select"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Amazon site"
+      zh_Hans: "Amazon 站点"
+    human_description:
+      en_US: "Amazon site"
+      zh_Hans: "Amazon 站点"
+    llm_description: "Only for platform=amazon. Default com (US)."
+    options:
+      - value: "com"
+        label:
+          en_US: "US (com)"
+          zh_Hans: "美国站 com"
+      - value: "co.uk"
+        label:
+          en_US: "UK (co.uk)"
+          zh_Hans: "英国站 co.uk"
+      - value: "co.jp"
+        label:
+          en_US: "Japan (co.jp)"
+          zh_Hans: "日本站 co.jp"
+      - value: "de"
+        label:
+          en_US: "Germany (de)"
+          zh_Hans: "德国站 de"
+      - value: "es"
+        label:
+          en_US: "Spain (es)"
+          zh_Hans: "西班牙站 es"
+      - value: "fr"
+        label:
+          en_US: "France (fr)"
+          zh_Hans: "法国站 fr"
+      - value: "in"
+        label:
+          en_US: "India (in)"
+          zh_Hans: "印度站 in"
+      - value: "it"
+        label:
+          en_US: "Italy (it)"
+          zh_Hans: "意大利站 it"
+      - value: "au"
+        label:
+          en_US: "Australia (au)"
+          zh_Hans: "澳洲站 au"
+      - value: "ca"
+        label:
+          en_US: "Canada (ca)"
+          zh_Hans: "加拿大站 ca"
+      - value: "com.mx"
+        label:
+          en_US: "Mexico (com.mx)"
+          zh_Hans: "墨西哥站 com.mx"
+    default: "com"
+  - name: "tiktokCountryCode"
+    type: "select"
+    required: false
+    form: "llm"
+    label:
+      en_US: "TikTok country"
+      zh_Hans: "TikTok 国家"
+    human_description:
+      en_US: "TikTok country"
+      zh_Hans: "TikTok 国家"
+    llm_description: "Only for platform=tiktok. Default US. On continuation it must match the first query."
+    options:
+      - value: "US"
+        label:
+          en_US: "US"
+          zh_Hans: "US"
+      - value: "GB"
+        label:
+          en_US: "GB"
+          zh_Hans: "GB"
+      - value: "ID"
+        label:
+          en_US: "ID"
+          zh_Hans: "ID"
+      - value: "VN"
+        label:
+          en_US: "VN"
+          zh_Hans: "VN"
+      - value: "TH"
+        label:
+          en_US: "TH"
+          zh_Hans: "TH"
+      - value: "MY"
+        label:
+          en_US: "MY"
+          zh_Hans: "MY"
+      - value: "PH"
+        label:
+          en_US: "PH"
+          zh_Hans: "PH"
+      - value: "SG"
+        label:
+          en_US: "SG"
+          zh_Hans: "SG"
+      - value: "BR"
+        label:
+          en_US: "BR"
+          zh_Hans: "BR"
+    default: "US"
+  - name: "tiktokSort"
+    type: "number"
+    required: false
+    form: "llm"
+    label:
+      en_US: "TikTok sort"
+      zh_Hans: "TikTok 排序"
+    human_description:
+      en_US: "TikTok sort"
+      zh_Hans: "TikTok 排序"
+    llm_description: "Only for platform=tiktok. Upstream sort code, default 1."
+    default: 1
+  - name: "tiktokContinuation"
+    type: "string"
+    required: false
+    form: "llm"
+    label:
+      en_US: "TikTok continuation"
+      zh_Hans: "TikTok 翻页游标"
+    human_description:
+      en_US: "TikTok continuation"
+      zh_Hans: "TikTok 翻页游标"
+    llm_description: "Only for TikTok paging. Paste back the full continuation object from the previous response unchanged; clear it when changing country, sort or image."
+  - name: "advanced_filters"
+    type: "string"
+    required: false
+    form: "llm"
+    label:
+      en_US: "Advanced filters (JSON)"
+      zh_Hans: "高级筛选（JSON）"
+    human_description:
+      en_US: "Optional JSON object merged into the request, for filters not listed above."
+      zh_Hans: "可选 JSON 对象，直接并入请求体，用于补充上方未列出的筛选参数。"
+    llm_description: "Optional JSON object merged into the request body for advanced filters not exposed as dedicated parameters, for example {\"beginSaleCount\": 500}. Leave empty to use only the parameters above."
+    placeholder:
+      en_US: "{\"beginSaleCount\": 500}"
+      zh_Hans: "{\"beginSaleCount\": 500}"
+extra:
+  python:
+    source: "tools/global_image_search.py"

@@ -1,0 +1,38 @@
+version: "1.1.0"
+type: "plugin"
+author: "DianLeida"
+name: "dianleida"
+repo: "https://github.com/DianLeida/dsh-dianleida-1688-ecommerce-product-selection"
+label:
+  en_US: "DianLeiDa 1688 Sourcing"
+  zh_Hans: "店雷达 1688 选品"
+description:
+  en_US: "Connect Dify to DianLeiDa (店雷达) for 1688 product sourcing: product search, rankings, single-product analysis, category tree, image sourcing, cross-platform image search, shop rankings, product attributes and certificates, SKU prices and stock, trending new products, and product/shop monitoring."
+  zh_Hans: "把 Dify 接入店雷达，完成 1688 选品：商品搜索、热销榜单、单品分析、类目树、图片寻源、全网图搜、店铺榜单、商品属性与资质、SKU 价格库存、趋势新品，以及商品/店铺监控。"
+icon: "icon.svg"
+tags:
+  - "business"
+  - "ecommerce"
+  - "product-research"
+  - "1688"
+  - "supplier"
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+plugins:
+  tools:
+    - "provider/dianleida.yaml"
+meta:
+  version: "0.0.1"
+  arch:
+    - "amd64"
+    - "arm64"
+  runner:
+    language: "python"
+    version: "3.12"
+    entrypoint: "main"
+created_at: "2026-11-16T00:00:00Z"
+privacy: "PRIVACY.md"
+verified: false
