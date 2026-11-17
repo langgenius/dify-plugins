@@ -1,8 +1,0 @@
-.venv/
-__pycache__/
-**/__pycache__/
-*.pyc
-.pytest_cache/
-tests/
-.scripts/
-.smoke_artifacts/
