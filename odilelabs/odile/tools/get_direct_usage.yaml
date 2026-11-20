@@ -1,0 +1,25 @@
+{
+  "identity": {
+    "name": "get_direct_usage",
+    "author": "odilelabs",
+    "label": {
+      "en_US": "Get Direct Usage",
+      "zh_Hans": "Get Direct Usage",
+      "pt_BR": "Get Direct Usage"
+    }
+  },
+  "description": {
+    "human": {
+      "en_US": "Read your own Direct account ledger: the signed-in account’s UTC free-send allowance, prepaid balance in cents, reserved cents and last 20 charges. It never buys credit and does not list costs (see get_m2m_network). Use it before sending tasks that may cost credit; a payment_required reply from send_to_business carries the top-up link. Uses the same ledger as REST and your developer page. Requires direct:tasks and sign-in. Changes nothing; phone minutes and legacy credits are tracked separately. Example: call it with no arguments before a booking to confirm the allowance or balance covers it.",
+      "zh_Hans": "Read your own Direct account ledger: the signed-in account’s UTC free-send allowance, prepaid balance in cents, reserved cents and last 20 charges. It never buys credit and does not list costs (see get_m2m_network). Use it before sending tasks that may cost credit; a payment_required reply from send_to_business carries the top-up link. Uses the same ledger as REST and your developer page. Requires direct:tasks and sign-in. Changes nothing; phone minutes and legacy credits are tracked separately. Example: call it with no arguments before a booking to confirm the allowance or balance covers it.",
+      "pt_BR": "Read your own Direct account ledger: the signed-in account’s UTC free-send allowance, prepaid balance in cents, reserved cents and last 20 charges. It never buys credit and does not list costs (see get_m2m_network). Use it before sending tasks that may cost credit; a payment_required reply from send_to_business carries the top-up link. Uses the same ledger as REST and your developer page. Requires direct:tasks and sign-in. Changes nothing; phone minutes and legacy credits are tracked separately. Example: call it with no arguments before a booking to confirm the allowance or balance covers it."
+    },
+    "llm": "Read your own Direct account ledger: the signed-in account’s UTC free-send allowance, prepaid balance in cents, reserved cents and last 20 charges. It never buys credit and does not list costs (see get_m2m_network). Use it before sending tasks that may cost credit; a payment_required reply from send_to_business carries the top-up link. Uses the same ledger as REST and your developer page. Requires direct:tasks and sign-in. Changes nothing; phone minutes and legacy credits are tracked separately. Example: call it with no arguments before a booking to confirm the allowance or balance covers it."
+  },
+  "parameters": [],
+  "extra": {
+    "python": {
+      "source": "tools/get_direct_usage.py"
+    }
+  }
+}
