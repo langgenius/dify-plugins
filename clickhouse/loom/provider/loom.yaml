@@ -1,0 +1,51 @@
+identity:
+  author: clickhouse
+  name: loom
+  label:
+    en_US: Loom
+  description:
+    en_US: Memory and document search in your Loom deployment.
+  icon: icon.svg
+credentials_for_provider:
+  base_url:
+    type: text-input
+    required: true
+    label:
+      en_US: Loom URL
+    help:
+      en_US: Configure a restricted Loom writer token and its deployment identity.
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: Loom token
+    help:
+      en_US: Configure a restricted Loom writer token and its deployment identity.
+  org:
+    type: text-input
+    required: true
+    label:
+      en_US: Organization
+    help:
+      en_US: Configure a restricted Loom writer token and its deployment identity.
+  namespace:
+    type: text-input
+    required: true
+    label:
+      en_US: Namespace
+    help:
+      en_US: Configure a restricted Loom writer token and its deployment identity.
+  agent:
+    type: text-input
+    required: true
+    label:
+      en_US: Agent name
+    help:
+      en_US: Configure a restricted Loom writer token and its deployment identity.
+tools:
+  - tools/remember.yaml
+  - tools/recall.yaml
+  - tools/search_knowledge.yaml
+extra:
+  python:
+    source: provider/loom.py

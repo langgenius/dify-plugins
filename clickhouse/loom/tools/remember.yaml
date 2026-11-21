@@ -1,0 +1,40 @@
+identity:
+  name: remember
+  author: clickhouse
+  label:
+    en_US: Remember
+description:
+  human:
+    en_US: Save a fact for the configured end user in Loom.
+  llm: Save a fact for the configured end user in Loom.
+parameters:
+  - name: user_id
+    type: string
+    required: true
+    label:
+      en_US: User ID
+    human_description:
+      en_US: Bind to the end-user identifier from your app. Do not let the model choose
+        it.
+    form: form
+  - name: memory_key
+    type: string
+    required: true
+    label:
+      en_US: Memory key
+    human_description:
+      en_US: Stable key for this fact.
+    llm_description: Stable key for this fact.
+    form: llm
+  - name: value
+    type: string
+    required: true
+    label:
+      en_US: Value
+    human_description:
+      en_US: The fact to remember.
+    llm_description: The fact to remember.
+    form: llm
+extra:
+  python:
+    source: tools/remember.py

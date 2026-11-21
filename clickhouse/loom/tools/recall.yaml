@@ -1,0 +1,42 @@
+identity:
+  name: recall
+  author: clickhouse
+  label:
+    en_US: Recall
+description:
+  human:
+    en_US: Search the configured end user's memories in this Loom namespace.
+  llm: Search the configured end user's memories in this Loom namespace.
+parameters:
+  - name: user_id
+    type: string
+    required: true
+    label:
+      en_US: User ID
+    human_description:
+      en_US: Bind to the end-user identifier from your app. Do not let the model choose
+        it.
+    form: form
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Query
+    human_description:
+      en_US: The text to search for.
+    llm_description: The text to search for.
+    form: llm
+  - name: top_k
+    type: number
+    required: false
+    default: 5
+    min: 1
+    max: 500
+    label:
+      en_US: Result limit
+    human_description:
+      en_US: Number of results, from 1 to 500.
+    form: form
+extra:
+  python:
+    source: tools/recall.py

@@ -1,0 +1,12 @@
+tests/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.venv/
+.env*
+.git/
+.github/
+.gitignore
+*.difypkg
+pyproject.toml
