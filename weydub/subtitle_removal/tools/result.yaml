@@ -1,0 +1,22 @@
+identity:
+  name: removal_result
+  author: weydub
+  label: {en_US: Check removal result}
+description:
+  human: {en_US: Check an existing work ID and get the download URL when the MP4 is ready.}
+  llm: Check the same work ID using the original Weydub account. This action never creates a job.
+parameters:
+  - name: work_id
+    type: string
+    required: true
+    form: llm
+    label: {en_US: Work ID}
+    human_description: {en_US: The numeric ID returned when you submitted the source video.}
+    llm_description: The work_id output of Remove burned-in subtitles, preserved as text.
+output_schema:
+  type: object
+  properties:
+    state: {type: string, description: Current job state., enum: [processing, ready, failed]}
+    video_url: {type: string, description: Private download link. Only present when ready.}
+extra:
+  python: {source: tools/result.py}

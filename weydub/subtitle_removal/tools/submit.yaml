@@ -1,0 +1,21 @@
+identity:
+  name: submit_removal
+  author: weydub
+  label: {en_US: Remove burned-in subtitles}
+description:
+  human: {en_US: Start one billable full-frame Pro job. Other on-screen text may also be removed.}
+  llm: Use only with permission to spend Weydub credits. Submit once and keep the work ID. Never retry automatically.
+parameters:
+  - name: video_url
+    type: string
+    required: true
+    form: llm
+    label: {en_US: Source video URL}
+    human_description: {en_US: Direct HTTPS link to a video you have permission to process.}
+    llm_description: A downloadable HTTPS video URL, not a social post or preview page.
+output_schema:
+  type: object
+  properties:
+    work_id: {type: string, description: Save this ID and pass it to Check removal result.}
+extra:
+  python: {source: tools/submit.py}

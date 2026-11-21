@@ -1,0 +1,23 @@
+identity:
+  author: weydub
+  name: subtitle_removal
+  label: {en_US: Weydub Pro Subtitle Removal}
+  description: {en_US: Remove burned-in captions across the whole frame of a video.}
+  icon: icon.png
+  tags: [videos]
+credentials_for_provider:
+  app_key:
+    type: secret-input
+    required: true
+    label: {en_US: Weydub App Key}
+    help: {en_US: Use the API credentials from your Weydub account.}
+    url: https://weydub.com/docs/api/
+  app_secret:
+    type: secret-input
+    required: true
+    label: {en_US: Weydub App Secret}
+    help: {en_US: Used to sign requests. Keep this out of prompts and workflow inputs.}
+    url: https://weydub.com/docs/api/
+tools: [tools/submit.yaml, tools/result.yaml]
+extra:
+  python: {source: provider/weydub.py}
