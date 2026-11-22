@@ -1,0 +1,92 @@
+identity:
+  name: get_shelf
+  author: gaohaoyv
+  label:
+    en_US: Get Shelf
+    zh_Hans: 获取书架
+description:
+  human:
+    en_US: Read a BookStack shelf by ID and return normalized metadata.
+    zh_Hans: 根据 ID 读取 BookStack 书架并返回标准化元数据。
+  llm: Read a BookStack shelf by ID and return normalized metadata.
+output_schema:
+  type: object
+  properties:
+    success:
+      type: boolean
+      description: Whether reading the shelf succeeded.
+    error:
+      type: string
+      nullable: true
+      description: Error message when reading the shelf fails.
+    shelf_id:
+      type: string
+      nullable: true
+      description: BookStack shelf identifier.
+    name:
+      type: string
+      nullable: true
+      description: Shelf name.
+    slug:
+      type: string
+      nullable: true
+      description: Shelf slug.
+    description:
+      type: string
+      nullable: true
+      description: Shelf description.
+    description_html:
+      type: string
+      nullable: true
+      description: Shelf description HTML.
+    books:
+      type: array
+      nullable: true
+      description: Raw associated book objects when available.
+      items:
+        type: object
+    tags:
+      type: array
+      nullable: true
+      description: Raw tag objects when available.
+      items:
+        type: object
+    url:
+      type: string
+      nullable: true
+      description: Shelf URL.
+    created_at:
+      type: string
+      nullable: true
+      description: Shelf creation timestamp.
+    updated_at:
+      type: string
+      nullable: true
+      description: Shelf update timestamp.
+    created_by:
+      type: object
+      nullable: true
+      description: Raw creator metadata when available.
+    updated_by:
+      type: object
+      nullable: true
+      description: Raw updater metadata when available.
+    raw:
+      type: object
+      nullable: true
+      description: Original BookStack shelf object.
+parameters:
+  - name: shelf_id
+    type: string
+    required: true
+    label:
+      en_US: Shelf ID
+      zh_Hans: 书架 ID
+    human_description:
+      en_US: The BookStack shelf ID to read.
+      zh_Hans: 要读取的 BookStack 书架 ID。
+    llm_description: The BookStack shelf ID to read.
+    form: llm
+extra:
+  python:
+    source: tools/get_shelf.py
