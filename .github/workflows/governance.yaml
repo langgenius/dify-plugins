@@ -1,0 +1,117 @@
+name: Governance
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches:
+      - main
+      - dev
+    paths:
+      - "**/*.difypkg"
+      - "**/manifest.yaml"
+
+concurrency:
+  group: governance-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  # One job for all three checks: they share the checkout, the interpreter and
+  # the changed-file list, so three runners used to pay for the same setup
+  # three times. Each check still reports on its own and still blocks.
+  governance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyYAML
+        run: |
+          python3 -m pip install --quiet --disable-pip-version-check pyyaml \
+            || echo "PyYAML unavailable; the check falls back to its built-in manifest parser."
+
+      - name: Collect changed files
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          EXPECTED_CHANGED_FILES: ${{ github.event.pull_request.changed_files }}
+        run: |
+          mkdir -p /tmp/governance
+          gh api --paginate "repos/${{ github.repository }}/pulls/${PR_NUMBER}/files" --slurp \
+            | jq 'add | map({filename: .filename, status: .status})' \
+            > /tmp/governance/changed_files.json
+          python3 - <<'PY'
+          import json
+          import os
+
+          files = json.load(open("/tmp/governance/changed_files.json", encoding="utf-8"))
+          expected = int(os.environ.get("EXPECTED_CHANGED_FILES") or 0)
+          # The files API returns at most 3,000 entries. Never skip the check on an incomplete list.
+          if expected and len(files) < expected:
+              raise SystemExit(
+                  f"Cannot determine changed files: PR file list is incomplete "
+                  f"({len(files)} of {expected}). Re-run the check."
+              )
+          print(f"Collected {len(files)} changed file(s).")
+          PY
+
+      - name: Check packaging rules
+        id: packaging-rules
+        continue-on-error: true
+        run: |
+          python3 .github/scripts/governance/check_packaging_rules.py \
+            --changed-files /tmp/governance/changed_files.json \
+            --repo-root .
+
+      - name: Check manifest tags
+        id: manifest-tags
+        continue-on-error: true
+        run: |
+          python3 .github/scripts/governance/check_manifest_tags.py \
+            --changed-files /tmp/governance/changed_files.json \
+            --repo-root .
+
+      - name: Detect near-duplicate plugins
+        id: near-duplicates
+        continue-on-error: true
+        run: |
+          # Compares the changed packages against every package in the repository.
+          # Same-author name collisions fail the check; all other findings are
+          # non-blocking warnings written to the job summary.
+          python3 .github/scripts/governance/check_near_duplicates.py \
+            --changed-files /tmp/governance/changed_files.json \
+            --repo-root .
+
+      # Every check above keeps reporting after a failure, so one summary lists
+      # all findings; this step is what actually reddens the job.
+      - name: Fail on blocking findings
+        if: always()
+        run: |
+          FAILED=0
+          if [ "${{ steps.packaging-rules.outcome }}" = "failure" ]; then
+            echo "::error::Packaging rules check reported blocking findings."
+            FAILED=1
+          fi
+          if [ "${{ steps.manifest-tags.outcome }}" = "failure" ]; then
+            echo "::error::Manifest tags check reported blocking findings."
+            FAILED=1
+          fi
+          if [ "${{ steps.near-duplicates.outcome }}" = "failure" ]; then
+            echo "::error::Near-duplicate check reported blocking findings."
+            FAILED=1
+          fi
+          if [ "$FAILED" = "1" ]; then
+            echo "One or more governance checks failed. See the job summary for details."
+            exit 1
+          fi
+          echo "All governance checks passed."
