@@ -147,6 +147,41 @@ def _fmt(n):
     return "%d" % n if float(n).is_integer() else "%.1f" % n
 
 
+# Rough per-size output-token ranges for API (per-token) platforms. Documented as a rough guide.
+API_OUTPUT_TOKENS = {"small": (50, 300), "medium": (300, 1500), "big": (1500, 6000)}
+
+
+def _money(x):
+    if x < 0.001:
+        return "$%.4f" % x
+    if x < 0.1:
+        return "$%.3f" % x
+    return "$%.2f" % x
+
+
+def compute_api_estimate(platform, size, input_tokens):
+    """Per-token estimate for API model platforms (Dify LLM nodes etc.)."""
+    if not platform["inRate"] and not platform["outRate"]:
+        return {
+            "rangeText": "$0 per call",
+            "subText": platform["modelNote"],
+            "pct": None,
+            "verdict": "fits",
+            "verdictText": "Free, runs on your own machine.",
+        }
+    out_lo, out_hi = API_OUTPUT_TOKENS[size]
+    low = input_tokens * platform["inRate"] / 1e6 + out_lo * platform["outRate"] / 1e6
+    high = input_tokens * platform["inRate"] / 1e6 + out_hi * platform["outRate"] / 1e6
+    notable = high >= 0.05
+    return {
+        "rangeText": "%s\u2013%s per call" % (_money(low), _money(high)),
+        "subText": platform["modelNote"] + ", plus %s\u2013%s output tokens" % (_fmt(out_lo), _fmt(out_hi)),
+        "pct": None,
+        "verdict": "tight" if notable else "fits",
+        "verdictText": "Notable per-call cost. A shorter prompt cuts the input side." if notable else "Cheap per call.",
+    }
+
+
 def compute_estimate(platform, size, plan, type_key):
     """Faithful port of computeEstimate() from the PE extension estimator.js."""
     plan_label = plan["label"] if plan else "Free"
@@ -210,10 +245,13 @@ def full_estimate(text, platform_id, size, plan_id):
     if plan_id and not plan:
         raise PEError("Unknown plan '%s' for %s." % (plan_id, platform["name"]))
     type_key, type_label = detect_task_type(text)
-    est = compute_estimate(platform, size, plan, type_key)
+    if platform["kind"] == "tokens":
+        est = compute_api_estimate(platform, size, estimate_tokens(text))
+    else:
+        est = compute_estimate(platform, size, plan, type_key)
     result = {
         "platform": platform["name"],
-        "plan": (plan or {}).get("label", "Free"),
+        "plan": "Pay per use" if platform["kind"] == "tokens" else (plan or {}).get("label", "Free"),
         "size": size,
         "sizeMeaning": SIZES[size],
         "taskType": type_label,
@@ -224,8 +262,9 @@ def full_estimate(text, platform_id, size, plan_id):
         "verdictText": est["verdictText"],
         "confidence": platform.get("confidence") or platform.get("unverified") or "Rough estimate, not a quote.",
     }
-    fit = cheapest_free_fit(size, type_key)
-    if fit:
-        fit = {"platform": fit["platform"], "rangeText": fit["rangeText"], "headroom": fit["headroom"]}
-        result["cheapestFreeFit"] = fit
+    if platform["kind"] != "tokens":
+        fit = cheapest_free_fit(size, type_key)
+        if fit:
+            fit = {"platform": fit["platform"], "rangeText": fit["rangeText"], "headroom": fit["headroom"]}
+            result["cheapestFreeFit"] = fit
     return result

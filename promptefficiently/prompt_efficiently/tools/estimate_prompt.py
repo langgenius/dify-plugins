@@ -18,7 +18,7 @@ class EstimatePromptTool(Tool):
         platform_id = (tool_parameters.get("platform") or "").strip().lower()
         platform = platform_by_id(platform_id)
         if not platform:
-            raise PEError("Choose one of: chatgpt, claude, gemini, grok, town, manus, lovable, bolt, replit.")
+            raise PEError("Choose one of: chatgpt, claude, gemini, grok, town, manus, lovable, bolt, replit, openai_api, anthropic_api, gemini_api, deepseek, xai_api, mistral, groq, together, fireworks, openrouter, qwen, zhipu, moonshot, cohere, ollama.")
         size = (tool_parameters.get("size") or "medium").strip().lower()
         if size not in ("small", "medium", "big"):
             size = "medium"
@@ -44,7 +44,9 @@ class EstimatePromptTool(Tool):
 def estimate_card(result, pro, remaining):
     """Markdown card mirroring the extension's cost bubble."""
     fit = result.get("cheapestFreeFit")
-    if fit and fit["platform"] != result["platform"] and fit.get("headroom", 0) >= 1:
+    if result.get("plan") == "Pay per use":
+        fit_line = "Pay-per-use API, billed per token. No free tier tracked."
+    elif fit and fit["platform"] != result["platform"] and fit.get("headroom", 0) >= 1:
         fit_line = (
             "Rough guide: this fits in %s's free tier (about %s). "
             "Check their current limits first." % (fit["platform"], fit["rangeText"])

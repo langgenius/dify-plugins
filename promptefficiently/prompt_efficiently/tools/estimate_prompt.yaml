@@ -5,8 +5,8 @@ identity:
     en_US: Estimate prompt cost
 description:
   human:
-    en_US: Rough estimate of what a prompt will cost on an AI product (ChatGPT, Claude, Gemini, Grok, Town AI, Manus, Lovable, Bolt or Replit) before you send it. The maths runs inside this plugin - your prompt text is never sent to Prompt Efficiently for this tool. Each estimate counts toward the account's free 5 estimates a day (Pro is unlimited). Estimates are rough guides, not quotes or balance readings.
-  llm: Estimate the rough usage cost (messages, credits, tokens or dollars) of a prompt on a named AI product before sending it. Returns a range, a verdict (fits / tight / over the plan allowance), the rough input token count, and the cheapest free alternative. Use before running an expensive prompt. The prompt text stays local; estimates are rough, not quotes.
+    en_US: Rough estimate of what a prompt will cost on an AI product (ChatGPT, Claude, Gemini, Grok, Town AI, Manus, Lovable, Bolt or Replit) or an API model (OpenAI, Anthropic, Gemini, DeepSeek, xAI, Mistral, Groq, Together, Fireworks, OpenRouter, Qwen, Zhipu GLM, Moonshot Kimi, Cohere or Ollama) before you send it. The maths runs inside this plugin - your prompt text is never sent to Prompt Efficiently for this tool. Each estimate counts toward the account's free 5 estimates a day (Pro is unlimited). Estimates are rough guides, not quotes or balance readings.
+  llm: Estimate the rough usage cost (messages, credits, tokens or dollars) of a prompt on a named AI product or API model before sending it. Consumer products return usage ranges and the cheapest free alternative; API providers (openai_api, anthropic_api, gemini_api, deepseek, xai_api, mistral, groq, together, fireworks, openrouter, qwen, zhipu, moonshot, cohere, ollama) return a per-call dollar range from input plus output tokens. Returns a range, a verdict, and the rough input token count. Use before running an expensive prompt. The prompt text stays local; estimates are rough, not quotes.
 parameters:
   - name: prompt
     type: string
@@ -45,6 +45,36 @@ parameters:
         label: {en_US: Bolt}
       - value: replit
         label: {en_US: Replit}
+      - value: openai_api
+        label: {en_US: OpenAI API (GPT-6 Sol)}
+      - value: anthropic_api
+        label: {en_US: Anthropic API (Claude Sonnet)}
+      - value: gemini_api
+        label: {en_US: Gemini API}
+      - value: deepseek
+        label: {en_US: DeepSeek API}
+      - value: xai_api
+        label: {en_US: xAI API (Grok)}
+      - value: mistral
+        label: {en_US: Mistral API}
+      - value: groq
+        label: {en_US: Groq}
+      - value: together
+        label: {en_US: Together AI}
+      - value: fireworks
+        label: {en_US: Fireworks AI}
+      - value: openrouter
+        label: {en_US: OpenRouter}
+      - value: qwen
+        label: {en_US: Qwen API (Alibaba)}
+      - value: zhipu
+        label: {en_US: Zhipu GLM API}
+      - value: moonshot
+        label: {en_US: Moonshot Kimi API}
+      - value: cohere
+        label: {en_US: Cohere API}
+      - value: ollama
+        label: {en_US: Ollama (local models)}
   - name: size
     type: select
     required: false

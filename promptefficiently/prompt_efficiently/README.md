@@ -2,7 +2,7 @@
 
 Estimate what a prompt will cost on an AI product **before** you send it, and get a shorter rewrite that aims to do the same job for less - inside any Dify Chatflow, Workflow or Agent.
 
-- **Estimate prompt cost**: rough usage estimate (messages, credits, tokens or dollars) for ChatGPT, Claude, Gemini, Grok, Town AI, Manus, Lovable, Bolt and Replit, with a fits / tight / over verdict against the plan's allowance and the cheapest free alternative. The maths runs inside this plugin; **your prompt text is never sent to Prompt Efficiently for an estimate.**
+- **Estimate prompt cost**: rough usage estimate (messages, credits, tokens or dollars) for ChatGPT, Claude, Gemini, Grok, Town AI, Manus, Lovable, Bolt and Replit, plus per-call dollar estimates for API models (OpenAI, Anthropic, Gemini, DeepSeek, xAI, Mistral, Groq, Together, Fireworks, OpenRouter, Qwen, Zhipu GLM, Moonshot Kimi and Cohere APIs, and free local models via Ollama), with a fits / tight / over verdict against the plan's allowance and the cheapest free alternative. The maths runs inside this plugin; **your prompt text is never sent to Prompt Efficiently for an estimate.**
 - **Prompt Efficiently rewrite**: sends the prompt to Prompt Efficiently's live rewrite service (only when you turn on the 18+ consent in the plugin settings) and returns a shorter version to review. Modes: shorter, clearer, more specific.
 
 Estimates are rough guides, not quotes, bills or balance readings.
@@ -27,7 +27,7 @@ Codes expire after 10 minutes. If a session expires later, repeat steps 2-3.
 | Parameter | Required | Notes |
 | --- | --- | --- |
 | prompt | yes | The full prompt text. |
-| platform | yes | chatgpt, claude, gemini, grok, town, manus, lovable, bolt or replit. |
+| platform | yes | chatgpt, claude, gemini, grok, town, manus, lovable, bolt, replit, openai_api, anthropic_api, gemini_api, deepseek, xai_api, mistral, groq, together, fireworks, openrouter, qwen, zhipu, moonshot, cohere or ollama. |
 | size | no | small, medium (default) or big. |
 | plan | no | Paid plan id on that product, e.g. plus, pro, max, starter, core. Empty = free plan. |
 
