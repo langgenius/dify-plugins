@@ -1,0 +1,47 @@
+identity:
+  author: promptefficiently
+  name: prompt_efficiently
+  label:
+    en_US: Prompt Efficiently
+  description:
+    en_US: Rough prompt cost estimates for ChatGPT, Claude, Gemini, Grok, Town AI, Manus, Lovable, Bolt and Replit, plus an AI rewrite that shortens a prompt while keeping its goal. Requires a free Prompt Efficiently account (promptefficiently.com).
+  icon: icon.svg
+  tags:
+    - productivity
+    - utilities
+credentials_for_provider:
+  pe_email:
+    type: text-input
+    required: true
+    label:
+      en_US: Prompt Efficiently account email
+    placeholder:
+      en_US: you@example.com
+    help:
+      en_US: The email you use (or will use) for your free Prompt Efficiently account at promptefficiently.com.
+    url: https://promptefficiently.com/app
+  pe_code:
+    type: secret-input
+    required: false
+    label:
+      en_US: Sign-in code (emailed to you)
+    placeholder:
+      en_US: Six digits. Leave empty on the first save to have a code emailed to you.
+    help:
+      en_US: First save with this field empty and Prompt Efficiently emails you a 6-digit code. Paste it here and save again. Codes expire after 10 minutes.
+    url: https://promptefficiently.com/app
+  confirm_adult_consent:
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: I am 18 or older and agree that text sent to the rewrite_prompt tool is processed by Prompt Efficiently and its AI provider to produce the rewrite
+    help:
+      en_US: "Only needed for rewrite_prompt. estimate_prompt never sends your prompt anywhere; the cost maths runs inside this plugin. Details: promptefficiently.com/privacy"
+    url: https://promptefficiently.com/privacy
+tools:
+  - tools/estimate_prompt.yaml
+  - tools/rewrite_prompt.yaml
+extra:
+  python:
+    source: provider/prompt_efficiently.py

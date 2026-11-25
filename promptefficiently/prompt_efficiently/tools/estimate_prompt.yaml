@@ -1,0 +1,76 @@
+identity:
+  name: estimate_prompt
+  author: promptefficiently
+  label:
+    en_US: Estimate prompt cost
+description:
+  human:
+    en_US: Rough estimate of what a prompt will cost on an AI product (ChatGPT, Claude, Gemini, Grok, Town AI, Manus, Lovable, Bolt or Replit) before you send it. The maths runs inside this plugin - your prompt text is never sent to Prompt Efficiently for this tool. Each estimate counts toward the account's free 5 estimates a day (Pro is unlimited). Estimates are rough guides, not quotes or balance readings.
+  llm: Estimate the rough usage cost (messages, credits, tokens or dollars) of a prompt on a named AI product before sending it. Returns a range, a verdict (fits / tight / over the plan allowance), the rough input token count, and the cheapest free alternative. Use before running an expensive prompt. The prompt text stays local; estimates are rough, not quotes.
+parameters:
+  - name: prompt
+    type: string
+    required: true
+    label:
+      en_US: Prompt
+    human_description:
+      en_US: The exact prompt text you are about to send.
+    llm_description: The full prompt text to estimate. Pass the whole prompt, not a summary.
+    form: llm
+  - name: platform
+    type: select
+    required: true
+    label:
+      en_US: AI product
+    human_description:
+      en_US: The AI product the prompt will run on.
+    llm_description: The AI product the prompt will run on. Pick the closest match.
+    form: llm
+    options:
+      - value: chatgpt
+        label: {en_US: ChatGPT}
+      - value: claude
+        label: {en_US: Claude}
+      - value: gemini
+        label: {en_US: Gemini}
+      - value: grok
+        label: {en_US: Grok}
+      - value: town
+        label: {en_US: Town AI}
+      - value: manus
+        label: {en_US: Manus}
+      - value: lovable
+        label: {en_US: Lovable}
+      - value: bolt
+        label: {en_US: Bolt}
+      - value: replit
+        label: {en_US: Replit}
+  - name: size
+    type: select
+    required: false
+    default: medium
+    label:
+      en_US: Task size
+    human_description:
+      en_US: How big the job is. Small is a single task or question, medium a small project or feature, big a many-step build.
+    llm_description: Rough size of what the prompt asks for. small = a single task or question, medium = a small project or feature, big = a many-step build. Default medium when unsure.
+    form: llm
+    options:
+      - value: small
+        label: {en_US: Small - a single task or question}
+      - value: medium
+        label: {en_US: Medium - a small project or feature}
+      - value: big
+        label: {en_US: Big - a big build, many steps}
+  - name: plan
+    type: string
+    required: false
+    label:
+      en_US: Plan (optional)
+    human_description:
+      en_US: The plan id you pay for on that product, e.g. plus, pro, max, starter, core. Leave empty for the free plan.
+    llm_description: The user's paid plan id on that product if known (for example chatgpt plus, claude pro, lovable pro, replit core). Leave empty for the free plan.
+    form: llm
+extra:
+  python:
+    source: tools/estimate_prompt.py
