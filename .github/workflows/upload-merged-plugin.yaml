@@ -2,7 +2,7 @@ name: Upload Merged Plugin
 
 on:
   push:
-    branches: 
+    branches:
       - main
       - dev
     paths-ignore:
@@ -14,14 +14,13 @@ on:
 
 env:
   REPO_NAME: langgenius/dify-plugins
+  # The marketplace toolkit is cloned here at run time (see .gitignore).
+  TOOLKIT_DIR: .github/scripts/toolkit
 
 jobs:
+  # No elevated permissions: the toolkit and the CLI are cloned with
+  # ORG_SCOPE_GITHUB_TOKEN, and nothing here writes back to the repository.
   upload-merged-plugin:
-    permissions:
-      # contents: write is only what lets the failure report post a commit
-      # comment. The toolkit and the CLI are cloned with
-      # ORG_SCOPE_GITHUB_TOKEN, not with this token.
-      contents: write
     runs-on: depot-ubuntu-24.04
     steps:
       - name: Checkout
@@ -33,30 +32,56 @@ jobs:
       - name: Clone Marketplace Toolkit
         env:
           GH_TOKEN: ${{ secrets.ORG_SCOPE_GITHUB_TOKEN }}
-        run: |
-          gh repo clone langgenius/dify-marketplace-toolkit -- .scripts/
-      
+        run: gh repo clone langgenius/dify-marketplace-toolkit -- "$TOOLKIT_DIR"
+
       - name: Download Plugin Daemon
         env:
           GH_TOKEN: ${{ secrets.ORG_SCOPE_GITHUB_TOKEN }}
         run: |
-          gh release download -R langgenius/dify-plugin-daemon --pattern "dify-plugin-linux-amd64" --dir .scripts
-          chmod +x .scripts/dify-plugin-linux-amd64
+          gh release download -R langgenius/dify-plugin-daemon --pattern "dify-plugin-linux-amd64" --dir "$TOOLKIT_DIR"
+          chmod +x "$TOOLKIT_DIR/dify-plugin-linux-amd64"
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: 3.12.7
-      
+
       - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests jq
+          pip install requests
+
+      - name: Ensure jq and yq
+        run: |
+          jq --version
+          if ! command -v yq >/dev/null 2>&1; then
+            echo "yq is not preinstalled on this runner; installing it"
+            sudo curl -fsSL "https://github.com/mikefarah/yq/releases/download/v4.44.5/yq_linux_amd64" \
+              -o /usr/local/bin/yq
+            sudo chmod +x /usr/local/bin/yq
+          fi
+          yq --version
 
       - name: Get Changed Files from Push
-        id: get_changed_files
         run: |
-          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | jq -R -s -c 'split("\n")[:-1] | map({path: .})')
+          # check-pkg-paths.py needs each file's change status, which
+          # --name-status provides: added / removed / modified.
+          CHANGED_FILES=$(git diff --name-status ${{ github.event.before }} ${{ github.sha }} | jq -R -s -c '
+            split("\n")[:-1]
+            | map(select(length > 0))
+            | map(split("\t"))
+            | map({
+                path: .[-1],
+                status: (
+                  .[0]
+                  | if startswith("A") then "added"
+                    elif startswith("D") then "removed"
+                    elif startswith("R") then "added"
+                    else "modified"
+                    end
+                )
+              })
+          ')
           echo "CHANGED_FILES=$CHANGED_FILES" >> $GITHUB_ENV
           echo "CHANGED_FILES=$CHANGED_FILES"
 
@@ -64,60 +89,31 @@ jobs:
         env:
           PR_FILES: ${{ env.CHANGED_FILES }}
         run: |
-          if PLUGIN_PATH=$(python3 .scripts/validator/check-pkg-paths.py); then
-              echo $PLUGIN_PATH
+          set -o pipefail
+          # The script prints the package path last, after any informational
+          # lines (e.g. "also removing N older version(s)"), so read the last
+          # line. pipefail keeps a rejected push from looking like a success.
+          if PLUGIN_PATH=$(python3 "$TOOLKIT_DIR/validator/check-pkg-paths.py" | tail -n 1); then
               echo "PLUGIN_PATH=$PLUGIN_PATH" >> $GITHUB_ENV
           else
-            echo "Only one .difypkg file change is allowed in a single push."
-            exit 1
+              echo "Only one .difypkg file change is allowed in a single push."
+              exit 1
           fi
 
-      - name: yq - portable yaml processor
-        uses: mikefarah/yq@v4.44.5
-        with:
-          cmd: yq --version
-
-      - name: Unpack Plugin for Final Validation
-        run: |
-          mkdir -p unpacked_plugin
-          unzip "$PLUGIN_PATH" -d unpacked_plugin
-
+      # Re-validates the merged bytes before publishing: one entry point, the
+      # same registry of package checks the pull request ran. A blocking
+      # finding exits non-zero, which fails this job before anything uploads.
       - name: Final Package Validation
         run: |
-          python3 .scripts/validator/check-package-contents.py \
-            -d unpacked_plugin \
-            --package-file "$PLUGIN_PATH" \
-            --error-file /tmp/package_contents_errors.txt \
-            --warning-file /tmp/package_contents_warnings.txt
+          python3 "$TOOLKIT_DIR/validator/validate-difypkg.py" "$PLUGIN_PATH" \
+            --output-dir /tmp/validation
 
-          python3 .scripts/validator/check-package-secrets.py \
-            -d unpacked_plugin \
-            --error-file /tmp/package_secrets_errors.txt \
-            --warning-file /tmp/package_secrets_warnings.txt
-
-          python3 .scripts/validator/check-package-binaries.py \
-            -d unpacked_plugin \
-            --error-file /tmp/package_binaries_errors.txt \
-            --warning-file /tmp/package_binaries_warnings.txt
-
-          python3 .scripts/validator/check-manifest-metadata.py \
-            -d unpacked_plugin \
-            --error-file /tmp/manifest_errors.txt \
-            --warning-file /tmp/manifest_warnings.txt
-
-          python3 .scripts/validator/check-readme-metadata.py \
-            -d unpacked_plugin \
-            --error-file /tmp/readme_errors.txt \
-            --warning-file /tmp/readme_warnings.txt
-
-          python3 .scripts/validator/check-package-dependencies.py \
-            -d unpacked_plugin \
-            --error-file /tmp/package_dependencies_errors.txt \
-            --warning-file /tmp/package_dependencies_warnings.txt
-
-          python3 .scripts/validator/check-prohibited-financial-activity.py \
-            -d unpacked_plugin \
-            --warning-file /tmp/prohibited_financial_activity_warnings.txt
+      - name: Publish validation summary
+        if: always()
+        run: |
+          if [ -f /tmp/validation/summary.md ]; then
+            cat /tmp/validation/summary.md >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+          fi
 
       - name: Extract Release Notes
         env:
@@ -137,46 +133,30 @@ jobs:
             echo "No associated PR found for $LAST_SHA; uploading without release notes."
             : > /tmp/pr_body.md
           fi
-          python3 .scripts/tools/extract-changelog.py --pr-body-file /tmp/pr_body.md > /tmp/changelog.md
+          python3 "$TOOLKIT_DIR/tools/extract-changelog.py" --pr-body-file /tmp/pr_body.md > /tmp/changelog.md
           echo "--- extracted release notes ---"
           cat /tmp/changelog.md
 
-      - name: Upload Plugin (production)
-        run: |
-          python3 .scripts/uploader -p ${{ env.PLUGIN_PATH }} -t ${{ secrets.MARKETPLACE_TOKEN }} --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u ${{ secrets.MARKETPLACE_BASE_URL }} --with-changelog ${CATEGORY_FLAG:+"$CATEGORY_FLAG"} < /tmp/changelog.md
-
-      # Staging only becomes testable once uploads reach it: the backend rebuilds
-      # latest/recommended on an upload signal. Never blocking, though -- a red run
-      # invites a re-run, which re-uploads; -f keeps that idempotent.
-      - name: Upload Plugin (staging)
-        id: upload-staging
-        continue-on-error: true
+      # One upload call publishes to production and, when the staging secrets
+      # are set, fans out to staging as a mirror. A mirror never fails the
+      # publish: the uploader downgrades a mirror failure to a warning, so a
+      # red staging environment can no longer block a release.
+      - name: Upload Plugin
         env:
+          MARKETPLACE_TOKEN: ${{ secrets.MARKETPLACE_TOKEN }}
+          MARKETPLACE_BASE_URL: ${{ secrets.MARKETPLACE_BASE_URL }}
           STAGING_BASE_URL: ${{ secrets.MARKETPLACE_STAGING_BASE_URL }}
           STAGING_TOKEN: ${{ secrets.MARKETPLACE_STAGING_TOKEN }}
         run: |
-          if [ -z "$STAGING_BASE_URL" ] || [ -z "$STAGING_TOKEN" ]; then
-            echo "MARKETPLACE_STAGING_BASE_URL / _TOKEN are not set; skipping the staging upload"
-            exit 0
+          MIRROR_ARGS=()
+          if [ -n "$STAGING_BASE_URL" ] && [ -n "$STAGING_TOKEN" ]; then
+            MIRROR_ARGS=(--mirror-url "$STAGING_BASE_URL" --mirror-token "$STAGING_TOKEN")
+          else
+            echo "MARKETPLACE_STAGING_BASE_URL / _TOKEN are not set; skipping the staging mirror"
           fi
-          python3 .scripts/uploader -p "$PLUGIN_PATH" -t "$STAGING_TOKEN" \
-            --plugin-daemon-path .scripts/dify-plugin-linux-amd64 -u "$STAGING_BASE_URL" -f --with-changelog ${CATEGORY_FLAG:+"$CATEGORY_FLAG"} < /tmp/changelog.md
 
-      - name: Report a failed staging upload
-        if: steps.upload-staging.outcome == 'failure'
-        # Summary needs no token; the comment is best-effort. Neither may redden
-        # a production publish that already succeeded.
-        continue-on-error: true
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          PLUGIN: ${{ env.PLUGIN_PATH }}
-        run: |
-          report=$(printf '%s\n' \
-            "**Staging upload failed** for \`$PLUGIN\`." \
-            "" \
-            "The plugin **is** published to production -- only <https://marketplace-staging.dify.dev> is missing it, so nothing needs re-merging or re-reviewing." \
-            "" \
-            "Reason: [workflow run]($RUN_URL). The next push of this plugin, or a backfill run, will bring staging back in line.")
-          printf '%s\n' "$report" >> "$GITHUB_STEP_SUMMARY"
-          gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments" -f body="$report"
+          python3 "$TOOLKIT_DIR/uploader" -p "$PLUGIN_PATH" -t "$MARKETPLACE_TOKEN" \
+            --plugin-daemon-path "$TOOLKIT_DIR/dify-plugin-linux-amd64" \
+            -u "$MARKETPLACE_BASE_URL" \
+            --with-changelog ${CATEGORY_FLAG:+"$CATEGORY_FLAG"} "${MIRROR_ARGS[@]}" \
+            < /tmp/changelog.md
