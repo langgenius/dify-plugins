@@ -18,11 +18,12 @@ COMPLEX = re.compile(r"(?m)^[ ]{0,3}(?:\x60{3,}|~{3,})|"
                      r"</?[A-Za-z][^>]*>|<[/!]?[A-Za-z]")
 IMAGE = re.compile(r"!\[[^\[\]\n]*\]\((?:[^()\n]|\([^()\n]*\))*\)")
 LINK = re.compile(r"\[([^\[\]\n]*)\]\((?:[^()\n]|\([^()\n]*\))*\)")
-URL = re.compile(r"<?(?:https?://|www\.)[^\s<>\]]+>?", re.I)
+ANGLE_URL = re.compile(r"<(?:https?://|www\.)[^\s<>]+>", re.I)
+URL = re.compile(r"(?:https?://|www\.)[^\s<>\]]+", re.I)
 COMMENT = re.compile(r"<!--.*?-->", re.S)
 FEEDBACK = "Explain what the plugin does and give one concrete input, output, supported action, or use case, then resubmit."
 MAX_CHARS = 40000
-POLICY_VERSION = "overview-visible-v1"
+POLICY_VERSION = "overview-visible-v2"
 
 @dataclass(frozen=True)
 class Policy:
@@ -43,7 +44,11 @@ def visible(source: str) -> tuple[str, bool]:
     text = IMAGE.sub(" ", text)
     if "![" in text:
         return "", True
-    text = URL.sub(" ", LINK.sub(r" \1 ", text))
+    text = ANGLE_URL.sub(" ", LINK.sub(r" \1 ", text))
+    # Without delimiters, a Unicode URL can run straight into visible prose.
+    if any(not match[0].isascii() for match in URL.finditer(text)):
+        return "", True
+    text = URL.sub(" ", text)
     if COMPLEX.search(text):
         return "", True
     return text, False
@@ -97,7 +102,8 @@ def decide(record: object, policy: Policy) -> dict:
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("input", nargs="?", default="-", help="UTF-8 JSONL file, or - for stdin")
-    parser.add_argument("--min-visible", type=int, required=True, help="reject if count is strictly below this number")
+    parser.add_argument("--min-visible", type=int, default=1,
+                        help="flag a nonempty Overview for length only if it falls below this count (default: 1)")
     parser.add_argument("--review-below", type=int, help="optional higher threshold for manual review")
     parser.add_argument("--enforce", action="store_true", help="emit reject instead of review for deterministic failures")
     args = parser.parse_args(argv)

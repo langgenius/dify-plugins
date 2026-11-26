@@ -40,6 +40,17 @@ class OverviewRules(unittest.TestCase):
         self.check("![decorative badge](https://example.test) <!-- Hidden text --> https://example.test", "reject", "no_visible_content", 0)
         self.check("[Details](https://example.test/path_(a))", "reject", "below_minimum_visible_length", 7)
 
+    def test_bare_url_with_unclear_text_boundary_goes_to_review(self):
+        for text in ("https://example.test。按城市查天气", "www.example.test/城市"):
+            with self.subTest(text=text):
+                self.check(text, "review", "complex_markup_requires_review")
+
+    def test_delimited_unicode_urls_preserve_visible_text(self):
+        for text in ("<https://example.test/天气>按仓库和标签查找公开问题",
+                     "[按仓库和标签查找公开问题](https://example.test/天气)"):
+            with self.subTest(text=text):
+                self.check(text, "review", "borderline_length", 12)
+
     def test_complex_markup_does_not_trigger_rejection(self):
         for item in ("<div>Example</div>", "~~~text\nabc\n~~~", "[ref][example]", "# Intro\nExample", "<!-- open"):
             with self.subTest(item=item):
@@ -56,6 +67,27 @@ class OverviewRules(unittest.TestCase):
     def test_policy_settings_validation(self):
         with self.assertRaises(ValueError):
             Policy(12, 11)
+
+    def test_cli_without_length_cutoff(self):
+        records = [
+            {"id": 1, "overview": "按城市查天气"},
+            {"id": 2, "overview": "TBD"},
+            {"id": 3, "overview": "", "plugin_name": "Example"},
+            {"id": 4, "overview": "Example", "plugin_name": "Example"},
+        ]
+        script = Path(__file__).with_name("overview_guard.py")
+        for options, expected in [
+            ([], ["pass", "review", "review", "review"]),
+            (["--enforce"], ["pass", "reject", "reject", "reject"]),
+            (["--enforce", "--review-below", "12"], ["review", "reject", "reject", "reject"]),
+        ]:
+            with self.subTest(options=options):
+                result = subprocess.run(
+                    [sys.executable, script, *options],
+                    input="\n".join(json.dumps(row) for row in records),
+                    capture_output=True, text=True, check=True,
+                )
+                self.assertEqual([json.loads(line)["decision"] for line in result.stdout.splitlines()], expected)
 
     def test_cli_keeps_processing_after_bad_row(self):
         script = str(Path(__file__).with_name("overview_guard.py"))
