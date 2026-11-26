@@ -22,6 +22,16 @@ Every submission must include:
 - A `PRIVACY.md` file or hosted privacy policy that explains what user data is collected, stored, logged, or sent to third parties. If no user data is collected, say so explicitly.
 - Primary user-facing text in English. Additional localized README files are welcome and should follow the [i18n guidance](https://docs.dify.ai/en/develop-plugin/features-and-specs/plugin-types/multilingual-readme).
 
+## Marketplace Overview review
+
+The Overview for a new plugin should tell a reviewer what the plugin does and give at least one concrete example of an input, output, supported action, or use case. A short description is fine if it provides that information.
+
+Reviewers may return clearly insufficient submissions for revision without a full review. A title repeated as the entire Overview, placeholder text such as `TBD`, or a generic phrase such as `AI tool` with no stated capability is not enough. For example, “Looks up public GitHub issues by repository and label” is concise but identifies an actual capability and its inputs.
+
+Suggested feedback: “Please expand the Marketplace Overview to explain what the plugin does and give one concrete input, output, supported action, or use case. Then resubmit for review.”
+
+Do not reject an informative Overview on length alone. If an automated minimum is introduced, publish it first, apply it to visible prose rather than Markdown formatting, validate it across supported languages, and keep ambiguous cases in manual review.
+
 ## Dependencies
 
 Keep dependencies minimal and explain unusual runtime requirements. Python plugins should avoid unbounded or unnecessary dependencies, direct URL installs, and git-based package installs unless the PR explains why they are required.
