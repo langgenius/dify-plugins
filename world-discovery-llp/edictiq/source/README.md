@@ -7,8 +7,8 @@ Edict IQ brings official-source regulatory change intelligence, verified citatio
 Requirements: a Dify instance (version 1.7.1+) and an Edict IQ account. The tool plugin is free to install. Edict IQ features depend on account permissions and subscription.
 
 1. Install Edict IQ from the Dify Marketplace or install the signed plugin package.
-2. In the Edict IQ tool provider OAuth client setup, copy the exact callback URI displayed by Dify. The organization administrator must register a confidential OAuth client in Edict IQ with that callback and client-secret Basic authentication. This is not the same OAuth client used by Dify's private MCP server connection.
-3. Enter the OAuth client ID and client secret in Dify's OAuth client settings. Never paste a secret into a prompt or workflow. The authorization-code grant must be permitted; configure PKCE based on what the installed Dify OAuth runtime supplies.
+2. In the Edict IQ tool provider OAuth client setup, copy the exact callback URI displayed by Dify. The Edict IQ administrator must register a confidential OAuth client in Supabase Authentication > OAuth Apps with that callback and client-secret Basic authentication. This is not the same OAuth client used by Dify's private MCP server connection.
+3. Enter the OAuth client ID and client secret in Dify's OAuth client settings. Never paste a secret into a prompt or workflow. The authorization-code grant and refresh tokens must be permitted. The plugin implements per-login PKCE S256 itself: a random verifier is encrypted into the time-limited OAuth state and checked at callback. Supabase OAuth Server requires PKCE for both public and confidential clients.
 4. Click Authorize and grant access to your Edict IQ organization/workspace. If the required scopes are not granted, tools may remain unavailable.
 
 For private MCP use only, Dify also supports connecting https://edictiq.com/api/mcp under Integrations > Tools > MCP with dynamic OAuth client registration.
@@ -40,6 +40,6 @@ Edict IQ supports a permanent free layer; premium functionality depends on the p
 
 Public source: https://github.com/edictiq/edictiq-platform/tree/main/integrations/edictiq-dify-plugin
 
-Only the fixed HTTPS Edict IQ MCP and official Supabase OAuth endpoints are accessed. No shell, SQL, browser automation, arbitrary host access, raw file upload or built-in background worker. Tool parameter definitions are generated from the current Edict IQ MCP contract and regression-tested for parity.
+Only the fixed HTTPS Edict IQ MCP and official Supabase OAuth endpoints are accessed. PKCE verifier state expires after ten minutes and is never persisted or logged by this plugin. No shell, SQL, browser automation, arbitrary host access, raw file upload or built-in background worker. Tool parameter definitions are generated from the current Edict IQ MCP contract and regression-tested for parity.
 
 IMPORTANT: Complete a live OAuth client configuration and an authenticated read-only tool call in Dify before submitting for marketplace review.

@@ -1,21 +1,58 @@
 """Edict IQ OAuth 2.0 provider. OAuth credentials are supplied by Dify, never in source."""
 from __future__ import annotations
 
+import base64
+import hashlib
+import hmac
+import secrets
 import time
 from collections.abc import Mapping
 from typing import Any
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
 
-import requests
+# Dify initializes gevent SSL support; load it before the requests/urllib3 stack.
 from dify_plugin import ToolProvider
 from dify_plugin.entities.oauth import ToolOAuthCredentials
 from dify_plugin.errors.tool import ToolProviderCredentialValidationError, ToolProviderOAuthError
+
+import requests
+from cryptography.fernet import Fernet, InvalidToken
 from tools.mcp_client import call_mcp, EdictIqMcpError
 
 AUTH_URL = "https://vweumwphoufbatnalcte.supabase.co/auth/v1/oauth/authorize"
 TOKEN_URL = "https://vweumwphoufbatnalcte.supabase.co/auth/v1/oauth/token"
 RESOURCE_URL = "https://edictiq.com/api/mcp"
 SCOPES = "openid email offline_access"
+
+
+def _pkce_state_cipher(redirect_uri: str, creds: Mapping[str, Any]) -> Fernet:
+    """Stateless, short-lived PKCE verifier custody bound to the confidential OAuth client.
+
+    Dify's ToolProvider OAuth interface does not have a per-authorization storage hook.
+    Supabase echoes the state value to Dify's callback, which passes it to this plugin.
+    This state token contains only an encrypted verifier, never an access token.
+    """
+    cid, secret = creds.get("client_id"), creds.get("client_secret")
+    if not isinstance(cid, str) or not cid or not isinstance(secret, str) or not secret:
+        raise ToolProviderOAuthError("Configure the Edict IQ OAuth client first.")
+    key = hmac.digest(
+        secret.encode("utf-8"),
+        b"edictiq-dify-pkce-state-v1\x00" + cid.encode("utf-8") + b"\x00" + redirect_uri.encode("utf-8"),
+        "sha256",
+    )
+    return Fernet(base64.urlsafe_b64encode(key))
+
+
+def _is_secure_callback(redirect_uri: str) -> bool:
+    try:
+        parsed = urlsplit(redirect_uri)
+        return (
+            parsed.scheme == "https" and bool(parsed.hostname)
+            and not parsed.username and not parsed.password
+            and not parsed.fragment and not parsed.query
+        )
+    except ValueError:
+        return False
 
 
 def _exchange_token(data: dict[str, str], creds: Mapping[str, Any]) -> ToolOAuthCredentials:
@@ -58,10 +95,16 @@ class EdictIqProvider(ToolProvider):
     def _oauth_get_authorization_url(self, redirect_uri: str, system_credentials: Mapping[str, Any]) -> str:
         if not system_credentials.get("client_id") or not system_credentials.get("client_secret"):
             raise ToolProviderOAuthError("Set up the Edict IQ OAuth client ID and secret.")
-        if not isinstance(redirect_uri, str) or not redirect_uri.startswith("https://"):
+        if not isinstance(redirect_uri, str) or not _is_secure_callback(redirect_uri):
             raise ToolProviderOAuthError("Dify must provide a secure OAuth callback.")
-        params = {"client_id": str(system_credentials["client_id"]), "redirect_uri": redirect_uri,
-                  "response_type": "code", "scope": SCOPES, "resource": RESOURCE_URL}
+        verifier = secrets.token_urlsafe(48)
+        challenge = base64.urlsafe_b64encode(hashlib.sha256(verifier.encode("ascii")).digest()).rstrip(b"=").decode("ascii")
+        state = _pkce_state_cipher(redirect_uri, system_credentials).encrypt(verifier.encode("ascii")).decode("ascii")
+        params = {
+            "client_id": str(system_credentials["client_id"]), "redirect_uri": redirect_uri,
+            "response_type": "code", "scope": SCOPES, "resource": RESOURCE_URL,
+            "state": state, "code_challenge": challenge, "code_challenge_method": "S256",
+        }
         return AUTH_URL + "?" + urlencode(params)
 
     def _oauth_get_credentials(self, redirect_uri: str, system_credentials: Mapping[str, Any], request: Any) -> ToolOAuthCredentials:
@@ -70,9 +113,18 @@ class EdictIqProvider(ToolProvider):
         code = request.args.get("code")
         if not isinstance(code, str) or not code:
             raise ToolProviderOAuthError("Edict IQ authorization code is missing.")
+        state = request.args.get("state")
+        if not isinstance(state, str) or len(state) > 1024:
+            raise ToolProviderOAuthError("Edict IQ OAuth state is missing or invalid.")
+        try:
+            verifier = _pkce_state_cipher(redirect_uri, system_credentials).decrypt(
+                state.encode("ascii"), ttl=600,
+            ).decode("ascii")
+        except (InvalidToken, UnicodeError, ValueError) as exc:
+            raise ToolProviderOAuthError("Edict IQ OAuth state expired or failed verification.") from exc
         return _exchange_token(
             {"grant_type": "authorization_code", "code": code, "redirect_uri": redirect_uri,
-             "resource": RESOURCE_URL},
+             "resource": RESOURCE_URL, "code_verifier": verifier},
             system_credentials,
         )
 
