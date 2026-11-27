@@ -1,0 +1,44 @@
+identity:
+  name: list_workspace_monitors
+  author: world-discovery-llp
+  label:
+    en_US: List workspace monitors
+description:
+  human:
+    en_US: List saved target monitors and view monitors in the explicitly selected, authorized Edict IQ workspace. Includes
+      status and delivery cadence. No creation or analysis credits.
+  llm: List saved target monitors and view monitors in the explicitly selected, authorized Edict IQ workspace. Includes
+    status and delivery cadence. No creation or analysis credits.
+parameters:
+- name: organization_id
+  type: string
+  required: true
+  label:
+    en_US: Organization id
+  human_description:
+    en_US: Explicit organization id from list_connected_workspaces; never guess.
+  llm_description: Explicit organization id from list_connected_workspaces; never guess.
+  form: llm
+- name: workspace_id
+  type: string
+  required: true
+  label:
+    en_US: Workspace id
+  human_description:
+    en_US: Explicit workspace id from list_connected_workspaces; never guess.
+  llm_description: Explicit workspace id from list_connected_workspaces; never guess.
+  form: llm
+- name: limit
+  type: number
+  required: false
+  label:
+    en_US: Limit
+  human_description:
+    en_US: Limit for List workspace monitors.
+  llm_description: Limit for List workspace monitors.
+  form: llm
+  min: 1
+  max: 10
+extra:
+  python:
+    source: tools/list_workspace_monitors.py

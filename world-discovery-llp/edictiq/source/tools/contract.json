@@ -1,0 +1,447 @@
+[
+  {
+    "name": "list_connected_workspaces",
+    "title": "List connected Edict IQ workspaces",
+    "description": "Lists only the organizations and workspaces available to this authenticated Edict IQ connection. Workspace-specific operations require explicit organization_id and workspace_id identifiers; targets are not inferred.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    },
+    "annotations": {
+      "title": "List connected Edict IQ workspaces",
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "search_regulatory_changes",
+    "title": "Search regulatory changes",
+    "description": "Search Edict IQ's approved source-backed regulatory change layer by business question. Returns concise change, impact and relevance fields, not raw source-registry or acquisition data.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "jurisdiction": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "frameworks": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "type": "string",
+            "maxLength": 120
+          }
+        },
+        "sectors": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "type": "string",
+            "maxLength": 120
+          }
+        },
+        "lens": {
+          "type": "string",
+          "enum": [
+            "compliance",
+            "market"
+          ]
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "title": "Search regulatory changes",
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "get_regulatory_change",
+    "title": "Get regulatory change",
+    "description": "Retrieve one approved Edict IQ regulatory change with source identity, what changed and impact context. Machine output intentionally withholds raw acquisition metadata and direct source URLs.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "event_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 220
+        }
+      },
+      "required": [
+        "event_ref"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "title": "Get regulatory change",
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "get_regulatory_evidence",
+    "title": "Get verified regulatory evidence",
+    "description": "Retrieve bounded verified citation excerpts and legal-location metadata for one approved Edict IQ event. Direct source URLs, hashes, parser details and acquisition metadata are excluded.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "event_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 220
+        }
+      },
+      "required": [
+        "event_ref"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "title": "Get verified regulatory evidence",
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "list_workspace_monitors",
+    "title": "List workspace monitors",
+    "description": "List saved target monitors and view monitors in the explicitly selected, authorized Edict IQ workspace. Includes status and delivery cadence. No creation or analysis credits.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "organization_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "workspace_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        }
+      },
+      "required": [
+        "organization_id",
+        "workspace_id"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "title": "List workspace monitors",
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "list_workspace_impacts",
+    "title": "List workspace impacts",
+    "description": "List organization-specific impact assessments from the workspace bound to this credential. Private context snapshots, user identifiers and raw evidence payloads are excluded.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "organization_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "workspace_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "status": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        }
+      },
+      "required": [
+        "organization_id",
+        "workspace_id"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "title": "List workspace impacts",
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "get_workspace_impact",
+    "title": "Get workspace impact decision chain",
+    "description": "Retrieve one workspace impact assessment with human-reviewed applicability, obligation changes, control and policy impacts, evidence requests and compliance gaps. Raw context and evidence JSON stay private.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "organization_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "workspace_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "assessment_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        }
+      },
+      "required": [
+        "organization_id",
+        "workspace_id",
+        "assessment_ref"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "title": "Get workspace impact decision chain",
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "list_workspace_open_work",
+    "title": "List open regulatory work",
+    "description": "List unresolved compliance gaps and evidence requests in the credential-bound workspace so an AI client can answer what still needs attention without receiving the underlying private corpus.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "organization_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "workspace_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        }
+      },
+      "required": [
+        "organization_id",
+        "workspace_id"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "title": "List open regulatory work",
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "create_target_monitor",
+    "title": "Create target monitor in Edict IQ",
+    "description": "Creates one monitored target in an explicitly selected Edict IQ workspace on explicit user request. This state-changing operation requires monitor.write consent and a stable idempotency_key UUID. Plan limits and audit records apply. No analysis credits are consumed.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "organization_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "workspace_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "item_type": {
+          "type": "string",
+          "enum": [
+            "keyword",
+            "framework",
+            "topic",
+            "authority",
+            "jurisdiction",
+            "sector",
+            "source",
+            "proceeding"
+          ]
+        },
+        "item_value": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 180
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "delivery_cadence": {
+          "type": "string",
+          "enum": [
+            "off",
+            "immediate",
+            "daily",
+            "weekly"
+          ]
+        },
+        "idempotency_key": {
+          "type": "string",
+          "format": "uuid",
+          "description": "One stable UUID per user-requested creation. Reuse it on retries."
+        }
+      },
+      "required": [
+        "organization_id",
+        "workspace_id",
+        "title",
+        "item_type",
+        "item_value",
+        "delivery_cadence",
+        "idempotency_key"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "title": "Create target monitor in Edict IQ",
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "prepare_upload_handoff",
+    "title": "Get upload link",
+    "description": "Returns a link to the selected Edict IQ workspace upload page for a document check, portfolio import, or legal entity import. This tool does not upload, import, analyze, or modify files. The user opens the link and selects files directly in Edict IQ. Attachments, file contents, public file URLs, access tokens, and upload credentials are not accepted by this tool. Imports require user review. Document analysis costs 1 credit per page only after explicit confirmation in Edict IQ.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "organization_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "workspace_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "upload_kind": {
+          "type": "string",
+          "enum": [
+            "document",
+            "portfolio",
+            "entities"
+          ]
+        }
+      },
+      "required": [
+        "organization_id",
+        "workspace_id",
+        "upload_kind"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "title": "Get upload link",
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "get_workspace_inventory",
+    "title": "Get a bounded Edict IQ entity and portfolio overview",
+    "description": "Read bounded counts and a small overview of legal entities and portfolio positions from a deliberately selected workspace. Requires a separately approved inventory.read OAuth permission. Never returns source files, account numbers, market values, private notes, raw context, or bulk positions.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "organization_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "workspace_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        }
+      },
+      "required": [
+        "organization_id",
+        "workspace_id"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "title": "Get a bounded Edict IQ entity and portfolio overview",
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "list_document_checks",
+    "title": "Check the status of your Edict IQ document analyses",
+    "description": "List at most ten document-check jobs started by the connected user in the selected Edict IQ workspace. This tool does not read document content, file paths or model results; it reports completion and credited page cost only. Requires separate analysis.read OAuth permission.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "organization_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "workspace_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        }
+      },
+      "required": [
+        "organization_id",
+        "workspace_id"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "title": "Check the status of your Edict IQ document analyses",
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": false
+    }
+  }
+]

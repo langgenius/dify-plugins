@@ -1,0 +1,53 @@
+identity:
+  name: list_workspace_impacts
+  author: world-discovery-llp
+  label:
+    en_US: List workspace impacts
+description:
+  human:
+    en_US: List organization-specific impact assessments from the workspace bound to this credential. Private context
+      snapshots, user identifiers and raw evidence payloads are excluded.
+  llm: List organization-specific impact assessments from the workspace bound to this credential. Private context snapshots,
+    user identifiers and raw evidence payloads are excluded.
+parameters:
+- name: organization_id
+  type: string
+  required: true
+  label:
+    en_US: Organization id
+  human_description:
+    en_US: Explicit organization id from list_connected_workspaces; never guess.
+  llm_description: Explicit organization id from list_connected_workspaces; never guess.
+  form: llm
+- name: workspace_id
+  type: string
+  required: true
+  label:
+    en_US: Workspace id
+  human_description:
+    en_US: Explicit workspace id from list_connected_workspaces; never guess.
+  llm_description: Explicit workspace id from list_connected_workspaces; never guess.
+  form: llm
+- name: status
+  type: string
+  required: false
+  label:
+    en_US: Status
+  human_description:
+    en_US: Status for List workspace impacts.
+  llm_description: Status for List workspace impacts.
+  form: llm
+- name: limit
+  type: number
+  required: false
+  label:
+    en_US: Limit
+  human_description:
+    en_US: Limit for List workspace impacts.
+  llm_description: Limit for List workspace impacts.
+  form: llm
+  min: 1
+  max: 10
+extra:
+  python:
+    source: tools/list_workspace_impacts.py

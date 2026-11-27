@@ -1,0 +1,90 @@
+identity:
+  name: search_regulatory_changes
+  author: world-discovery-llp
+  label:
+    en_US: Search regulatory changes
+description:
+  human:
+    en_US: Search Edict IQ's approved source-backed regulatory change layer by business question. Returns concise change,
+      impact and relevance fields, not raw source-registry or acquisition data.
+  llm: Search Edict IQ's approved source-backed regulatory change layer by business question. Returns concise change,
+    impact and relevance fields, not raw source-registry or acquisition data.
+parameters:
+- name: query
+  type: string
+  required: true
+  label:
+    en_US: Query
+  human_description:
+    en_US: Query for Search regulatory changes.
+  llm_description: Query for Search regulatory changes.
+  form: llm
+- name: jurisdiction
+  type: string
+  required: false
+  label:
+    en_US: Jurisdiction
+  human_description:
+    en_US: Jurisdiction for Search regulatory changes.
+  llm_description: Jurisdiction for Search regulatory changes.
+  form: llm
+- name: frameworks
+  type: array
+  required: false
+  label:
+    en_US: Frameworks
+  human_description:
+    en_US: Frameworks for Search regulatory changes.
+  llm_description: Frameworks for Search regulatory changes.
+  form: llm
+  input_schema:
+    type: array
+    items:
+      type: string
+      maxLength: 120
+    maxItems: 20
+- name: sectors
+  type: array
+  required: false
+  label:
+    en_US: Sectors
+  human_description:
+    en_US: Sectors for Search regulatory changes.
+  llm_description: Sectors for Search regulatory changes.
+  form: llm
+  input_schema:
+    type: array
+    items:
+      type: string
+      maxLength: 120
+    maxItems: 20
+- name: lens
+  type: select
+  required: false
+  label:
+    en_US: Lens
+  human_description:
+    en_US: Lens for Search regulatory changes.
+  llm_description: Lens for Search regulatory changes.
+  form: llm
+  options:
+  - value: compliance
+    label:
+      en_US: compliance
+  - value: market
+    label:
+      en_US: market
+- name: limit
+  type: number
+  required: false
+  label:
+    en_US: Limit
+  human_description:
+    en_US: Limit for Search regulatory changes.
+  llm_description: Limit for Search regulatory changes.
+  form: llm
+  min: 1
+  max: 10
+extra:
+  python:
+    source: tools/search_regulatory_changes.py

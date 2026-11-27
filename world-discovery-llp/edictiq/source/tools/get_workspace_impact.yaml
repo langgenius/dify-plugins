@@ -1,0 +1,42 @@
+identity:
+  name: get_workspace_impact
+  author: world-discovery-llp
+  label:
+    en_US: Get workspace impact decision chain
+description:
+  human:
+    en_US: Retrieve one workspace impact assessment with human-reviewed applicability, obligation changes, control and
+      policy impacts, evidence requests and compliance gaps. Raw context and evidence JSON stay private.
+  llm: Retrieve one workspace impact assessment with human-reviewed applicability, obligation changes, control and policy
+    impacts, evidence requests and compliance gaps. Raw context and evidence JSON stay private.
+parameters:
+- name: organization_id
+  type: string
+  required: true
+  label:
+    en_US: Organization id
+  human_description:
+    en_US: Explicit organization id from list_connected_workspaces; never guess.
+  llm_description: Explicit organization id from list_connected_workspaces; never guess.
+  form: llm
+- name: workspace_id
+  type: string
+  required: true
+  label:
+    en_US: Workspace id
+  human_description:
+    en_US: Explicit workspace id from list_connected_workspaces; never guess.
+  llm_description: Explicit workspace id from list_connected_workspaces; never guess.
+  form: llm
+- name: assessment_ref
+  type: string
+  required: true
+  label:
+    en_US: Assessment ref
+  human_description:
+    en_US: Assessment ref for Get workspace impact decision chain.
+  llm_description: Assessment ref for Get workspace impact decision chain.
+  form: llm
+extra:
+  python:
+    source: tools/get_workspace_impact.py

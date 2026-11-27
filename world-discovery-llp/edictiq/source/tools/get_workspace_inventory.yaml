@@ -1,0 +1,46 @@
+identity:
+  name: get_workspace_inventory
+  author: world-discovery-llp
+  label:
+    en_US: Get a bounded Edict IQ entity and portfolio overview
+description:
+  human:
+    en_US: Read bounded counts and a small overview of legal entities and portfolio positions from a deliberately selected
+      workspace. Requires a separately approved inventory.read OAuth permission. Never returns source files, account
+      numbers, market values, private notes, raw context, or bulk positions.
+  llm: Read bounded counts and a small overview of legal entities and portfolio positions from a deliberately selected
+    workspace. Requires a separately approved inventory.read OAuth permission. Never returns source files, account numbers,
+    market values, private notes, raw context, or bulk positions.
+parameters:
+- name: organization_id
+  type: string
+  required: true
+  label:
+    en_US: Organization id
+  human_description:
+    en_US: Explicit organization id from list_connected_workspaces; never guess.
+  llm_description: Explicit organization id from list_connected_workspaces; never guess.
+  form: llm
+- name: workspace_id
+  type: string
+  required: true
+  label:
+    en_US: Workspace id
+  human_description:
+    en_US: Explicit workspace id from list_connected_workspaces; never guess.
+  llm_description: Explicit workspace id from list_connected_workspaces; never guess.
+  form: llm
+- name: limit
+  type: number
+  required: false
+  label:
+    en_US: Limit
+  human_description:
+    en_US: Limit for Get a bounded Edict IQ entity and portfolio overview.
+  llm_description: Limit for Get a bounded Edict IQ entity and portfolio overview.
+  form: llm
+  min: 1
+  max: 10
+extra:
+  python:
+    source: tools/get_workspace_inventory.py

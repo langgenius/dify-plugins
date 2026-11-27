@@ -1,0 +1,128 @@
+identity:
+  name: create_target_monitor
+  author: world-discovery-llp
+  label:
+    en_US: Create target monitor in Edict IQ
+description:
+  human:
+    en_US: Creates one monitored target in an explicitly selected Edict IQ workspace on explicit user request. This state-changing
+      operation requires monitor.write consent and a stable idempotency_key UUID. Plan limits and audit records apply.
+      No analysis credits are consumed.
+  llm: Creates one monitored target in an explicitly selected Edict IQ workspace on explicit user request. This state-changing
+    operation requires monitor.write consent and a stable idempotency_key UUID. Plan limits and audit records apply.
+    No analysis credits are consumed. Requires explicit user instruction and confirmation; creates a persistent monitor.
+parameters:
+- name: organization_id
+  type: string
+  required: true
+  label:
+    en_US: Organization id
+  human_description:
+    en_US: Explicit organization id from list_connected_workspaces; never guess.
+  llm_description: Explicit organization id from list_connected_workspaces; never guess.
+  form: llm
+- name: workspace_id
+  type: string
+  required: true
+  label:
+    en_US: Workspace id
+  human_description:
+    en_US: Explicit workspace id from list_connected_workspaces; never guess.
+  llm_description: Explicit workspace id from list_connected_workspaces; never guess.
+  form: llm
+- name: title
+  type: string
+  required: true
+  label:
+    en_US: Title
+  human_description:
+    en_US: Title for Create target monitor in Edict IQ.
+  llm_description: Title for Create target monitor in Edict IQ.
+  form: llm
+- name: item_type
+  type: select
+  required: true
+  label:
+    en_US: Item type
+  human_description:
+    en_US: Item type for Create target monitor in Edict IQ.
+  llm_description: Item type for Create target monitor in Edict IQ.
+  form: llm
+  options:
+  - value: keyword
+    label:
+      en_US: keyword
+  - value: framework
+    label:
+      en_US: framework
+  - value: topic
+    label:
+      en_US: topic
+  - value: authority
+    label:
+      en_US: authority
+  - value: jurisdiction
+    label:
+      en_US: jurisdiction
+  - value: sector
+    label:
+      en_US: sector
+  - value: source
+    label:
+      en_US: source
+  - value: proceeding
+    label:
+      en_US: proceeding
+- name: item_value
+  type: string
+  required: true
+  label:
+    en_US: Item value
+  human_description:
+    en_US: Item value for Create target monitor in Edict IQ.
+  llm_description: Item value for Create target monitor in Edict IQ.
+  form: llm
+- name: description
+  type: string
+  required: false
+  label:
+    en_US: Description
+  human_description:
+    en_US: Description for Create target monitor in Edict IQ.
+  llm_description: Description for Create target monitor in Edict IQ.
+  form: llm
+- name: delivery_cadence
+  type: select
+  required: true
+  label:
+    en_US: Delivery cadence
+  human_description:
+    en_US: Delivery cadence for Create target monitor in Edict IQ.
+  llm_description: Delivery cadence for Create target monitor in Edict IQ.
+  form: llm
+  options:
+  - value: 'off'
+    label:
+      en_US: 'off'
+  - value: immediate
+    label:
+      en_US: immediate
+  - value: daily
+    label:
+      en_US: daily
+  - value: weekly
+    label:
+      en_US: weekly
+- name: idempotency_key
+  type: string
+  required: true
+  label:
+    en_US: Idempotency key
+  human_description:
+    en_US: Stable UUID for this explicit user-requested creation. Reuse on retry; never invent a fresh key for a retry.
+  llm_description: Stable UUID for this explicit user-requested creation. Reuse on retry; never invent a fresh key for
+    a retry.
+  form: llm
+extra:
+  python:
+    source: tools/create_target_monitor.py

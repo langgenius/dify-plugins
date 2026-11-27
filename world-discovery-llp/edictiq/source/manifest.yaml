@@ -1,0 +1,33 @@
+version: 0.1.0
+type: plugin
+author: world-discovery-llp
+name: edictiq
+label:
+  en_US: Edict IQ
+description:
+  en_US: Source-backed regulatory intelligence, verified evidence and workspace impact workflows through Edict IQ.
+icon: icon.png
+tags:
+- business
+- finance
+resource:
+  memory: 134217728
+  permission:
+    tool:
+      enabled: true
+plugins:
+  tools:
+  - provider/edictiq.yaml
+meta:
+  version: 0.0.1
+  arch:
+  - amd64
+  - arm64
+  runner:
+    language: python
+    version: '3.12'
+    entrypoint: main
+  minimum_dify_version: 1.7.1
+created_at: '2026-11-27T12:00:00Z'
+privacy: PRIVACY.md
+verified: false

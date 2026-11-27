@@ -1,0 +1,24 @@
+identity:
+  name: get_regulatory_change
+  author: world-discovery-llp
+  label:
+    en_US: Get regulatory change
+description:
+  human:
+    en_US: Retrieve one approved Edict IQ regulatory change with source identity, what changed and impact context. Machine
+      output intentionally withholds raw acquisition metadata and direct source URLs.
+  llm: Retrieve one approved Edict IQ regulatory change with source identity, what changed and impact context. Machine
+    output intentionally withholds raw acquisition metadata and direct source URLs.
+parameters:
+- name: event_ref
+  type: string
+  required: true
+  label:
+    en_US: Event ref
+  human_description:
+    en_US: Event ref for Get regulatory change.
+  llm_description: Event ref for Get regulatory change.
+  form: llm
+extra:
+  python:
+    source: tools/get_regulatory_change.py
