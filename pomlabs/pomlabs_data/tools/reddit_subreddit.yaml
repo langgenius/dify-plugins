@@ -1,0 +1,31 @@
+identity:
+  name: reddit_subreddit
+  author: pomlabs
+  label:
+    en_US: "Subreddit Posts"
+description:
+  human:
+    en_US: "Posts of a subreddit with score, comments count, date and text."
+  llm: "Posts of a subreddit with score, comments count, date and text."
+parameters:
+  - name: name
+    type: string
+    required: true
+    label:
+      en_US: "name"
+    human_description:
+      en_US: "Subreddit name (without r/)"
+    llm_description: "Subreddit name (without r/)"
+    form: llm
+  - name: max
+    type: number
+    required: false
+    label:
+      en_US: "max"
+    human_description:
+      en_US: "Maximum posts"
+    llm_description: "Maximum posts"
+    form: llm
+extra:
+  python:
+    source: tools/reddit_subreddit.py

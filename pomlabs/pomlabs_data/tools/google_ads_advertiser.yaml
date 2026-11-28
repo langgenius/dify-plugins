@@ -1,0 +1,40 @@
+identity:
+  name: google_ads_advertiser
+  author: pomlabs
+  label:
+    en_US: "Google Ads Transparency"
+description:
+  human:
+    en_US: "Ads of an advertiser in the Google Ads Transparency Center, by domain or name, per country."
+  llm: "Ads of an advertiser in the Google Ads Transparency Center, by domain or name, per country."
+parameters:
+  - name: advertiser
+    type: string
+    required: true
+    label:
+      en_US: "advertiser"
+    human_description:
+      en_US: "Advertiser domain, name or AR id"
+    llm_description: "Advertiser domain, name or AR id"
+    form: llm
+  - name: region
+    type: string
+    required: false
+    label:
+      en_US: "region"
+    human_description:
+      en_US: "Country code (e.g. US, BR)"
+    llm_description: "Country code (e.g. US, BR)"
+    form: llm
+  - name: max
+    type: number
+    required: false
+    label:
+      en_US: "max"
+    human_description:
+      en_US: "Maximum ads"
+    llm_description: "Maximum ads"
+    form: llm
+extra:
+  python:
+    source: tools/google_ads_advertiser.py

@@ -1,0 +1,22 @@
+identity:
+  name: linkedin_profile
+  author: pomlabs
+  label:
+    en_US: "LinkedIn Profile"
+description:
+  human:
+    en_US: "Public LinkedIn profile without login: name, location, about, company, education and skills."
+  llm: "Public LinkedIn profile without login: name, location, about, company, education and skills."
+parameters:
+  - name: profile
+    type: string
+    required: true
+    label:
+      en_US: "profile"
+    human_description:
+      en_US: "LinkedIn profile URL or public identifier"
+    llm_description: "LinkedIn profile URL or public identifier"
+    form: llm
+extra:
+  python:
+    source: tools/linkedin_profile.py

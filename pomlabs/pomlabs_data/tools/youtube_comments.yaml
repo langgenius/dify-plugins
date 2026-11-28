@@ -1,0 +1,40 @@
+identity:
+  name: youtube_comments
+  author: pomlabs
+  label:
+    en_US: "YouTube Comments"
+description:
+  human:
+    en_US: "Comments and replies of a YouTube video or Short: text, author, likes, reply count, date."
+  llm: "Comments and replies of a YouTube video or Short: text, author, likes, reply count, date."
+parameters:
+  - name: video
+    type: string
+    required: true
+    label:
+      en_US: "video"
+    human_description:
+      en_US: "YouTube video URL or ID"
+    llm_description: "YouTube video URL or ID"
+    form: llm
+  - name: max
+    type: number
+    required: false
+    label:
+      en_US: "max"
+    human_description:
+      en_US: "Maximum comments (default 100)"
+    llm_description: "Maximum comments (default 100)"
+    form: llm
+  - name: sort
+    type: string
+    required: false
+    label:
+      en_US: "sort"
+    human_description:
+      en_US: "top or newest"
+    llm_description: "top or newest"
+    form: llm
+extra:
+  python:
+    source: tools/youtube_comments.py
