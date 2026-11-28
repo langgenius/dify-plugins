@@ -1,5 +1,5 @@
-from tools._base import PomBase
+import tools._base as _b
 
 
-class VideoTranscriptTool(PomBase):
+class VideoTranscriptTool(_b.PomBase):
     PATH = "/v1/video-transcript/transcript"

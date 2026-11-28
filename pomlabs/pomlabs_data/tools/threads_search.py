@@ -1,5 +1,5 @@
-from tools._base import PomBase
+import tools._base as _b
 
 
-class ThreadsSearchTool(PomBase):
+class ThreadsSearchTool(_b.PomBase):
     PATH = "/v1/threads/search"

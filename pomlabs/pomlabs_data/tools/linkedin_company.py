@@ -1,5 +1,5 @@
-from tools._base import PomBase
+import tools._base as _b
 
 
-class LinkedinCompanyTool(PomBase):
+class LinkedinCompanyTool(_b.PomBase):
     PATH = "/v1/linkedin-company"
