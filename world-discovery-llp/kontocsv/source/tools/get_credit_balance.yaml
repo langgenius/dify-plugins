@@ -1,0 +1,43 @@
+identity:
+  name: get_credit_balance
+  author: world-discovery-llp
+  label:
+    en_US: Check available conversion credits
+description:
+  human:
+    en_US: Returns the authenticated KontoCSV account's current total, reserved and available conversion-credit
+      balance.
+  llm: Returns the authenticated KontoCSV account's current total, reserved and available conversion-credit balance.
+    Read-only and does not spend credits.
+parameters:
+- name: locale
+  type: select
+  required: false
+  label:
+    en_US: Language
+  human_description:
+    en_US: Language for Check available conversion credits.
+  llm_description: Language for Check available conversion credits.
+  form: llm
+  options:
+  - value: de
+    label:
+      en_US: de
+  - value: en
+    label:
+      en_US: en
+  - value: fr
+    label:
+      en_US: fr
+  - value: es
+    label:
+      en_US: es
+  - value: it
+    label:
+      en_US: it
+  - value: nl
+    label:
+      en_US: nl
+extra:
+  python:
+    source: tools/get_credit_balance.py

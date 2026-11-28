@@ -1,0 +1,48 @@
+identity:
+  author: world-discovery-llp
+  name: kontocsv
+  description:
+    en_US: Bank-statement and CSV conversion using the existing credit-protected KontoCSV service.
+  icon: icon.png
+  label:
+    en_US: KontoCSV
+  tags:
+    - business
+    - finance
+credentials_for_provider: {}
+oauth_schema:
+  client_schema:
+    - name: client_id
+      type: text-input
+      required: true
+      label:
+        en_US: KontoCSV OAuth client ID
+      help:
+        en_US: Register a confidential KontoCSV OAuth client for the exact Dify callback and the KontoCSV Claude MCP resource.
+      url: https://www.kontocsv.de/en/claude-connector
+    - name: client_secret
+      type: secret-input
+      required: true
+      label:
+        en_US: KontoCSV OAuth client secret
+  credentials_schema:
+    - name: access_token
+      type: secret-input
+      label:
+        en_US: Access token
+    - name: refresh_token
+      type: secret-input
+      label:
+        en_US: Refresh token
+tools:
+  - tools/create_browser_upload_session.yaml
+  - tools/complete_browser_upload.yaml
+  - tools/inspect_bank_statement.yaml
+  - tools/prepare_bank_statement_conversion.yaml
+  - tools/get_credit_balance.yaml
+  - tools/convert_bank_statement_for_accounting.yaml
+  - tools/get_conversion_status.yaml
+  - tools/download_accounting_export.yaml
+extra:
+  python:
+    source: provider/kontocsv.py

@@ -1,0 +1,70 @@
+identity:
+  name: create_browser_upload_session
+  author: world-discovery-llp
+  label:
+    en_US: Create secure browser upload
+description:
+  human:
+    en_US: Creates a short-lived KontoCSV browser upload link for a PDF bank, card or payment statement, or a transaction
+      CSV. The user selects and uploads the file on KontoCSV's website. Creating the link does not start a conversion
+      or spend credits.
+  llm: Creates a short-lived KontoCSV browser upload link for a PDF bank, card or payment statement, or a transaction
+    CSV. The user selects and uploads the file on KontoCSV's website. Creating the link does not start a conversion
+    or spend credits. Give the returned browserUploadUrl to the user for direct upload on KontoCSV, not in Dify.
+parameters:
+- name: filename
+  type: string
+  required: false
+  label:
+    en_US: File name
+  human_description:
+    en_US: File name for Create secure browser upload. Use only a filename; no bank login credentials.
+  llm_description: File name for Create secure browser upload. Use only a filename; no bank login credentials.
+  form: llm
+- name: mediaType
+  type: select
+  required: true
+  label:
+    en_US: Source format
+  human_description:
+    en_US: Source format for Create secure browser upload.
+  llm_description: Source format for Create secure browser upload.
+  form: llm
+  options:
+  - value: application/pdf
+    label:
+      en_US: application/pdf
+  - value: text/csv
+    label:
+      en_US: text/csv
+- name: locale
+  type: select
+  required: false
+  label:
+    en_US: Language
+  human_description:
+    en_US: Language for Create secure browser upload.
+  llm_description: Language for Create secure browser upload.
+  form: llm
+  options:
+  - value: de
+    label:
+      en_US: de
+  - value: en
+    label:
+      en_US: en
+  - value: fr
+    label:
+      en_US: fr
+  - value: es
+    label:
+      en_US: es
+  - value: it
+    label:
+      en_US: it
+  - value: nl
+    label:
+      en_US: nl
+extra:
+  python:
+    source: tools/create_browser_upload_session.py

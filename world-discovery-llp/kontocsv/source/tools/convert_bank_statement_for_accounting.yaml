@@ -1,0 +1,38 @@
+identity:
+  name: convert_bank_statement_for_accounting
+  author: world-discovery-llp
+  label:
+    en_US: Start confirmed conversion
+description:
+  human:
+    en_US: Starts a previously prepared KontoCSV conversion after explicit user confirmation. KontoCSV reserves
+      service credits atomically before processing and captures them according to the existing job-outcome policy.
+  llm: Starts a previously prepared KontoCSV conversion after explicit user confirmation. KontoCSV reserves service
+    credits atomically before processing and captures them according to the existing job-outcome policy. CHARGES
+    credits only after explicit human confirmation and a valid quoteId from preparation. Never confirm implicitly.
+parameters:
+- name: quoteId
+  type: string
+  required: true
+  label:
+    en_US: Prepared conversion quote
+  human_description:
+    en_US: Prepared conversion quote for Start confirmed conversion. Reuse the exact opaque ID from the immediately
+      preceding KontoCSV result; never guess or fabricate one.
+  llm_description: Prepared conversion quote for Start confirmed conversion. Reuse the exact opaque ID from the
+    immediately preceding KontoCSV result; never guess or fabricate one.
+  form: llm
+- name: confirmedByUser
+  type: boolean
+  required: true
+  label:
+    en_US: User explicitly confirmed
+  human_description:
+    en_US: Set true ONLY after the human explicitly confirms the exact prepared conversion and required credits
+      in this conversation. Never infer consent or preauthorize future operations.
+  llm_description: Set true ONLY after the human explicitly confirms the exact prepared conversion and required
+    credits in this conversation. Never infer consent or preauthorize future operations.
+  form: llm
+extra:
+  python:
+    source: tools/convert_bank_statement_for_accounting.py
