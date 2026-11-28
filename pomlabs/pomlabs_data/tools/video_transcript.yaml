@@ -1,0 +1,40 @@
+identity:
+  name: video_transcript
+  author: pomlabs
+  label:
+    en_US: "Instagram/TikTok/Facebook Video Transcript"
+description:
+  human:
+    en_US: "Speech-to-text transcript of a public Instagram Reel, TikTok or Facebook video."
+  llm: "Speech-to-text transcript of a public Instagram Reel, TikTok or Facebook video."
+parameters:
+  - name: url
+    type: string
+    required: true
+    label:
+      en_US: "url"
+    human_description:
+      en_US: "Video URL"
+    llm_description: "Video URL"
+    form: llm
+  - name: language
+    type: string
+    required: false
+    label:
+      en_US: "language"
+    human_description:
+      en_US: "Language code of the speech (optional)"
+    llm_description: "Language code of the speech (optional)"
+    form: llm
+  - name: timestamps
+    type: string
+    required: false
+    label:
+      en_US: "timestamps"
+    human_description:
+      en_US: "true to include timestamps"
+    llm_description: "true to include timestamps"
+    form: llm
+extra:
+  python:
+    source: tools/video_transcript.py

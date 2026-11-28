@@ -1,0 +1,40 @@
+identity:
+  name: youtube_transcript
+  author: pomlabs
+  label:
+    en_US: "YouTube Transcript"
+description:
+  human:
+    en_US: "Full transcript (captions) of a YouTube video with optional timestamps."
+  llm: "Full transcript (captions) of a YouTube video with optional timestamps."
+parameters:
+  - name: video
+    type: string
+    required: true
+    label:
+      en_US: "video"
+    human_description:
+      en_US: "YouTube video URL or ID"
+    llm_description: "YouTube video URL or ID"
+    form: llm
+  - name: languages
+    type: string
+    required: false
+    label:
+      en_US: "languages"
+    human_description:
+      en_US: "Preferred caption languages, comma separated (e.g. en,pt)"
+    llm_description: "Preferred caption languages, comma separated (e.g. en,pt)"
+    form: llm
+  - name: timestamps
+    type: string
+    required: false
+    label:
+      en_US: "timestamps"
+    human_description:
+      en_US: "true to include timestamps"
+    llm_description: "true to include timestamps"
+    form: llm
+extra:
+  python:
+    source: tools/youtube_transcript.py

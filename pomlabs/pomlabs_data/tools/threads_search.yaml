@@ -1,0 +1,31 @@
+identity:
+  name: threads_search
+  author: pomlabs
+  label:
+    en_US: "Threads Search"
+description:
+  human:
+    en_US: "Threads (Meta) posts from a keyword search: text, likes, replies, reposts, date, author."
+  llm: "Threads (Meta) posts from a keyword search: text, likes, replies, reposts, date, author."
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: "query"
+    human_description:
+      en_US: "Search query"
+    llm_description: "Search query"
+    form: llm
+  - name: max
+    type: number
+    required: false
+    label:
+      en_US: "max"
+    human_description:
+      en_US: "Maximum posts"
+    llm_description: "Maximum posts"
+    form: llm
+extra:
+  python:
+    source: tools/threads_search.py

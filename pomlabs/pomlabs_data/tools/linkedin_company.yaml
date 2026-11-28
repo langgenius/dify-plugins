@@ -1,0 +1,22 @@
+identity:
+  name: linkedin_company
+  author: pomlabs
+  label:
+    en_US: "LinkedIn Company"
+description:
+  human:
+    en_US: "Public LinkedIn company page: name, industry, size, followers, headquarters and offices."
+  llm: "Public LinkedIn company page: name, industry, size, followers, headquarters and offices."
+parameters:
+  - name: company
+    type: string
+    required: true
+    label:
+      en_US: "company"
+    human_description:
+      en_US: "LinkedIn company URL, slug or ID"
+    llm_description: "LinkedIn company URL, slug or ID"
+    form: llm
+extra:
+  python:
+    source: tools/linkedin_company.py

@@ -1,0 +1,31 @@
+identity:
+  name: instagram_profile
+  author: pomlabs
+  label:
+    en_US: "Instagram Profile"
+description:
+  human:
+    en_US: "Public Instagram profile: exact followers, following, posts count, bio, links, category and latest posts."
+  llm: "Public Instagram profile: exact followers, following, posts count, bio, links, category and latest posts."
+parameters:
+  - name: username
+    type: string
+    required: true
+    label:
+      en_US: "username"
+    human_description:
+      en_US: "Instagram username (without @)"
+    llm_description: "Instagram username (without @)"
+    form: llm
+  - name: posts
+    type: number
+    required: false
+    label:
+      en_US: "posts"
+    human_description:
+      en_US: "How many latest posts to include"
+    llm_description: "How many latest posts to include"
+    form: llm
+extra:
+  python:
+    source: tools/instagram_profile.py

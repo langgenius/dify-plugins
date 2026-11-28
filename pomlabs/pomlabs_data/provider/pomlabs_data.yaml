@@ -1,0 +1,80 @@
+identity:
+  author: pomlabs
+  name: pomlabs_data
+  label:
+    en_US: Pom Labs Data
+  description:
+    en_US: "Public social and web data as clean JSON: YouTube comments and transcripts, Instagram, LinkedIn, Reddit, Threads, Google Ads. One API key, no login to the source sites."
+  icon: icon.png
+  tags:
+    - social
+    - search
+    - utilities
+credentials_for_provider:
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: API key
+    placeholder:
+      en_US: Your Pom Labs X-API-Key
+    help:
+      en_US: Free key on RapidAPI (free plan on every API)
+    url: https://rapidapi.com/user/pomlabs
+
+#########################################################################################
+# If you want to support OAuth, you can uncomment the following code.
+#########################################################################################
+# oauth_schema:
+#   client_schema:
+#     - name: "client_id"
+#       type: "secret-input"
+#       required: true
+#       url: https://example.com/oauth/authorize
+#       placeholder:
+#         en_US: "Please input your Client ID"
+#         zh_Hans: "请输入你的 Client ID"
+#         pt_BR: "Insira seu Client ID"
+#       help:
+#         en_US: "Client ID is used to authenticate requests to the example.com API."
+#         zh_Hans: "Client ID 用于认证请求到 example.com API。"
+#         pt_BR: "Client ID é usado para autenticar solicitações à API do example.com."
+#       label:
+#         zh_Hans: "Client ID"
+#         en_US: "Client ID"
+#     - name: "client_secret"
+#       type: "secret-input"
+#       required: true
+#       url: https://example.com/oauth/authorize
+#       placeholder:
+#         en_US: "Please input your Client Secret"
+#         zh_Hans: "请输入你的 Client Secret"
+#         pt_BR: "Insira seu Client Secret"
+#       help:
+#         en_US: "Client Secret is used to authenticate requests to the example.com API."
+#         zh_Hans: "Client Secret 用于认证请求到 example.com API。"
+#         pt_BR: "Client Secret é usado para autenticar solicitações à API do example.com."
+#       label:
+#         zh_Hans: "Client Secret"
+#         en_US: "Client Secret"
+#   credentials_schema:
+#     - name: "access_token"
+#       type: "secret-input"
+#       label:
+#         zh_Hans: "Access Token"
+#         en_US: "Access Token"
+
+tools:
+  - tools/youtube_comments.yaml
+  - tools/youtube_transcript.yaml
+  - tools/video_transcript.yaml
+  - tools/instagram_profile.yaml
+  - tools/linkedin_company.yaml
+  - tools/linkedin_profile.yaml
+  - tools/reddit_search.yaml
+  - tools/reddit_subreddit.yaml
+  - tools/threads_search.yaml
+  - tools/google_ads_advertiser.yaml
+extra:
+  python:
+    source: provider/pomlabs_data.py
