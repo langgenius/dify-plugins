@@ -1,0 +1,25 @@
+{
+  "identity": {
+    "name": "get_m2m_network",
+    "author": "odilelabs",
+    "label": {
+      "en_US": "Get M2M Network",
+      "zh_Hans": "Get M2M Network",
+      "pt_BR": "Get M2M Network"
+    }
+  },
+  "description": {
+    "human": {
+      "en_US": "Read the OdileM2M network card for Direct: the live skills a business can accept, what each costs in credits, the credit packs, the limits that apply, and the Gate MCP address and quickstart. Use it to cost Direct tasks before sending any. It does not choose between products (get_agent_services) and does not show your own balance (get_direct_usage). Returns the pricing card (currency, credit_cents, packs, lookups) plus live_skills[{id, name, description, credits}], receipts, mcp_url, gate_mcp_url, quickstart_url, docs_url and connect_steps[]. Reference data, nothing account-specific: takes no arguments, needs no sign-in, contacts no business and changes nothing. Example: call it once with no arguments before the first send_to_business of a session.",
+      "zh_Hans": "Read the OdileM2M network card for Direct: the live skills a business can accept, what each costs in credits, the credit packs, the limits that apply, and the Gate MCP address and quickstart. Use it to cost Direct tasks before sending any. It does not choose between products (get_agent_services) and does not show your own balance (get_direct_usage). Returns the pricing card (currency, credit_cents, packs, lookups) plus live_skills[{id, name, description, credits}], receipts, mcp_url, gate_mcp_url, quickstart_url, docs_url and connect_steps[]. Reference data, nothing account-specific: takes no arguments, needs no sign-in, contacts no business and changes nothing. Example: call it once with no arguments before the first send_to_business of a session.",
+      "pt_BR": "Read the OdileM2M network card for Direct: the live skills a business can accept, what each costs in credits, the credit packs, the limits that apply, and the Gate MCP address and quickstart. Use it to cost Direct tasks before sending any. It does not choose between products (get_agent_services) and does not show your own balance (get_direct_usage). Returns the pricing card (currency, credit_cents, packs, lookups) plus live_skills[{id, name, description, credits}], receipts, mcp_url, gate_mcp_url, quickstart_url, docs_url and connect_steps[]. Reference data, nothing account-specific: takes no arguments, needs no sign-in, contacts no business and changes nothing. Example: call it once with no arguments before the first send_to_business of a session."
+    },
+    "llm": "Read the OdileM2M network card for Direct: the live skills a business can accept, what each costs in credits, the credit packs, the limits that apply, and the Gate MCP address and quickstart. Use it to cost Direct tasks before sending any. It does not choose between products (get_agent_services) and does not show your own balance (get_direct_usage). Returns the pricing card (currency, credit_cents, packs, lookups) plus live_skills[{id, name, description, credits}], receipts, mcp_url, gate_mcp_url, quickstart_url, docs_url and connect_steps[]. Reference data, nothing account-specific: takes no arguments, needs no sign-in, contacts no business and changes nothing. Example: call it once with no arguments before the first send_to_business of a session."
+  },
+  "parameters": [],
+  "extra": {
+    "python": {
+      "source": "tools/get_m2m_network.py"
+    }
+  }
+}

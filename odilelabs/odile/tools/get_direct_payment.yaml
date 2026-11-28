@@ -1,0 +1,60 @@
+{
+  "identity": {
+    "name": "get_direct_payment",
+    "author": "odilelabs",
+    "label": {
+      "en_US": "Get Direct Payment",
+      "zh_Hans": "Get Direct Payment",
+      "pt_BR": "Get Direct Payment"
+    }
+  },
+  "description": {
+    "human": {
+      "en_US": "Check an existing deposit booking on your signed-in Direct account: reconcile its Stripe Checkout payment and return its receipt and the separate booking state. Use it after send_to_business returned a payment_url for a deposit booking, to see whether the person has paid; it cannot start a payment, which the person makes on Stripe’s hosted page. Pass biz (the business id from its card) and task_id (the task id send_to_business returned for that booking). Requires direct:tasks. Uses only the stored merchant account and amount and creates no new charge or booking identity; a verified paid checkout may finish its already-authorized held booking. Payout status remains unknown: paid does not mean a bank payout. Safe to repeat. Example: biz='harbor-plumbing', task_id='tk_5d0' after send_to_business returned a payment_url for a deposit booking.",
+      "zh_Hans": "Check an existing deposit booking on your signed-in Direct account: reconcile its Stripe Checkout payment and return its receipt and the separate booking state. Use it after send_to_business returned a payment_url for a deposit booking, to see whether the person has paid; it cannot start a payment, which the person makes on Stripe’s hosted page. Pass biz (the business id from its card) and task_id (the task id send_to_business returned for that booking). Requires direct:tasks. Uses only the stored merchant account and amount and creates no new charge or booking identity; a verified paid checkout may finish its already-authorized held booking. Payout status remains unknown: paid does not mean a bank payout. Safe to repeat. Example: biz='harbor-plumbing', task_id='tk_5d0' after send_to_business returned a payment_url for a deposit booking.",
+      "pt_BR": "Check an existing deposit booking on your signed-in Direct account: reconcile its Stripe Checkout payment and return its receipt and the separate booking state. Use it after send_to_business returned a payment_url for a deposit booking, to see whether the person has paid; it cannot start a payment, which the person makes on Stripe’s hosted page. Pass biz (the business id from its card) and task_id (the task id send_to_business returned for that booking). Requires direct:tasks. Uses only the stored merchant account and amount and creates no new charge or booking identity; a verified paid checkout may finish its already-authorized held booking. Payout status remains unknown: paid does not mean a bank payout. Safe to repeat. Example: biz='harbor-plumbing', task_id='tk_5d0' after send_to_business returned a payment_url for a deposit booking."
+    },
+    "llm": "Check an existing deposit booking on your signed-in Direct account: reconcile its Stripe Checkout payment and return its receipt and the separate booking state. Use it after send_to_business returned a payment_url for a deposit booking, to see whether the person has paid; it cannot start a payment, which the person makes on Stripe’s hosted page. Pass biz (the business id from its card) and task_id (the task id send_to_business returned for that booking). Requires direct:tasks. Uses only the stored merchant account and amount and creates no new charge or booking identity; a verified paid checkout may finish its already-authorized held booking. Payout status remains unknown: paid does not mean a bank payout. Safe to repeat. Example: biz='harbor-plumbing', task_id='tk_5d0' after send_to_business returned a payment_url for a deposit booking."
+  },
+  "parameters": [
+    {
+      "name": "biz",
+      "type": "string",
+      "required": true,
+      "label": {
+        "en_US": "Biz",
+        "zh_Hans": "Biz",
+        "pt_BR": "Biz"
+      },
+      "human_description": {
+        "en_US": "The business id (from its card) the deposit booking was made with.",
+        "zh_Hans": "The business id (from its card) the deposit booking was made with.",
+        "pt_BR": "The business id (from its card) the deposit booking was made with."
+      },
+      "llm_description": "The business id (from its card) the deposit booking was made with.",
+      "form": "llm"
+    },
+    {
+      "name": "task_id",
+      "type": "string",
+      "required": true,
+      "label": {
+        "en_US": "Task Id",
+        "zh_Hans": "Task Id",
+        "pt_BR": "Task Id"
+      },
+      "human_description": {
+        "en_US": "The task id send_to_business returned for that booking.",
+        "zh_Hans": "The task id send_to_business returned for that booking.",
+        "pt_BR": "The task id send_to_business returned for that booking."
+      },
+      "llm_description": "The task id send_to_business returned for that booking.",
+      "form": "llm"
+    }
+  ],
+  "extra": {
+    "python": {
+      "source": "tools/get_direct_payment.py"
+    }
+  }
+}
